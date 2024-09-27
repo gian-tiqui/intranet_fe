@@ -74,7 +74,7 @@ const Navbar: React.FC<Props> = ({ children }) => {
           className=" sticky w-full flex justify-between pt-3 pb-3 top-0 bg-neutral-200"
           id="hi"
         >
-          <p className="text-2xl font-semibold">Intranet</p>
+          <p className="text-2xl font-extrabold cursor-pointer">Intranet</p>
           <div className="flex items-center gap-3">
             <button className="rounded-full border border-neutral-800 h-9 flex hover:bg-neutral-300 items-center justify-center gap-1 px-4">
               <Icon icon="ri:share-2-fill" className="h-5 w-5" />
@@ -83,7 +83,8 @@ const Navbar: React.FC<Props> = ({ children }) => {
             <button className="rounded-full h-9 w-9 bg-white"></button>
           </div>
         </div>
-        <div>{children}</div>
+
+        <div className="lg:px-64">{children}</div>
       </div>
     </div>
   );
