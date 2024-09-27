@@ -1,11 +1,13 @@
 import Image from "next/image";
 import Comments from "../components/Comments";
 import CommentBar from "../components/CommentBar";
+import AuthListener from "@/app/components/AuthListener";
 
 const PostPage = ({ params }: { params: { id: number } }) => {
   const { id } = params;
   return (
     <div className="">
+      <AuthListener />
       <h1 className="text-xl font-bold">Poster name here {id}</h1>
       <h4 className="text-sm mb-2">Date here</h4>
       <Image
