@@ -9,6 +9,11 @@ interface Props {
 }
 
 const Navbar: React.FC<Props> = ({ children }) => {
+  // this is causing the error
+  // const genRandomNum = () => {
+  //   return Math.floor(Math.random() * 11) + 1;
+  // };
+
   return (
     <div className="flex h-screen">
       <nav className="flex flex-col w-96 bg-white shadow h-full">
@@ -45,11 +50,11 @@ const Navbar: React.FC<Props> = ({ children }) => {
             </HoverBox>
           </div>
           <div className="flex flex-col-reverse">
-            {[...Array(20)].map((_, i) => (
+            {[...Array(10)].map((_, i) => (
               <div key={i} className="px-3 mb-8">
                 <p className="text-sm font-semibold ms-2 mb-1">Day {i + 1}</p>
                 <div className="flex flex-col-reverse">
-                  {Array(3)
+                  {Array(5)
                     .fill(0)
                     .map((_, index) => (
                       <Link href={`/post/${index}`} key={index}>
@@ -74,12 +79,12 @@ const Navbar: React.FC<Props> = ({ children }) => {
           className=" sticky w-full flex justify-between pt-3 pb-3 top-0 bg-neutral-200"
           id="hi"
         >
-          <p className="text-2xl font-extrabold cursor-pointer">Intranet</p>
+          <p className="text-2xl font-extrabold cursor-pointer">Memo Title</p>
           <div className="flex items-center gap-3">
-            <button className="rounded-full border border-neutral-800 h-9 flex hover:bg-neutral-300 items-center justify-center gap-1 px-4">
+            <div className="cursor-pointer rounded-full border border-neutral-800 h-9 flex hover:bg-neutral-300 items-center justify-center gap-1 px-4">
               <Icon icon="ri:share-2-fill" className="h-5 w-5" />
               <p>Share</p>
-            </button>
+            </div>
             <button className="rounded-full h-9 w-9 bg-white"></button>
           </div>
         </div>
