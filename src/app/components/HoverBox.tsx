@@ -2,14 +2,11 @@ import React, { ReactNode } from "react";
 
 interface Props {
   children?: ReactNode;
+  className?: string;
 }
 
-const HoverBox: React.FC<Props> = ({ children }) => {
-  return (
-    <div className="hover:bg-gray-200 p-2 cursor-pointer rounded">
-      {children}
-    </div>
-  );
+const HoverBox: React.FC<Props> = ({ children, className }) => {
+  return <div className={className}>{children}</div>;
 };
 
 export default HoverBox;

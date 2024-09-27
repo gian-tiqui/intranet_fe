@@ -1,34 +1,76 @@
 "use client";
-import React from "react";
+import React, { ReactNode } from "react";
 import { Icon } from "@iconify/react";
 import HoverBox from "./HoverBox";
+import Link from "next/link";
 
-const Navbar = () => {
+interface Props {
+  children?: ReactNode;
+}
+
+const Navbar: React.FC<Props> = ({ children }) => {
   return (
-    <nav className="h-full absolute left-0 w-64 bg-white shadow">
-      <div id="buttons" className="flex justify-between w-full px-3 pt-2">
-        <HoverBox>
-          <Icon icon="iconoir:sidebar-collapse" className="h-5 w-5" />
-        </HoverBox>
-        <HoverBox>
-          <Icon icon="lucide:edit" className="h-5 w-5" />
-        </HoverBox>
-      </div>
-      <div id="buttons" className="overflow-y-auto px-3 mt-2">
-        <HoverBox>
-          <div className="flex items-center gap-2">
-            <Icon icon="ph:hospital-fill" className="h-5 w-5" />
-            <p className="w-full">Intranet</p>
+    <div className="flex h-screen">
+      <nav className="flex flex-col w-96 bg-white shadow h-full">
+        <div
+          id="buttons"
+          className="flex justify-between w-full px-3 pt-2 mb-2"
+        >
+          <HoverBox className="hover:bg-neutral-100 p-2 cursor-pointer rounded">
+            <Icon icon="iconoir:sidebar-collapse" className="h-5 w-5" />
+          </HoverBox>
+
+          <HoverBox className="hover:bg-neutral-100 p-2 cursor-pointer rounded">
+            <Icon icon="lucide:edit" className="h-5 w-5" />
+          </HoverBox>
+        </div>
+
+        {/* THIS CONTAINS YOUR POSTS/MEMOS */}
+        <div className="overflow-auto flex-grow mb-3">
+          <div id="menu-buttons" className="px-3 mt-2 mb-6">
+            <HoverBox className="hover:bg-neutral-100 p-2 cursor-pointer rounded">
+              <div className="flex items-center gap-2">
+                <Icon icon="ph:hospital-fill" className="h-5 w-5" />
+                <p className="w-full">Intranet</p>
+              </div>
+            </HoverBox>
+            <HoverBox className="hover:bg-neutral-100 p-2 cursor-pointer rounded">
+              <div className="flex items-center gap-2">
+                <Icon
+                  icon="fluent:grid-circles-24-regular"
+                  className="h-5 w-5"
+                />
+                <p className="w-full">Explore Intranet</p>
+              </div>
+            </HoverBox>
           </div>
-        </HoverBox>
-        <HoverBox>
-          <div className="flex items-center gap-2">
-            <Icon icon="fluent:grid-circles-24-regular" className="h-5 w-5" />
-            <p className="w-full">Explore Intranet</p>
+          <div className="flex flex-col-reverse">
+            {[...Array(20)].map((_, i) => (
+              <div key={i} className="px-3 mb-8">
+                <p className="text-sm font-semibold ms-2 mb-1">Day {i + 1}</p>
+                <div className="flex flex-col-reverse">
+                  {Array(3)
+                    .fill(0)
+                    .map((_, index) => (
+                      <Link href={`/post/${index}`} key={index}>
+                        <HoverBox className="hover:bg-neutral-100 py-1 px-2 cursor-pointer rounded">
+                          Post {index + 1}
+                        </HoverBox>
+                      </Link>
+                    ))}
+                </div>
+              </div>
+            ))}
           </div>
-        </HoverBox>
-      </div>
-    </nav>
+        </div>
+        <div className="px-3 mb-3">
+          <HoverBox className="hover:bg-neutral-100 p-2 cursor-pointer rounded">
+            <p>hi</p>
+          </HoverBox>
+        </div>
+      </nav>
+      <div className="max-h-screen overflow-auto w-full">{children}</div>
+    </div>
   );
 };
 
