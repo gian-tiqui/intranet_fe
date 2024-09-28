@@ -7,18 +7,28 @@ const ModeToggler = () => {
   const { isDarkMode, setIsDarkMode } = useDarkModeStore();
 
   useEffect(() => {
-    if (document.body.classList.contains("dark")) {
+    const storedMode = localStorage.getItem("darkMode");
+
+    if (storedMode === "true") {
+      document.documentElement.classList.add("dark");
       setIsDarkMode(true);
+    } else {
+      document.documentElement.classList.remove("dark");
+      setIsDarkMode(false);
     }
   }, [setIsDarkMode]);
 
   const toggleDarkMode = () => {
-    if (document.body.classList.contains("dark")) {
-      document.body.classList.remove("dark");
+    const currentMode = document.documentElement.classList.contains("dark");
+
+    if (currentMode) {
+      document.documentElement.classList.remove("dark");
       setIsDarkMode(false);
+      localStorage.setItem("darkMode", "false");
     } else {
-      document.body.classList.add("dark");
+      document.documentElement.classList.add("dark");
       setIsDarkMode(true);
+      localStorage.setItem("darkMode", "true");
     }
   };
 
@@ -27,7 +37,11 @@ const ModeToggler = () => {
       className="rounded-full grid place-content-center h-9 w-9 bg-white dark:bg-neutral-800"
       onClick={toggleDarkMode}
     >
-      <Icon icon={isDarkMode ? "tabler:sun-filled" : "tabler:moon-filled"} />
+      {isDarkMode ? (
+        <Icon icon={"tabler:sun-filled"} />
+      ) : (
+        <Icon icon={"solar:moon-bold"} />
+      )}
     </button>
   );
 };
