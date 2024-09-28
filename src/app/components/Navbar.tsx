@@ -15,16 +15,16 @@ const Navbar: React.FC<Props> = ({ children }) => {
   return (
     <div className="flex h-screen">
       {hidden && (
-        <nav className="flex flex-col w-96 bg-white shadow h-full">
+        <nav className="flex flex-col w-80 bg-white shadow h-full p-1">
           <div
             id="buttons"
             className="flex justify-between w-full px-3 pt-2 mb-2"
           >
-            <HoverBox className="hover:bg-neutral-200 p-2 cursor-pointer rounded">
+            <HoverBox className="hover:bg-neutral-200 px-2 py-1 cursor-pointer rounded">
               <Icon icon="iconoir:sidebar-collapse" className="h-5 w-5" />
             </HoverBox>
 
-            <HoverBox className="hover:bg-neutral-200 p-2 cursor-pointer rounded">
+            <HoverBox className="hover:bg-neutral-200 px-2 py-1 cursor-pointer rounded">
               <Icon icon="lucide:edit" className="h-5 w-5" />
             </HoverBox>
           </div>
@@ -33,25 +33,25 @@ const Navbar: React.FC<Props> = ({ children }) => {
           <div className="overflow-auto flex-grow mb-3">
             <div id="menu-buttons" className="px-3 mt-2 mb-6">
               <HoverBox className="hover:bg-neutral-200 p-2 cursor-pointer rounded">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <Icon icon="ph:hospital-fill" className="h-5 w-5" />
-                  <p className="w-full">Intranet</p>
+                  <p className="w-full text-md">Intranet</p>
                 </div>
               </HoverBox>
               <HoverBox className="hover:bg-neutral-200 p-2 cursor-pointer rounded">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <Icon
                     icon="fluent:grid-circles-24-regular"
                     className="h-5 w-5"
                   />
-                  <p className="w-full">Explore Intranet</p>
+                  <p className="w-full text-md">Explore Intranet</p>
                 </div>
               </HoverBox>
             </div>
             <div className="flex flex-col-reverse">
               {[...Array(10)].map((_, i) => (
                 <div key={i} className="px-3 mb-8">
-                  <p className="text-sm font-semibold ms-2 mb-1">Day {i + 1}</p>
+                  <p className="text-xs font-semibold ms-2 mb-2">Day {i + 1}</p>
                   <div className="flex flex-col-reverse">
                     {Array(5)
                       .fill(0)
@@ -69,7 +69,13 @@ const Navbar: React.FC<Props> = ({ children }) => {
           </div>
           <div className="px-3 mb-3">
             <HoverBox className="hover:bg-neutral-200 p-2 cursor-pointer rounded">
-              <p>hi</p>
+              <div className="flex items-center gap-3">
+                <div className="rounded-full bg-neutral-200 h-8 w-8"></div>
+                <div>
+                  <p className="text-sm">Westlake User</p>
+                  <p className="text-xs truncate">IT Department</p>
+                </div>
+              </div>
             </HoverBox>
           </div>
         </nav>
