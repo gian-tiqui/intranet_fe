@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import HoverBox from "./HoverBox";
 import Link from "next/link";
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
+import ModeToggler from "./ModeToggler";
 
 interface Props {
   children?: ReactNode;
@@ -13,9 +14,9 @@ const Navbar: React.FC<Props> = ({ children }) => {
   const { hidden } = useNavbarVisibilityStore();
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen dark:text-white">
       {hidden && (
-        <nav className="flex flex-col w-80 bg-white shadow h-full p-1">
+        <nav className="hidden md:flex flex-col w-80 bg-white dark:bg-neutral-800 shadow h-full p-1">
           <div
             id="buttons"
             className="flex justify-between w-full px-3 pt-2 mb-2"
@@ -81,13 +82,13 @@ const Navbar: React.FC<Props> = ({ children }) => {
         </nav>
       )}
       <div
-        className={`max-h-screen overflow-auto relative w-full pb-2 ${
+        className={`max-h-screen overflow-auto relative w-full ${
           hidden && "px-6"
         }`}
       >
         {hidden && (
           <div
-            className=" sticky w-full flex justify-between pt-3 pb-3 top-0 bg-neutral-200"
+            className=" sticky w-full flex justify-between pt-3 pb-3 top-0 bg-neutral-200 dark:bg-neutral-700"
             id="hi"
           >
             <p className="text-2xl font-extrabold cursor-pointer">Memo Title</p>
@@ -96,12 +97,14 @@ const Navbar: React.FC<Props> = ({ children }) => {
                 <Icon icon="ri:share-2-fill" className="h-5 w-5" />
                 <p>Share</p>
               </div>
-              <button className="rounded-full h-9 w-9 bg-white"></button>
+              <ModeToggler />
             </div>
           </div>
         )}
 
-        <div className="lg:px-64">{children}</div>
+        <div className="mx-auto w-full md:w-[350px] lg:w-[750px]">
+          {children}
+        </div>
       </div>
     </div>
   );
