@@ -22,7 +22,7 @@ const CommentBar = () => {
       <textarea
         ref={textareaRef}
         placeholder="Comment here"
-        className="w-full outline-none px-2 resize-none overflow-hidden min-h-[40px] max-h-[200px]"
+        className="w-full outline-none px-2 resize-none overflow-hidden min-h-8 max-h-[200px]"
         rows={1}
         onInput={handleInput}
       />
