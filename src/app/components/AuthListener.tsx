@@ -12,10 +12,10 @@ const AuthListener = () => {
   useEffect(() => {
     const checkAuth = () => {
       if (!localStorage.getItem("intranet") && !Cookies.get("intranet")) {
-        setHidden(true);
+        setHidden(false);
         router.push("/login");
       } else {
-        setHidden(false);
+        setHidden(true);
       }
     };
 
