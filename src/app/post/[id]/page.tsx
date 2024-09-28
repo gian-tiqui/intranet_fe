@@ -8,7 +8,7 @@ const PostPage = ({ params }: { params: { id: number } }) => {
   return (
     <div className="">
       <AuthListener />
-      <h1 className="text-xl font-bold">Poster name here {id}</h1>
+      <h1 className="text-xl font-bold">Poster name here {Number(id) + 1}</h1>
       <h4 className="text-sm mb-2">Date here</h4>
       <Image
         className="h-96 w-full bg-neutral-100 mb-6"

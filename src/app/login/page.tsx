@@ -1,11 +1,10 @@
 import React from "react";
+import Form from "./components/Form";
 
 const Login = () => {
   return (
     <div className="h-screen">
-      <div>
-        <p>Intranet</p>
-      </div>
+      <Form />
     </div>
   );
 };
