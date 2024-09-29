@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import HoverBox from "./HoverBox";
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
@@ -18,15 +18,34 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { hidden } = useNavbarVisibilityStore();
   const { isCollapsed, setIsCollapsed } = useToggleStore();
   const { visible, setVisible } = useShowPostStore();
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // Adjust the width based on your needs
+
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 768);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const variants = {
-    open: {
-      x: 0,
-      width: "45vh",
-      opacity: 1,
-      transition: { type: "spring", stiffness: 300, damping: 30 },
-    },
+    open: isMobile
+      ? {
+          x: 0,
+          width: "100%",
+          opacity: 1,
+          transition: { type: "spring", stiffness: 300, damping: 30 },
+        }
+      : {
+          x: 0,
+          width: "45vh",
+          opacity: 1,
+          transition: { type: "spring", stiffness: 300, damping: 30 },
+        },
     collapsed: {
-      x: "-100%",
+      x: isMobile ? "-100%" : "-50%",
       width: 0,
       opacity: 0,
       transition: { type: "spring", stiffness: 300, damping: 30 },
@@ -117,7 +136,9 @@ const Divider: React.FC<Props> = ({ children }) => {
           </div>
         )}
 
-        <div className="mx-auto w-full max-w-[750px] px-3 md:px-0">
+        <div
+          className={`mx-auto w-full ${hidden && "max-w-[750px]"} px-3 md:px-0`}
+        >
           {children}
         </div>
       </main>
