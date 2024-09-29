@@ -34,13 +34,13 @@ const ModeToggler = () => {
 
   return (
     <button
-      className="rounded-full grid place-content-center h-9 w-9 bg-neutral-200 dark:bg-neutral-800"
+      className="rounded-full grid place-content-center h-10 w-10 bg-neutral-300 dark:bg-neutral-900 hover:bg-neutral-400 dark:hover:bg-neutral-700"
       onClick={toggleDarkMode}
     >
       {isDarkMode ? (
-        <Icon icon={"tabler:sun-filled"} />
+        <Icon icon={"line-md:sunny-loop"} className="h-7 w-7" />
       ) : (
-        <Icon icon={"solar:moon-bold"} />
+        <Icon icon={"line-md:moon-rising-alt-loop"} className="h-7 w-7" />
       )}
     </button>
   );

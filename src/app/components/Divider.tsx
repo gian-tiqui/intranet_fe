@@ -19,14 +19,17 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { isCollapsed, setIsCollapsed } = useToggleStore();
   const { visible, setVisible } = useShowPostStore();
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
-  const handleResize = () => {
-    setIsMobile(window.innerWidth < 768);
-  };
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize();
+
     window.addEventListener("resize", handleResize);
+
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -74,7 +77,7 @@ const Divider: React.FC<Props> = ({ children }) => {
       >
         {hidden && (
           <div
-            className="sticky w-full flex justify-between pt-3 pb-3 top-0 bg-neutral-200 dark:bg-neutral-700"
+            className="sticky w-full flex justify-between pt-3 pb-3 top-0 bg-neutral-200 dark:bg-neutral-800"
             id="hi"
           >
             <div id="buttons" className="flex w-full pt-2 mb-2 gap-3">
