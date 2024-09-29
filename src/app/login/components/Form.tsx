@@ -2,18 +2,19 @@
 import Cookies from "js-cookie";
 
 import useNavbarVisibilityStore from "@/app/store/navbarVisibilityStore";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const Form = () => {
   const { setHidden } = useNavbarVisibilityStore();
+  const router = useRouter();
 
   useEffect(() => {
     if (Cookies.get("intranet") && localStorage.getItem("intranet")) {
       setHidden(false);
-      redirect("/");
+      router.push("/");
     }
-  }, [setHidden]);
+  }, [setHidden, router]);
 
   return (
     <div
@@ -22,7 +23,7 @@ const Form = () => {
         setHidden(true);
         Cookies.set("intranet", "1");
         localStorage.setItem("intranet", "1");
-        redirect("post/1");
+        router.push("/post");
       }}
     ></div>
   );

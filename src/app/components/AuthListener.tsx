@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
+import { INTRANET } from "../page";
 
 const AuthListener = () => {
   const { setHidden } = useNavbarVisibilityStore();
@@ -11,7 +12,7 @@ const AuthListener = () => {
 
   useEffect(() => {
     const checkAuth = () => {
-      if (!localStorage.getItem("intranet") && !Cookies.get("intranet")) {
+      if (!localStorage.getItem(INTRANET) && !Cookies.get(INTRANET)) {
         setHidden(false);
         router.push("/login");
       } else {

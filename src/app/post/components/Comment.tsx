@@ -5,9 +5,9 @@ import HoverBox from "@/app/components/HoverBox";
 const Comment = () => {
   return (
     <div>
-      <div className="flex gap-4">
+      <div className="flex gap-6">
         <div className="h-10 w-10 bg-white rounded-full"></div>
-        <div className="max-w-[85%]">
+        <div className="max-w-[85%] mt-1">
           <p className="font-bold">Commentor name</p>
           <div className="mb-1">
             <p>
