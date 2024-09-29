@@ -25,13 +25,13 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
         animate="open"
         exit="collapsed"
         variants={variants}
-        className="hidden md:flex flex-col w-full bg-white dark:bg-neutral-800 shadow h-full p-1"
+        className="hidden md:flex flex-col w-full bg-white dark:bg-neutral-900 shadow h-full p-1"
       >
         <div
           id="buttons"
           className="flex justify-between w-full px-3 pt-2 mb-2"
         >
-          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded">
+          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
             <Icon
               icon="iconoir:sidebar-collapse"
               className="h-5 w-5"
@@ -39,7 +39,7 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
             />
           </HoverBox>
 
-          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded">
+          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
             <Icon
               onClick={() => setVisible(true)}
               icon="lucide:edit"
@@ -51,19 +51,20 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
         {/* THIS CONTAINS YOUR POSTS/MEMOS */}
         <div className="overflow-auto flex-grow mb-3">
           <div id="menu-buttons" className="px-3 mt-2 mb-6">
-            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded">
+            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
               <div className="flex items-center gap-3">
-                <Icon icon="ph:hospital-fill" className="h-5 w-5" />
+                <Icon icon={"ph:hospital"} className="h-5 w-5" />
+
                 <p className="w-full text-md">Intranet</p>
               </div>
             </HoverBox>
-            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded">
+            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
               <div className="flex items-center gap-3">
-                <Icon
-                  icon="fluent:grid-circles-24-regular"
-                  className="h-5 w-5"
-                />
-                <p className="w-full text-md">Explore Intranet</p>
+                <Icon icon={"ph:hospital"} className="h-5 w-5" />
+
+                <p className="w-full text-md truncate">
+                  Westlake Medical Center
+                </p>
               </div>
             </HoverBox>
           </div>
@@ -76,7 +77,7 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
                     .fill(0)
                     .map((_, index) => (
                       <Link href={`/post/${index}`} key={index}>
-                        <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-900 py-1 px-2 cursor-pointer rounded">
+                        <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 py-1 px-2 cursor-pointer rounded">
                           Post {index + 1}
                         </HoverBox>
                       </Link>
@@ -95,13 +96,13 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
         animate="open"
         exit="collapsed"
         variants={variants}
-        className="flex md:hidden absolute z-50 flex-col w-full bg-white dark:bg-neutral-800 shadow h-full p-1"
+        className="flex md:hidden absolute z-50 flex-col w-full bg-white dark:bg-neutral-900 shadow h-full p-1"
       >
         <div
           id="buttons"
           className="flex justify-between w-full px-3 pt-2 mb-2"
         >
-          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded">
+          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
             <Icon
               icon="iconoir:sidebar-collapse"
               className="h-5 w-5"
@@ -109,7 +110,7 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
             />
           </HoverBox>
 
-          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded">
+          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
             <Icon
               onClick={() => setVisible(true)}
               icon="lucide:edit"
@@ -121,13 +122,13 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
         {/* THIS CONTAINS YOUR POSTS/MEMOS */}
         <div className="overflow-auto flex-grow mb-3">
           <div id="menu-buttons" className="px-3 mt-2 mb-6">
-            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded">
+            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
               <div className="flex items-center gap-3">
                 <Icon icon="ph:hospital-fill" className="h-5 w-5" />
                 <p className="w-full text-md">Intranet</p>
               </div>
             </HoverBox>
-            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded">
+            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
               <div className="flex items-center gap-3">
                 <Icon
                   icon="fluent:grid-circles-24-regular"
@@ -146,7 +147,7 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
                     .fill(0)
                     .map((_, index) => (
                       <Link href={`/post/${index}`} key={index}>
-                        <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-900 py-1 px-2 cursor-pointer rounded">
+                        <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 py-1 px-2 cursor-pointer rounded">
                           Post {index + 1}
                         </HoverBox>
                       </Link>

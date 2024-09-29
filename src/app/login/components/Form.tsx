@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { AnimatePresence } from "framer-motion";
+import MotionP from "@/app/components/animation/MotionP";
 
 type FormFields = {
   email: string;
@@ -64,9 +66,13 @@ const Form = () => {
             placeholder="Email"
           />
         </div>
-        {errors.email && (
-          <p className="text-red-500 text-xs ms-4 font-bold">Email required</p>
-        )}
+        <AnimatePresence>
+          {errors.email && (
+            <MotionP className="text-red-500 text-xs ms-4 font-bold">
+              Email required
+            </MotionP>
+          )}
+        </AnimatePresence>
       </div>
       <div className="h-14 mb-14">
         <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl mb-1">
@@ -81,18 +87,20 @@ const Form = () => {
             type="password"
           />
         </div>
-        {errors.password && (
-          <p className="text-red-500 ms-4 font-bold text-xs">
-            Password required
-          </p>
-        )}
+        <AnimatePresence>
+          {errors.password && (
+            <MotionP className="text-red-500 ms-4 font-bold text-xs">
+              Password required
+            </MotionP>
+          )}
+        </AnimatePresence>
       </div>
 
       <div className="w-full flex flex-col items-center">
         <button className="w-48 mb-1 rounded-2xl h-10 text-neutral-200 border border-neutral-300 font-bold bg-neutral-800 dark:bg-neutral-200 dark:text-neutral-800 hover:bg-neutral-900">
           Login
         </button>
-        <p className="text-center text-xs text-red-500 font-semibold hover:text-red-600 cursor-pointer">
+        <p className="text-center text-xs font-semibold hover:underline cursor-pointer">
           Forgot password?
         </p>
       </div>

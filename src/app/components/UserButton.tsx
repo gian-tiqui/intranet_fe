@@ -34,8 +34,8 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
       onClick={() => setUVisible(true)}
     >
       {uVisible && (
-        <div className="absolute p-3 w-full bg-white dark:bg-neutral-800 border-[1px] flex flex-col gap-3 border-neutral-200 dark:border-neutral-700 bottom-12 rounded-2xl">
-          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded">
+        <div className="absolute p-3 w-full bg-white dark:bg-neutral-900 border-[1px] flex flex-col gap-3 border-neutral-200 dark:border-neutral-700 bottom-12 rounded-2xl">
+          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
             <div className="w-full flex gap-2 items-center">
               <Icon
                 icon={"material-symbols:post-outline"}
@@ -44,14 +44,14 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
               <p>My posts</p>
             </div>
           </HoverBox>
-          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded">
+          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
             <div className="w-full flex gap-2 items-center">
               <Icon icon={"uil:setting"} className="w-6 h-6" />
               <p>Settings</p>
             </div>
           </HoverBox>
           <hr className="w-full border border-neutral-200 dark:border-neutral-700" />
-          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded">
+          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
             <div
               className="w-full flex gap-2 items-center"
               onClick={handleLogout}
@@ -62,7 +62,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
           </HoverBox>
         </div>
       )}
-      <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded">
+      <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
         <div className="flex items-center gap-3">
           <div className="rounded-full bg-neutral-200 h-8 w-8"></div>
           <div>
