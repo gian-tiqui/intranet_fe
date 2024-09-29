@@ -19,7 +19,7 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { isCollapsed, setIsCollapsed } = useToggleStore();
   const { visible, setVisible } = useShowPostStore();
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // Adjust the width based on your needs
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const handleResize = () => {
     setIsMobile(window.innerWidth < 768);
@@ -67,7 +67,11 @@ const Divider: React.FC<Props> = ({ children }) => {
           ))}
       </AnimatePresence>
 
-      <main className={`max-h-screen overflow-auto relative w-full px-3`}>
+      <main
+        className={`max-h-screen overflow-auto relative w-full ${
+          hidden && "px-3"
+        }`}
+      >
         {hidden && (
           <div
             className="sticky w-full flex justify-between pt-3 pb-3 top-0 bg-neutral-200 dark:bg-neutral-700"

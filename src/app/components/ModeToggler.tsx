@@ -34,7 +34,7 @@ const ModeToggler = () => {
 
   return (
     <button
-      className="rounded-full grid place-content-center h-9 w-9 bg-white dark:bg-neutral-800"
+      className="rounded-full grid place-content-center h-9 w-9 bg-neutral-200 dark:bg-neutral-800"
       onClick={toggleDarkMode}
     >
       {isDarkMode ? (
