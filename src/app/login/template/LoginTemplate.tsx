@@ -6,7 +6,7 @@ interface Props {
 
 const LoginTemplate: React.FC<Props> = ({ children }) => {
   return (
-    <div className="h-screen bg-gradient-to-b from-white dark:from-black via-neutral-100 dark:via-neutral-800 to-neutral-300 dark:to-neutral-800 flex flex-col items-center">
+    <div className="h-screen bg-gradient-to-b from-white dark:from-black via-neutral-100 dark:via-neutral-800 to-neutral-300 dark:to-neutral-800 flex flex-col items-center justify-center">
       {children}
     </div>
   );

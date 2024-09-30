@@ -47,7 +47,7 @@ const Form = () => {
   return (
     <form
       onSubmit={handleSubmit(handleLogin)}
-      className="p-6 w-80 bg-white dark:bg-neutral-900 rounded-2xl shadow"
+      className="p-6 max-w-80 bg-white dark:bg-neutral-900 rounded-2xl shadow"
     >
       <h1 className="text-xl mb-2 text-center font-bold">Login</h1>
       <h1 className="mb-20 text-center font-semibold">
