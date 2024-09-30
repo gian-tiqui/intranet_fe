@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import useShowSettingsStore from "../store/showSettingStore";
 import HoverBox from "./HoverBox";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import UserInfo from "./UserInfo";
+import Password from "./Password";
 
 const Settings = () => {
   const { setShown } = useShowSettingsStore();
   const [mode, setMode] = useState<string>("save");
+  const [fragment, setFragment] = useState<string>("userInfo");
 
   const handleModeChange = () => {
     setMode(mode === "save" ? "edit" : "save");
@@ -21,7 +24,7 @@ const Settings = () => {
       onClick={() => setShown(false)}
     >
       <div
-        className="md:w-[700px] rounded-3xl bg-white dark:bg-neutral-900 p-8"
+        className="md:w-[700px] rounded-3xl h-96 bg-white dark:bg-neutral-900 p-8"
         onClick={stopPropa}
       >
         <div className="flex justify-between items-start w-full mb-5">
@@ -41,43 +44,32 @@ const Settings = () => {
           </HoverBox>
         </div>
         <hr className="w-full mb-4 border-t dark:border-gray-700" />
-        <div className="flex h-52">
+        <div className="flex">
           <div className="w-1/3 flex flex-col p-2">
-            <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded flex items-center gap-3">
-              <Icon icon={"mdi:user-outline"} className="w-6 h-6" />
-              <p className="">User Information</p>
+            <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
+              <div
+                className=" flex items-center gap-3"
+                onClick={() => setFragment("userInfo")}
+              >
+                <Icon icon={"mdi:user-outline"} className="w-6 h-6" />
+                <p className="">User Information</p>
+              </div>
             </HoverBox>
-            <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded flex items-center gap-3">
-              <Icon icon={"mdi:password-outline"} className="w-6 h-6" />
-              <p className="">Password</p>
-            </HoverBox>
-            <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded flex items-center gap-3">
-              <Icon icon={"carbon:unknown"} className="w-6 h-6" />
-              <p className="">Idk</p>
+            <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
+              <div
+                className="flex items-center gap-3"
+                onClick={() => setFragment("password")}
+              >
+                <Icon icon={"mdi:password-outline"} className="w-6 h-6" />
+                <p className="">Password</p>
+              </div>
             </HoverBox>
           </div>
           <div className="w-2/3 p-2 overflow-auto">
-            <div className="flex flex-row-reverse">
-              <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-1 cursor-pointer rounded">
-                <div
-                  className="flex items-center gap-3"
-                  onClick={handleModeChange}
-                >
-                  {mode === "save" ? (
-                    <>
-                      <Icon icon={"lucide:edit"} className="w-5 h-5" />
-                      <p className="text-md">Edit profile</p>
-                    </>
-                  ) : (
-                    <>
-                      <Icon icon={"mingcute:save-line"} className="w-5 h-5" />
-                      <p className="text-md">Save profile</p>
-                    </>
-                  )}
-                </div>
-              </HoverBox>
-            </div>
-            <div></div>
+            {fragment === "userInfo" && (
+              <UserInfo mode={mode} handleModeChange={handleModeChange} />
+            )}
+            {fragment === "password" && <Password />}
           </div>
         </div>
       </div>

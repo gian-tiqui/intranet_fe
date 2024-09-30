@@ -9,6 +9,7 @@ const PostPage = ({ params }: { params: { id: number } }) => {
     <div className="">
       <AuthListener />
       <PostContainer id={id} />
+      <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-6" />
       <Comments />
       <CommentBar />
     </div>

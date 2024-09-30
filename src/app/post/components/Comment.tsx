@@ -8,12 +8,13 @@ const Comment = () => {
       <div className="flex gap-6">
         <div className="h-10 w-10 bg-white rounded-full"></div>
         <div className="max-w-[85%] mt-1">
-          <p className="font-bold">Commentor name</p>
+          <p className="font-bold">Westlake User</p>
           <div className="mb-1">
             <p>
-              hi this is my comment hi this is my commenthi this is my
-              commenthithis is my commenthi this is my commentthis is my
-              commenthi this is my comment
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat.
             </p>
           </div>
           <HoverBox className="hover:bg-neutral-30 0 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded w-20">
