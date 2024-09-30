@@ -7,6 +7,7 @@ import HoverBox from "./HoverBox";
 import useShowPostStore from "../store/showPostStore";
 import useShowUserModalStore from "../store/showUserModal";
 import UserButton from "./UserButton";
+import { useRouter } from "next/navigation";
 
 interface Props {
   variants: Variants;
@@ -16,6 +17,7 @@ interface Props {
 
 const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
   const { setVisible } = useShowPostStore();
+  const router = useRouter();
   const { uVisible, setUVisible } = useShowUserModalStore();
   return (
     <>
@@ -52,7 +54,10 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
         <div className="overflow-auto flex-grow mb-3">
           <div id="menu-buttons" className="px-3 mt-2 mb-6">
             <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-              <div className="flex items-center gap-3">
+              <div
+                className="flex items-center gap-3"
+                onClick={() => router.push("/")}
+              >
                 <Icon icon={"ph:hospital"} className="h-5 w-5" />
 
                 <p className="w-full text-md">Intranet</p>
