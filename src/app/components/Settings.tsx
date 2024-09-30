@@ -65,7 +65,7 @@ const Settings = () => {
               </div>
             </HoverBox>
           </div>
-          <div className="w-2/3 p-2 overflow-auto">
+          <div className="w-2/3 p-2 overflow-auto h-56">
             {fragment === "userInfo" && (
               <UserInfo mode={mode} handleModeChange={handleModeChange} />
             )}

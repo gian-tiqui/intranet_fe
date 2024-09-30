@@ -32,7 +32,7 @@ const PostModal = () => {
       className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-40 grid place-content-center"
     >
       <div
-        className="p-4 w-96 rounded-2xl bg-white dark:bg-neutral-900"
+        className="p-4 w-80 rounded-2xl bg-white dark:bg-neutral-900"
         onClick={handleFormClick}
       >
         <div className="flex items-start gap-3 mb-2">
@@ -41,13 +41,18 @@ const PostModal = () => {
         </div>
         <form>
           <div>
+            <input
+              className="w-full outline-none p-2 dark:bg-neutral-900"
+              placeholder="Memo title"
+            />
+            <hr className="w-full border-b border dark:border-neutral-800" />
             <textarea
               className="w-full h-40 outline-none p-2 dark:bg-neutral-900"
               placeholder="Is there something you want to write for the memo?"
             />
 
-            <div className="w-full p-4  dark:bg-neutral-900 shadow-md rounded-md">
-              <div className="relative w-full border border-dashed border-neutral-200 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-50 dark:hover:bg-neutral-950 transition-all duration-200">
+            <div className="w-full p-4 mb-4 dark:bg-neutral-900 rounded-md">
+              <div className="relative w-full border border-dashed border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-all duration-200">
                 <input
                   type="file"
                   className="absolute inset-0 opacity-0 cursor-pointer"
@@ -64,6 +69,13 @@ const PostModal = () => {
                 </div>
               </div>
             </div>
+
+            <button
+              type="submit"
+              className="w-full border rounded-xl h-10 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-700"
+            >
+              Post
+            </button>
           </div>
         </form>
       </div>

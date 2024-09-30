@@ -41,7 +41,7 @@ const Form = () => {
     setHidden(true);
     Cookies.set("intranet", "1");
     localStorage.setItem("intranet", "1");
-    router.push("/post");
+    router.push("/");
   };
 
   return (
