@@ -61,10 +61,11 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
             <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
               <div className="flex items-center gap-3">
                 <Icon icon={"ph:hospital"} className="h-5 w-5" />
-
-                <p className="w-full text-md truncate">
-                  Westlake Medical Center
-                </p>
+                <Link href={"https://westlakemed.com.ph/"}>
+                  <p className="w-full text-md truncate">
+                    Westlake Medical Center
+                  </p>
+                </Link>
               </div>
             </HoverBox>
           </div>

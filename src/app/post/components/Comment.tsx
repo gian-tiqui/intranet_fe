@@ -16,7 +16,7 @@ const Comment = () => {
               commenthi this is my comment
             </p>
           </div>
-          <HoverBox className="hover:bg-neutral-300 p-2 cursor-pointer rounded">
+          <HoverBox className="hover:bg-neutral-30 0 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded w-20">
             <Replies />
           </HoverBox>
         </div>

@@ -13,7 +13,7 @@ const Home = () => {
           <h1 className="text-3xl">Go to memos</h1>
           <Link
             href={"/post"}
-            className="bg-white dark:bg-neutral-900 h-12 text-2xl w-40 rounded-2xl shadow hover:bg-black grid place-content-center"
+            className="bg-neutral-300 mt-5 dark:bg-neutral-700 border border-neutral-400 dark:border-neutral-700 h-12 text-xl w-40 rounded-2xl shadow dark:hover:bg-neutral-600 grid place-content-center"
           >
             Memos
           </Link>
