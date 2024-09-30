@@ -33,12 +33,16 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
     setShown(true);
   };
 
+  const handleOpenModal = () => {
+    setUVisible(true);
+  };
+
   return (
-    <div className="px-3 mb-3 relative" onClick={() => setUVisible(true)}>
+    <div className="px-3 mb-3 relative" onClick={handleOpenModal}>
       {uVisible && (
         <div
           onClick={(e: React.MouseEvent) => e.stopPropagation()}
-          className="absolute p-3 w-full bg-white dark:bg-neutral-900 border-[1px] flex flex-col gap-3 border-neutral-200 dark:border-neutral-700 bottom-12 rounded-2xl"
+          className="absolute z-50 p-3 w-full bg-white dark:bg-neutral-900 border-[1px] flex flex-col gap-3 border-neutral-200 dark:border-neutral-700 bottom-12 rounded-2xl"
         >
           <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
             <div className="w-full flex gap-2 items-center">
