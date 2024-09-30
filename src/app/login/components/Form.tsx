@@ -36,8 +36,16 @@ const Form = () => {
   }, [setHidden, router]);
 
   const handleLogin = (data: FormFields) => {
-    if (data.email !== account.email && data.password !== account.password)
+    console.log(data);
+    if (data.email !== account.email) {
+      console.log("wrong");
       return;
+    }
+
+    if (data.password !== account.password) {
+      console.log("wrong");
+      return;
+    }
 
     setHidden(true);
     Cookies.set("intranet", "1");
