@@ -22,6 +22,7 @@ const Password = () => {
         <input
           className="outline-none dark:bg-neutral-900 border-b border-neutral-700 px-2"
           type="password"
+          {...register("currentPassword", { required: true })}
         />
       </div>
       <div className="flex justify-between items-center">
@@ -29,6 +30,7 @@ const Password = () => {
         <input
           className="outline-none dark:bg-neutral-900 border-b border-neutral-700 px-2"
           type="password"
+          {...register("newPassword", { required: true })}
         />
       </div>
       <div className="flex justify-between items-center mb-5">
@@ -36,6 +38,7 @@ const Password = () => {
         <input
           className="outline-none dark:bg-neutral-900 border-b border-neutral-700 px-2"
           type="password"
+          {...register("confirmNewPassword", { required: true })}
         />
       </div>
       <button
