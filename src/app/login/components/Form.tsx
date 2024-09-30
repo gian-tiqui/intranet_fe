@@ -1,6 +1,5 @@
 "use client";
 import Cookies from "js-cookie";
-
 import useNavbarVisibilityStore from "@/app/store/navbarVisibilityStore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
