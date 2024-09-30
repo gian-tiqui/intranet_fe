@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
 import { INTRANET } from "../bindings/binding";
+import useShowSettingsStore from "../store/showSettingStore";
 
 interface Props {
   uVisible: boolean;
@@ -15,6 +16,7 @@ interface Props {
 
 const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
   const { setHidden } = useNavbarVisibilityStore();
+  const { setShown } = useShowSettingsStore();
   const router = useRouter();
 
   const handleLogout = (event: React.MouseEvent) => {
@@ -26,10 +28,18 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
     router.push("/login");
   };
 
+  const handleShowSettings = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setShown(true);
+  };
+
   return (
     <div className="px-3 mb-3 relative" onClick={() => setUVisible(true)}>
       {uVisible && (
-        <div className="absolute p-3 w-full bg-white dark:bg-neutral-900 border-[1px] flex flex-col gap-3 border-neutral-200 dark:border-neutral-700 bottom-12 rounded-2xl">
+        <div
+          onClick={(e: React.MouseEvent) => e.stopPropagation()}
+          className="absolute p-3 w-full bg-white dark:bg-neutral-900 border-[1px] flex flex-col gap-3 border-neutral-200 dark:border-neutral-700 bottom-12 rounded-2xl"
+        >
           <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
             <div className="w-full flex gap-2 items-center">
               <Icon
@@ -40,7 +50,10 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
             </div>
           </HoverBox>
           <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-            <div className="w-full flex gap-2 items-center">
+            <div
+              className="w-full flex gap-2 items-center"
+              onClick={handleShowSettings}
+            >
               <Icon icon={"uil:setting"} className="w-6 h-6" />
               <p>Settings</p>
             </div>

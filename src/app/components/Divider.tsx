@@ -9,6 +9,8 @@ import { AnimatePresence } from "framer-motion";
 import Aside from "./Aside";
 import PostModal from "../post/components/PostModal";
 import useShowPostStore from "../store/showPostStore";
+import Settings from "./Settings";
+import useShowSettingsStore from "../store/showSettingStore";
 
 interface Props {
   children?: ReactNode;
@@ -18,6 +20,7 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { hidden } = useNavbarVisibilityStore();
   const { isCollapsed, setIsCollapsed } = useToggleStore();
   const { visible, setVisible } = useShowPostStore();
+  const { shown } = useShowSettingsStore();
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -58,6 +61,7 @@ const Divider: React.FC<Props> = ({ children }) => {
   return (
     <div className="flex h-screen text-neutral-800 dark:text-neutral-100">
       {visible && <PostModal />}
+      {shown && <Settings />}
 
       <AnimatePresence>
         {isCollapsed ||
