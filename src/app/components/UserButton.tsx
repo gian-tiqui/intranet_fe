@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React from "react";
 import HoverBox from "./HoverBox";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Cookies from "js-cookie";
@@ -13,13 +13,11 @@ interface Props {
 }
 
 const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
-  const ref = useRef<HTMLDivElement>(null);
   const { setHidden } = useNavbarVisibilityStore();
   const router = useRouter();
 
   const handleLogout = (event: React.MouseEvent) => {
     event.stopPropagation();
-    console.log("Logging out...");
     setHidden(false);
     Cookies.remove(INTRANET);
     localStorage.removeItem(INTRANET);
@@ -28,11 +26,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
   };
 
   return (
-    <div
-      ref={ref}
-      className="px-3 mb-3 relative"
-      onClick={() => setUVisible(true)}
-    >
+    <div className="px-3 mb-3 relative" onClick={() => setUVisible(true)}>
       {uVisible && (
         <div className="absolute p-3 w-full bg-white dark:bg-neutral-900 border-[1px] flex flex-col gap-3 border-neutral-200 dark:border-neutral-700 bottom-12 rounded-2xl">
           <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">

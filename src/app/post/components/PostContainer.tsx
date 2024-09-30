@@ -9,7 +9,7 @@ interface Props {
 const PostContainer: React.FC<Props> = ({ id }) => {
   return (
     <div>
-      <div className="flex items-center gap-2 mb-2">
+      <div className="flex items-start gap-2 mb-2">
         <div className="h-9 w-9 bg-red-500 rounded-full"></div>
         <h1 className="text-lg font-semibold">Westlake User</h1>
       </div>
