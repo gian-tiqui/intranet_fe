@@ -47,9 +47,6 @@ const PostModal = () => {
             />
 
             <div className="w-full p-4  dark:bg-neutral-900 shadow-md rounded-md">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Upload your file
-              </label>
               <div className="relative w-full border border-dashed border-neutral-200 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-50 dark:hover:bg-neutral-950 transition-all duration-200">
                 <input
                   type="file"
@@ -62,7 +59,7 @@ const PostModal = () => {
                     className="h-10 w-10"
                   />
                   <span className="mt-2 text-sm">
-                    {fileName ? fileName : "Click to upload"}
+                    {fileName ? fileName : "Click to upload memo"}
                   </span>
                 </div>
               </div>

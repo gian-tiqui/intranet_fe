@@ -8,14 +8,17 @@ interface FormFields {
 }
 
 const Password = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormFields>();
+  const { register, handleSubmit } = useForm<FormFields>();
+
+  const onPasswordReset = (data: FormFields) => {
+    console.log(data);
+  };
 
   return (
-    <form className="flex flex-col gap-3">
+    <form
+      className="flex flex-col gap-3"
+      onSubmit={handleSubmit(onPasswordReset)}
+    >
       <h1 className="text-center font-bold mb-3">Change password</h1>
       <div className="flex justify-between items-center">
         <p>Current password</p>

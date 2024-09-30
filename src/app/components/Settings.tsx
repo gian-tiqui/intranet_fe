@@ -64,10 +64,6 @@ const Settings = () => {
                 <p className="">Password</p>
               </div>
             </HoverBox>
-            <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded flex items-center gap-3">
-              <Icon icon={"carbon:unknown"} className="w-6 h-6" />
-              <p className="">Idk</p>
-            </HoverBox>
           </div>
           <div className="w-2/3 p-2 overflow-auto">
             {fragment === "userInfo" && (
