@@ -4,8 +4,9 @@ import HoverBox from "./HoverBox";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { INTRANET } from "../page";
+
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
+import { INTRANET } from "../bindings/binding";
 
 interface Props {
   uVisible: boolean;

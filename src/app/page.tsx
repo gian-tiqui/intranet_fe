@@ -2,8 +2,6 @@ import React from "react";
 import AuthListener from "./components/AuthListener";
 import Link from "next/link";
 
-export const INTRANET = "intranet";
-
 const Home = () => {
   return (
     <>
