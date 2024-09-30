@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
-import { INTRANET } from "../page";
+import { INTRANET } from "../bindings/binding";
 
 const AuthListener = () => {
   const { setHidden } = useNavbarVisibilityStore();
