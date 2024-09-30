@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence } from "framer-motion";
 import MotionP from "@/app/components/animation/MotionP";
+import { INTRANET } from "@/app/bindings/binding";
 
 type FormFields = {
   email: string;
@@ -28,7 +29,7 @@ const Form = () => {
   };
 
   useEffect(() => {
-    if (Cookies.get("intranet") && localStorage.getItem("intranet")) {
+    if (Cookies.get(INTRANET) && localStorage.getItem(INTRANET)) {
       setHidden(false);
       router.push("/");
     }

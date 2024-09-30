@@ -21,7 +21,6 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { isCollapsed, setIsCollapsed } = useToggleStore();
   const { visible, setVisible } = useShowPostStore();
   const { shown } = useShowSettingsStore();
-
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
