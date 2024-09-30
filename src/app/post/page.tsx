@@ -1,16 +1,12 @@
 import React from "react";
 import AuthListener from "../components/AuthListener";
-import PostContainer from "./components/PostContainer";
+import MainPost from "./components/MainPost";
 
 const Post = () => {
   return (
     <div>
       <AuthListener />
-      {Array(10)
-        .fill(0)
-        .map((_, index) => (
-          <PostContainer id={index} key={index} />
-        ))}
+      <MainPost />
     </div>
   );
 };
