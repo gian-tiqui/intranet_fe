@@ -11,6 +11,8 @@ import PostModal from "../post/components/PostModal";
 import useShowPostStore from "../store/showPostStore";
 import Settings from "./Settings";
 import useShowSettingsStore from "../store/showSettingStore";
+import LoginSplash from "./RefreshSplashArt";
+import useSplashToggler from "../store/useSplashStore";
 
 interface Props {
   children?: ReactNode;
@@ -22,6 +24,16 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { visible, setVisible } = useShowPostStore();
   const { shown } = useShowSettingsStore();
   const [isMobile, setIsMobile] = useState(false);
+  const { showSplash, setShowSplash } = useSplashToggler();
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      console.log("Hiding splash screen");
+      setShowSplash(false);
+    }, 3000);
+
+    return () => clearTimeout(timeout);
+  }, [setShowSplash, showSplash]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -61,6 +73,7 @@ const Divider: React.FC<Props> = ({ children }) => {
     <div className="flex h-screen text-neutral-800 dark:text-neutral-100">
       {visible && <PostModal />}
       {shown && <Settings />}
+      {showSplash && <LoginSplash />}
 
       <AnimatePresence>
         {isCollapsed ||
