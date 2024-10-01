@@ -57,10 +57,13 @@ const Form = () => {
     }
 
     try {
-      const response = await axios.post(`${API_BASE}/auth/login`, {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${API_BASE ? API_BASE : "http://localhost:8080"}/auth/login`,
+        {
+          email,
+          password,
+        }
+      );
 
       toast.dismiss();
 
