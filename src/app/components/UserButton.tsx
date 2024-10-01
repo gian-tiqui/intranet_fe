@@ -4,10 +4,10 @@ import HoverBox from "./HoverBox";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
 import { INTRANET } from "../bindings/binding";
 import useShowSettingsStore from "../store/showSettingStore";
+import useLogoutArtStore from "../store/useLogoutSplashStore";
 
 interface Props {
   uVisible: boolean;
@@ -15,12 +15,14 @@ interface Props {
 }
 
 const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
+  const { setShowLogoutArt } = useLogoutArtStore();
   const { setHidden } = useNavbarVisibilityStore();
   const { setShown } = useShowSettingsStore();
   const router = useRouter();
 
   const handleLogout = (event: React.MouseEvent) => {
     event.stopPropagation();
+    setShowLogoutArt(true);
     setHidden(false);
     Cookies.remove(INTRANET);
     localStorage.removeItem(INTRANET);
