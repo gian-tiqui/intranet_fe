@@ -76,9 +76,17 @@ const Form = () => {
       if (typeof error === "object" && error !== null) {
         const errorObj = error as { response: { data: { message: string } } };
         if (errorObj.response.data.message === "User not found") {
-          toast("User not found", { type: "error" });
+          toast("User not found", {
+            type: "error",
+            className:
+              "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-white",
+          });
         } else if (errorObj.response.data.message === "Password invalid") {
-          toast("Password invalid", { type: "error" });
+          toast("Password invalid", {
+            type: "error",
+            className:
+              "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-white",
+          });
         }
       } else {
         console.error("Unexpected error:", error);
