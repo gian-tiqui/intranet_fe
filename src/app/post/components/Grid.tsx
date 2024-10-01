@@ -1,10 +1,14 @@
 "use client";
+import useShowPostStore from "@/app/store/showPostStore";
+import useShowSettingsStore from "@/app/store/showSettingStore";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useRouter } from "next/navigation";
 import React from "react";
 
 const Grid = () => {
   const router = useRouter();
+  const { setVisible } = useShowPostStore();
+  const { setShown } = useShowSettingsStore();
 
   return (
     <div className="grid place-content-center h-[600px]">
@@ -17,7 +21,7 @@ const Grid = () => {
           <p>View all memos</p>
         </div>
         <div
-          onClick={() => router.push("/post")}
+          onClick={() => setVisible(true)}
           className="w-32 h-32 p-4 rounded-lg dark:bg-neutral-800 border border-neutral-300 hover:bg-gray-300 cursor-pointer dark:border-neutral-700 dark:hover:bg-neutral-700"
         >
           <Icon
@@ -27,7 +31,7 @@ const Grid = () => {
           <p>Post a memo</p>
         </div>
         <div
-          onClick={() => router.push("/post")}
+          onClick={() => setShown(true)}
           className="w-32 h-32 p-4 rounded-lg dark:bg-neutral-800 border border-neutral-300 hover:bg-gray-300 cursor-pointer dark:border-neutral-700 dark:hover:bg-neutral-700"
         >
           <Icon
