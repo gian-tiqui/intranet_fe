@@ -49,9 +49,17 @@ const Form = () => {
   }, [setHidden, router]);
 
   const handleLogin = (data: FormFields) => {
-    console.log(data);
+    if (!data.email.endsWith("@wmc.com")) {
+      toast("Email Invalid", {
+        type: "error",
+        className: "bg-neutral-200 dark:bg-neutral-900",
+      });
+
+      return;
+    }
+
     if (data.email !== account.email) {
-      toast("Wrong Email", {
+      toast("Email not found", {
         type: "error",
         className: "bg-neutral-200 dark:bg-neutral-900",
       });

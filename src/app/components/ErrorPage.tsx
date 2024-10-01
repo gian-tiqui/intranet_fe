@@ -34,13 +34,13 @@ const ErrorPage = () => {
 
   return (
     <div className="h-screen w selection:-screen grid place-content-center bg-neutral-200 text-neutral-900 dark:bg-neutral-900 font-mono">
-      <div className="w-96 flex flex-col bg-gray-300 p-5 rounded-lg">
+      <div className="w-96 flex flex-col bg-gray-300 p-5 rounded-lg shadow">
         {View}
-        <p className="text-2xl text-center font-bold">
-          Sadly this page doesn&apos;t exist
+        <p className="text-xl text-center font-bold mb-2">
+          Sadly, this page doesn&apos;t exist
         </p>
-        <p className="text-lg text-center font-bold ">
-          Redirecting you to home in {count}...
+        <p className="text-lg text-center">
+          Redirecting you back in {count}...
         </p>
       </div>
     </div>

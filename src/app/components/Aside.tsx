@@ -1,6 +1,6 @@
 "use client";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { motion, Variants } from "framer-motion";
+import { AnimatePresence, motion, Variants } from "framer-motion";
 import Link from "next/link";
 import React, { useState } from "react";
 import HoverBox from "./HoverBox";
@@ -8,6 +8,7 @@ import useShowPostStore from "../store/showPostStore";
 import useShowUserModalStore from "../store/showUserModal";
 import UserButton from "./UserButton";
 import { useRouter } from "next/navigation";
+import MotionTemplate from "./animation/MotionTemplate";
 
 interface Props {
   variants: Variants;
@@ -81,22 +82,29 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
             </HoverBox>
           </div>
           <div className="flex flex-col">
-            {arr.slice(0, maxNum).map((item, i) => (
-              <div key={i} className="px-3 mb-8">
-                <p className="text-xs font-semibold ms-2 mb-2">Day {item}</p>
-                <div className="flex flex-col-reverse">
-                  {Array(5)
-                    .fill(0)
-                    .map((_, index) => (
-                      <Link href={`/post/${index}`} key={index}>
-                        <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 py-1 px-2 cursor-pointer rounded">
-                          <p> Lorem Ipsum {index + 1}</p>
-                        </HoverBox>
-                      </Link>
-                    ))}
-                </div>
-              </div>
-            ))}
+            <AnimatePresence>
+              {arr.slice(0, maxNum).map((item, i) => (
+                <MotionTemplate key={i}>
+                  <div className="px-3 mb-8">
+                    <p className="text-xs font-semibold ms-2 mb-2">
+                      Day {item}
+                    </p>
+                    <div className="flex flex-col-reverse">
+                      {Array(5)
+                        .fill(0)
+                        .map((_, index) => (
+                          <Link href={`/post/${index}`} key={index}>
+                            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 py-1 px-2 cursor-pointer rounded">
+                              <p> Lorem Ipsum {index + 1}</p>
+                            </HoverBox>
+                          </Link>
+                        ))}
+                    </div>
+                  </div>
+                </MotionTemplate>
+              ))}
+            </AnimatePresence>
+
             <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 py-1 px-2 mx-4 cursor-pointer rounded">
               <button onClick={showMore} className="w-full">
                 Show more
