@@ -13,6 +13,7 @@ import useLogoutArtStore from "../store/useLogoutSplashStore";
  * @TODO: [fix] user modal not closing on document click
  * test
  *
+ * Possible Roots: Zustand Store/Appearance Handlers
  */
 
 interface Props {
