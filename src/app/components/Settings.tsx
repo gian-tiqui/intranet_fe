@@ -4,11 +4,13 @@ import HoverBox from "./HoverBox";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import UserInfo from "./UserInfo";
 import Password from "./Password";
+import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
 
 const Settings = () => {
   const { setShown } = useShowSettingsStore();
   const [mode, setMode] = useState<string>("save");
   const [fragment, setFragment] = useState<string>("userInfo");
+  const { setHidden } = useNavbarVisibilityStore();
 
   const handleModeChange = () => {
     setMode(mode === "save" ? "edit" : "save");
@@ -18,10 +20,15 @@ const Settings = () => {
     e.stopPropagation();
   };
 
+  const handleOuterChange = () => {
+    setHidden(true);
+    setShown(false);
+  };
+
   return (
     <div
       className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-40 grid place-content-center"
-      onClick={() => setShown(false)}
+      onClick={handleOuterChange}
     >
       <div
         className="md:w-[700px] rounded-3xl h-96 bg-white dark:bg-neutral-900 p-8"
