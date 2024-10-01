@@ -12,7 +12,7 @@ const useFetchIP = () => {
 
     getIp();
   }, []);
-  return ip ? ip : null;
+  return ip;
 };
 
 export default useFetchIP;

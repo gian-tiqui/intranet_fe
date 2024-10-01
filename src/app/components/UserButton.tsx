@@ -9,6 +9,12 @@ import { INTRANET } from "../bindings/binding";
 import useShowSettingsStore from "../store/showSettingStore";
 import useLogoutArtStore from "../store/useLogoutSplashStore";
 
+/*
+ * @TODO: [fix] user modal not closing on document click
+ * test
+ *
+ */
+
 interface Props {
   uVisible: boolean;
   setUVisible: (visible: boolean) => void;
