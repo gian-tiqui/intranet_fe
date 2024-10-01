@@ -2,6 +2,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ReactNode } from "react";
 
+// Shake animation object for horizontal shake on show
+
 const shakeAnimation = {
   initial: { x: 0 },
   animate: {
@@ -13,6 +15,8 @@ const shakeAnimation = {
     },
   },
 };
+
+// Motion p element component
 
 const MotionP = ({
   children,
