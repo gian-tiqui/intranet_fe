@@ -52,7 +52,8 @@ const Form = () => {
     if (!data.email.endsWith("@wmc.com")) {
       toast("Email Invalid", {
         type: "error",
-        className: "bg-neutral-200 dark:bg-neutral-900",
+        className:
+          "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-whit",
       });
 
       return;
@@ -61,7 +62,8 @@ const Form = () => {
     if (data.email !== account.email) {
       toast("Email not found", {
         type: "error",
-        className: "bg-neutral-200 dark:bg-neutral-900",
+        className:
+          "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-whit",
       });
 
       return;
