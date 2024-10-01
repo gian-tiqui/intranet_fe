@@ -93,7 +93,7 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
                       {Array(5)
                         .fill(0)
                         .map((_, index) => (
-                          <Link href={`/post/${index}`} key={index}>
+                          <Link href={`/posts/${index}`} key={index}>
                             <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 py-1 px-2 cursor-pointer rounded">
                               <p> Lorem Ipsum {index + 1}</p>
                             </HoverBox>
@@ -177,7 +177,7 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
                           setIsCollapsed(true);
                         }}
                       >
-                        <Link href={`/post/${index}`}>
+                        <Link href={`/posts/${index}`}>
                           <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 py-1 px-2 cursor-pointer rounded">
                             Post {index + 1}
                           </HoverBox>

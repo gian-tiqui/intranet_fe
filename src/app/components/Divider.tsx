@@ -7,7 +7,7 @@ import ModeToggler from "./ModeToggler";
 import useToggleStore from "../store/navbarCollapsedStore";
 import { AnimatePresence } from "framer-motion";
 import Aside from "./Aside";
-import PostModal from "../post/components/PostModal";
+import PostModal from "../posts/components/PostModal";
 import useShowPostStore from "../store/showPostStore";
 import Settings from "./Settings";
 import useShowSettingsStore from "../store/showSettingStore";
