@@ -34,7 +34,6 @@ const Form = () => {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      console.log("Hiding splash screen");
       setShowLogoutArt(false);
     }, 3000);
 
