@@ -28,7 +28,6 @@ const Divider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      console.log("Hiding splash screen");
       setShowSplash(false);
     }, 3000);
 
