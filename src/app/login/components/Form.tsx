@@ -11,6 +11,7 @@ import { INTRANET } from "@/app/bindings/binding";
 import useSplashToggler from "@/app/store/useSplashStore";
 import SignOutSplash from "@/app/components/SignOutSplash";
 import useLogoutArtStore from "@/app/store/useLogoutSplashStore";
+import { toast } from "react-toastify";
 
 type FormFields = {
   email: string;
@@ -50,12 +51,20 @@ const Form = () => {
   const handleLogin = (data: FormFields) => {
     console.log(data);
     if (data.email !== account.email) {
-      console.log("wrong");
+      toast("Wrong Email", {
+        type: "error",
+        className: "bg-neutral-200 dark:bg-neutral-900",
+      });
+
       return;
     }
 
     if (data.password !== account.password) {
-      console.log("wrong");
+      toast("Wrong password", {
+        type: "error",
+        className:
+          "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-white",
+      });
       return;
     }
 
