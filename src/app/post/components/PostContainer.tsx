@@ -1,15 +1,26 @@
 "use client";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 interface Props {
   id: number;
+  generalPost?: boolean;
 }
 
-const PostContainer: React.FC<Props> = ({ id }) => {
+const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/post/${id}`);
+  };
+
   return (
-    <div>
+    <div
+      onClick={generalPost ? handleClick : undefined}
+      className={`${generalPost && "cursor-pointer"}`}
+    >
       <div className="flex items-start gap-2 mb-2">
         <div className="h-9 w-9 bg-gray-300 rounded-full"></div>
         <h1 className="text-lg font-semibold">Westlake User {id}</h1>

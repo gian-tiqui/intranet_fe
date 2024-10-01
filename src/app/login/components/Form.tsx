@@ -7,11 +7,12 @@ import { useForm } from "react-hook-form";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence } from "framer-motion";
 import MotionP from "@/app/components/animation/MotionP";
-import { INTRANET } from "@/app/bindings/binding";
+import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import useSplashToggler from "@/app/store/useSplashStore";
 import SignOutSplash from "@/app/components/SignOutSplash";
 import useLogoutArtStore from "@/app/store/useLogoutSplashStore";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 type FormFields = {
   email: string;
@@ -28,10 +29,6 @@ const Form = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormFields>();
-  const account = {
-    email: "user@wmc.com",
-    password: "password",
-  };
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -48,8 +45,8 @@ const Form = () => {
     }
   }, [setHidden, router]);
 
-  const handleLogin = (data: FormFields) => {
-    if (!data.email.endsWith("@wmc.com")) {
+  const handleLogin = async ({ email, password }: FormFields) => {
+    if (!email.endsWith("@wmc.com")) {
       toast("Email Invalid", {
         type: "error",
         className:
@@ -59,32 +56,36 @@ const Form = () => {
       return;
     }
 
-    if (data.email !== account.email) {
-      toast("Email not found", {
-        type: "error",
-        className:
-          "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-whit",
-      });
+    try {
+      const response = await axios.post(
+        `${API_BASE ? API_BASE : "http://localhost:8080"}/auth/login`,
+        {
+          email,
+          password,
+        }
+      );
 
-      return;
+      toast.dismiss();
+
+      setHidden(true);
+      Cookies.set(INTRANET, response.data.tokens.refreshToken);
+      localStorage.setItem(INTRANET, response.data.tokens.accessToken);
+      setShowSplash(true);
+      router.push("/");
+    } catch (error: unknown) {
+      if (typeof error === "object" && error !== null) {
+        const errorObj = error as { response: { data: { message: string } } };
+        if (errorObj.response.data.message === "User not found") {
+          toast("User not found", { type: "error" });
+        } else if (errorObj.response.data.message === "Password invalid") {
+          toast("Password invalid", { type: "error" });
+        }
+      } else {
+        console.error("Unexpected error:", error);
+      }
     }
 
-    if (data.password !== account.password) {
-      toast("Wrong password", {
-        type: "error",
-        className:
-          "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-white",
-      });
-      return;
-    }
-
-    toast.dismiss();
-
-    setHidden(true);
-    Cookies.set(INTRANET, "1");
-    localStorage.setItem(INTRANET, "1");
-    setShowSplash(true);
-    router.push("/");
+    return;
   };
 
   return (
