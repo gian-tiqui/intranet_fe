@@ -7,6 +7,8 @@ export interface MotionTemplateProps {
   duration?: number;
 }
 
+// This component will appear from the bottom of the UI when the children appear in the DOM.
+
 const MotionTemplate: React.FC<MotionTemplateProps> = ({
   children,
   duration = 0.75,
