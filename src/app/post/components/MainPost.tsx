@@ -12,7 +12,7 @@ const MainPost = () => {
         .fill(0)
         .slice(0, maxNum)
         .map((_, index) => (
-          <PostContainer id={index} key={index} />
+          <PostContainer id={index} key={index} generalPost />
         ))}
       <HoverBox className=" py-1 px-2 cursor-pointer rounded grid place-content-center">
         <button
