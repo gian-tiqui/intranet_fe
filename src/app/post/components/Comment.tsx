@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import HoverBox from "@/app/components/HoverBox";
 import CommentBar from "./CommentBar";
+import MotionTemplate from "@/app/components/animation/MotionTemplate";
+import { AnimatePresence } from "framer-motion";
 
 interface Props {
   isReply?: boolean;
@@ -28,15 +30,19 @@ const Comment: React.FC<Props> = ({ isReply }) => {
               <div onClick={() => setShowReplies(!showReplies)}>Replies</div>
             </HoverBox>
           )}
-          {showReplies && (
-            <div className="flex flex-col gap-2">
-              <Comment />
-              <Comment />
-              <Comment />
-              <Comment />
-              <CommentBar />
-            </div>
-          )}
+          <AnimatePresence>
+            {showReplies && (
+              <MotionTemplate>
+                <div className="flex flex-col gap-2">
+                  <Comment />
+                  <Comment />
+                  <Comment />
+                  <Comment />
+                  <CommentBar />
+                </div>
+              </MotionTemplate>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>
