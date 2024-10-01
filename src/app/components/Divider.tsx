@@ -14,6 +14,13 @@ import useShowSettingsStore from "../store/showSettingStore";
 import LoginSplash from "./RefreshSplashArt";
 import useSplashToggler from "../store/useSplashStore";
 
+/*
+ *
+ *
+ * Start commenting here
+ *
+ */
+
 interface Props {
   children?: ReactNode;
 }
