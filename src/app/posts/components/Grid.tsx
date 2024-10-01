@@ -14,7 +14,7 @@ const Grid = () => {
     <div className="grid place-content-center h-[600px]">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
         <div
-          onClick={() => router.push("/post")}
+          onClick={() => router.push("/posts")}
           className="w-32 h-32 p-4 rounded-lg dark:bg-neutral-800 border border-neutral-300 hover:bg-gray-300 cursor-pointer dark:border-neutral-700 dark:hover:bg-neutral-700"
         >
           <Icon icon={"carbon:view"} className="mb-2 h-5 w-5" />

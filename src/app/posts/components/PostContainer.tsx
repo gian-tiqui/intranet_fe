@@ -13,7 +13,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/post/${id}`);
+    router.push(`/posts/${id}`);
   };
 
   return (
