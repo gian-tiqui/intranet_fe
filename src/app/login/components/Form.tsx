@@ -79,13 +79,13 @@ const Form = () => {
           toast("User not found", {
             type: "error",
             className:
-              "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-whit",
+              "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-white",
           });
         } else if (errorObj.response.data.message === "Password invalid") {
           toast("Password invalid", {
             type: "error",
             className:
-              "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-whit",
+              "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-white",
           });
         }
       } else {
