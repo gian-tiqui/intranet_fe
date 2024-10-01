@@ -1,8 +1,14 @@
-import React from "react";
-import Replies from "./Replies";
+"use client";
+import React, { useState } from "react";
 import HoverBox from "@/app/components/HoverBox";
+import CommentBar from "./CommentBar";
 
-const Comment = () => {
+interface Props {
+  isReply?: boolean;
+}
+
+const Comment: React.FC<Props> = ({ isReply }) => {
+  const [showReplies, setShowReplies] = useState<boolean>(false);
   return (
     <div>
       <div className="flex gap-6">
@@ -17,9 +23,20 @@ const Comment = () => {
               nisi ut aliquip ex ea commodo consequat.
             </p>
           </div>
-          <HoverBox className="hover:bg-neutral-30 0 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded w-20">
-            <Replies />
-          </HoverBox>
+          {isReply && (
+            <HoverBox className="hover:bg-neutral-30 0 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded w-20 mb-5">
+              <div onClick={() => setShowReplies(!showReplies)}>Replies</div>
+            </HoverBox>
+          )}
+          {showReplies && (
+            <div className="flex flex-col gap-2">
+              <Comment />
+              <Comment />
+              <Comment />
+              <Comment />
+              <CommentBar />
+            </div>
+          )}
         </div>
       </div>
     </div>
