@@ -1,6 +1,6 @@
 "use client";
 import React, { ReactNode } from "react";
-import loginAnim from "../assets/logoutAnim.json";
+import loginAnim from "../assets/logoutAnim2.json";
 import { useLottie } from "lottie-react";
 
 interface Props {

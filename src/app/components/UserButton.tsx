@@ -35,6 +35,12 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
     setShown(true);
   };
 
+  const handleShowSettingsMobile = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setHidden(false);
+    setShown(true);
+  };
+
   const handleOpenModal = () => {
     setUVisible(true);
   };
@@ -55,10 +61,19 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
               <p>My posts</p>
             </div>
           </HoverBox>
-          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
+          <HoverBox className="hidden md:block hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
             <div
               className="w-full flex gap-2 items-center"
               onClick={handleShowSettings}
+            >
+              <Icon icon={"uil:setting"} className="w-6 h-6" />
+              <p>Settings</p>
+            </div>
+          </HoverBox>
+          <HoverBox className="block md:hidden hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
+            <div
+              className="w-full flex gap-2 items-center"
+              onClick={handleShowSettingsMobile}
             >
               <Icon icon={"uil:setting"} className="w-6 h-6" />
               <p>Settings</p>

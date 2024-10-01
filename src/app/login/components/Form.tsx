@@ -76,6 +76,8 @@ const Form = () => {
       return;
     }
 
+    toast.dismiss();
+
     setHidden(true);
     Cookies.set(INTRANET, "1");
     localStorage.setItem(INTRANET, "1");
