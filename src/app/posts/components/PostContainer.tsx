@@ -7,6 +7,12 @@ import { format } from "date-fns";
 import React, { useState, useEffect } from "react";
 import PostSkeleton from "./PostSkeleton";
 
+/*
+ * @TODO
+ * Loading components initialization starts here
+ *
+ */
+
 interface Props {
   id: number;
   generalPost?: boolean;
