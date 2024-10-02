@@ -5,6 +5,7 @@ import PostContainer from "../components/PostContainer";
 
 const PostPage = ({ params }: { params: { id: number } }) => {
   const { id } = params;
+
   return (
     <div className="">
       <AuthListener />

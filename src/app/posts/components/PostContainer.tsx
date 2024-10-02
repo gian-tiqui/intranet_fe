@@ -1,8 +1,11 @@
 "use client";
+import usePost from "@/app/custom-hooks/post";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React from "react";
+import { format } from "date-fns";
+import React, { useState, useEffect } from "react";
+import PostSkeleton from "./PostSkeleton";
 
 interface Props {
   id: number;
@@ -11,10 +14,22 @@ interface Props {
 
 const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const router = useRouter();
+  const post = usePost(id);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (post) {
+      setLoading(false);
+    }
+  }, [post]);
 
   const handleClick = () => {
     router.push(`/posts/${id}`);
   };
+
+  if (!loading) {
+    return <PostSkeleton />;
+  }
 
   return (
     <div
@@ -23,23 +38,21 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     >
       <div className="flex items-start gap-2 mb-2">
         <div className="h-9 w-9 bg-gray-300 rounded-full"></div>
-        <h1 className="text-lg font-semibold">Westlake User {id}</h1>
+        <h1 className="text-lg font-semibold">
+          {post?.user?.firstName} {post?.user?.lastName}
+        </h1>
       </div>
 
-      <h1 className="text-xl font-bold">Lorem Ipsum</h1>
-      <h4 className="text-xs mb-3">September 30, 2024</h4>
+      <h1 className="text-xl font-bold">{post?.title}</h1>
+      <h4 className="text-xs mb-3">
+        {post?.createdAt
+          ? format(new Date(post.createdAt), "MMMM dd, yyyy")
+          : "Unknown Date"}
+      </h4>
 
       <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-2" />
 
-      <p className="text-md mb-2 max-w-full">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
-      </p>
+      <p className="text-md mb-2 max-w-full">{post?.message}</p>
       <Image
         className="h-96 w-full bg-neutral-100 mb-6"
         src="https://nextjs.org/icons/next.svg"
