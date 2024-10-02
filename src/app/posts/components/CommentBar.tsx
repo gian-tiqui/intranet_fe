@@ -3,6 +3,8 @@ import React, { useRef } from "react";
 import { Icon } from "@iconify/react";
 import { useForm } from "react-hook-form";
 import { CreateComment } from "@/app/types/types";
+import { API_BASE, INTRANET } from "@/app/bindings/binding";
+import apiClient from "@/app/http-common/apiUrl";
 
 interface Props {
   postId?: number;
@@ -26,7 +28,7 @@ const CommentBar: React.FC<Props> = ({ postId, parentId }) => {
     textarea.style.height = `${textarea.scrollHeight}px`;
   };
 
-  const handleCommentSubmit = (data: FormFields) => {
+  const handleCommentSubmit = async (data: FormFields) => {
     const createComment: CreateComment = {
       userId: 7,
       message: data.message,
@@ -34,7 +36,16 @@ const CommentBar: React.FC<Props> = ({ postId, parentId }) => {
       parentId,
     };
 
-    console.log(createComment);
+    try {
+      await apiClient.post(`${API_BASE}/comment`, {
+        ...createComment,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

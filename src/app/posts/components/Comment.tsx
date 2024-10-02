@@ -39,7 +39,7 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
                     <Comment key={reply.cid} comment={reply} postId={postId} />
                   ))}
                 </div>
-                <CommentBar parentId={comment.cid} postId={postId} />
+                <CommentBar parentId={comment.cid} />
               </MotionTemplate>
             )}
           </AnimatePresence>
