@@ -8,6 +8,7 @@ import React, { useState, useEffect } from "react";
 import PostSkeleton from "./PostSkeleton";
 import Comments from "./Comments";
 import { PostComment } from "@/app/types/types";
+import CommentBar from "./CommentBar";
 
 /*
  * @TODO
@@ -94,6 +95,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
       {post?.comments && (
         <Comments comments={post?.comments as PostComment[]} postId={id} />
       )}
+      <CommentBar postId={id} />
     </>
   );
 };
