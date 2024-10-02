@@ -9,9 +9,10 @@ import { PostComment } from "@/app/types/types";
 interface Props {
   isReply?: boolean;
   comment: PostComment;
+  postId: number;
 }
 
-const Comment: React.FC<Props> = ({ isReply, comment }) => {
+const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
   const [showReplies, setShowReplies] = useState<boolean>(false);
 
   return (
@@ -35,10 +36,10 @@ const Comment: React.FC<Props> = ({ isReply, comment }) => {
               <MotionTemplate>
                 <div className="flex flex-col gap-2 mb-5">
                   {comment.replies?.map((reply) => (
-                    <Comment key={reply.cid} comment={reply} />
+                    <Comment key={reply.cid} comment={reply} postId={postId} />
                   ))}
                 </div>
-                <CommentBar />
+                <CommentBar parentId={comment.parentId} postId={postId} />
               </MotionTemplate>
             )}
           </AnimatePresence>

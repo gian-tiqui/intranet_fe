@@ -68,4 +68,11 @@ type PostComment = {
   replies?: PostComment[];
 };
 
-export type { Post, GroupedPosts, User, Comment, PostComment };
+type CreateComment = {
+  userId: number;
+  postId?: number;
+  parentId?: number;
+  message?: string;
+};
+
+export type { Post, GroupedPosts, User, Comment, PostComment, CreateComment };

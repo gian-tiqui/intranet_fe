@@ -92,7 +92,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
       </div>
       <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-6" />
       {post?.comments && (
-        <Comments comments={post?.comments as PostComment[]} />
+        <Comments comments={post?.comments as PostComment[]} postId={id} />
       )}
     </>
   );
