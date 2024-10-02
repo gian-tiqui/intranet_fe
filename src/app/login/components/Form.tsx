@@ -7,12 +7,12 @@ import { useForm } from "react-hook-form";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence } from "framer-motion";
 import MotionP from "@/app/components/animation/MotionP";
-import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import useSplashToggler from "@/app/store/useSplashStore";
 import SignOutSplash from "@/app/components/SignOutSplash";
 import useLogoutArtStore from "@/app/store/useLogoutSplashStore";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { INTRANET, API_BASE } from "@/app/bindings/binding";
 
 type FormFields = {
   email: string;
@@ -50,7 +50,7 @@ const Form = () => {
       toast("Email Invalid", {
         type: "error",
         className:
-          "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-whit",
+          "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-white",
       });
 
       return;
@@ -75,19 +75,11 @@ const Form = () => {
     } catch (error: unknown) {
       if (typeof error === "object" && error !== null) {
         const errorObj = error as { response: { data: { message: string } } };
-        if (errorObj.response.data.message === "User not found") {
-          toast("User not found", {
-            type: "error",
-            className:
-              "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-white",
-          });
-        } else if (errorObj.response.data.message === "Password invalid") {
-          toast("Password invalid", {
-            type: "error",
-            className:
-              "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-white",
-          });
-        }
+        toast(errorObj.response.data.message, {
+          type: "error",
+          className:
+            "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-white",
+        });
       } else {
         console.error("Unexpected error:", error);
       }

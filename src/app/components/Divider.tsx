@@ -57,7 +57,7 @@ const Divider: React.FC<Props> = ({ children }) => {
     open: isMobile
       ? {
           x: 0,
-          width: "100%",
+          width: "75%",
           opacity: 1,
           transition: { type: "spring", stiffness: 300, damping: 30 },
         }
