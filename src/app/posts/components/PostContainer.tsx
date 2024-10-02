@@ -33,7 +33,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     router.push(`/posts/${id}`);
   };
 
-  if (!loading) {
+  if (loading) {
     return <PostSkeleton />;
   }
 
