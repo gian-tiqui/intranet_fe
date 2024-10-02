@@ -44,7 +44,7 @@ const PostList = () => {
                   <h2 className="text-xs font-semibold ms-2 mb-2">
                     {format(new Date(date), "MMMM dd, yyyy")}
                   </h2>
-                  <div className="flex flex-col-reverse">
+                  <div className="flex flex-col">
                     {groupedPosts[date].map((post, index) => (
                       <Link href={`/posts/${post.pid}`} key={index}>
                         <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 py-1 px-2 cursor-pointer rounded">
