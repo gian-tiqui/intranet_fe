@@ -2,15 +2,18 @@
 import React, { useEffect, useState } from "react";
 import Comment from "./Comment";
 import CommentSkeleton from "./CommentSkeleton";
+import { PostComment } from "@/app/types/types";
 
-const Comments = () => {
+interface Props {
+  comments: PostComment[];
+}
+
+const Comments: React.FC<Props> = ({ comments }) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-  }, []);
+    setLoading(false);
+  }, [comments]);
 
   if (loading) {
     return <CommentSkeleton />;
@@ -18,11 +21,9 @@ const Comments = () => {
 
   return (
     <div className="flex flex-col gap-6 pb-24">
-      {Array(5)
-        .fill(0)
-        .map((_, index) => (
-          <Comment isReply key={index} />
-        ))}
+      {comments.map((comment) => (
+        <Comment isReply key={comment.cid} comment={comment} />
+      ))}
     </div>
   );
 };
