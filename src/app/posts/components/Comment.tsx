@@ -19,7 +19,9 @@ const Comment: React.FC<Props> = ({ isReply, comment }) => {
       <div className="flex gap-6">
         <div className="h-10 w-10 bg-white rounded-full"></div>
         <div className="max-w-[85%] mt-1">
-          <p className="font-bold">{comment.user.firstName}</p>
+          <p className="font-bold">
+            {comment.user.firstName} {comment.user.lastName}
+          </p>
           <div className="mb-1">
             <p>{comment.message}</p>
           </div>
@@ -31,12 +33,12 @@ const Comment: React.FC<Props> = ({ isReply, comment }) => {
           <AnimatePresence>
             {showReplies && (
               <MotionTemplate>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 mb-5">
                   {comment.replies?.map((reply) => (
-                    <Comment key={reply.cid} comment={comment} />
+                    <Comment key={reply.cid} comment={reply} />
                   ))}
-                  <CommentBar />
                 </div>
+                <CommentBar />
               </MotionTemplate>
             )}
           </AnimatePresence>
