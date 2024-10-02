@@ -6,6 +6,7 @@ import MotionTemplate from "@/app/components/animation/MotionTemplate";
 import HoverBox from "@/app/components/HoverBox";
 import Link from "next/link";
 import usePosts from "@/app/custom-hooks/posts";
+import PostListSkeleton from "./PostListSkeleton";
 
 const groupPostsByDate = (posts: Post[]) => {
   return posts.reduce((groups: GroupedPosts, post: Post) => {
@@ -26,6 +27,10 @@ const PostList = () => {
   const showMore = () => {
     setMaxNum((prevMax) => prevMax + 3);
   };
+
+  if (!posts) {
+    return <PostListSkeleton />;
+  }
 
   return (
     <>
