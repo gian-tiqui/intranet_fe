@@ -15,10 +15,10 @@ const Comment: React.FC<Props> = ({ isReply, comment }) => {
   const [showReplies, setShowReplies] = useState<boolean>(false);
 
   return (
-    <div className="">
+    <div>
       <div className="flex gap-6">
         <div className="h-10 w-10 bg-white rounded-full"></div>
-        <div className="max-w-[85%] mt-1">
+        <div className="mt-1 w-full">
           <p className="font-bold">
             {comment.user.firstName} {comment.user.lastName}
           </p>
