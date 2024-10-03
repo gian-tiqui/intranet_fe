@@ -37,12 +37,15 @@ const CommentBar: React.FC<Props> = ({ postId, parentId }) => {
     };
 
     try {
-      await apiClient.post(`${API_BASE}/comment`, {
+      const response = await apiClient.post(`${API_BASE}/comment`, {
         ...createComment,
         headers: {
           Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
         },
       });
+
+      if (response.data.statusCode === 200) {
+      }
     } catch (error) {
       console.error(error);
     }

@@ -13,6 +13,7 @@ import useLogoutArtStore from "@/app/store/useLogoutSplashStore";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { INTRANET, API_BASE } from "@/app/bindings/binding";
+import { jwtDecode } from "jwt-decode";
 
 type FormFields = {
   email: string;
@@ -71,7 +72,13 @@ const Form = () => {
       Cookies.set(INTRANET, response.data.tokens.refreshToken);
       localStorage.setItem(INTRANET, response.data.tokens.accessToken);
       setShowSplash(true);
-      router.push("/");
+
+      const decoded: { departmentName: string } = jwtDecode(
+        response.data.tokens.accessToken
+      );
+
+      if (decoded.departmentName === "ADMIN") router.push("/dashboard");
+      else router.push("/");
     } catch (error: unknown) {
       if (typeof error === "object" && error !== null) {
         const errorObj = error as { response: { data: { message: string } } };

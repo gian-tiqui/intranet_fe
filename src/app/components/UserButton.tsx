@@ -8,6 +8,7 @@ import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
 import { INTRANET } from "../bindings/binding";
 import useShowSettingsStore from "../store/showSettingStore";
 import useLogoutArtStore from "../store/useLogoutSplashStore";
+import { jwtDecode } from "jwt-decode";
 
 /*
  * @TODO: [fix] user modal not closing on document click
@@ -35,6 +36,18 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
     localStorage.removeItem(INTRANET);
 
     router.push("/login");
+  };
+
+  const decodeData = () => {
+    const at = localStorage.getItem(INTRANET);
+
+    const decoded: {
+      departmentName: string;
+      firstName: string;
+      lastName: string;
+    } = jwtDecode(at || "");
+
+    return decoded;
   };
 
   const handleShowSettings = (event: React.MouseEvent) => {
@@ -102,8 +115,12 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
         <div className="flex items-center gap-3">
           <div className="rounded-full bg-neutral-200 h-8 w-8"></div>
           <div>
-            <p className="text-sm">Westlake User</p>
-            <p className="text-xs truncate">IT Department</p>
+            <p className="text-sm">
+              {decodeData().firstName} {decodeData().lastName}
+            </p>
+            <p className="text-xs truncate">
+              {decodeData().departmentName} Department
+            </p>
           </div>
         </div>
       </HoverBox>

@@ -23,8 +23,8 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
           <p className="font-bold">
             {comment.user.firstName} {comment.user.lastName}
           </p>
-          <div className="mb-1">
-            <p>{comment.message}</p>
+          <div className="">
+            <p className="">{comment.message}</p>
           </div>
           {isReply && (
             <HoverBox className="hover:bg-neutral-30 0 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded w-20 mb-5">

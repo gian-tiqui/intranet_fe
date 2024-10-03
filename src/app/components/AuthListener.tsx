@@ -29,7 +29,7 @@ const AuthListener = () => {
     checkAuth();
   }, [pathname, router, setHidden]);
 
-  return <div></div>;
+  return <></>;
 };
 
 export default AuthListener;
