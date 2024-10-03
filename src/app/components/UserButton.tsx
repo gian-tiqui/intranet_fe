@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HoverBox from "./HoverBox";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Cookies from "js-cookie";
@@ -10,13 +10,6 @@ import useShowSettingsStore from "../store/showSettingStore";
 import useLogoutArtStore from "../store/useLogoutSplashStore";
 import { jwtDecode } from "jwt-decode";
 
-/*
- * @TODO: [fix] user modal not closing on document click
- * test
- *
- * Possible Roots: Zustand Store/Appearance Handlers
- */
-
 interface Props {
   uVisible: boolean;
   setUVisible: (visible: boolean) => void;
@@ -26,6 +19,12 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
   const { setShowLogoutArt } = useLogoutArtStore();
   const { setHidden } = useNavbarVisibilityStore();
   const { setShown } = useShowSettingsStore();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [userData, setUserData] = useState<{
+    firstName: string;
+    lastName: string;
+    departmentName: string;
+  } | null>(null);
   const router = useRouter();
 
   const handleLogout = (event: React.MouseEvent) => {
@@ -34,26 +33,28 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
     setHidden(false);
     Cookies.remove(INTRANET);
     localStorage.removeItem(INTRANET);
-
     router.push("/login");
   };
 
   const decodeData = () => {
     const at = localStorage.getItem(INTRANET);
-    let decoded: {
-      departmentName: string;
-      firstName: string;
-      lastName: string;
-    } | null;
-
     if (at) {
-      decoded = jwtDecode(at);
+      return jwtDecode<{
+        departmentName: string;
+        firstName: string;
+        lastName: string;
+      }>(at);
     }
-
-    decoded = null;
-
-    return decoded;
+    return null;
   };
+
+  useEffect(() => {
+    const data = decodeData();
+    if (data) {
+      setUserData(data);
+    }
+    setLoading(false);
+  }, []);
 
   const handleShowSettings = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -120,15 +121,15 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
         <div className="flex items-center gap-3">
           <div className="rounded-full bg-neutral-200 h-8 w-8"></div>
           <div>
-            {decodeData() && (
+            {loading ? (
+              <p className="text-sm">Loading...</p>
+            ) : userData ? (
               <>
-                <p className="text-sm">
-                  {decodeData().firstName} {decodeData().lastName}
-                </p>
-                <p className="text-xs truncate">
-                  {decodeData().departmentName} Department
-                </p>
+                <p className="text-sm">{`${userData.firstName} ${userData.lastName}`}</p>
+                <p className="text-xs truncate">{userData.departmentName}</p>
               </>
+            ) : (
+              <p className="text-sm">User not found</p>
             )}
           </div>
         </div>

@@ -69,7 +69,18 @@ const Form = () => {
       toast.dismiss();
 
       setHidden(true);
-      Cookies.set(INTRANET, response.data.tokens.refreshToken);
+      const rt = response.data.tokens.refreshToken;
+      const decodedToken = jwtDecode<{ exp?: number }>(rt);
+
+      const expiresInSeconds = decodedToken.exp
+        ? decodedToken.exp - Math.floor(Date.now() / 1000)
+        : 0;
+      const expirationDays = Math.max(
+        Math.floor(expiresInSeconds / (24 * 60 * 60)),
+        1
+      );
+
+      Cookies.set(INTRANET, rt, { expires: expirationDays });
       localStorage.setItem(INTRANET, response.data.tokens.accessToken);
       setShowSplash(true);
 

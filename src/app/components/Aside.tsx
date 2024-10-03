@@ -13,9 +13,9 @@ import useTokenStore from "../store/tokenStore";
 import { INTRANET } from "../bindings/binding";
 
 interface Props {
-  variants: Variants;
-  isCollapsed: boolean;
-  setIsCollapsed: (collapsed: boolean) => void;
+  variants?: Variants;
+  isCollapsed?: boolean;
+  setIsCollapsed?: (collapsed: boolean) => void;
 }
 
 const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
@@ -46,7 +46,9 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
             <Icon
               icon="iconoir:sidebar-collapse"
               className="h-5 w-5"
-              onClick={() => setIsCollapsed(!isCollapsed)}
+              onClick={
+                setIsCollapsed ? () => setIsCollapsed(!isCollapsed) : undefined
+              }
             />
           </HoverBox>
 
@@ -106,7 +108,9 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
             <Icon
               icon="iconoir:sidebar-collapse"
               className="h-5 w-5"
-              onClick={() => setIsCollapsed(!isCollapsed)}
+              onClick={
+                setIsCollapsed ? () => setIsCollapsed(!isCollapsed) : undefined
+              }
             />
           </HoverBox>
 
