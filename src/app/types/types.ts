@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 type User = {
   id: number;
   email: string;
@@ -75,4 +77,17 @@ type CreateComment = {
   message?: string;
 };
 
-export type { Post, GroupedPosts, User, Comment, PostComment, CreateComment };
+type ABoardSelector = {
+  name: string;
+  component: ReactNode;
+};
+
+export type {
+  Post,
+  GroupedPosts,
+  User,
+  Comment,
+  PostComment,
+  CreateComment,
+  ABoardSelector,
+};
