@@ -2,24 +2,31 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { motion, Variants } from "framer-motion";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import HoverBox from "./HoverBox";
 import useShowPostStore from "../store/showPostStore";
 import useShowUserModalStore from "../store/showUserModal";
 import UserButton from "./UserButton";
 import { useRouter } from "next/navigation";
 import PostList from "../posts/components/PostList";
+import useTokenStore from "../store/tokenStore";
+import { INTRANET } from "../bindings/binding";
 
 interface Props {
-  variants: Variants;
-  isCollapsed: boolean;
-  setIsCollapsed: (collapsed: boolean) => void;
+  variants?: Variants;
+  isCollapsed?: boolean;
+  setIsCollapsed?: (collapsed: boolean) => void;
 }
 
 const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
   const { setVisible } = useShowPostStore();
   const router = useRouter();
   const { uVisible, setUVisible } = useShowUserModalStore();
+  const { setToken } = useTokenStore();
+
+  useEffect(() => {
+    setToken(localStorage.getItem(INTRANET) || "");
+  }, [setToken]);
 
   return (
     <>
@@ -39,7 +46,9 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
             <Icon
               icon="iconoir:sidebar-collapse"
               className="h-5 w-5"
-              onClick={() => setIsCollapsed(!isCollapsed)}
+              onClick={
+                setIsCollapsed ? () => setIsCollapsed(!isCollapsed) : undefined
+              }
             />
           </HoverBox>
 
@@ -99,7 +108,9 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
             <Icon
               icon="iconoir:sidebar-collapse"
               className="h-5 w-5"
-              onClick={() => setIsCollapsed(!isCollapsed)}
+              onClick={
+                setIsCollapsed ? () => setIsCollapsed(!isCollapsed) : undefined
+              }
             />
           </HoverBox>
 

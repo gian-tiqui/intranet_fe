@@ -34,28 +34,30 @@ const PostList = () => {
 
   return (
     <>
-      {Object.keys(groupedPosts)
-        .slice(0, maxNum)
-        .map((date) => (
-          <MotionTemplate key={date}>
-            <div className="px-3 mb-8">
-              <div key={date}>
-                <h2 className="text-xs font-semibold ms-2 mb-2">
-                  {format(new Date(date), "MMMM dd, yyyy")}
-                </h2>
-                <div className="flex flex-col-reverse">
-                  {groupedPosts[date].map((post, index) => (
-                    <Link href={`/posts/${post.pid}`} key={index}>
-                      <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 py-1 px-2 cursor-pointer rounded">
-                        <p>{post.title}</p>
-                      </HoverBox>
-                    </Link>
-                  ))}
+      <div>
+        {Object.keys(groupedPosts)
+          .slice(0, maxNum)
+          .map((date) => (
+            <MotionTemplate key={date}>
+              <div className="px-3 mb-8">
+                <div key={date}>
+                  <h2 className="text-xs font-semibold ms-2 mb-2">
+                    {format(new Date(date), "MMMM dd, yyyy")}
+                  </h2>
+                  <div className="flex flex-col">
+                    {groupedPosts[date].map((post, index) => (
+                      <Link href={`/posts/${post.pid}`} key={index}>
+                        <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 py-1 px-2 cursor-pointer rounded">
+                          <p>{post.title}</p>
+                        </HoverBox>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          </MotionTemplate>
-        ))}
+            </MotionTemplate>
+          ))}
+      </div>
 
       <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 py-1 px-2 mx-4 cursor-pointer rounded">
         <button onClick={showMore} className="w-full">

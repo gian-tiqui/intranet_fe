@@ -4,26 +4,27 @@ import HoverBox from "@/app/components/HoverBox";
 import CommentBar from "./CommentBar";
 import MotionTemplate from "@/app/components/animation/MotionTemplate";
 import { AnimatePresence } from "framer-motion";
+import { PostComment } from "@/app/types/types";
 
 interface Props {
   isReply?: boolean;
+  comment: PostComment;
+  postId: number;
 }
 
-const Comment: React.FC<Props> = ({ isReply }) => {
+const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
   const [showReplies, setShowReplies] = useState<boolean>(false);
+
   return (
     <div>
       <div className="flex gap-6">
         <div className="h-10 w-10 bg-white rounded-full"></div>
-        <div className="max-w-[85%] mt-1">
-          <p className="font-bold">Westlake User</p>
-          <div className="mb-1">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
-            </p>
+        <div className="mt-1 w-full">
+          <p className="font-bold">
+            {comment.user.firstName} {comment.user.lastName}
+          </p>
+          <div className="">
+            <p className="">{comment.message}</p>
           </div>
           {isReply && (
             <HoverBox className="hover:bg-neutral-30 0 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded w-20 mb-5">
@@ -33,13 +34,12 @@ const Comment: React.FC<Props> = ({ isReply }) => {
           <AnimatePresence>
             {showReplies && (
               <MotionTemplate>
-                <div className="flex flex-col gap-2">
-                  <Comment />
-                  <Comment />
-                  <Comment />
-                  <Comment />
-                  <CommentBar />
+                <div className="flex flex-col gap-2 mb-5">
+                  {comment.replies?.map((reply) => (
+                    <Comment key={reply.cid} comment={reply} postId={postId} />
+                  ))}
                 </div>
+                <CommentBar parentId={comment.cid} />
               </MotionTemplate>
             )}
           </AnimatePresence>

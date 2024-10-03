@@ -1,19 +1,39 @@
 "use client";
 import HoverBox from "@/app/components/HoverBox";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PostContainer from "./PostContainer";
+import { API_BASE, INTRANET } from "@/app/bindings/binding";
+import { Post } from "@/app/types/types";
+import axios from "axios";
 
 const MainPost = () => {
   const [maxNum, setMaxNum] = useState<number>(3);
 
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${API_BASE}/post`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+          },
+        });
+
+        setPosts(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div>
-      {Array(10)
-        .fill(0)
-        .slice(0, maxNum)
-        .map((_, index) => (
-          <PostContainer id={index} key={index} generalPost />
-        ))}
+      {posts.slice(0, maxNum).map((post) => (
+        <PostContainer id={post.pid} key={post.pid} generalPost />
+      ))}
       <HoverBox className=" py-1 px-2 cursor-pointer rounded grid place-content-center">
         <button
           onClick={() => setMaxNum((prevMax) => prevMax + 3)}

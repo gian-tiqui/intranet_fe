@@ -24,16 +24,55 @@ type Post = {
   pid: number;
   userId: number;
   deptId: number;
-  title: string;
-  message: string;
-  imageLocation: string;
+  title?: string;
+  message?: string;
+  imageLocation?: string;
   createdAt: Date;
   updatedAt: Date;
   user?: User;
+  comments?: Comment[];
 };
 
 type GroupedPosts = {
   [date: string]: Post[];
 };
 
-export type { Post, GroupedPosts, User };
+type Comment = {
+  cid: number;
+  userId: number;
+  postId: number;
+  parentId: number;
+  message?: string;
+  imageLocation?: string;
+  createdAt: Date;
+  updatedAt: Date;
+
+  user: User;
+  post: Post;
+  // parentComment: number;
+  replies?: Comment[];
+};
+
+type PostComment = {
+  cid: number;
+  userId: number;
+  postId: number;
+  parentId: number;
+  message?: string;
+  imageLocation?: string;
+  createdAt: Date;
+  updatedAt: Date;
+
+  user: User;
+  post: Post;
+  replies?: PostComment[];
+};
+
+type CreateComment = {
+  userId: number;
+  postId?: number;
+  parentId?: number;
+  message?: string;
+};
+
+export type { Post, GroupedPosts, User, Comment, PostComment, CreateComment };
