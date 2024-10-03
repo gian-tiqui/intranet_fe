@@ -12,7 +12,7 @@ import CommentBar from "./CommentBar";
 
 /*
  * @TODO
- * Loading components initialization starts here
+ * Change the approach in fetching comments
  *
  */
 

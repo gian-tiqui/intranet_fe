@@ -54,8 +54,9 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <div className="w-full bg-neutral-200 dark:bg-neutral-700 h-screen">
-        {selectedComp}
+      <div className="w-full bg-neutral-200 dark:bg-neutral-700 h-screen ">
+        <div className="w-full bg-neutral-700 p-5 shadow">sss</div>
+        <div className="p-5">{selectedComp}</div>
       </div>
     </div>
   );
