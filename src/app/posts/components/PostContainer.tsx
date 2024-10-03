@@ -12,7 +12,7 @@ import CommentBar from "./CommentBar";
 
 /*
  * @TODO
- * Change the approach in fetching comments
+ * Apply polling approach
  *
  */
 
