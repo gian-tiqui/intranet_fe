@@ -5,20 +5,34 @@ import PostContainer from "./PostContainer";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import { Post } from "@/app/types/types";
 import axios from "axios";
+import useHideSearchBarStore from "@/app/store/hideSearchBar";
+import usePostUriStore from "@/app/store/usePostUri";
+import apiClient from "@/app/http-common/apiUrl";
 
 const MainPost = () => {
+  const { setSearchBarHidden } = useHideSearchBarStore();
   const [maxNum, setMaxNum] = useState<number>(3);
+  const { uriPost } = usePostUriStore();
+
+  useEffect(() => {
+    setSearchBarHidden(true);
+
+    return () => setSearchBarHidden(false);
+  }, [setSearchBarHidden]);
 
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${API_BASE}/post`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-          },
-        });
+        const response = await apiClient.get(
+          `${API_BASE}/post?search=${uriPost}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+            },
+          }
+        );
 
         setPosts(response.data);
       } catch (error) {
@@ -27,7 +41,7 @@ const MainPost = () => {
     };
 
     fetchData();
-  }, []);
+  }, [uriPost]);
 
   return (
     <div>

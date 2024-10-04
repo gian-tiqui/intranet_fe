@@ -27,6 +27,20 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
   } | null>(null);
   const router = useRouter();
 
+  useEffect(() => {
+    const handleClick = () => {
+      if (uVisible) {
+        setUVisible(false);
+      }
+    };
+
+    document.addEventListener("click", handleClick);
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, [setUVisible, uVisible]);
+
   const handleLogout = (event: React.MouseEvent) => {
     event.stopPropagation();
     setShowLogoutArt(true);
