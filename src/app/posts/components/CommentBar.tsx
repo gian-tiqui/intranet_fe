@@ -1,14 +1,16 @@
 "use client";
-import React, { useRef } from "react";
+import React, { Dispatch, SetStateAction, useRef } from "react";
 import { Icon } from "@iconify/react";
 import { useForm } from "react-hook-form";
-import { CreateComment } from "@/app/types/types";
+import { CreateComment, PostComment } from "@/app/types/types";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
 
 interface Props {
   postId?: number;
   parentId?: number;
+  comments?: PostComment[];
+  setComments?: Dispatch<SetStateAction<PostComment[]>>;
 }
 
 interface FormFields {
@@ -17,7 +19,7 @@ interface FormFields {
 
 const CommentBar: React.FC<Props> = ({ postId, parentId }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { register, handleSubmit } = useForm<FormFields>();
+  const { register, handleSubmit, reset } = useForm<FormFields>();
 
   const handleInput = () => {
     const textarea = textareaRef.current;
@@ -44,7 +46,8 @@ const CommentBar: React.FC<Props> = ({ postId, parentId }) => {
         },
       });
 
-      if (response.data.statusCode === 200) {
+      if (response.status === 201) {
+        reset();
       }
     } catch (error) {
       console.error(error);
