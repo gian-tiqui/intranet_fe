@@ -7,14 +7,6 @@ import { Department } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { useEffect, useState } from "react";
 
-interface FormFields {
-  userId: number;
-  deptId: number;
-  message?: string;
-  memo?: File;
-  title: string;
-}
-
 const PostModal = () => {
   const { setVisible } = useShowPostStore();
   const { setIsCollapsed } = useToggleStore();
@@ -48,10 +40,6 @@ const PostModal = () => {
     }
   };
 
-  const handlePost = (data: FormFields) => {
-    console.log(data);
-  };
-
   const handleFormClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
@@ -74,7 +62,7 @@ const PostModal = () => {
           <div className="rounded-full w-10 h-10 bg-gray-400"></div>
           <p className="font-bold">Westlake User</p>
         </div>
-        <form onSubmit={handleSubmit(handlePost)}>
+        <form>
           <div>
             <input
               className="w-full outline-none p-2 dark:bg-neutral-900"
