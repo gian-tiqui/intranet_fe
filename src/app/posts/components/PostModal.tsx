@@ -6,12 +6,25 @@ import useShowPostStore from "@/app/store/showPostStore";
 import { Department } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+
+interface FormFields {
+  userId: number;
+  deptId: number;
+  message?: string;
+  memo?: File;
+  title?: string;
+}
 
 const PostModal = () => {
   const { setVisible } = useShowPostStore();
   const { setIsCollapsed } = useToggleStore();
-  const [fileName, setFileName] = useState("");
   const [departments, setDepartments] = useState<Department[]>([]);
+  const { register, handleSubmit } = useForm<FormFields>();
+
+  const handlePost = (data: FormFields) => {
+    console.log(data);
+  };
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -31,14 +44,6 @@ const PostModal = () => {
 
     fetchDepartments();
   }, []);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFileName(e.target.files[0].name);
-    } else {
-      setFileName("");
-    }
-  };
 
   const handleFormClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -62,16 +67,18 @@ const PostModal = () => {
           <div className="rounded-full w-10 h-10 bg-gray-400"></div>
           <p className="font-bold">Westlake User</p>
         </div>
-        <form>
+        <form onSubmit={handleSubmit(handlePost)}>
           <div>
             <input
               className="w-full outline-none p-2 dark:bg-neutral-900"
               placeholder="Memo title"
+              {...register("title")}
             />
             <hr className="w-full border-b border dark:border-neutral-800" />
             <textarea
               className="w-full h-40 outline-none p-2 dark:bg-neutral-900"
               placeholder="Is there something you want to write for the memo?"
+              {...register("message")}
             />
 
             <div className="w-full p-4 mb-4 dark:bg-neutral-900 rounded-md">
@@ -79,16 +86,14 @@ const PostModal = () => {
                 <input
                   type="file"
                   className="absolute inset-0 opacity-0 cursor-pointer"
-                  onChange={handleFileChange}
+                  {...register("memo")}
                 />
                 <div className="flex flex-col items-center justify-center text-gray-500">
                   <Icon
                     icon={"material-symbols:upload"}
                     className="h-10 w-10"
                   />
-                  <span className="mt-2 text-sm">
-                    {fileName ? fileName : "Click to upload memo"}
-                  </span>
+                  <span className="mt-2 text-sm">{"Click to upload memo"}</span>
                 </div>
               </div>
             </div>
