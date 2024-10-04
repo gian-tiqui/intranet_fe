@@ -5,14 +5,16 @@ import useToggleStore from "@/app/store/navbarCollapsedStore";
 import useShowPostStore from "@/app/store/showPostStore";
 import { Department } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 interface FormFields {
   userId: number;
   deptId: number;
   message?: string;
-  memo?: File;
+  memo?: FileList;
   title?: string;
 }
 
@@ -21,9 +23,60 @@ const PostModal = () => {
   const { setIsCollapsed } = useToggleStore();
   const [departments, setDepartments] = useState<Department[]>([]);
   const { register, handleSubmit } = useForm<FormFields>();
+  const [fileName, setFileName] = useState<string>("");
+  const toastClass = "";
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFileName(e.target.files[0].name);
+    }
+  };
+
+  const decodeData = () => {
+    const at = localStorage.getItem(INTRANET);
+
+    if (at) {
+      const decoded: { firstName: string; lastName: string } = jwtDecode(at);
+
+      return decoded;
+    }
+
+    return null;
+  };
 
   const handlePost = (data: FormFields) => {
-    console.log(data);
+    const at = localStorage.getItem(INTRANET);
+
+    if (at) {
+      const decode: { sub: number } = jwtDecode(at);
+
+      data.userId = decode.sub;
+
+      const formData = new FormData();
+      formData.append("userId", String(data.userId));
+      formData.append("deptId", String(data.deptId));
+      if (data.title) formData.append("title", data.title);
+      if (data.message) formData.append("message", data.message);
+      if (data.memo) formData.append("memo", data.memo[0]);
+
+      apiClient
+        .post(`${API_BASE}/post`, formData, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          toast(response.data.message, {
+            type: "success",
+            className: toastClass,
+          });
+          setVisible(false);
+        })
+        .catch((error) => {
+          toast(error, { type: "error", className: toastClass });
+        });
+    }
   };
 
   useEffect(() => {
@@ -65,7 +118,9 @@ const PostModal = () => {
       >
         <div className="flex items-start gap-3 mb-2">
           <div className="rounded-full w-10 h-10 bg-gray-400"></div>
-          <p className="font-bold">Westlake User</p>
+          <p className="font-bold">
+            {decodeData()?.firstName} {decodeData()?.lastName}
+          </p>
         </div>
         <form onSubmit={handleSubmit(handlePost)}>
           <div>
@@ -87,21 +142,31 @@ const PostModal = () => {
                   type="file"
                   className="absolute inset-0 opacity-0 cursor-pointer"
                   {...register("memo")}
+                  onChange={handleFileChange}
                 />
                 <div className="flex flex-col items-center justify-center text-gray-500">
-                  <Icon
-                    icon={"material-symbols:upload"}
-                    className="h-10 w-10"
-                  />
-                  <span className="mt-2 text-sm">{"Click to upload memo"}</span>
+                  {fileName ? (
+                    <Icon icon={"weui:done2-outlined"} className="h-10 w-10" />
+                  ) : (
+                    <Icon
+                      icon={"material-symbols:upload"}
+                      className="h-10 w-10"
+                    />
+                  )}
+                  <span className="mt-2 text-sm">
+                    {fileName || "Click to upload memo"}{" "}
+                  </span>
                 </div>
               </div>
             </div>
-            <select className="w-full bg-inherit border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none">
+            <select
+              {...register("deptId", { required: true })}
+              className="w-full bg-inherit border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none"
+            >
               <option value={""}>Select a department</option>
               {departments.map((department) => (
                 <option
-                  value={department.departmentName}
+                  value={department.deptId}
                   className="w-full border rounded-xl h-10 bg-white dark:bg-neutral-900"
                   key={department.deptId}
                 >
