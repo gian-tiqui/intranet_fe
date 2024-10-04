@@ -23,9 +23,9 @@ const Users = () => {
   }, []);
 
   return (
-    <div className="p-4 overflow-x-auto">
-      <table className="min-w-full bg-white border border-gray-200 dark:bg-black dark:border-gray-600 shadow-md">
-        <thead className="bg-gray-200 text-gray-600 uppercase text-sm">
+    <div className="p-4 w-96">
+      <table className="min-w-full bg-white border border-gray-200 dark:bg-neutral-800 dark:border-gray-600 shadow-md">
+        <thead className="bg-gray-200 dark:bg-neutral-900 text-white uppercase text-sm">
           <tr>
             <th className="py-3 px-4 border-b">FIRST NAME</th>
             <th className="py-3 px-4 border-b">MIDDLE NAME</th>
@@ -45,7 +45,10 @@ const Users = () => {
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr key={user.id} className="hover:bg-gray-100">
+            <tr
+              key={user.id}
+              className="hover:bg-gray-100 dark:hover:bg-neutral-700"
+            >
               <td className="py-2 px-4 border-b">{user.firstName}</td>
               <td className="py-2 px-4 border-b">{user.middleName}</td>
               <td className="py-2 px-4 border-b">{user.lastName}</td>
