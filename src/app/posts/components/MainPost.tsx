@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import PostContainer from "./PostContainer";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import { Post } from "@/app/types/types";
-import axios from "axios";
 import useHideSearchBarStore from "@/app/store/hideSearchBar";
 import usePostUriStore from "@/app/store/usePostUri";
 import apiClient from "@/app/http-common/apiUrl";
