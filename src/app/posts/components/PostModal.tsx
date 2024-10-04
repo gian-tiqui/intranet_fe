@@ -1,13 +1,46 @@
 "use client";
+import { API_BASE, INTRANET } from "@/app/bindings/binding";
+import apiClient from "@/app/http-common/apiUrl";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
 import useShowPostStore from "@/app/store/showPostStore";
+import { Department } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+
+interface FormFields {
+  userId: number;
+  deptId: number;
+  message?: string;
+  memo?: File;
+  title: string;
+}
 
 const PostModal = () => {
   const { setVisible } = useShowPostStore();
   const { setIsCollapsed } = useToggleStore();
   const [fileName, setFileName] = useState("");
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const { register, handleSubmit } = useForm<FormFields>();
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      const departmentEndpoint = "department";
+
+      const response = await apiClient.get(
+        `${API_BASE}/${departmentEndpoint}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+          },
+        }
+      );
+
+      setDepartments(response.data);
+    };
+
+    fetchDepartments();
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -15,6 +48,10 @@ const PostModal = () => {
     } else {
       setFileName("");
     }
+  };
+
+  const handlePost = (data: FormFields) => {
+    console.log(data);
   };
 
   const handleFormClick = (e: React.MouseEvent) => {
@@ -39,7 +76,7 @@ const PostModal = () => {
           <div className="rounded-full w-10 h-10 bg-gray-400"></div>
           <p className="font-bold">Westlake User</p>
         </div>
-        <form>
+        <form onSubmit={handleSubmit(handlePost)}>
           <div>
             <input
               className="w-full outline-none p-2 dark:bg-neutral-900"
@@ -69,6 +106,19 @@ const PostModal = () => {
                 </div>
               </div>
             </div>
+            <select className="w-full bg-inherit border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none">
+              <option value={""}>Select a department</option>
+              {departments.map((department) => (
+                <option
+                  value={department.departmentName}
+                  className="w-full border rounded-xl h-10 bg-white dark:bg-neutral-900"
+                  key={department.deptId}
+                >
+                  {department.departmentName[0].toUpperCase() +
+                    department.departmentName.substring(1).toLowerCase()}
+                </option>
+              ))}
+            </select>
 
             <button
               type="submit"
