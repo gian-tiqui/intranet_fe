@@ -28,6 +28,13 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const post = usePost(id);
   const [loading, setLoading] = useState<boolean>(true);
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [comments, setComments] = useState<PostComment[]>([]);
+
+  useEffect(() => {
+    if (post) {
+      setComments(post?.comments as PostComment[]);
+    }
+  }, [post]);
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -125,10 +132,8 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
       <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-6" />
       {!generalPost && (
         <>
-          {post?.comments && (
-            <Comments comments={post?.comments as PostComment[]} postId={id} />
-          )}
-          <CommentBar postId={id} />
+          {comments && <Comments comments={comments} postId={id} />}
+          <CommentBar setComments={setComments} postId={id} />
         </>
       )}
     </>
