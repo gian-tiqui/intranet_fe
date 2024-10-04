@@ -72,11 +72,11 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
           priority
         />
         <div className="flex flex-grow w-full mb-6">
-          <div className="w-full gap-3 flex justify-center dark:hover:bg-neutral-700 py-2">
+          <div className="w-full gap-3 flex justify-center hover:bg-gray-300 dark:hover:bg-neutral-700 py-2">
             <Icon icon={"mdi:like-outline"} className="h-6 w-6" />
             <p className="cursor-pointer">Like</p>
           </div>
-          <div className="w-full gap-3 flex justify-center dark:hover:bg-neutral-700 py-2">
+          <div className="w-full gap-3 flex justify-center hover:bg-gray-300 dark:hover:bg-neutral-700 py-2">
             <Icon
               icon={"material-symbols:comment-outline"}
               className="h-6 w-6"
@@ -84,7 +84,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
 
             <p className="text-center cursor-pointer">Comment</p>
           </div>
-          <div className="w-full gap-3 flex justify-center dark:hover:bg-neutral-700 py-2">
+          <div className="w-full gap-3 flex justify-center hover:bg-gray-300 dark:hover:bg-neutral-700 py-2">
             <Icon icon={"fluent-mdl2:share"} className="h-6 w-6" />
 
             <p className="text-end cursor-pointer">Share</p>

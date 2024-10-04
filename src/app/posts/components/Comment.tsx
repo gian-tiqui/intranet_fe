@@ -18,19 +18,30 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
   return (
     <div>
       <div className="flex gap-6">
-        <div className="h-10 w-10 bg-white rounded-full"></div>
-        <div className="mt-1 w-full">
+        {/* Avatar Section */}
+        <div className="h-10 w-10 bg-white rounded-full flex-shrink-0"></div>
+
+        {/* Comment Content Section */}
+        <div className="mt-1 w-full min-w-0">
           <p className="font-bold">
             {comment.user.firstName} {comment.user.lastName}
           </p>
-          <div className="">
-            <p className="">{comment.message}</p>
+          <div className="w-full">
+            <p className="break-words overflow-wrap break-word">
+              {comment.message}
+            </p>
           </div>
+
+          {/* Replies Section */}
           {isReply && (
-            <HoverBox className="hover:bg-neutral-30 0 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded w-20 mb-5">
-              <div onClick={() => setShowReplies(!showReplies)}>Replies</div>
+            <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-700 p-1 cursor-pointer rounded w-16 mb-5 mt-1">
+              <div onClick={() => setShowReplies(!showReplies)}>
+                <p className="text-sm">Replies</p>
+              </div>
             </HoverBox>
           )}
+
+          {/* Show Replies Animation */}
           <AnimatePresence>
             {showReplies && (
               <MotionTemplate>

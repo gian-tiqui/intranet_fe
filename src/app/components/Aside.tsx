@@ -1,7 +1,6 @@
 "use client";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { motion, Variants } from "framer-motion";
-import Link from "next/link";
 import React, { useEffect } from "react";
 import HoverBox from "./HoverBox";
 import useShowPostStore from "../store/showPostStore";
@@ -70,18 +69,7 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
                 onClick={() => router.push("/")}
               >
                 <Icon icon={"ph:hospital"} className="h-5 w-5" />
-
                 <p className="w-full text-md">Intranet</p>
-              </div>
-            </HoverBox>
-            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-              <div className="flex items-center gap-3">
-                <Icon icon={"ph:hospital"} className="h-5 w-5" />
-                <Link href={"https://westlakemed.com.ph/"}>
-                  <p className="w-full text-md truncate">
-                    Westlake Medical Center
-                  </p>
-                </Link>
               </div>
             </HoverBox>
           </div>

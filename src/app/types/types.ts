@@ -55,6 +55,11 @@ type Comment = {
   replies?: Comment[];
 };
 
+type Department = {
+  deptId: number;
+  departmentName: string;
+};
+
 type PostComment = {
   cid: number;
   userId: number;
@@ -90,4 +95,5 @@ export type {
   PostComment,
   CreateComment,
   ABoardSelector,
+  Department,
 };

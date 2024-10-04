@@ -1,6 +1,9 @@
 "use client";
+import { API_BASE, INTRANET } from "@/app/bindings/binding";
+import apiClient from "@/app/http-common/apiUrl";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
 import useShowPostStore from "@/app/store/showPostStore";
+import { Department } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { useEffect, useState } from "react";
 
@@ -8,6 +11,26 @@ const PostModal = () => {
   const { setVisible } = useShowPostStore();
   const { setIsCollapsed } = useToggleStore();
   const [fileName, setFileName] = useState("");
+  const [departments, setDepartments] = useState<Department[]>([]);
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      const departmentEndpoint = "department";
+
+      const response = await apiClient.get(
+        `${API_BASE}/${departmentEndpoint}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+          },
+        }
+      );
+
+      setDepartments(response.data);
+    };
+
+    fetchDepartments();
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -69,6 +92,19 @@ const PostModal = () => {
                 </div>
               </div>
             </div>
+            <select className="w-full bg-inherit border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none">
+              <option value={""}>Select a department</option>
+              {departments.map((department) => (
+                <option
+                  value={department.departmentName}
+                  className="w-full border rounded-xl h-10 bg-white dark:bg-neutral-900"
+                  key={department.deptId}
+                >
+                  {department.departmentName[0].toUpperCase() +
+                    department.departmentName.substring(1).toLowerCase()}
+                </option>
+              ))}
+            </select>
 
             <button
               type="submit"

@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ChangeEvent, ReactNode, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import HoverBox from "./HoverBox";
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
@@ -13,13 +13,9 @@ import Settings from "./Settings";
 import useShowSettingsStore from "../store/showSettingStore";
 import LoginSplash from "./RefreshSplashArt";
 import useSplashToggler from "../store/useSplashStore";
-
-/*
- *
- *
- * Start commenting here
- *
- */
+import Searchbar from "./Searchbar";
+import useHideSearchBarStore from "../store/hideSearchBar";
+import usePostUriStore from "../store/usePostUri";
 
 interface Props {
   children?: ReactNode;
@@ -32,6 +28,33 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { shown } = useShowSettingsStore();
   const [isMobile, setIsMobile] = useState(false);
   const { showSplash, setShowSplash } = useSplashToggler();
+  const [searchText, setSearchText] = useState<string>("");
+  const [debouncedSearch, setDebouncedSearch] = useState<string>("");
+  const { searchBarHidden } = useHideSearchBarStore();
+  const { setPostUri } = usePostUriStore();
+  const [loadingSearch, setLoadingSearch] = useState<boolean>(false);
+
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setSearchText(value);
+  };
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setDebouncedSearch(searchText);
+      setLoadingSearch(true);
+    }, 1000);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchText]);
+
+  useEffect(() => {
+    const refreshData = async () => {
+      setPostUri(debouncedSearch);
+    };
+
+    refreshData();
+  }, [debouncedSearch, setPostUri]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -160,6 +183,13 @@ const Divider: React.FC<Props> = ({ children }) => {
             </div>
 
             <div className="flex items-center gap-3 px-3">
+              {searchBarHidden && (
+                <Searchbar
+                  searchText={searchText}
+                  handleSearchChange={handleSearchChange}
+                  loading={loadingSearch}
+                />
+              )}
               <ModeToggler />
             </div>
           </div>
