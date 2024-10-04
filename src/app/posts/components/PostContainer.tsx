@@ -9,6 +9,8 @@ import PostSkeleton from "./PostSkeleton";
 import Comments from "./Comments";
 import { PostComment } from "@/app/types/types";
 import CommentBar from "./CommentBar";
+import apiClient from "@/app/http-common/apiUrl";
+import { API_BASE, INTRANET } from "@/app/bindings/binding";
 
 /*
  * @TODO
@@ -24,7 +26,36 @@ interface Props {
 const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const router = useRouter();
   const post = usePost(id);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [imageUrl, setImageUrl] = useState<string>("");
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      const testingImage = "1728022209255-781839337-download.jpg";
+      const at = localStorage.getItem(INTRANET);
+
+      if (at) {
+        try {
+          const response = await apiClient.get(
+            `${API_BASE}/post/uploads/${testingImage}`,
+            {
+              headers: { Authorization: `Bearer ${at}` },
+            }
+          );
+
+          const arrayBuffer = new Uint8Array(response.data.data);
+          const blob = new Blob([arrayBuffer], { type: "image/jpeg" });
+
+          const imageUrl = URL.createObjectURL(blob); // Create URL from blob
+          setImageUrl(imageUrl);
+        } catch (error) {
+          console.error("Error fetching image:", error);
+        }
+      }
+    };
+
+    fetchImage();
+  }, [post]);
 
   useEffect(() => {
     if (post) {
@@ -65,7 +96,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
         <p className="text-md mb-2 max-w-full">{post?.message}</p>
         <Image
           className="h-96 w-full bg-neutral-100 mb-6"
-          src="https://nextjs.org/icons/next.svg"
+          src={imageUrl || "https://nextjs.org/icons/next.svg"}
           alt="Next.js logo"
           height={0}
           width={0}
