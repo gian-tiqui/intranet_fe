@@ -6,7 +6,6 @@ import useShowPostStore from "@/app/store/showPostStore";
 import { Department } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 
 interface FormFields {
   userId: number;
@@ -21,7 +20,6 @@ const PostModal = () => {
   const { setIsCollapsed } = useToggleStore();
   const [fileName, setFileName] = useState("");
   const [departments, setDepartments] = useState<Department[]>([]);
-  const { register, handleSubmit } = useForm<FormFields>();
 
   useEffect(() => {
     const fetchDepartments = async () => {
