@@ -109,7 +109,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
           width={0}
           priority
         />
-        <div className="flex flex-grow w-full mb-6">
+        {/* <div className="flex flex-grow w-full mb-6">
           <div className="w-full gap-3 flex justify-center hover:bg-gray-300 dark:hover:bg-neutral-700 py-2">
             <Icon icon={"mdi:like-outline"} className="h-6 w-6" />
             <p className="cursor-pointer">Like</p>
@@ -127,7 +127,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
 
             <p className="text-end cursor-pointer">Share</p>
           </div>
-        </div>
+        </div> */}
       </div>
       <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-6" />
       {!generalPost && (
