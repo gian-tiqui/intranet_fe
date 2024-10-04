@@ -88,7 +88,7 @@ const Form = () => {
         response.data.tokens.accessToken
       );
 
-      if (decoded.departmentName === "ADMIN") router.push("/dashboard");
+      if (decoded.departmentName === "ADMIN") router.push("/admin/dashboard");
       else router.push("/");
     } catch (error: unknown) {
       if (typeof error === "object" && error !== null) {
