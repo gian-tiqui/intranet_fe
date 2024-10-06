@@ -8,7 +8,7 @@ import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
 import { INTRANET } from "../bindings/binding";
 import useShowSettingsStore from "../store/showSettingStore";
 import useLogoutArtStore from "../store/useLogoutSplashStore";
-import { jwtDecode } from "jwt-decode";
+import { decodeUserData } from "../functions/functions";
 
 interface Props {
   uVisible: boolean;
@@ -50,20 +50,8 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
     router.push("/login");
   };
 
-  const decodeData = () => {
-    const at = localStorage.getItem(INTRANET);
-    if (at) {
-      return jwtDecode<{
-        departmentName: string;
-        firstName: string;
-        lastName: string;
-      }>(at);
-    }
-    return null;
-  };
-
   useEffect(() => {
-    const data = decodeData();
+    const data = decodeUserData();
     if (data) {
       setUserData(data);
     }

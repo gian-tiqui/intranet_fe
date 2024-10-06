@@ -5,6 +5,7 @@ import CommentBar from "./CommentBar";
 import MotionTemplate from "@/app/components/animation/MotionTemplate";
 import { AnimatePresence } from "framer-motion";
 import { PostComment } from "@/app/types/types";
+import { decodeUserData } from "@/app/functions/functions";
 
 interface Props {
   isReply?: boolean;
@@ -23,7 +24,7 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
 
         {/* Comment Content Section */}
         <div className="mt-1 w-full min-w-0">
-          {comment.user ? (
+          {comment.user.id === decodeUserData()?.sub ? (
             <p className="font-bold">
               {comment.user.firstName} {comment.user.lastName}
             </p>
