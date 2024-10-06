@@ -1,5 +1,6 @@
 "use client";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
+import { decodeUserData } from "@/app/functions/functions";
 import apiClient from "@/app/http-common/apiUrl";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
 import useShowPostStore from "@/app/store/showPostStore";
@@ -30,18 +31,6 @@ const PostModal = () => {
     if (e.target.files && e.target.files.length > 0) {
       setFileName(e.target.files[0].name);
     }
-  };
-
-  const decodeData = () => {
-    const at = localStorage.getItem(INTRANET);
-
-    if (at) {
-      const decoded: { firstName: string; lastName: string } = jwtDecode(at);
-
-      return decoded;
-    }
-
-    return null;
   };
 
   const handlePost = (data: FormFields) => {
@@ -119,7 +108,7 @@ const PostModal = () => {
         <div className="flex items-start gap-3 mb-2">
           <div className="rounded-full w-10 h-10 bg-gray-400"></div>
           <p className="font-bold">
-            {decodeData()?.firstName} {decodeData()?.lastName}
+            {decodeUserData()?.firstName} {decodeUserData()?.lastName}
           </p>
         </div>
         <form onSubmit={handleSubmit(handlePost)}>

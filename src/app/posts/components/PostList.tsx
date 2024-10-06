@@ -7,6 +7,7 @@ import HoverBox from "@/app/components/HoverBox";
 import Link from "next/link";
 import usePosts from "@/app/custom-hooks/posts";
 import PostListSkeleton from "./PostListSkeleton";
+import NoPosts from "./NoPosts";
 
 const groupPostsByDate = (posts: Post[]) => {
   return posts.reduce((groups: GroupedPosts, post: Post) => {
@@ -30,6 +31,10 @@ const PostList = () => {
 
   if (!posts) {
     return <PostListSkeleton />;
+  }
+
+  if (posts.length === 0) {
+    return <NoPosts />;
   }
 
   return (
