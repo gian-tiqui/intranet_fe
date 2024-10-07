@@ -11,13 +11,13 @@ export interface MotionTemplateProps {
 
 const MotionTemplate: React.FC<MotionTemplateProps> = ({
   children,
-  duration = 0.75,
+  duration = 0.3,
 }) => {
   return (
     <motion.div
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      // exit={{ y: 20, opacity: 0 }}
+      exit={{ y: 20, opacity: 0 }}
       transition={{ ease: "easeInOut", duration: duration }}
     >
       {children}

@@ -12,6 +12,8 @@ import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import { decodeUserData } from "@/app/functions/functions";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import DeleteModal from "./DeleteModal";
+import { AnimatePresence } from "framer-motion";
+import MotionTemplate from "@/app/components/animation/MotionTemplate";
 
 // rem bizbox
 
@@ -116,12 +118,17 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
 
   return (
     <>
-      {showDeleteModal && (
-        <DeleteModal
-          setShowDeleteModal={setShowDeleteModal}
-          postId={post?.pid}
-        />
-      )}
+      <AnimatePresence>
+        {showDeleteModal && (
+          <MotionTemplate>
+            <DeleteModal
+              setShowDeleteModal={setShowDeleteModal}
+              postId={post?.pid}
+            />
+          </MotionTemplate>
+        )}
+      </AnimatePresence>
+
       <div
         onClick={generalPost ? handleClick : undefined}
         className={`${generalPost && "cursor-pointer"}`}
@@ -143,30 +150,34 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
                 />
               </div>
 
-              {!openOptions && (
-                <div
-                  className="absolute w-28 bg-neutral-200 border text-black dark:text-white border-gray-300 rounded-xl dark:bg-neutral-800 dark:border-gray-700 p-2 right-0"
-                  onClick={handleOptionsClicked}
-                >
-                  <div
-                    onClick={handleEditClicked}
-                    className="w-full flex items-center gap-1 rounded-lg p-2 hover:bg-gray-300 cursor-pointer dark:hover:bg-neutral-700"
-                  >
-                    <Icon icon={"lucide:edit"} className="h-5 w-5" />
-                    <p className="text-sm">Edit</p>
-                  </div>
-                  <div
-                    onClick={handleDeleteClicked}
-                    className="w-full flex items-center gap-1 rounded-lg p-2 hover:bg-gray-300 cursor-pointer dark:hover:bg-neutral-700"
-                  >
-                    <Icon
-                      icon={"material-symbols:delete-outline"}
-                      className="h-5 w-5"
-                    />
-                    <p className="text-sm">Delete</p>
-                  </div>
-                </div>
-              )}
+              <AnimatePresence>
+                {!openOptions && (
+                  <MotionTemplate>
+                    <div
+                      className="absolute w-28 bg-neutral-200 border text-black dark:text-white border-gray-300 rounded-xl dark:bg-neutral-800 dark:border-gray-700 p-2 right-0"
+                      onClick={handleOptionsClicked}
+                    >
+                      <div
+                        onClick={handleEditClicked}
+                        className="w-full flex items-center gap-1 rounded-lg p-2 hover:bg-gray-300 cursor-pointer dark:hover:bg-neutral-700"
+                      >
+                        <Icon icon={"lucide:edit"} className="h-5 w-5" />
+                        <p className="text-sm">Edit</p>
+                      </div>
+                      <div
+                        onClick={handleDeleteClicked}
+                        className="w-full flex items-center gap-1 rounded-lg p-2 hover:bg-gray-300 cursor-pointer dark:hover:bg-neutral-700"
+                      >
+                        <Icon
+                          icon={"material-symbols:delete-outline"}
+                          className="h-5 w-5"
+                        />
+                        <p className="text-sm">Delete</p>
+                      </div>
+                    </div>
+                  </MotionTemplate>
+                )}
+              </AnimatePresence>
             </div>
           )}
         </div>
