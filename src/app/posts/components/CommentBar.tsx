@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { CreateComment, PostComment } from "@/app/types/types";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
+import { decodeUserData } from "@/app/functions/functions";
 
 interface Props {
   postId?: number;
@@ -31,26 +32,29 @@ const CommentBar: React.FC<Props> = ({ postId, parentId }) => {
   };
 
   const handleCommentSubmit = async (data: FormFields) => {
-    const createComment: CreateComment = {
-      userId: 7,
-      message: data.message,
-      postId,
-      parentId,
-    };
+    const userId = decodeUserData()?.sub;
+    if (userId) {
+      const createComment: CreateComment = {
+        userId: userId,
+        message: data.message,
+        postId,
+        parentId,
+      };
 
-    try {
-      const response = await apiClient.post(`${API_BASE}/comment`, {
-        ...createComment,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-        },
-      });
+      try {
+        const response = await apiClient.post(`${API_BASE}/comment`, {
+          ...createComment,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+          },
+        });
 
-      if (response.status === 201) {
-        reset();
+        if (response.status === 201) {
+          reset();
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
     }
   };
 
@@ -60,7 +64,7 @@ const CommentBar: React.FC<Props> = ({ postId, parentId }) => {
       className="sticky bottom-0 pb-8 bg-neutral-200 dark:bg-neutral-800"
     >
       <div className="w-full h-auto rounded-3xl rounded-b-3xl bg-white dark:bg-neutral-700 cursor-text flex items-end gap-3 px-3 py-[10px] shadow-2xl">
-        <div className="bg-neutral-200 rounded-2xl grid place-content-center h-9 w-10 dark:bg-neutral-500">
+        <div className="bg-neutral-200 rounded-2xl grid place-content-center h-9 w-10 dark:bg-neutral-500 hover:bg-neutral-300 dark:hover:bg-neutral-800">
           <Icon icon={"eva:attach-fill"} className="h-5 w-5 cursor-pointer" />
         </div>
         <textarea
@@ -72,7 +76,7 @@ const CommentBar: React.FC<Props> = ({ postId, parentId }) => {
         />
         <button
           type="submit"
-          className="bg-neutral-200 rounded-2xl grid place-content-center h-9 w-10 dark:bg-neutral-500"
+          className="bg-neutral-200 rounded-2xl grid place-content-center h-9 w-10 dark:bg-neutral-500 hover:bg-neutral-300 dark:hover:bg-neutral-800"
         >
           <Icon icon={"mi:send"} className="h-5 w-5 cursor-pointer" />
         </button>
