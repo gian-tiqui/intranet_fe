@@ -1,7 +1,7 @@
 "use client";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { motion, Variants } from "framer-motion";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import HoverBox from "./HoverBox";
 import useShowPostStore from "../store/showPostStore";
 import useShowUserModalStore from "../store/showUserModal";
@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import PostList from "../posts/components/PostList";
 import useTokenStore from "../store/tokenStore";
 import { INTRANET } from "../bindings/binding";
+import { checkDept } from "../functions/functions";
 
 interface Props {
   variants?: Variants;
@@ -22,10 +23,17 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
   const router = useRouter();
   const { uVisible, setUVisible } = useShowUserModalStore();
   const { setToken } = useTokenStore();
+  const [editVisible, setEditVisible] = useState<boolean>(true);
 
   useEffect(() => {
     setToken(localStorage.getItem(INTRANET) || "");
   }, [setToken]);
+
+  useEffect(() => {
+    if (!checkDept()) {
+      setEditVisible(false);
+    }
+  }, []);
 
   return (
     <>
@@ -51,13 +59,15 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
             />
           </HoverBox>
 
-          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-            <Icon
-              onClick={() => setVisible(true)}
-              icon="lucide:edit"
-              className="h-5 w-5"
-            />
-          </HoverBox>
+          {editVisible && (
+            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
+              <Icon
+                onClick={() => setVisible(true)}
+                icon="lucide:edit"
+                className="h-5 w-5"
+              />
+            </HoverBox>
+          )}
         </div>
 
         {/* THIS CONTAINS YOUR POSTS/MEMOS */}
@@ -102,13 +112,15 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
             />
           </HoverBox>
 
-          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-            <Icon
-              onClick={() => setVisible(true)}
-              icon="lucide:edit"
-              className="h-5 w-5"
-            />
-          </HoverBox>
+          {editVisible && (
+            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
+              <Icon
+                onClick={() => setVisible(true)}
+                icon="lucide:edit"
+                className="h-5 w-5"
+              />
+            </HoverBox>
+          )}
         </div>
 
         {/* THIS CONTAINS YOUR POSTS/MEMOS */}

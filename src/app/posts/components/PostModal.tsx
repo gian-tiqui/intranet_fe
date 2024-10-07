@@ -25,7 +25,8 @@ const PostModal = () => {
   const [departments, setDepartments] = useState<Department[]>([]);
   const { register, handleSubmit } = useForm<FormFields>();
   const [fileName, setFileName] = useState<string>("");
-  const toastClass = "";
+  const toastClass =
+    "bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white";
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {

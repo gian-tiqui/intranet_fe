@@ -33,6 +33,7 @@ type Post = {
   updatedAt: Date;
   user?: User;
   comments?: Comment[];
+  edited: boolean;
 };
 
 type GroupedPosts = {

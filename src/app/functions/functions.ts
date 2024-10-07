@@ -16,4 +16,18 @@ const decodeUserData = () => {
   return null;
 };
 
-export { decodeUserData };
+const checkDept = () => {
+  const userDeptId = decodeUserData()?.deptId;
+
+  if (userDeptId) {
+    const deptIds: number[] = [1, 2, 4]; // 4 is initial id for admin.
+
+    if (!deptIds.includes(userDeptId)) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+export { decodeUserData, checkDept };

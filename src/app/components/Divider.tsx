@@ -16,6 +16,10 @@ import useSplashToggler from "../store/useSplashStore";
 import Searchbar from "./Searchbar";
 import useHideSearchBarStore from "../store/hideSearchBar";
 import usePostUriStore from "../store/usePostUri";
+import useEditModalStore from "../store/editModal";
+import EditPostModal from "../posts/components/EditModal";
+import usePostIdStore from "../store/postId";
+import { checkDept } from "../functions/functions";
 
 interface Props {
   children?: ReactNode;
@@ -33,6 +37,9 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { searchBarHidden } = useHideSearchBarStore();
   const { setPostUri } = usePostUriStore();
   const [loadingSearch, setLoadingSearch] = useState<boolean>(false);
+  const { showEditModal } = useEditModalStore();
+  const { postId } = usePostIdStore();
+  const [editVisible, setEditVisible] = useState<boolean>(true);
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -76,6 +83,12 @@ const Divider: React.FC<Props> = ({ children }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    if (!checkDept()) {
+      setEditVisible(false);
+    }
+  }, []);
+
   const variants = {
     open: isMobile
       ? {
@@ -103,6 +116,7 @@ const Divider: React.FC<Props> = ({ children }) => {
       {visible && <PostModal />}
       {shown && <Settings />}
       {showSplash && <LoginSplash />}
+      {showEditModal && <EditPostModal postId={postId} />}
 
       <AnimatePresence>
         {isCollapsed ||
@@ -142,16 +156,18 @@ const Divider: React.FC<Props> = ({ children }) => {
                       />
                     </HoverBox>
 
-                    <HoverBox
-                      key="desktop-edit"
-                      className="hover:bg-neutral-300 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded"
-                    >
-                      <Icon
-                        onClick={() => setVisible(true)}
-                        icon="lucide:edit"
-                        className="h-5 w-5"
-                      />
-                    </HoverBox>
+                    {editVisible && (
+                      <HoverBox
+                        key="desktop-edit"
+                        className="hover:bg-neutral-300 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded"
+                      >
+                        <Icon
+                          onClick={() => setVisible(true)}
+                          icon="lucide:edit"
+                          className="h-5 w-5"
+                        />
+                      </HoverBox>
+                    )}
                   </>
                 )}
               </div>

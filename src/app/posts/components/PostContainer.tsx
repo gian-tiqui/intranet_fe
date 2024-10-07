@@ -14,6 +14,9 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import DeleteModal from "./DeleteModal";
 import { AnimatePresence } from "framer-motion";
 import MotionTemplate from "@/app/components/animation/MotionTemplate";
+import SmallToLarge from "@/app/components/animation/SmallToLarge";
+import useEditModalStore from "@/app/store/editModal";
+import usePostIdStore from "@/app/store/postId";
 
 // rem bizbox
 
@@ -37,6 +40,8 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const [editable, setEditable] = useState<boolean>(false);
   const [openOptions, setOpenOptions] = useState<boolean>(true);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const { setShowEditModal } = useEditModalStore();
+  const { setPostId } = usePostIdStore();
 
   useEffect(() => {
     const handleClick = () => {
@@ -91,7 +96,12 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   }, [post]);
 
   const handleEditClicked = () => {
-    console.log("edit mode");
+    const postId = post?.pid;
+
+    if (postId) {
+      setShowEditModal(true);
+      setPostId(post?.pid);
+    }
   };
 
   const handleDeleteClicked = () => {
@@ -134,10 +144,15 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
         className={`${generalPost && "cursor-pointer"}`}
       >
         <div className="flex items-start gap-2 mb-4 justify-between">
-          <div className="flex gap-2 items-start">
+          <div className="flex gap-3 items-start">
             <div className="h-9 w-9 bg-gray-300 rounded-full"></div>
             <h1 className="text-lg font-semibold">
-              {post?.user?.firstName} {post?.user?.lastName}
+              {decodeUserData()?.sub !== post?.userId
+                ? `${post?.user?.firstName} ${post?.user?.lastName}`
+                : "You"}{" "}
+              <span className="text-sm font-medium">
+                {post?.edited && "(Edited)"}
+              </span>
             </h1>
           </div>
           {editable && (
@@ -152,7 +167,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
 
               <AnimatePresence>
                 {!openOptions && (
-                  <MotionTemplate>
+                  <SmallToLarge>
                     <div
                       className="absolute w-28 bg-neutral-200 border text-black dark:text-white border-gray-300 rounded-xl dark:bg-neutral-800 dark:border-gray-700 p-2 right-0"
                       onClick={handleOptionsClicked}
@@ -175,7 +190,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
                         <p className="text-sm">Delete</p>
                       </div>
                     </div>
-                  </MotionTemplate>
+                  </SmallToLarge>
                 )}
               </AnimatePresence>
             </div>
@@ -184,7 +199,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
 
         <h1 className="text-xl font-bold">{post?.title}</h1>
         <h4 className="text-xs mb-3">
-          {post?.createdAt
+          {post?.updatedAt
             ? format(new Date(post.createdAt), "MMMM dd, yyyy")
             : "Unknown Date"}
         </h4>
