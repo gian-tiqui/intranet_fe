@@ -9,18 +9,19 @@ const PageLoader = () => {
 
   useEffect(() => {
     const handleStart = () => setIsLoading(true);
-    const handleComplete = () => setIsLoading(false);
+    const handleComplete = () => {
+      setIsLoading(false);
+
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 50000);
+    };
 
     const handleBeforeUnload = () => {
       setIsLoading(true);
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
-
-    // const handleRouteChange = (url: string) => {
-    //   setIsLoading(true);
-    //   setTimeout(() => setIsLoading(false), 2000);
-    // };
 
     router?.events.on("routeChangeStart", handleStart);
     router?.events.on("routeChangeComplete", handleComplete);
