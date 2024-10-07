@@ -16,12 +16,11 @@ const usePosts = () => {
         if (!at) return;
         const decoded: { deptId: number } = jwtDecode(at);
 
-        if (decoded.deptId === 2 || decoded.deptId === 3) deptIdQuery = "";
+        if (decoded.deptId === 1 || decoded.deptId === 2) deptIdQuery = "";
         else deptIdQuery = String(decoded.deptId);
 
         const apiUri = `${API_BASE}/post?deptId=${deptIdQuery}`;
 
-        console.log(apiUri);
         const response = await apiClient.get(apiUri, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,

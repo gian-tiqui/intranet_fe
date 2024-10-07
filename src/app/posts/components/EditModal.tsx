@@ -2,9 +2,9 @@
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import { decodeUserData } from "@/app/functions/functions";
 import apiClient from "@/app/http-common/apiUrl";
+import useEditModalStore from "@/app/store/editModal";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
-import useShowPostStore from "@/app/store/showPostStore";
-import { Department } from "@/app/types/types";
+import { Post } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useState } from "react";
@@ -19,14 +19,42 @@ interface FormFields {
   title?: string;
 }
 
-const PostModal = () => {
-  const { setVisible } = useShowPostStore();
+interface EditPostModalProps {
+  postId: number | undefined;
+}
+
+const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
+  const { setShowEditModal } = useEditModalStore();
   const { setIsCollapsed } = useToggleStore();
-  const [departments, setDepartments] = useState<Department[]>([]);
-  const { register, handleSubmit } = useForm<FormFields>();
-  const [fileName, setFileName] = useState<string>("");
+  const { register, handleSubmit, setValue } = useForm<FormFields>();
+  const [fileName, setFileName] = useState<string | undefined>("");
   const toastClass =
     "bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white";
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await apiClient.get(`${API_BASE}/post/${postId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+          },
+        });
+        const post: Post = response.data.post;
+
+        setValue("title", post.title);
+        setValue("message", post.message);
+        setFileName(post?.imageLocation?.split("post/")[1]);
+      } catch (error) {
+        const err = error as { response: { data: { message: string } } };
+        toast(err.response.data.message, {
+          type: "error",
+          className: toastClass,
+        });
+      }
+    };
+
+    fetchPost();
+  }, [postId, setValue]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -34,7 +62,7 @@ const PostModal = () => {
     }
   };
 
-  const handlePost = (data: FormFields) => {
+  const handleEditPost = (data: FormFields) => {
     const at = localStorage.getItem(INTRANET);
 
     if (at) {
@@ -47,10 +75,11 @@ const PostModal = () => {
       formData.append("deptId", String(data.deptId));
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
-      if (data.memo) formData.append("memo", data.memo[0]);
+      if (data.memo && data.memo.length > 0)
+        formData.append("newMemo", data.memo[0]);
 
       apiClient
-        .post(`${API_BASE}/post`, formData, {
+        .put(`${API_BASE}/post/${postId}`, formData, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
             "Content-Type": "multipart/form-data",
@@ -61,32 +90,14 @@ const PostModal = () => {
             type: "success",
             className: toastClass,
           });
-          setVisible(false);
+          setShowEditModal(false);
+          window.location.reload();
         })
         .catch((error) => {
-          toast(error, { type: "error", className: toastClass });
+          toast(error.message, { type: "error", className: toastClass });
         });
     }
   };
-
-  useEffect(() => {
-    const fetchDepartments = async () => {
-      const departmentEndpoint = "department";
-
-      const response = await apiClient.get(
-        `${API_BASE}/${departmentEndpoint}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-          },
-        }
-      );
-
-      setDepartments(response.data);
-    };
-
-    fetchDepartments();
-  }, []);
 
   const handleFormClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -99,7 +110,7 @@ const PostModal = () => {
 
   return (
     <div
-      onClick={() => setVisible(false)}
+      onClick={() => setShowEditModal(false)}
       className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-40 grid place-content-center"
     >
       <div
@@ -112,7 +123,7 @@ const PostModal = () => {
             {decodeUserData()?.firstName} {decodeUserData()?.lastName}
           </p>
         </div>
-        <form onSubmit={handleSubmit(handlePost)}>
+        <form onSubmit={handleSubmit(handleEditPost)}>
           <div>
             <input
               className="w-full outline-none p-2 dark:bg-neutral-900"
@@ -122,7 +133,7 @@ const PostModal = () => {
             <hr className="w-full border-b border dark:border-neutral-800" />
             <textarea
               className="w-full h-40 outline-none p-2 dark:bg-neutral-900"
-              placeholder="Is there something you want to write for the memo?"
+              placeholder="Edit your memo content"
               {...register("message")}
             />
 
@@ -149,28 +160,12 @@ const PostModal = () => {
                 </div>
               </div>
             </div>
-            <select
-              {...register("deptId", { required: true })}
-              className="w-full bg-inherit border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none"
-            >
-              <option value={""}>Select a department</option>
-              {departments.map((department) => (
-                <option
-                  value={department.deptId}
-                  className="w-full border rounded-xl h-10 bg-white dark:bg-neutral-900"
-                  key={department.deptId}
-                >
-                  {department.departmentName[0].toUpperCase() +
-                    department.departmentName.substring(1).toLowerCase()}
-                </option>
-              ))}
-            </select>
 
             <button
               type="submit"
               className="w-full border rounded-xl h-10 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-700"
             >
-              Post
+              Save Changes
             </button>
           </div>
         </form>
@@ -179,4 +174,4 @@ const PostModal = () => {
   );
 };
 
-export default PostModal;
+export default EditPostModal;
