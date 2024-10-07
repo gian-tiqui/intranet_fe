@@ -39,24 +39,24 @@ const Sidebar = () => {
 
   return (
     <div className="flex w-full font-mono">
-      <div>
-        <div className="px-5 pt-5">INTRANET</div>
-        <div className="flex flex-col gap-1 p-5 w-72">
+      <div className="bg-white dark:bg-neutral-900">
+        <div className="px-5 pt-5 clear-start">INTRANET</div>
+        <div className="flex flex-col gap-1 py-2 px-10 w-72">
           {components.map((comp, index) => (
-            <p
-              className="cursor-pointer"
-              onClick={() => setSelectedComp(comp.component)}
-              key={index}
-            >
-              {comp.name}
-            </p>
+            <div key={index}>
+              <p
+                className="cursor-pointer"
+                onClick={() => setSelectedComp(comp.component)}
+              >
+                {comp.name}
+              </p>
+            </div>
           ))}
         </div>
       </div>
 
-      <div className="w-full bg-neutral-200 dark:bg-neutral-700 h-screen ">
-        <div className="w-full bg-neutral-700 p-5 shadow">sss</div>
-        <div className="p-5 overflow-auto">{selectedComp}</div>
+      <div className="w-full bg-neutral-200 dark:bg-neutral-700 h-screen">
+        <div className="">{selectedComp}</div>
       </div>
     </div>
   );

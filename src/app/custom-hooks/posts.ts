@@ -16,7 +16,7 @@ const usePosts = () => {
         if (!at) return;
         const decoded: { deptId: number } = jwtDecode(at);
 
-        if (decoded.deptId === 1 || decoded.deptId === 2) deptIdQuery = "";
+        if ([1, 2, 4].includes(decoded.deptId)) deptIdQuery = "";
         else deptIdQuery = String(decoded.deptId);
 
         const apiUri = `${API_BASE}/post?deptId=${deptIdQuery}`;

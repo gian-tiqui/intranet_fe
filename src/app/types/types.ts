@@ -20,6 +20,7 @@ type User = {
   updatedAt: Date;
   refreshToken?: string;
   deptId: number;
+  department: { departmentName: string };
 };
 
 type Post = {
@@ -88,6 +89,11 @@ type ABoardSelector = {
   component: ReactNode;
 };
 
+type MinMax = {
+  min: number;
+  max: number;
+};
+
 export type {
   Post,
   GroupedPosts,
@@ -97,4 +103,5 @@ export type {
   CreateComment,
   ABoardSelector,
   Department,
+  MinMax,
 };
