@@ -1,10 +1,12 @@
 "use client";
 import { INTRANET } from "@/app/bindings/binding";
+import useNavbarVisibilityStore from "@/app/store/navbarVisibilityStore";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 const DashboardGuard = () => {
+  const { setHidden } = useNavbarVisibilityStore();
   const router = useRouter();
   useEffect(() => {
     if (localStorage.getItem(INTRANET)) {
@@ -12,8 +14,9 @@ const DashboardGuard = () => {
       const decoded: { departmentName: string } = jwtDecode(dept || "");
 
       if (decoded.departmentName !== "ADMIN") router.push("/");
+      else setHidden(false);
     }
-  }, [router]);
+  }, [router, setHidden]);
   return <></>;
 };
 

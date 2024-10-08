@@ -87,6 +87,7 @@ type CreateComment = {
 type ABoardSelector = {
   name: string;
   component: ReactNode;
+  icon: string;
 };
 
 type MinMax = {

@@ -15,6 +15,7 @@ import React, { useEffect, useState } from "react";
 
 const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [page, setPage] = useState<number>(1);
   const JUMP = 4;
   const [minMax, setMinMax] = useState<MinMax>({ min: 0, max: 4 });
   const heads: string[] = [
@@ -32,6 +33,7 @@ const Users = () => {
         min: prevState.min + JUMP,
         max: prevState.max + JUMP,
       }));
+      setPage((prevNum) => prevNum + 1);
     }
   };
 
@@ -41,6 +43,7 @@ const Users = () => {
         min: prevState.min - JUMP,
         max: prevState.max - JUMP,
       }));
+      setPage((prevNum) => prevNum - 1);
     }
   };
 
@@ -60,7 +63,7 @@ const Users = () => {
 
   return (
     <div className="users-component">
-      <div className="w-full  dark:bg-neutral-700 py-5 px-10 shadow flex justify-between">
+      <div className="w-full  bg-inherit py-5 px-10 shadow flex justify-between">
         <p>meow</p>
         <div className="flex gap-3">
           <ModeToggler />
@@ -75,13 +78,16 @@ const Users = () => {
         </div>
         <div className="border border-gray-300 dark:border-gray-600 pb-5 rounded-b-xl shadow">
           <table className="min-w-full bg-inherit  min-h-96">
-            <thead className="dark:bg-neutral-700 dark:text-white border-b border-gray-300 dark:border-neutral-600 uppercase text-sm">
+            <thead className="bg-inherit dark:text-white border-b border-gray-300 dark:border-neutral-600 uppercase text-sm">
               <tr>
                 {heads.map((head, index) => (
                   <th className="py-3 px-4" key={index}>
                     <div className="flex items-center justify-center gap-2">
                       <p>{head}</p>
-                      <Icon icon={"bx:sort"} className="cursor-pointer" />
+                      <Icon
+                        icon={"bx:sort"}
+                        className="cursor-pointer p-1 rounded-full hover:bg-gray-300 dark:hover:bg-neutral-700 h-6 w-6"
+                      />
                     </div>
                   </th>
                 ))}
@@ -113,26 +119,29 @@ const Users = () => {
                   <td className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-center">
                     <Icon
                       icon={"simple-line-icons:options"}
-                      className="mx-auto h-7 w-7 p-1 cursor-pointer"
+                      className="mx-auto h-7 w-7 p-1 cursor-pointer hover:bg-gray-300 dark:hover:bg-neutral-600 rounded-full"
                     />
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <div className="flex flex-row-reverse mx-6 gap-5 mt-5">
-            <button onClick={handleNextClicked}>
-              <Icon
-                icon={"grommet-icons:link-next"}
-                className="h-7 hover:bg-gray-300 dark:hover:bg-neutral-600 rounded-full p-1 w-7"
-              />
-            </button>
-            <button onClick={handlePrevClicked}>
-              <Icon
-                icon={"grommet-icons:link-previous"}
-                className="h-7 hover:bg-gray-300 rounded-full dark:hover:bg-neutral-600  p-1 w-7"
-              />
-            </button>
+          <div className="flex mx-6 gap-5 mt-5 justify-between">
+            <p>Page {page}</p>
+            <div className="flex gap-3">
+              <button onClick={handlePrevClicked}>
+                <Icon
+                  icon={"grommet-icons:link-previous"}
+                  className="h-7 hover:bg-gray-300 rounded-full dark:hover:bg-neutral-600  p-1 w-7"
+                />
+              </button>
+              <button onClick={handleNextClicked}>
+                <Icon
+                  icon={"grommet-icons:link-next"}
+                  className="h-7 hover:bg-gray-300 dark:hover:bg-neutral-600 rounded-full p-1 w-7"
+                />
+              </button>
+            </div>
           </div>
         </div>
       </div>
