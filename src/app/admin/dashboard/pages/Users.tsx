@@ -216,7 +216,7 @@ const Users = () => {
           </h1>
           <select
             onChange={handleSelectChange}
-            className="bg-inherit border outline-none rounded-full border-gray-400 dark:border-neutral-900 text-center me-5 w-24 cursor-pointer h-10"
+            className="bg-gray-400 dark:bg-neutral-700 border outline-none rounded-full border-gray-400 dark:border-neutral-900 text-center me-5 w-24 cursor-pointer h-10"
           >
             {departments.map((dept, index) => (
               <option

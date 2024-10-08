@@ -17,14 +17,7 @@ import MotionTemplate from "@/app/components/animation/MotionTemplate";
 import SmallToLarge from "@/app/components/animation/SmallToLarge";
 import useEditModalStore from "@/app/store/editModal";
 import usePostIdStore from "@/app/store/postId";
-
-// rem bizbox
-
-/*
- * @TODO
- * Apply polling approach
- *
- */
+import { createWorker } from "tesseract.js";
 
 interface Props {
   id: number;
@@ -42,6 +35,31 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const { setShowEditModal } = useEditModalStore();
   const { setPostId } = usePostIdStore();
+  const [message, setMessage] = useState<string>("");
+  const [extracting, setExtracting] = useState<boolean>(false);
+
+  const scanImage = async (imageUrl: string) => {
+    const worker = await createWorker("eng");
+    try {
+      setExtracting(true);
+      const {
+        data: { text },
+      } = await worker.recognize(imageUrl);
+      setMessage(text);
+    } catch (error) {
+      console.error("Error scanning image:", error);
+    } finally {
+      await worker.terminate();
+      setExtracting(false);
+    }
+  };
+
+  const handleExtractImageClicked = () => {
+    if (message) return;
+    if (imageUrl) {
+      scanImage(imageUrl);
+    }
+  };
 
   useEffect(() => {
     const handleClick = () => {
@@ -122,6 +140,26 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     event.stopPropagation();
   };
 
+  const handleDownloadImage = async () => {
+    if (!imageUrl) return;
+
+    const response = await fetch(imageUrl);
+    if (!response.ok) {
+      console.error("Failed to fetch image:", response.statusText);
+      return;
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `post-image-${id}.jpg`;
+    link.click();
+
+    window.URL.revokeObjectURL(url);
+  };
+
   if (loading) {
     return <PostSkeleton />;
   }
@@ -197,16 +235,41 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
           )}
         </div>
 
-        <h1 className="text-xl font-bold">{post?.title}</h1>
-        <h4 className="text-xs mb-3">
-          {post?.updatedAt
-            ? format(new Date(post.createdAt), "MMMM dd, yyyy")
-            : "Unknown Date"}
-        </h4>
+        <div className="w-full flex justify-between">
+          <div>
+            <h1 className="text-xl font-bold">{post?.title}</h1>
+            <h4 className="text-xs mb-3">
+              {post?.updatedAt
+                ? format(new Date(post.createdAt), "MMMM dd, yyyy")
+                : "Unknown Date"}
+            </h4>
+          </div>
+          {message === "" && (
+            <button
+              onClick={handleExtractImageClicked}
+              className="hover:bg-gray-300 dark:hover:bg-neutral-700 px-2 h-10 rounded"
+            >
+              Extract text from image
+            </button>
+          )}
+        </div>
 
         <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-2" />
 
-        <p className="text-md mb-2 max-w-full">{post?.message}</p>
+        {extracting && <p>Extracting text</p>}
+
+        {!extracting && (
+          <div
+            className="text-md mb-2 max-w-full whitespace-pre-wrap break-words"
+            style={{
+              overflowWrap: "break-word",
+              wordWrap: "break-word",
+              hyphens: "auto",
+            }}
+          >
+            {message || post?.message}
+          </div>
+        )}
         <Image
           className="h-96 w-full bg-neutral-100 mb-6"
           src={imageUrl || "https://nextjs.org/icons/next.svg"}
@@ -216,6 +279,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
           layout="responsive"
           priority
         />
+        <button onClick={handleDownloadImage}>Download Image (PDF)</button>
       </div>
       <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-6" />
       {!generalPost && (
