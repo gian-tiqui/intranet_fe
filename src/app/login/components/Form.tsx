@@ -84,12 +84,7 @@ const Form = () => {
       localStorage.setItem(INTRANET, response.data.tokens.accessToken);
       setShowSplash(true);
 
-      const decoded: { departmentName: string } = jwtDecode(
-        response.data.tokens.accessToken
-      );
-
-      if (decoded.departmentName === "ADMIN") router.push("/admin/dashboard");
-      else router.push("/");
+      router.push("/");
     } catch (error: unknown) {
       if (typeof error === "object" && error !== null) {
         const errorObj = error as { response: { data: { message: string } } };

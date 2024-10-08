@@ -87,11 +87,17 @@ type CreateComment = {
 type ABoardSelector = {
   name: string;
   component: ReactNode;
+  icon: string;
 };
 
 type MinMax = {
   min: number;
   max: number;
+};
+
+type ThType = {
+  head: string;
+  field: string;
 };
 
 export type {
@@ -104,4 +110,5 @@ export type {
   ABoardSelector,
   Department,
   MinMax,
+  ThType,
 };

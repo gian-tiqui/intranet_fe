@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import UserInfo from "./UserInfo";
 import Password from "./Password";
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
+import { decodeUserData } from "../functions/functions";
 
 const Settings = () => {
   const { setShown } = useShowSettingsStore();
@@ -21,7 +22,9 @@ const Settings = () => {
   };
 
   const handleOuterChange = () => {
-    setHidden(true);
+    const userDept = decodeUserData()?.departmentName;
+
+    if (userDept?.toLowerCase() !== "admin") setHidden(true);
     setShown(false);
   };
 

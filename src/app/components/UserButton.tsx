@@ -19,6 +19,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
   const { setShowLogoutArt } = useLogoutArtStore();
   const { setHidden } = useNavbarVisibilityStore();
   const { setShown } = useShowSettingsStore();
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [userData, setUserData] = useState<{
     firstName: string;
@@ -40,6 +41,18 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
       document.removeEventListener("click", handleClick);
     };
   }, [setUVisible, uVisible]);
+
+  useEffect(() => {
+    const checkRole = () => {
+      const userDept = decodeUserData()?.departmentName;
+
+      console.log(userDept);
+
+      if (userDept?.toLowerCase() === "admin") setIsAdmin(true);
+    };
+
+    checkRole();
+  }, []);
 
   const handleLogout = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -80,8 +93,24 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
           onClick={(e: React.MouseEvent) => e.stopPropagation()}
           className="absolute z-50 p-3 w-full bg-white dark:bg-neutral-900 border-[1px] flex flex-col gap-3 border-neutral-200 dark:border-neutral-700 bottom-12 rounded-2xl"
         >
+          {isAdmin && (
+            <>
+              <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
+                <div
+                  className="w-full flex gap-2 items-center"
+                  onClick={() => router.push("/admin/dashboard")}
+                >
+                  <Icon icon={"file-icons:dashboard"} className="w-6 h-6" />
+                  <p>Dashboard</p>
+                </div>
+              </HoverBox>
+            </>
+          )}
           <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-            <div className="w-full flex gap-2 items-center">
+            <div
+              className="w-full flex gap-2 items-center"
+              onClick={() => router.push("/")}
+            >
               <Icon
                 icon={"material-symbols:post-outline"}
                 className="w-6 h-6"
@@ -98,6 +127,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
               <p>Settings</p>
             </div>
           </HoverBox>
+
           <HoverBox className="block md:hidden hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
             <div
               className="w-full flex gap-2 items-center"
