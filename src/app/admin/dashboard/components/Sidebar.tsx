@@ -12,11 +12,14 @@ import UserButton from "@/app/components/UserButton";
 import useShowUserModalStore from "@/app/store/showUserModal";
 import HoverBox from "@/app/components/HoverBox";
 import { useRouter } from "next/navigation";
+import useAdminHiderStore from "@/app/store/adminOpacitor";
+import AddUserModal from "./AddUserModal";
 
 const Sidebar = () => {
   const [selectedComp, setSelectedComp] = useState<ReactNode>(<Graphs />);
   const { uVisible, setUVisible } = useShowUserModalStore();
   const router = useRouter();
+  const { aShown, setAShown } = useAdminHiderStore();
 
   const components: ABoardSelector[] = [
     {
@@ -53,6 +56,17 @@ const Sidebar = () => {
 
   return (
     <div className="flex w-full font-mono">
+      {aShown && (
+        <div
+          onClick={() => setAShown(!aShown)}
+          className="w-full h-full bg-black/85 absolute z-20 grid place-content-center"
+        >
+          <div onClick={(e) => e.stopPropagation()}>
+            {true && <AddUserModal />}
+          </div>
+        </div>
+      )}
+
       <div className="bg-white dark:bg-neutral-900 flex flex-col justify-between shadow">
         <div className="">
           <div className="px-5 pt-5 clear-start mb-6 font-extrabold text-2xl">
