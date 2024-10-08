@@ -2,29 +2,26 @@
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import ModeToggler from "@/app/components/ModeToggler";
 import apiClient from "@/app/http-common/apiUrl";
-import { MinMax, User } from "@/app/types/types";
+import { MinMax, ThType, User } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { formatDate } from "date-fns";
 import React, { useEffect, useState } from "react";
 
-/*
- * @TODO:
- *
- * Continue this and other pages later.
- */
-
 const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [sortedUsers, setSortedUsers] = useState<User[]>([]);
   const [page, setPage] = useState<number>(1);
+  const [direction, setDirection] = useState<string>("asc");
+  const [selectedField, setSelectedField] = useState<string>("");
   const JUMP = 4;
   const [minMax, setMinMax] = useState<MinMax>({ min: 0, max: 4 });
-  const heads: string[] = [
-    "FIRST NAME",
-    "MIDDLE NAME",
-    "LAST NAME",
-    "EMAIL",
-    "DEPARTMENT",
-    "DOB",
+  const heads: ThType[] = [
+    { head: "FIRST NAME", field: "firstname" },
+    { head: "MIDDLE NAME", field: "middlename" },
+    { head: "LAST NAME", field: "lastname" },
+    { head: "EMAIL", field: "email" },
+    { head: "DEPARTMENT", field: "department" },
+    { head: "DOB", field: "dob" },
   ];
 
   const handleNextClicked = () => {
@@ -56,10 +53,72 @@ const Users = () => {
       });
 
       setUsers(response.data.users.users);
+      setSortedUsers(response.data.users.users);
     };
 
     fetchUsers();
   }, []);
+
+  const handleSortClicked = (field: string) => {
+    if (selectedField === field) {
+      setDirection(direction === "asc" ? "desc" : "asc");
+    } else {
+      setDirection("asc");
+    }
+    setSelectedField(field);
+  };
+
+  useEffect(() => {
+    const sortUsers = () => {
+      const sorted = [...users].sort((a, b) => {
+        let valueA, valueB;
+
+        switch (selectedField) {
+          case "firstname":
+            valueA = a.firstName.toLowerCase();
+            valueB = b.firstName.toLowerCase();
+            break;
+          case "middlename":
+            valueA = a.middleName?.toLowerCase();
+            valueB = b.middleName?.toLowerCase();
+            break;
+          case "lastname":
+            valueA = a.lastName.toLowerCase();
+            valueB = b.lastName.toLowerCase();
+            break;
+          case "email":
+            valueA = a.email.toLowerCase();
+            valueB = b.email.toLowerCase();
+            break;
+          case "department":
+            valueA = a.department.departmentName.toLowerCase();
+            valueB = b.department.departmentName.toLowerCase();
+            break;
+          case "dob":
+            valueA = new Date(a.dob).getTime();
+            valueB = new Date(b.dob).getTime();
+            break;
+          default:
+            return 0;
+        }
+
+        if (valueA && valueB) {
+          if (valueA < valueB) {
+            return direction === "asc" ? -1 : 1;
+          }
+          if (valueA > valueB) {
+            return direction === "asc" ? 1 : -1;
+          }
+        }
+
+        return 0;
+      });
+
+      setSortedUsers(sorted);
+    };
+
+    sortUsers();
+  }, [selectedField, direction, users]);
 
   return (
     <div className="users-component">
@@ -83,10 +142,17 @@ const Users = () => {
                 {heads.map((head, index) => (
                   <th className="py-3 px-4" key={index}>
                     <div className="flex items-center justify-center gap-2">
-                      <p>{head}</p>
+                      <p>{head.head}</p>
                       <Icon
+                        onClick={() => handleSortClicked(head.field)}
                         icon={"bx:sort"}
-                        className="cursor-pointer p-1 rounded-full hover:bg-gray-300 dark:hover:bg-neutral-700 h-6 w-6"
+                        className={`${
+                          selectedField === head.field && "rotate-45"
+                        } ${
+                          direction === "desc" &&
+                          selectedField === head.field &&
+                          "-rotate-45"
+                        } cursor-pointer p-1 rounded-full hover:bg-gray-300 dark:hover:bg-neutral-700 h-6 w-6`}
                       />
                     </div>
                   </th>
@@ -95,7 +161,7 @@ const Users = () => {
               </tr>
             </thead>
             <tbody className="align-top">
-              {users.slice(minMax.min, minMax.max).map((user) => (
+              {sortedUsers.slice(minMax.min, minMax.max).map((user) => (
                 <tr key={user.id} className="">
                   <td className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-center">
                     {user.firstName}

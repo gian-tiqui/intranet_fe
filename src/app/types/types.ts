@@ -95,6 +95,11 @@ type MinMax = {
   max: number;
 };
 
+type ThType = {
+  head: string;
+  field: string;
+};
+
 export type {
   Post,
   GroupedPosts,
@@ -105,4 +110,5 @@ export type {
   ABoardSelector,
   Department,
   MinMax,
+  ThType,
 };
