@@ -44,14 +44,15 @@ const Users = () => {
     setSearchText(value);
   };
 
-  const departments: string[] = [
-    "IT",
-    "HR",
-    "QM",
-    "ACNT",
-    "ADM",
-    "MRKTG",
-    "PRCHS",
+  const departments: { field: string; deptName: string }[] = [
+    { deptName: "ALL", field: "" },
+    { deptName: "IT", field: "it" },
+    { deptName: "HR", field: "hr" },
+    { deptName: "QM", field: "qm" },
+    { deptName: "ACNT", field: "accounting" },
+    { deptName: "ADM", field: "admitting" },
+    { deptName: "MRKTG", field: "marketing" },
+    { deptName: "PRCHS", field: "purchasing" },
   ];
 
   const handleNextClicked = () => {
@@ -79,10 +80,16 @@ const Users = () => {
   };
 
   useEffect(() => {
-    const usersByDept = users.filter(
-      (user) => user.department.departmentName === selectedDept
-    );
-    setSortedUsers(usersByDept);
+    if (selectedDept === "") {
+      setSortedUsers(users);
+    } else {
+      const usersByDept = users.filter(
+        (user) =>
+          user.department.departmentName.toLowerCase() ===
+          selectedDept.toLowerCase()
+      );
+      setSortedUsers(usersByDept);
+    }
   }, [selectedDept, users]);
 
   useEffect(() => {
@@ -119,8 +126,20 @@ const Users = () => {
   };
 
   useEffect(() => {
-    console.log(debouncedSearch);
-  }, [debouncedSearch]);
+    const searchUsers = () => {
+      const searchTerm = debouncedSearch.toLowerCase().trim();
+      const usersSearchResults = users.filter((user) => {
+        const fullName = `${user.firstName} ${user.middleName} ${user.lastName}`
+          .toLowerCase()
+          .trim();
+        return fullName.includes(searchTerm);
+      });
+
+      setSortedUsers(usersSearchResults);
+    };
+
+    searchUsers();
+  }, [debouncedSearch, users]);
 
   useEffect(() => {
     const sortUsers = () => {
@@ -188,27 +207,34 @@ const Users = () => {
       </div>
 
       <div className="p-10">
-        <div className="flex justify-between border border-b-gray-300 border-x-gray-300 dark:border-gray-600 rounded-t-xl pt-5">
+        <div
+          className="flex justify-between border border-b-gray-300 border-x-gray-300 dark:border-neutral-900
+         rounded-t-xl pt-5"
+        >
           <h1 className="px-9 mb-6">
             <p className="text-2xl font-extrabold">Users</p>
           </h1>
           <select
             onChange={handleSelectChange}
-            className="bg-inherit border outline-none rounded-full border-gray-400 dark:border-neutral-500 text-center me-5 w-24 cursor-pointer h-10"
+            className="bg-inherit border outline-none rounded-full border-gray-400 dark:border-neutral-900 text-center me-5 w-24 cursor-pointer h-10"
           >
             {departments.map((dept, index) => (
               <option
+                value={dept.field}
                 key={index}
                 className="bg-gray-300 dark:bg-neutral-700 grid place-content-center"
               >
-                {dept}
+                {dept.deptName}
               </option>
             ))}
           </select>
         </div>
-        <div className="border border-gray-300 dark:border-gray-600 pb-5 rounded-b-xl shadow">
+        <div
+          className="border border-gray-300 dark:border-neutral-900
+         pb-5 rounded-b-xl shadow"
+        >
           <table className="min-w-full bg-inherit  min-h-96">
-            <thead className="bg-inherit dark:text-white border-b border-gray-300 dark:border-neutral-600 uppercase text-sm">
+            <thead className="bg-inherit dark:text-white border-b border-gray-300 dark:border-neutral-900 uppercase text-sm">
               <tr>
                 {heads.map((head, index) => (
                   <th className="py-3 px-4" key={index}>
@@ -232,35 +258,60 @@ const Users = () => {
               </tr>
             </thead>
             <tbody className="align-top">
-              {sortedUsers.slice(minMax.min, minMax.max).map((user) => (
-                <tr key={user.id} className="">
-                  <td className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-center">
-                    {user.firstName}
-                  </td>
-                  <td className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-center">
-                    {user.middleName}
-                  </td>
-                  <td className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-center">
-                    {user.lastName}
-                  </td>
-                  <td className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-center">
-                    {user.email}
-                  </td>
-                  <td className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-center">
-                    {user.department.departmentName}
-                  </td>
-                  <td className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-center">
-                    {" "}
-                     {formatDate(user.dob, "MMMM dd, yyyy")}
-                  </td>
-                  <td className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-center">
-                    <Icon
-                      icon={"simple-line-icons:options"}
-                      className="mx-auto h-7 w-7 p-1 cursor-pointer hover:bg-gray-300 dark:hover:bg-neutral-600 rounded-full"
-                    />
-                  </td>
-                </tr>
-              ))}
+              {sortedUsers.length > 0 ? (
+                sortedUsers.slice(minMax.min, minMax.max).map((user) => (
+                  <tr key={user.id} className="">
+                    <td
+                      className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
+                   text-center"
+                    >
+                      {user.firstName}
+                    </td>
+                    <td
+                      className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
+                   text-center"
+                    >
+                      {user.middleName}
+                    </td>
+                    <td
+                      className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
+                   text-center"
+                    >
+                      {user.lastName}
+                    </td>
+                    <td
+                      className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
+                   text-center"
+                    >
+                      {user.email}
+                    </td>
+                    <td
+                      className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
+                   text-center"
+                    >
+                      {user.department.departmentName}
+                    </td>
+                    <td
+                      className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
+                   text-center"
+                    >
+                      {" "}
+                       {formatDate(user.dob, "MMMM dd, yyyy")}
+                    </td>
+                    <td
+                      className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
+                   text-center"
+                    >
+                      <Icon
+                        icon={"simple-line-icons:options"}
+                        className="mx-auto h-7 w-7 p-1 cursor-pointer hover:bg-gray-300 dark:hover:bg-neutral-600 rounded-full"
+                      />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <p className="ms-5 font-bold mt-3">No users found</p>
+              )}
             </tbody>
           </table>
           <div className="flex mx-6 gap-5 mt-5 justify-between">
