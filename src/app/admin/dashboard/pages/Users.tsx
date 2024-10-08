@@ -1,11 +1,12 @@
 "use client";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import ModeToggler from "@/app/components/ModeToggler";
+import Searchbar from "@/app/components/Searchbar";
 import apiClient from "@/app/http-common/apiUrl";
 import { MinMax, ThType, User } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { formatDate } from "date-fns";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 
 const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -13,6 +14,11 @@ const Users = () => {
   const [page, setPage] = useState<number>(1);
   const [direction, setDirection] = useState<string>("asc");
   const [selectedField, setSelectedField] = useState<string>("");
+  const [loadingSearch, setLoadingSearch] = useState<boolean>(false);
+  const [searchText, setSearchText] = useState<string>("");
+  const [debouncedSearch, setDebouncedSearch] = useState<string>("");
+  const [selectedDept, setSelectedDept] = useState<string>("");
+
   const JUMP = 4;
   const [minMax, setMinMax] = useState<MinMax>({ min: 0, max: 4 });
   const heads: ThType[] = [
@@ -22,6 +28,30 @@ const Users = () => {
     { head: "EMAIL", field: "email" },
     { head: "DEPARTMENT", field: "department" },
     { head: "DOB", field: "dob" },
+  ];
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setDebouncedSearch(searchText);
+      setLoadingSearch(true);
+    }, 1000);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchText]);
+
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setSearchText(value);
+  };
+
+  const departments: string[] = [
+    "IT",
+    "HR",
+    "QM",
+    "ACNT",
+    "ADM",
+    "MRKTG",
+    "PRCHS",
   ];
 
   const handleNextClicked = () => {
@@ -44,6 +74,17 @@ const Users = () => {
     }
   };
 
+  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedDept(e.target.value);
+  };
+
+  useEffect(() => {
+    const usersByDept = users.filter(
+      (user) => user.department.departmentName === selectedDept
+    );
+    setSortedUsers(usersByDept);
+  }, [selectedDept, users]);
+
   useEffect(() => {
     const fetchUsers = async () => {
       const response = await apiClient.get(`${API_BASE}/users`, {
@@ -59,6 +100,15 @@ const Users = () => {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setDebouncedSearch(searchText);
+      setLoadingSearch(true);
+    }, 1000);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchText]);
+
   const handleSortClicked = (field: string) => {
     if (selectedField === field) {
       setDirection(direction === "asc" ? "desc" : "asc");
@@ -67,6 +117,10 @@ const Users = () => {
     }
     setSelectedField(field);
   };
+
+  useEffect(() => {
+    console.log(debouncedSearch);
+  }, [debouncedSearch]);
 
   useEffect(() => {
     const sortUsers = () => {
@@ -122,9 +176,13 @@ const Users = () => {
 
   return (
     <div className="users-component">
-      <div className="w-full  bg-inherit py-5 px-10 shadow flex justify-between">
-        <p>meow</p>
-        <div className="flex gap-3">
+      <div className="w-full  bg-inherit py-5 px-10 shadow flex flex-row-reverse">
+        <div className="flex gap-3 items-center">
+          <Searchbar
+            loading={loadingSearch}
+            handleSearchChange={handleSearchChange}
+            searchText={searchText}
+          />
           <ModeToggler />
         </div>
       </div>
@@ -134,6 +192,19 @@ const Users = () => {
           <h1 className="px-9 mb-6">
             <p className="text-2xl font-extrabold">Users</p>
           </h1>
+          <select
+            onChange={handleSelectChange}
+            className="bg-inherit border outline-none rounded-full border-gray-400 dark:border-neutral-500 text-center me-5 w-24 cursor-pointer h-10"
+          >
+            {departments.map((dept, index) => (
+              <option
+                key={index}
+                className="bg-gray-300 dark:bg-neutral-700 grid place-content-center"
+              >
+                {dept}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="border border-gray-300 dark:border-gray-600 pb-5 rounded-b-xl shadow">
           <table className="min-w-full bg-inherit  min-h-96">
