@@ -229,7 +229,7 @@ const Users = () => {
           </button>
           <select
             onChange={handleSelectChange}
-            className="bg-gray-300 dark:bg-neutral-700 border outline-none rounded-full border-gray-400 dark:border-neutral-900 text-center w-24 cursor-pointer h-10"
+            className="bg-gray-300 dark:bg-neutral-700 border outline-none rounded-full border-gray-400 dark:border-neutral-900 text-center w-24 cursor-pointer h-8"
           >
             {departments.map((dept, index) => (
               <option
