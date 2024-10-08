@@ -3,6 +3,7 @@ import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import ModeToggler from "@/app/components/ModeToggler";
 import Searchbar from "@/app/components/Searchbar";
 import apiClient from "@/app/http-common/apiUrl";
+import useAdminHiderStore from "@/app/store/adminOpacitor";
 import { MinMax, ThType, User } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { formatDate } from "date-fns";
@@ -18,6 +19,7 @@ const Users = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [debouncedSearch, setDebouncedSearch] = useState<string>("");
   const [selectedDept, setSelectedDept] = useState<string>("");
+  const { setAShown } = useAdminHiderStore();
 
   const JUMP = 4;
   const [minMax, setMinMax] = useState<MinMax>({ min: 0, max: 4 });
@@ -77,6 +79,10 @@ const Users = () => {
 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setSelectedDept(e.target.value);
+  };
+
+  const handleAddClicked = () => {
+    setAShown(true);
   };
 
   useEffect(() => {
@@ -195,7 +201,10 @@ const Users = () => {
 
   return (
     <div className="users-component">
-      <div className="w-full  bg-inherit py-5 px-10 shadow flex flex-row-reverse">
+      <div className="w-full  bg-inherit py-5 px-10 shadow flex justify-between items-center">
+        <h1 className="">
+          <p className="text-2xl font-extrabold">Users</p>
+        </h1>
         <div className="flex gap-3 items-center">
           <Searchbar
             loading={loadingSearch}
@@ -209,14 +218,18 @@ const Users = () => {
       <div className="p-10">
         <div
           className="flex justify-between border border-b-gray-300 border-x-gray-300 dark:border-neutral-900
-         rounded-t-xl pt-5"
+         rounded-t-xl p-5"
         >
-          <h1 className="px-9 mb-6">
-            <p className="text-2xl font-extrabold">Users</p>
-          </h1>
+          <button
+            onClick={handleAddClicked}
+            className="flex items-center justify-between gap-2 px-5 bg-gray-300 hover:shadow rounded-full dark:bg-neutral-700"
+          >
+            <Icon icon={"ant-design:user-add-outlined"} className="h-6 w-6" />
+            <p>Add</p>
+          </button>
           <select
             onChange={handleSelectChange}
-            className="bg-inherit border outline-none rounded-full border-gray-400 dark:border-neutral-900 text-center me-5 w-24 cursor-pointer h-10"
+            className="bg-gray-300 dark:bg-neutral-700 border outline-none rounded-full border-gray-400 dark:border-neutral-900 text-center w-24 cursor-pointer h-10"
           >
             {departments.map((dept, index) => (
               <option
