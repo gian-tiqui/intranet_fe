@@ -1,6 +1,11 @@
 "use client";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { Icon } from "@iconify/react";
+import useDepartments from "@/app/custom-hooks/departments";
+import apiClient from "@/app/http-common/apiUrl";
+import { API_BASE } from "@/app/bindings/binding";
+import { toast } from "react-toastify";
 
 interface FormFields {
   email: string;
@@ -27,182 +32,227 @@ const AddUserModal = () => {
     formState: { errors },
   } = useForm<FormFields>();
 
-  const onSubmit = (data: FormFields) => {
-    console.log(data);
+  const departments = useDepartments();
+
+  const onSubmit = async (data: FormFields) => {
+    data.zipCode = Number(data.zipCode);
+    data.deptId = Number(data.deptId);
+    data.dob = new Date(new Date(data.dob).toISOString());
+
+    try {
+      const response = await apiClient.post(`${API_BASE}/auth/register`, {
+        ...data,
+      });
+
+      if (response.data.statusCode === 201) {
+        toast(response.data.message, { type: "success" });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-96 p-4 bg-neutral-200 dark:bg-neutral-900 rounded-2xl space-y-4"
+      className="p-6 max-w-md bg-white dark:bg-neutral-900 rounded-2xl h-96 w-96 overflow-auto shadow space-y-6"
     >
-      {/* Email */}
-      <div>
-        <input
-          type="email"
-          {...register("email", { required: "Email is required" })}
-          className="input-field"
-        />
-        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
-      </div>
+      <h1 className="text-xl mb-4 text-center font-bold">Add New User</h1>
 
-      {/* Password */}
-      <div>
-        <input
-          type="password"
-          {...register("password", { required: "Password is required" })}
-          className="input-field"
-        />
-        {errors.password && (
-          <p className="text-red-500">{errors.password.message}</p>
+      <div className="h-14">
+        <div className="flex items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl mb-1">
+          <Icon className="h-6 w-6 text-neutral-400" icon="ic:outline-email" />
+          <input
+            type="email"
+            {...register("email", { required: "Email is required" })}
+            placeholder="Email"
+            className="bg-neutral-100 dark:bg-neutral-800 outline-none w-full px-2"
+          />
+        </div>
+        {errors.email && (
+          <p className="text-red-500 text-xs ms-4">{errors.email.message}</p>
         )}
       </div>
 
-      {/* First Name */}
-      <div>
+      <div className="h-14">
+        <div className="flex items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl mb-1">
+          <Icon
+            className="h-6 w-6 text-neutral-400"
+            icon="mdi:password-outline"
+          />
+          <input
+            type="password"
+            {...register("password", { required: "Password is required" })}
+            placeholder="Password"
+            className="bg-neutral-100 dark:bg-neutral-800 outline-none w-full px-2"
+          />
+        </div>
+        {errors.password && (
+          <p className="text-red-500 text-xs ms-4">{errors.password.message}</p>
+        )}
+      </div>
+
+      <div className="h-14">
         <input
           type="text"
           {...register("firstName", { required: "First name is required" })}
-          className="input-field"
+          placeholder="First Name"
+          className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
         {errors.firstName && (
-          <p className="text-red-500">{errors.firstName.message}</p>
+          <p className="text-red-500 text-xs ms-4">
+            {errors.firstName.message}
+          </p>
         )}
       </div>
 
-      {/* Middle Name */}
-      <div>
+      <div className="h-14">
         <input
           type="text"
           {...register("middleName")}
-          className="input-field"
+          placeholder="Middle Name"
+          className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
       </div>
 
-      {/* Last Name */}
-      <div>
+      <div className="h-14">
         <input
           type="text"
           {...register("lastName", { required: "Last name is required" })}
-          className="input-field"
+          placeholder="Last Name"
+          className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
         {errors.lastName && (
-          <p className="text-red-500">{errors.lastName.message}</p>
+          <p className="text-red-500 text-xs ms-4">{errors.lastName.message}</p>
         )}
       </div>
 
-      {/* Last Name Prefix */}
-      <div>
+      <div className="h-14">
         <input
           type="text"
           {...register("lastNamePrefix")}
-          className="input-field"
+          placeholder="Last Name Prefix"
+          className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
       </div>
 
-      {/* Preferred Name */}
-      <div>
+      <div className="h-14">
         <input
           type="text"
           {...register("preferredName")}
-          className="input-field"
+          placeholder="Preferred Name"
+          className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
       </div>
 
-      {/* Suffix */}
-      <div>
-        <input type="text" {...register("suffix")} className="input-field" />
+      <div className="h-14">
+        <input
+          type="text"
+          {...register("suffix")}
+          placeholder="Suffix"
+          className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
+        />
       </div>
 
-      {/* Address */}
-      <div>
+      <div className="h-14">
         <input
           type="text"
           {...register("address", { required: "Address is required" })}
-          className="input-field"
+          placeholder="Address"
+          className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
         {errors.address && (
-          <p className="text-red-500">{errors.address.message}</p>
+          <p className="text-red-500 text-xs ms-4">{errors.address.message}</p>
         )}
       </div>
 
-      {/* City */}
-      <div>
+      <div className="h-14">
         <input
           type="text"
           {...register("city", { required: "City is required" })}
-          className="input-field"
+          placeholder="City"
+          className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
-        {errors.city && <p className="text-red-500">{errors.city.message}</p>}
-      </div>
-
-      {/* State */}
-      <div>
-        <input
-          type="text"
-          {...register("state", { required: "State is required" })}
-          className="input-field"
-        />
-        {errors.state && <p className="text-red-500">{errors.state.message}</p>}
-      </div>
-
-      {/* Zip Code */}
-      <div>
-        <input
-          type="number"
-          {...register("zipCode", { required: "Zip code is required" })}
-          className="input-field"
-        />
-        {errors.zipCode && (
-          <p className="text-red-500">{errors.zipCode.message}</p>
+        {errors.city && (
+          <p className="text-red-500 text-xs ms-4">{errors.city.message}</p>
         )}
       </div>
 
-      {/* Date of Birth */}
-      <div>
+      <div className="h-14">
         <input
-          type="date"
-          {...register("dob", { required: "Date of birth is required" })}
-          className="input-field"
+          type="text"
+          {...register("state", { required: "State is required" })}
+          placeholder="State"
+          className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
-        {errors.dob && <p className="text-red-500">{errors.dob.message}</p>}
+        {errors.state && (
+          <p className="text-red-500 text-xs ms-4">{errors.state.message}</p>
+        )}
       </div>
 
-      {/* Gender */}
-      <div>
+      <div className="h-14">
+        <input
+          type="number"
+          {...register("zipCode", { required: "Zip code is required" })}
+          placeholder="Zip Code"
+          className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
+        />
+        {errors.zipCode && (
+          <p className="text-red-500 text-xs ms-4">{errors.zipCode.message}</p>
+        )}
+      </div>
+
+      {/*
+       * @TODO:
+       * Fix the input of date and should insert exactly like this format (1990-01-15T00:00:00.000Z)
+       *
+       */}
+      <div className="h-14">
+        <input
+          type="datetime-local"
+          {...register("dob", { required: "Date of birth is required" })}
+          className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
+        />
+        {errors.dob && (
+          <p className="text-red-500 text-xs ms-4">{errors.dob.message}</p>
+        )}
+      </div>
+
+      <div className="h-14">
         <select
           {...register("gender", { required: "Gender is required" })}
-          className="input-field"
+          className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         >
           <option value="Male">Male</option>
           <option value="Female">Female</option>
         </select>
         {errors.gender && (
-          <p className="text-red-500">{errors.gender.message}</p>
+          <p className="text-red-500 text-xs ms-4">{errors.gender.message}</p>
         )}
       </div>
 
-      {/* Department */}
-      <div>
-        <input
-          type="number"
+      <div className="h-14">
+        <select
           {...register("deptId", { required: "Department ID is required" })}
-          className="input-field"
-        />
+          className="w-full h-10 bg-neutral-100 dark:bg-neutral-800 border outline-none border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
+        >
+          {departments.map((department) => (
+            <option key={department.deptId} value={department.deptId}>
+              {department.departmentName}
+            </option>
+          ))}
+        </select>
         {errors.deptId && (
-          <p className="text-red-500">{errors.deptId.message}</p>
+          <p className="text-red-500 text-xs ms-4">{errors.deptId.message}</p>
         )}
       </div>
 
-      {/* Submit Button */}
-      <div className="mt-4">
-        <button
-          type="submit"
-          className="w-full p-2 bg-blue-500 text-white rounded"
-        >
-          Add User
-        </button>
-      </div>
+      <button
+        type="submit"
+        className="w-full py-2 px-4 dark:bg-neutral-200 rounded-2xl bg-neutral-900 mt-4 hover:bg-gray-950 hover:dark:bg-neutral-300 text-white dark:text-black transition"
+      >
+        Submit
+      </button>
     </form>
   );
 };

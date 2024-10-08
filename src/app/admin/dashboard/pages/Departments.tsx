@@ -1,8 +1,14 @@
 "use client";
-import React from "react";
+import useDepartments from "@/app/custom-hooks/departments";
 
 const Departments = () => {
-  return <div>departments</div>;
+  const departments = useDepartments();
+
+  return (
+    <div>
+      <pre>{JSON.stringify(departments, null, 2)}</pre>
+    </div>
+  );
 };
 
 export default Departments;

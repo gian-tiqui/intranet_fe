@@ -69,8 +69,9 @@ const Sidebar = () => {
 
       <div className="bg-white dark:bg-neutral-900 flex flex-col justify-between shadow">
         <div className="">
-          <div className="px-5 pt-5 clear-start mb-6 font-extrabold text-2xl">
-            INTRANET DASHBOARD
+          <div className="px-6 pt-5 clear-start mb-6 font-extrabold text-2xl gap-3 flex items-center">
+            <Icon icon={"file-icons:dashboard"} />
+            <p>DASHBOARD</p>
           </div>
           <hr className="mt-7 border-b border-gray-200 dark:border-gray-800 mb-2" />
           <HoverBox className="hover:bg-gray-300 mb-2 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded mx-4">
