@@ -109,16 +109,12 @@ const Sidebar = () => {
           <div className="flex flex-col gap-0 py-2 px-4 w-72">
             {components.map((comp, index) => (
               <div
+                onClick={() => setSelectedComp(comp.component)}
                 key={index}
                 className="flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-neutral-800 rounded p-2"
               >
                 <Icon icon={comp.icon} className="h-7 w-7" />
-                <p
-                  className="cursor-pointer"
-                  onClick={() => setSelectedComp(comp.component)}
-                >
-                  {comp.name}
-                </p>
+                <p className="cursor-pointer">{comp.name}</p>
               </div>
             ))}
           </div>

@@ -185,7 +185,9 @@ const Posts = () => {
 
   return (
     <div className="posts-component">
-      <div className="w-full bg-inherit py-5 px-10 shadow flex flex-row-reverse">
+      <div className="w-full bg-inherit py-5 px-10 shadow flex items-center justify-between">
+        <h1 className="text-2xl font-extrabold">Posts</h1>
+
         <div className="flex gap-3 items-center">
           <Searchbar
             loading={loadingSearch}
@@ -197,10 +199,7 @@ const Posts = () => {
       </div>
 
       <div className="p-10">
-        <div className="flex justify-between border border-b-gray-300 border-x-gray-300 dark:border-neutral-900 rounded-t-xl pt-5">
-          <h1 className="px-9 mb-6">
-            <p className="text-2xl font-extrabold">Posts</p>
-          </h1>
+        <div className="flex justify-between border border-b-gray-300 border-x-gray-300 px-4 dark:border-neutral-900 rounded-t-xl pt-5">
           <select
             onChange={handleSelectChange}
             className="bg-gray-300 dark:bg-neutral-700 border outline-none rounded-full border-gray-400 dark:border-neutral-900 text-center me-5 w-24 cursor-pointer h-10"
