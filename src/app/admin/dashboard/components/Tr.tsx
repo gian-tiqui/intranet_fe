@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import updateModalStore from "@/app/store/updateUserModal";
 import useAdminHiderStore from "@/app/store/adminOpacitor";
 import viewUserStore from "@/app/store/viewUser";
+import deleteUserStore from "@/app/store/deleteUserModal";
 
 const Tr: React.FC<User> = (user) => {
   const [showOptions, setShowOptions] = useState<boolean>(false);
@@ -15,6 +16,7 @@ const Tr: React.FC<User> = (user) => {
   const { setUpdateModalShown } = updateModalStore();
   const { setAShown } = useAdminHiderStore();
   const { setViewUser } = viewUserStore();
+  const { setShowDeleteModal } = deleteUserStore();
 
   const handleViewClicked = () => {
     setViewUser(true);
@@ -29,7 +31,9 @@ const Tr: React.FC<User> = (user) => {
   };
 
   const handleDeleteClicked = () => {
-    console.log("delete");
+    setAShown(true);
+
+    setShowDeleteModal(true);
   };
 
   useEffect(() => {

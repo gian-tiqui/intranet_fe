@@ -3,7 +3,6 @@ import { ReactNode } from "react";
 type User = {
   id: number;
   email: string;
-  password: string;
   firstName: string;
   middleName?: string;
   lastName: string;
@@ -18,9 +17,8 @@ type User = {
   gender: string;
   createdAt: Date;
   updatedAt: Date;
-  refreshToken?: string;
   deptId: number;
-  department: { departmentName: string };
+  department: Department;
 };
 
 type Post = {

@@ -29,7 +29,14 @@ const ViewUserData = () => {
     fetchUser();
   }, [selectedId]);
 
-  return <div>{JSON.stringify(user, null, 2)}</div>;
+  return (
+    <div
+      onClick={(e) => e.stopPropagation()}
+      className="h-96 w-96 bg-neutral-200 dark:bg-neutral-900 rounded-xl p-4"
+    >
+      {user?.firstName}
+    </div>
+  );
 };
 
 export default ViewUserData;
