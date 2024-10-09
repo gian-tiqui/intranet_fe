@@ -35,6 +35,7 @@ type Post = {
   user?: User;
   comments?: Comment[];
   edited: boolean;
+  department: Department;
 };
 
 type GroupedPosts = {

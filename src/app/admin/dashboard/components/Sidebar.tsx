@@ -14,12 +14,17 @@ import HoverBox from "@/app/components/HoverBox";
 import { useRouter } from "next/navigation";
 import useAdminHiderStore from "@/app/store/adminOpacitor";
 import AddUserModal from "./AddUserModal";
+import UpdateUserModal from "./UpdateUserModa";
+import addModalStore from "@/app/store/addPostModal";
+import updateModalStore from "@/app/store/updateUserModal";
 
 const Sidebar = () => {
   const [selectedComp, setSelectedComp] = useState<ReactNode>(<Graphs />);
   const { uVisible, setUVisible } = useShowUserModalStore();
   const router = useRouter();
   const { aShown, setAShown } = useAdminHiderStore();
+  const { addModalShown, setAddModalShown } = addModalStore();
+  const { updateModalShown, setUpdateModalShown } = updateModalStore();
 
   const components: ABoardSelector[] = [
     {
@@ -54,15 +59,22 @@ const Sidebar = () => {
     },
   ];
 
+  const handleHiderClicked = () => {
+    setAShown(!aShown);
+    setAddModalShown(false);
+    setUpdateModalShown(false);
+  };
+
   return (
     <div className="flex w-full font-mono">
       {aShown && (
         <div
-          onClick={() => setAShown(!aShown)}
+          onClick={handleHiderClicked}
           className="w-full h-full bg-black/85 absolute z-20 grid place-content-center"
         >
           <div onClick={(e) => e.stopPropagation()}>
-            {true && <AddUserModal />}
+            {addModalShown && <AddUserModal />}
+            {updateModalShown && <UpdateUserModal />}
           </div>
         </div>
       )}

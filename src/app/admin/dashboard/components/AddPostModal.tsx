@@ -24,7 +24,7 @@ interface FormFields {
   deptId: number;
 }
 
-const AddUserModal = () => {
+const AddPostModal = () => {
   const {
     register,
     handleSubmit,
@@ -249,4 +249,4 @@ const AddUserModal = () => {
   );
 };
 
-export default AddUserModal;
+export default AddPostModal;

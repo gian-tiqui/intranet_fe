@@ -10,6 +10,7 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 
 const Posts = () => {
   const [posts, setPosts] = useState<Post[]>([]);
+
   const [sortedPosts, setSortedPosts] = useState<Post[]>([]);
   const [page, setPage] = useState<number>(1);
   const [direction, setDirection] = useState<string>("asc");
@@ -24,7 +25,7 @@ const Posts = () => {
   const heads: ThType[] = [
     { head: "TITLE", field: "title" },
     { head: "MESSAGE", field: "message" },
-    { head: "USER", field: "user.firstName" },
+    { head: "POSTED BY", field: "user.firstName" },
     { head: "DEPARTMENT", field: "deptId" },
     { head: "CREATED AT", field: "createdAt" },
     { head: "UPDATED AT", field: "updatedAt" },
@@ -84,7 +85,7 @@ const Posts = () => {
       setSortedPosts(posts);
     } else {
       const postsByDept = posts.filter(
-        (post) => post.deptId.toString() === selectedDept
+        (post) => post.department.departmentName.toLowerCase() === selectedDept
       );
       setSortedPosts(postsByDept);
     }
@@ -98,6 +99,7 @@ const Posts = () => {
         },
       });
 
+      console.log(response.data);
       setPosts(response.data);
       setSortedPosts(response.data);
     };
@@ -212,7 +214,7 @@ const Posts = () => {
           </select>
         </div>
         <div className="border border-gray-300 dark:border-neutral-900 pb-5 rounded-b-xl shadow">
-          <table className="min-w-full bg-inherit min-h-96">
+          <table className="min-w-full border-b bg-inherit min-h-96 overflow-x-auto">
             <thead className="bg-inherit dark:text-white border-b border-gray-300 dark:border-neutral-900 uppercase text-sm">
               <tr>
                 {heads.map((head, index) => (
@@ -244,22 +246,28 @@ const Posts = () => {
                     className="border-b last:border-b-0 border-gray-300 dark:border-neutral-900"
                   >
                     <td className="text-center">{post.title}</td>
-                    <td className="text-center">{post.message}</td>
-                    <td className="text-center">{post.user?.firstName}</td>
-                    <td className="text-center">{post.deptId}</td>
+                    <td className="text-center break-all">{post.message}</td>
+                    <td className="text-center">
+                      {post.user?.firstName} {post.user?.lastName}
+                    </td>
+                    <td className="text-center">
+                      {post.department.departmentName}
+                    </td>
                     <td className="text-center">
                       {formatDate(post.createdAt, "MMMM dd, yyyy")}
                     </td>
                     <td className="text-center">
                       {formatDate(post.updatedAt, "MMMM dd, yyyy")}
                     </td>
-                    <td className="text-center">
-                      <button
-                        className="text-blue-500 hover:underline"
-                        onClick={() => alert(`Viewing post ${post.pid}`)}
-                      >
-                        View
-                      </button>
+                    <td
+                      onClick={() => console.log(post.pid)}
+                      className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
+                   text-center"
+                    >
+                      <Icon
+                        icon={"simple-line-icons:options"}
+                        className="mx-auto h-7 w-7 p-1 cursor-pointer hover:bg-gray-300 dark:hover:bg-neutral-600 rounded-full"
+                      />
                     </td>
                   </tr>
                 ))
@@ -275,29 +283,24 @@ const Posts = () => {
               )}
             </tbody>
           </table>
+          <div className="flex mx-6 gap-5 mt-5 justify-between">
+            <p>Page {page}</p>
+            <div className="flex gap-3">
+              <button onClick={handlePrevClicked}>
+                <Icon
+                  icon={"grommet-icons:link-previous"}
+                  className="h-7 hover:bg-gray-300 rounded-full dark:hover:bg-neutral-600  p-1 w-7"
+                />
+              </button>
+              <button onClick={handleNextClicked}>
+                <Icon
+                  icon={"grommet-icons:link-next"}
+                  className="h-7 hover:bg-gray-300 dark:hover:bg-neutral-600 rounded-full p-1 w-7"
+                />
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div className="w-full bg-inherit py-5 px-10 flex justify-between">
-        <button
-          disabled={minMax.min <= 0}
-          onClick={handlePrevClicked}
-          className={`${
-            minMax.min <= 0 ? "cursor-not-allowed" : "cursor-pointer"
-          } text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300`}
-        >
-          <Icon icon={"bx:chevrons-left"} className="h-6 w-6" />
-        </button>
-        <p>{page}</p>
-        <button
-          disabled={minMax.max >= posts.length}
-          onClick={handleNextClicked}
-          className={`${
-            minMax.max >= posts.length ? "cursor-not-allowed" : "cursor-pointer"
-          } text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-300`}
-        >
-          <Icon icon={"bx:chevrons-right"} className="h-6 w-6" />
-        </button>
       </div>
     </div>
   );
