@@ -3,11 +3,12 @@ import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import ModeToggler from "@/app/components/ModeToggler";
 import Searchbar from "@/app/components/Searchbar";
 import apiClient from "@/app/http-common/apiUrl";
+import addModalStore from "@/app/store/addPostModal";
 import useAdminHiderStore from "@/app/store/adminOpacitor";
 import { MinMax, ThType, User } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { formatDate } from "date-fns";
 import React, { ChangeEvent, useEffect, useState } from "react";
+import Tr from "../components/Tr";
 
 const Users = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -20,6 +21,7 @@ const Users = () => {
   const [debouncedSearch, setDebouncedSearch] = useState<string>("");
   const [selectedDept, setSelectedDept] = useState<string>("");
   const { setAShown } = useAdminHiderStore();
+  const { setAddModalShown } = addModalStore();
 
   const JUMP = 4;
   const [minMax, setMinMax] = useState<MinMax>({ min: 0, max: 4 });
@@ -82,6 +84,7 @@ const Users = () => {
   };
 
   const handleAddClicked = () => {
+    setAddModalShown(true);
     setAShown(true);
   };
 
@@ -270,62 +273,16 @@ const Users = () => {
                 <th className="py-3 px-4">ACTION</th>
               </tr>
             </thead>
-            <tbody className="align-top">
-              {sortedUsers.length > 0 ? (
-                sortedUsers.slice(minMax.min, minMax.max).map((user) => (
-                  <tr key={user.id} className="">
-                    <td
-                      className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
-                   text-center"
-                    >
-                      {user.firstName}
-                    </td>
-                    <td
-                      className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
-                   text-center"
-                    >
-                      {user.middleName}
-                    </td>
-                    <td
-                      className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
-                   text-center"
-                    >
-                      {user.lastName}
-                    </td>
-                    <td
-                      className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
-                   text-center"
-                    >
-                      {user.email}
-                    </td>
-                    <td
-                      className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
-                   text-center"
-                    >
-                      {user.department.departmentName}
-                    </td>
-                    <td
-                      className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
-                   text-center"
-                    >
-                      {" "}
-                       {formatDate(user.dob, "MMMM dd, yyyy")}
-                    </td>
-                    <td
-                      className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
-                   text-center"
-                    >
-                      <Icon
-                        icon={"simple-line-icons:options"}
-                        className="mx-auto h-7 w-7 p-1 cursor-pointer hover:bg-gray-300 dark:hover:bg-neutral-600 rounded-full"
-                      />
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <p className="ms-5 font-bold mt-3">No users found</p>
-              )}
-            </tbody>
+
+            {sortedUsers.length > 0 ? (
+              <tbody className="align-top">
+                {sortedUsers.slice(minMax.min, minMax.max).map((user) => (
+                  <Tr {...user} key={user.id} />
+                ))}
+              </tbody>
+            ) : (
+              <p className="ms-5 font-bold mt-3">No users found</p>
+            )}
           </table>
           <div className="flex mx-6 gap-5 mt-5 justify-between">
             <p>Page {page}</p>

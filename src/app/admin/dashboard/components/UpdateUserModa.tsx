@@ -1,20 +1,21 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import useDepartments from "@/app/custom-hooks/departments";
 import apiClient from "@/app/http-common/apiUrl";
 import { API_BASE } from "@/app/bindings/binding";
 import { toast } from "react-toastify";
+import userIdStore from "@/app/store/userId";
 
 interface FormFields {
   email: string;
-  password: string;
+  password?: string;
   firstName: string;
-  middleName: string;
+  middleName?: string;
   lastName: string;
-  lastNamePrefix: string;
-  preferredName: string;
-  suffix: string;
+  lastNamePrefix?: string;
+  preferredName?: string;
+  suffix?: string;
   address: string;
   city: string;
   state: string;
@@ -24,27 +25,61 @@ interface FormFields {
   deptId: number;
 }
 
-const AddUserModal = () => {
+const UpdateUserModal = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FormFields>();
-
+  const { selectedId } = userIdStore();
   const departments = useDepartments();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        setLoading(true);
+        const response = await apiClient.get(`${API_BASE}/users/${selectedId}`);
+        const userData = response.data.user;
+
+        setValue("email", userData.email);
+        setValue("firstName", userData.firstName);
+        setValue("middleName", userData.middleName);
+        setValue("lastName", userData.lastName);
+        setValue("lastNamePrefix", userData.lastNamePrefix);
+        setValue("preferredName", userData.preferredName);
+        setValue("suffix", userData.suffix);
+        setValue("address", userData.address);
+        setValue("city", userData.city);
+        setValue("state", userData.state);
+        setValue("zipCode", userData.zipCode);
+        setValue("dob", new Date(userData.dob));
+        setValue("gender", userData.gender);
+        setValue("deptId", userData.deptId);
+
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+        toast("Failed to load user data", { type: "error" });
+      }
+    };
+
+    loadUserData();
+  }, [selectedId, setValue]);
 
   const onSubmit = async (data: FormFields) => {
     data.zipCode = Number(data.zipCode);
     data.deptId = Number(data.deptId);
-    data.dob = new Date(new Date(data.dob).toISOString());
 
     try {
-      const response = await apiClient.post(`${API_BASE}/auth/register`, {
+      const response = await apiClient.put(`${API_BASE}/users/${selectedId}`, {
         ...data,
       });
 
-      if (response.data.statusCode === 201) {
-        toast(response.data.message, { type: "success" });
+      if (response.status === 200) {
+        toast("User updated successfully", { type: "success" });
       }
     } catch (error) {
       const err = error as { message: string };
@@ -53,12 +88,14 @@ const AddUserModal = () => {
     }
   };
 
-  return (
+  return loading ? (
+    <p>Loading...</p>
+  ) : (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="p-6 max-w-md bg-white dark:bg-neutral-900 rounded-2xl h-96 w-96 overflow-auto shadow space-y-6"
     >
-      <h1 className="text-xl mb-4 text-center font-bold">Add New User</h1>
+      <h1 className="text-xl mb-4 text-center font-bold">Update User</h1>
 
       <div className="h-14">
         <input
@@ -243,10 +280,10 @@ const AddUserModal = () => {
         type="submit"
         className="w-full py-2 px-4 dark:bg-neutral-200 rounded-2xl bg-neutral-900 mt-4 hover:bg-gray-950 hover:dark:bg-neutral-300 text-white dark:text-black transition"
       >
-        Submit
+        Update User
       </button>
     </form>
   );
 };
 
-export default AddUserModal;
+export default UpdateUserModal;
