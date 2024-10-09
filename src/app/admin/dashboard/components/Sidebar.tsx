@@ -19,6 +19,8 @@ import addModalStore from "@/app/store/addPostModal";
 import updateModalStore from "@/app/store/updateUserModal";
 import viewUserStore from "@/app/store/viewUser";
 import ViewUserData from "./ViewUserData";
+import deleteUserStore from "@/app/store/deleteUserModal";
+import DeleteModal from "./DeleteModal";
 
 const Sidebar = () => {
   const [selectedComp, setSelectedComp] = useState<ReactNode>(<Graphs />);
@@ -28,6 +30,7 @@ const Sidebar = () => {
   const { addModalShown, setAddModalShown } = addModalStore();
   const { updateModalShown, setUpdateModalShown } = updateModalStore();
   const { viewUser, setViewUser } = viewUserStore();
+  const { showDeleteModal, setShowDeleteModal } = deleteUserStore();
 
   const components: ABoardSelector[] = [
     {
@@ -67,6 +70,7 @@ const Sidebar = () => {
     setAddModalShown(false);
     setUpdateModalShown(false);
     setViewUser(false);
+    setShowDeleteModal(false);
   };
 
   return (
@@ -80,6 +84,7 @@ const Sidebar = () => {
             {addModalShown && <AddUserModal />}
             {updateModalShown && <UpdateUserModal />}
             {viewUser && <ViewUserData />}
+            {showDeleteModal && <DeleteModal />}
           </div>
         </div>
       )}
