@@ -99,7 +99,6 @@ const Posts = () => {
         },
       });
 
-      console.log(response.data);
       setPosts(response.data);
       setSortedPosts(response.data);
     };

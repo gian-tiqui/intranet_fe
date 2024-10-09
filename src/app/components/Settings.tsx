@@ -41,8 +41,10 @@ const Settings = () => {
           <div className="flex gap-3 w-full">
             <div className="h-10 w-10 bg-neutral-300 rounded-full"></div>
             <div>
-              <p>Westlake User</p>
-              <p className="text-xs">IT Department</p>
+              <p>
+                {decodeUserData()?.firstName} {decodeUserData()?.lastName}
+              </p>
+              <p className="text-xs">{decodeUserData()?.departmentName}</p>
             </div>
           </div>
           <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded flex items-center gap-3">

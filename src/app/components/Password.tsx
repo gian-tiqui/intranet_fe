@@ -1,5 +1,9 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import apiClient from "../http-common/apiUrl";
+import { API_BASE, INTRANET } from "../bindings/binding";
+import { decodeUserData } from "../functions/functions";
 
 interface FormFields {
   currentPassword: string;
@@ -8,10 +12,37 @@ interface FormFields {
 }
 
 const Password = () => {
-  const { register, handleSubmit } = useForm<FormFields>();
+  const { register, handleSubmit, reset } = useForm<FormFields>();
 
-  const onPasswordReset = (data: FormFields) => {
-    console.log(data);
+  const onPasswordReset = async (data: FormFields) => {
+    const userId = decodeUserData()?.sub;
+
+    if (userId) {
+      try {
+        const response = await apiClient.post(
+          `${API_BASE}/users/password`,
+          {
+            oldPassword: data.currentPassword,
+            newPassword: data.newPassword,
+            userId: userId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+            },
+          }
+        );
+
+        if (response.data.statusCode === 200) {
+          toast(response.data.message);
+          reset();
+        }
+      } catch (error) {
+        const { message } = error as { message: string };
+
+        toast(message, { type: "error" });
+      }
+    }
   };
 
   return (
