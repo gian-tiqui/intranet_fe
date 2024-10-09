@@ -281,7 +281,14 @@ const Users = () => {
                 ))}
               </tbody>
             ) : (
-              <p className="ms-5 font-bold mt-3">No users found</p>
+              <tr>
+                <td
+                  colSpan={heads.length + 1}
+                  className="text-center p-10 text-gray-500"
+                >
+                  No users found.
+                </td>
+              </tr>
             )}
           </table>
           <div className="flex mx-6 gap-5 mt-5 justify-between">
