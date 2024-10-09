@@ -7,12 +7,30 @@ import userIdStore from "@/app/store/userId";
 import React, { useEffect, useState } from "react";
 import updateModalStore from "@/app/store/updateUserModal";
 import useAdminHiderStore from "@/app/store/adminOpacitor";
+import viewUserStore from "@/app/store/viewUser";
 
 const Tr: React.FC<User> = (user) => {
   const [showOptions, setShowOptions] = useState<boolean>(false);
   const { setSelectedId } = userIdStore();
   const { setUpdateModalShown } = updateModalStore();
   const { setAShown } = useAdminHiderStore();
+  const { setViewUser } = viewUserStore();
+
+  const handleViewClicked = () => {
+    setViewUser(true);
+    setAShown(true);
+    setSelectedId(user.id);
+  };
+
+  const handleUpdateClicked = () => {
+    setUpdateModalShown(true);
+    setAShown(true);
+    setSelectedId(user.id);
+  };
+
+  const handleDeleteClicked = () => {
+    console.log("delete");
+  };
 
   useEffect(() => {
     const handleClick = () => {
@@ -86,22 +104,24 @@ const Tr: React.FC<User> = (user) => {
                 }}
                 className="flex flex-col w-32 right-0 items-start p-2 absolute bg-neutral-200 border border-gray-300 rounded-lg dark:bg-neutral-800 dark:border-gray-900"
               >
-                <button className="hover:bg-gray-300 px-2 dark:hover:bg-gray-900 rounded w-full py-2 flex items-center gap-1">
+                <button
+                  onClick={handleViewClicked}
+                  className="hover:bg-gray-300 px-2 dark:hover:bg-gray-900 rounded w-full py-2 flex items-center gap-1"
+                >
                   <Icon icon={"hugeicons:view"} className="h-5 w-5" />
                   View
                 </button>
                 <button
-                  onClick={() => {
-                    setUpdateModalShown(true);
-                    setAShown(true);
-                    setSelectedId(user.id);
-                  }}
+                  onClick={handleUpdateClicked}
                   className="hover:bg-gray-300 px-2 dark:hover:bg-gray-900 rounded w-full py-2 flex items-center gap-1"
                 >
                   <Icon icon={"bx:edit"} className="h-5 w-5" />
                   Update
                 </button>
-                <button className="hover:bg-gray-300 px-2 dark:hover:bg-gray-900 rounded w-full py-2 flex items-center gap-1">
+                <button
+                  onClick={handleDeleteClicked}
+                  className="hover:bg-gray-300 px-2 dark:hover:bg-gray-900 rounded w-full py-2 flex items-center gap-1"
+                >
                   <Icon
                     icon={"material-symbols:delete-outline"}
                     className="h-5 w-5"
