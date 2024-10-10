@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import apiClient from "../http-common/apiUrl";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import { toast } from "react-toastify";
+import { Comment } from "../types/types";
 
 const useComments = () => {
   const [comments, setComments] = useState<Comment[]>([]);
@@ -16,6 +17,7 @@ const useComments = () => {
         });
 
         if (response.status === 200) {
+          console.log(response.data);
           setComments(response.data);
         } else {
           console.log("There was a problem in fetching the comments");

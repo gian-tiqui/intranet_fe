@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import apiClient from "../http-common/apiUrl";
 import { API_BASE, INTRANET } from "../bindings/binding";
+import { Comment } from "../types/types";
 
 const useReplies = () => {
   const [replies, setReplies] = useState<Comment[]>([]);
