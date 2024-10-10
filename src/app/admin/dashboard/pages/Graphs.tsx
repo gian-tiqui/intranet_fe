@@ -4,7 +4,7 @@ import useComments from "@/app/custom-hooks/comments";
 import useDepartments from "@/app/custom-hooks/departments";
 import usePosts from "@/app/custom-hooks/posts";
 import useReplies from "@/app/custom-hooks/replies";
-import useUsers from "@/app/custom-hooks/Users"; // ???
+import useUsers from "@/app/custom-hooks/users";
 import React, { useEffect } from "react";
 import {
   LineChart,
