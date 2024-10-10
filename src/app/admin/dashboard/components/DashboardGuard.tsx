@@ -1,19 +1,24 @@
 "use client";
 import { INTRANET } from "@/app/bindings/binding";
+import { decodeUserData } from "@/app/functions/functions";
 import useNavbarVisibilityStore from "@/app/store/navbarVisibilityStore";
-import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 const DashboardGuard = () => {
+  // Navbar visibility setter.
   const { setHidden } = useNavbarVisibilityStore();
   const router = useRouter();
   useEffect(() => {
-    if (localStorage.getItem(INTRANET)) {
-      const dept = localStorage.getItem(INTRANET);
-      const decoded: { departmentName: string } = jwtDecode(dept || "");
+    // Verify if access token exists.
+    const at = localStorage.getItem(INTRANET);
 
-      if (decoded.departmentName !== "ADMIN") router.push("/");
+    if (at) {
+      // Retrieve the department name via access token.
+      const deptName = decodeUserData()?.departmentName;
+
+      // Do not allow the user to go to the dashboard if he is not an admin.
+      if (deptName !== "ADMIN") router.push("/");
       else setHidden(false);
     }
   }, [router, setHidden]);

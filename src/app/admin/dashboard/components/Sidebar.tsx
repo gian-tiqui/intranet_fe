@@ -32,6 +32,7 @@ const Sidebar = () => {
   const { viewUser, setViewUser } = viewUserStore();
   const { showDeleteModal, setShowDeleteModal } = deleteUserStore();
 
+  // Sidebar items that will change the children component.
   const components: ABoardSelector[] = [
     {
       name: "Graphs",

@@ -7,10 +7,16 @@ import React from "react";
 import { toast } from "react-toastify";
 
 const DeleteModal = () => {
+  // User ID global variable.
   const { selectedId } = userIdStore();
+
+  // A container that will block the UI aside from the focused form component.
   const { setAShown } = useAdminHiderStore();
+
+  // Delete Modal Component hider.
   const { setShowDeleteModal } = deleteUserStore();
 
+  // Asynchronous deletion function.
   const handleConfirm = async () => {
     try {
       const response = await apiClient.delete(
@@ -36,6 +42,7 @@ const DeleteModal = () => {
     }
   };
 
+  // Function that will close the modal and hide the blocker.
   const handleCancel = () => {
     setShowDeleteModal(false);
     setAShown(false);

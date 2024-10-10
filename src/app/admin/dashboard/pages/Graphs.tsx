@@ -1,6 +1,11 @@
 "use client";
 import ModeToggler from "@/app/components/ModeToggler";
-import React from "react";
+import useComments from "@/app/custom-hooks/comments";
+import useDepartments from "@/app/custom-hooks/departments";
+import usePosts from "@/app/custom-hooks/posts";
+import useReplies from "@/app/custom-hooks/replies";
+import useUsers from "@/app/custom-hooks/Users";
+import React, { useEffect } from "react";
 import {
   LineChart,
   Line,
@@ -27,69 +32,61 @@ const pieData = [
 ];
 
 const Graphs = () => {
+  const comments = useComments();
+  const users = useUsers();
+  const departments = useDepartments();
+  const posts = usePosts();
+  const replies = useReplies();
+
+  useEffect(() => {
+    console.table(comments);
+    console.table(users);
+    console.table(departments);
+    console.table(posts);
+  }, [comments, users, departments, posts, replies]);
+
   return (
     <div className="w-full h-screen overflow-auto">
+      {/*
+       *
+       * THIS IS THE HEADER SECTION OF THE GRAPH COMPONENT
+       *
+       */}
+
       <div className="w-full h-20 border-b border-gray-300 dark:border-neutral-900 flex justify-between px-2 items-center">
         <div></div>
         <ModeToggler />
       </div>
+
+      {/*
+       *
+       * THIS IS THE GRAPHS SECTION OF THE GRAPH COMPONENT
+       *
+       */}
+
       <div className="w-full p-3">
-        <div className="grid h-96 grid-cols-3 gap-1 mb-1">
+        {/* FIRST ROW */}
+        <div className="grid h-52 grid-cols-3 gap-1 mb-1">
+          {/* FIRST COLUMN */}
+
           <div className="grid grid-cols-3 col-span-2 gap-1">
-            {/* Line Chart */}
-            <div className="w-full bg-neutral-200 border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
-              <div className="w-full h-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={data}>
-                    <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
+            <div className="w-full bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
+              <div className="w-full h-full"></div>
             </div>
 
-            <div className="w-full bg-neutral-200 border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
-              <div className="w-full h-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={data}>
-                    <Bar dataKey="pv" fill="#82ca9d" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
+            <div className="w-full bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
+              <div className="w-full h-full"></div>
             </div>
 
-            <div className="w-full bg-neutral-200 border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
-              <div className="w-full h-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={data}>
-                    <Area
-                      type="monotone"
-                      dataKey="amt"
-                      stroke="#8884d8"
-                      fill="#8884d8"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
+            <div className="w-full bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
+              <div className="w-full h-full"></div>
             </div>
           </div>
 
-          <div className="w-full bg-neutral-200 border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
-            <div className="w-full h-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    fill="#8884d8"
-                    label
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+          {/* SECOND COLUMN */}
+
+          <div className="w-full bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
+            <div className="w-full h-full"></div>
           </div>
         </div>
 
@@ -100,7 +97,7 @@ const Graphs = () => {
               .map((_, index) => (
                 <div
                   key={index}
-                  className="w-full bg-neutral-200 border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow"
+                  className="w-full bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow"
                 >
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -119,7 +116,7 @@ const Graphs = () => {
                 </div>
               ))}
           </div>
-          <div className="w-full bg-neutral-200 border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
+          <div className="w-full bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data}>
                 <Area
@@ -131,7 +128,7 @@ const Graphs = () => {
               </AreaChart>
             </ResponsiveContainer>
           </div>
-          <div className="w-full bg-neutral-200 border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
+          <div className="w-full bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data}>
                 <Bar dataKey="pv" fill="#82ca9d" />
@@ -140,7 +137,7 @@ const Graphs = () => {
           </div>
         </div>
 
-        <div className="grid h-96 grid-cols-3 gap-1 bg-neutral-200 border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
+        <div className="grid h-96 grid-cols-3 gap-1 bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data}>
               <Line type="monotone" dataKey="uv" stroke="#8884d8" />

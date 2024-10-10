@@ -60,6 +60,8 @@ const AddUserModal = () => {
     >
       <h1 className="text-xl mb-4 text-center font-bold">Add New User</h1>
 
+      {/* EMAIL FIELD */}
+
       <div className="h-14">
         <input
           type="email"
@@ -72,6 +74,8 @@ const AddUserModal = () => {
         )}
       </div>
 
+      {/* PASSWORD FIELD */}
+
       <div className="h-14">
         <input
           type="password"
@@ -83,6 +87,8 @@ const AddUserModal = () => {
           <p className="text-red-500 text-xs ms-4">{errors.password.message}</p>
         )}
       </div>
+
+      {/* FIRST NAME FIELD */}
 
       <div className="h-14">
         <input
@@ -98,6 +104,8 @@ const AddUserModal = () => {
         )}
       </div>
 
+      {/* MIDDLE NAME FIELD */}
+
       <div className="h-14">
         <input
           type="text"
@@ -106,6 +114,8 @@ const AddUserModal = () => {
           className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
       </div>
+
+      {/* LAST NAME FIELD */}
 
       <div className="h-14">
         <input
@@ -119,6 +129,8 @@ const AddUserModal = () => {
         )}
       </div>
 
+      {/* LAST NAME PREFIX FIELD */}
+
       <div className="h-14">
         <input
           type="text"
@@ -127,6 +139,8 @@ const AddUserModal = () => {
           className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
       </div>
+
+      {/* PREFERRED NAME FIELD */}
 
       <div className="h-14">
         <input
@@ -137,6 +151,8 @@ const AddUserModal = () => {
         />
       </div>
 
+      {/* SUFFIX FIELD */}
+
       <div className="h-14">
         <input
           type="text"
@@ -145,6 +161,8 @@ const AddUserModal = () => {
           className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
       </div>
+
+      {/* ADDRESS FIELD */}
 
       <div className="h-14">
         <input
@@ -158,6 +176,8 @@ const AddUserModal = () => {
         )}
       </div>
 
+      {/* CITY FIELD */}
+
       <div className="h-14">
         <input
           type="text"
@@ -169,6 +189,8 @@ const AddUserModal = () => {
           <p className="text-red-500 text-xs ms-4">{errors.city.message}</p>
         )}
       </div>
+
+      {/* STATE FIELD */}
 
       <div className="h-14">
         <input
@@ -182,6 +204,8 @@ const AddUserModal = () => {
         )}
       </div>
 
+      {/* ZIP CODE FIELD */}
+
       <div className="h-14">
         <input
           type="number"
@@ -194,11 +218,8 @@ const AddUserModal = () => {
         )}
       </div>
 
-      {/*
-       * @TODO:
-       * Fix the input of date and should insert exactly like this format (1990-01-15T00:00:00.000Z)
-       *
-       */}
+      {/* DOB FIELD */}
+
       <div className="h-14">
         <input
           type="datetime-local"
@@ -209,6 +230,8 @@ const AddUserModal = () => {
           <p className="text-red-500 text-xs ms-4">{errors.dob.message}</p>
         )}
       </div>
+
+      {/* GENDER FIELD */}
 
       <div className="h-14">
         <select
@@ -222,6 +245,8 @@ const AddUserModal = () => {
           <p className="text-red-500 text-xs ms-4">{errors.gender.message}</p>
         )}
       </div>
+
+      {/* DEPARTMENT ID FIELD */}
 
       <div className="h-14">
         <select
@@ -238,6 +263,8 @@ const AddUserModal = () => {
           <p className="text-red-500 text-xs ms-4">Department is required</p>
         )}
       </div>
+
+      {/* SUBMIT BUTTON */}
 
       <button
         type="submit"
