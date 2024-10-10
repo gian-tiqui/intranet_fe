@@ -4,9 +4,30 @@ import { Post } from "@/app/types/types";
 import { formatDate } from "date-fns";
 import SmallToLarge from "@/app/components/animation/SmallToLarge";
 import { AnimatePresence } from "framer-motion";
+import usePostIdStore from "@/app/store/postId";
+import useEditModalStore from "@/app/store/editModal";
+import useDeletePostStore from "@/app/store/deletePost";
+import useAdminHiderStore from "@/app/store/adminOpacitor";
 
 const PostTr: React.FC<Post> = (post) => {
   const [showOptions, setShowOptions] = useState<boolean>(false);
+  const { setPostId } = usePostIdStore();
+  const { setShowEditModal } = useEditModalStore();
+  const { setDeletePostModalShown } = useDeletePostStore();
+  const { setAShown } = useAdminHiderStore();
+
+  const handleOptionClicked = () => {
+    setPostId(post.pid);
+  };
+
+  const handleDeleteClicked = () => {
+    setAShown(true);
+    setDeletePostModalShown(true);
+  };
+
+  const handleUpdateModalClicked = () => {
+    setShowEditModal(true);
+  };
 
   useEffect(() => {
     const handleClick = () => {
@@ -40,7 +61,7 @@ const PostTr: React.FC<Post> = (post) => {
         {formatDate(post.updatedAt, "MMMM dd, yyyy")}
       </td>
       <td
-        onClick={() => console.log(post.pid)}
+        onClick={handleOptionClicked}
         className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
                    text-center"
       >
@@ -62,11 +83,17 @@ const PostTr: React.FC<Post> = (post) => {
                   <Icon icon={"hugeicons:view"} className="h-5 w-5" />
                   View
                 </button>
-                <button className="hover:bg-gray-300 px-2 dark:hover:bg-gray-900 rounded w-full py-2 flex items-center gap-1">
+                <button
+                  onClick={handleUpdateModalClicked}
+                  className="hover:bg-gray-300 px-2 dark:hover:bg-gray-900 rounded w-full py-2 flex items-center gap-1"
+                >
                   <Icon icon={"bx:edit"} className="h-5 w-5" />
                   Update
                 </button>
-                <button className="hover:bg-gray-300 px-2 dark:hover:bg-gray-900 rounded w-full py-2 flex items-center gap-1">
+                <button
+                  onClick={handleDeleteClicked}
+                  className="hover:bg-gray-300 px-2 dark:hover:bg-gray-900 rounded w-full py-2 flex items-center gap-1"
+                >
                   <Icon
                     icon={"material-symbols:delete-outline"}
                     className="h-5 w-5"

@@ -52,8 +52,6 @@ type Comment = {
 
   user: User;
   post: Post;
-  // parentComment: number;
-  replies?: Comment[];
 };
 
 type Department = {

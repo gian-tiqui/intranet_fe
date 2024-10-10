@@ -21,6 +21,8 @@ import viewUserStore from "@/app/store/viewUser";
 import ViewUserData from "./ViewUserData";
 import deleteUserStore from "@/app/store/deleteUserModal";
 import DeleteModal from "./DeleteModal";
+import useDeletePostStore from "@/app/store/deletePost";
+import DeletePostModal from "./DeletePostModal";
 
 const Sidebar = () => {
   const [selectedComp, setSelectedComp] = useState<ReactNode>(<Graphs />);
@@ -31,6 +33,8 @@ const Sidebar = () => {
   const { updateModalShown, setUpdateModalShown } = updateModalStore();
   const { viewUser, setViewUser } = viewUserStore();
   const { showDeleteModal, setShowDeleteModal } = deleteUserStore();
+  const { deletePostModalShown, setDeletePostModalShown } =
+    useDeletePostStore();
 
   // Sidebar items that will change the children component.
   const components: ABoardSelector[] = [
@@ -72,6 +76,7 @@ const Sidebar = () => {
     setUpdateModalShown(false);
     setViewUser(false);
     setShowDeleteModal(false);
+    setDeletePostModalShown(false);
   };
 
   return (
@@ -86,6 +91,7 @@ const Sidebar = () => {
             {updateModalShown && <UpdateUserModal />}
             {viewUser && <ViewUserData />}
             {showDeleteModal && <DeleteModal />}
+            {deletePostModalShown && <DeletePostModal />}
           </div>
         </div>
       )}
