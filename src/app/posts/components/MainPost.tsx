@@ -7,6 +7,7 @@ import { Post } from "@/app/types/types";
 import useHideSearchBarStore from "@/app/store/hideSearchBar";
 import usePostUriStore from "@/app/store/usePostUri";
 import apiClient from "@/app/http-common/apiUrl";
+import { decodeUserData } from "@/app/functions/functions";
 
 const MainPost = () => {
   const { setSearchBarHidden } = useHideSearchBarStore();
@@ -25,7 +26,9 @@ const MainPost = () => {
     const fetchData = async () => {
       try {
         const response = await apiClient.get(
-          `${API_BASE}/post?search=${uriPost}`,
+          `${API_BASE}/post?search=${uriPost}&deptId=${
+            decodeUserData()?.deptId
+          }`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,

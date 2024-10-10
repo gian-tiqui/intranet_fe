@@ -59,6 +59,8 @@ type Comment = {
 type Department = {
   deptId: number;
   departmentName: string;
+  users: User[];
+  posts: Post[];
 };
 
 type PostComment = {
