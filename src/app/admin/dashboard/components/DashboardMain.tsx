@@ -4,9 +4,11 @@ import React, { useEffect } from "react";
 import Sidebar from "./Sidebar";
 
 const DashboardMain = () => {
+  // Dark mode setter from zustand.
   const { setIsDarkMode } = useDarkModeStore();
 
   useEffect(() => {
+    // Local Storage dark mode value.
     const storedMode = localStorage.getItem("darkMode");
 
     if (storedMode === "true") {
