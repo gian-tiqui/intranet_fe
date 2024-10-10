@@ -15,7 +15,7 @@ const useReplies = () => {
           },
         });
 
-        console.log(response);
+        setReplies(response.data);
       } catch (error) {
         console.error(error);
         const { message } = error as { message: string };
