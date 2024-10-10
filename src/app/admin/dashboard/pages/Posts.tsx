@@ -1,15 +1,15 @@
 "use client";
-import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import ModeToggler from "@/app/components/ModeToggler";
 import Searchbar from "@/app/components/Searchbar";
-import apiClient from "@/app/http-common/apiUrl";
+import usePosts from "@/app/custom-hooks/posts";
+import useShowPostStore from "@/app/store/showPostStore";
 import { MinMax, ThType, Post } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { formatDate } from "date-fns";
 import React, { ChangeEvent, useEffect, useState } from "react";
 
 const Posts = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const posts = usePosts();
 
   const [sortedPosts, setSortedPosts] = useState<Post[]>([]);
   const [page, setPage] = useState<number>(1);
@@ -19,6 +19,7 @@ const Posts = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [debouncedSearch, setDebouncedSearch] = useState<string>("");
   const [selectedDept, setSelectedDept] = useState<string>("");
+  const { setVisible } = useShowPostStore();
 
   const JUMP = 4;
   const [minMax, setMinMax] = useState<MinMax>({ min: 0, max: 4 });
@@ -90,21 +91,6 @@ const Posts = () => {
       setSortedPosts(postsByDept);
     }
   }, [selectedDept, posts]);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const response = await apiClient.get(`${API_BASE}/post`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-        },
-      });
-
-      setPosts(response.data);
-      setSortedPosts(response.data);
-    };
-
-    fetchPosts();
-  }, []);
 
   useEffect(() => {
     const searchPosts = () => {
@@ -199,10 +185,17 @@ const Posts = () => {
       </div>
 
       <div className="p-10">
-        <div className="flex justify-between border border-b-gray-300 border-x-gray-300 px-4 dark:border-neutral-900 rounded-t-xl pt-5">
+        <div className="flex items-center justify-between border border-b-gray-300 border-x-gray-300 px-4 dark:border-neutral-900 rounded-t-xl py-5">
+          <button
+            onClick={() => setVisible(true)}
+            className="flex items-center justify-between py-1 gap-2 px-5 bg-gray-300 hover:shadow rounded-full dark:bg-neutral-700"
+          >
+            <Icon icon={"material-symbols:post-add"} className="h-6 w-6" />
+            <p>Add</p>
+          </button>
           <select
             onChange={handleSelectChange}
-            className="bg-gray-300 dark:bg-neutral-700 border outline-none rounded-full border-gray-400 dark:border-neutral-900 text-center me-5 w-24 cursor-pointer h-10"
+            className="bg-gray-300 dark:bg-neutral-700 border outline-none rounded-full border-gray-400 dark:border-neutral-900 text-center me-5 w-24 cursor-pointer py-1"
           >
             {departments.map((dept, index) => (
               <option value={dept.field} key={index}>

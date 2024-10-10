@@ -1,17 +1,16 @@
 "use client";
-import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import ModeToggler from "@/app/components/ModeToggler";
 import Searchbar from "@/app/components/Searchbar";
-import apiClient from "@/app/http-common/apiUrl";
 import addModalStore from "@/app/store/addPostModal";
 import useAdminHiderStore from "@/app/store/adminOpacitor";
 import { MinMax, ThType, User } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import Tr from "../components/Tr";
+import useUsers from "@/app/custom-hooks/users";
 
 const Users = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const users = useUsers();
   const [sortedUsers, setSortedUsers] = useState<User[]>([]);
   const [page, setPage] = useState<number>(1);
   const [direction, setDirection] = useState<string>("asc");
@@ -102,19 +101,8 @@ const Users = () => {
   }, [selectedDept, users]);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await apiClient.get(`${API_BASE}/users`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-        },
-      });
-
-      setUsers(response.data.users.users);
-      setSortedUsers(response.data.users.users);
-    };
-
-    fetchUsers();
-  }, []);
+    setSortedUsers(users);
+  }, [users]);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -274,22 +262,22 @@ const Users = () => {
               </tr>
             </thead>
 
-            {sortedUsers.length > 0 ? (
-              <tbody className="align-top">
-                {sortedUsers.slice(minMax.min, minMax.max).map((user) => (
-                  <Tr {...user} key={user.id} />
-                ))}
-              </tbody>
-            ) : (
-              <tr>
-                <td
-                  colSpan={heads.length + 1}
-                  className="text-center p-10 text-gray-500"
-                >
-                  No users found.
-                </td>
-              </tr>
-            )}
+            <tbody className="align-top">
+              {sortedUsers.length > 0 ? (
+                sortedUsers
+                  .slice(minMax.min, minMax.max)
+                  .map((user) => <Tr {...user} key={user.id} />)
+              ) : (
+                <tr>
+                  <td
+                    colSpan={heads.length + 1}
+                    className="text-center p-10 text-gray-500"
+                  >
+                    No users found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
           </table>
           <div className="flex mx-6 gap-5 mt-5 justify-between">
             <p>Page {page}</p>

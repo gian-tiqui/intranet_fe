@@ -9,7 +9,7 @@ const useReplies = () => {
   useEffect(() => {
     const fetchReplies = async () => {
       try {
-        const response = await apiClient.get(`${API_BASE}/comment`, {
+        const response = await apiClient.get(`${API_BASE}/comment/replies`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
           },

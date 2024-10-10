@@ -5,7 +5,8 @@ import useDepartments from "@/app/custom-hooks/departments";
 import usePosts from "@/app/custom-hooks/posts";
 import useReplies from "@/app/custom-hooks/replies";
 import useUsers from "@/app/custom-hooks/users";
-import React, { useEffect } from "react";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import React from "react";
 import {
   LineChart,
   Line,
@@ -38,13 +39,6 @@ const Graphs = () => {
   const posts = usePosts();
   const replies = useReplies();
 
-  useEffect(() => {
-    console.table(comments);
-    console.table(users);
-    console.table(departments);
-    console.table(posts);
-  }, [comments, users, departments, posts, replies]);
-
   return (
     <div className="w-full h-screen overflow-auto">
       {/*
@@ -53,7 +47,7 @@ const Graphs = () => {
        *
        */}
 
-      <div className="w-full h-20 border-b border-gray-300 dark:border-neutral-900 flex justify-between px-2 items-center">
+      <div className="w-full h-20 border-b border-gray-300 dark:border-neutral-900 flex justify-between px-3 items-center">
         <div></div>
         <ModeToggler />
       </div>
@@ -66,27 +60,53 @@ const Graphs = () => {
 
       <div className="w-full p-3">
         {/* FIRST ROW */}
-        <div className="grid h-52 grid-cols-3 gap-1 mb-1">
+        <div className="grid h-28 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-1 mb-1">
           {/* FIRST COLUMN */}
 
-          <div className="grid grid-cols-3 col-span-2 gap-1">
-            <div className="w-full bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
-              <div className="w-full h-full"></div>
+          <div className="w-full font-extrabold h-full p-4 grid place-content-center bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
+            <div className="flex gap-2 items-center">
+              <Icon className="h-5 w-5" icon={"clarity:users-line"} />
+              <h1 className="text-center">USERS</h1>
             </div>
-
-            <div className="w-full bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
-              <div className="w-full h-full"></div>
-            </div>
-
-            <div className="w-full bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
-              <div className="w-full h-full"></div>
-            </div>
+            <p className="text-center">{users.length}</p>
           </div>
 
-          {/* SECOND COLUMN */}
+          <div className="w-full font-extrabold h-full p-4 grid place-content-center bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
+            <div className="flex gap-2 items-center">
+              <Icon
+                className="h-5 w-5"
+                icon={"material-symbols:post-outline"}
+              />
+              <h1 className="text-center">POSTS</h1>
+            </div>
+            <p className="text-center">{posts.length}</p>
+          </div>
 
-          <div className="w-full bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
-            <div className="w-full h-full"></div>
+          <div className="w-full font-extrabold h-full p-4 grid place-content-center bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
+            <div className="flex gap-2 items-center">
+              <Icon
+                className="h-5 w-5"
+                icon={"arcticons:emoji-department-store"}
+              />
+              <h1 className="text-center">DEPARTMENTS</h1>
+            </div>
+            <p className="text-center">{departments.length}</p>
+          </div>
+
+          <div className="w-full font-extrabold h-full p-4 grid place-content-center bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
+            <div className="flex gap-2 items-center">
+              <Icon className="h-5 w-5" icon={"mdi:comments-outline"} />
+              <h1 className="text-center">COMMENTS</h1>
+            </div>
+            <p className="text-center">{comments.length}</p>
+          </div>
+
+          <div className="w-full font-extrabold h-full p-4 grid place-content-center bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-800 shadow">
+            <div className="flex gap-2 items-center">
+              <Icon className="h-5 w-5" icon={"mingcute:comment-line"} />
+              <h1 className="text-center">REPLIES</h1>
+            </div>
+            <p className="text-center">{replies.length}</p>
           </div>
         </div>
 

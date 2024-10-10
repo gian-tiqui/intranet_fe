@@ -5,10 +5,12 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
-import { INTRANET } from "../bindings/binding";
+import { API_BASE, INTRANET } from "../bindings/binding";
 import useShowSettingsStore from "../store/showSettingStore";
 import useLogoutArtStore from "../store/useLogoutSplashStore";
 import { decodeUserData } from "../functions/functions";
+import { toast } from "react-toastify";
+import apiClient from "../http-common/apiUrl";
 
 interface Props {
   uVisible: boolean;
@@ -52,7 +54,24 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
     checkRole();
   }, []);
 
-  const handleLogout = (event: React.MouseEvent) => {
+  const handleLogout = async (event: React.MouseEvent) => {
+    const userId = decodeUserData()?.sub;
+
+    if (userId) {
+      try {
+        const response = await apiClient.post(`${API_BASE}/auth/logout`, {
+          userId: userId,
+        });
+
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+
+        const { message } = error as { message: string };
+        toast(message, { type: "error" });
+      }
+    }
+
     event.stopPropagation();
     setShowLogoutArt(true);
     setHidden(false);
