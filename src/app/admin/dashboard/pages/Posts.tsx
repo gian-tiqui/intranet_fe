@@ -5,8 +5,8 @@ import usePosts from "@/app/custom-hooks/posts";
 import useShowPostStore from "@/app/store/showPostStore";
 import { MinMax, ThType, Post } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { formatDate } from "date-fns";
 import React, { ChangeEvent, useEffect, useState } from "react";
+import PostTr from "../components/PostTr";
 
 const Posts = () => {
   const posts = usePosts();
@@ -231,37 +231,9 @@ const Posts = () => {
             </thead>
             <tbody className="align-top">
               {sortedPosts.length > 0 ? (
-                sortedPosts.slice(minMax.min, minMax.max).map((post) => (
-                  <tr
-                    key={post.pid}
-                    className="border-b last:border-b-0 border-gray-300 dark:border-neutral-900"
-                  >
-                    <td className="text-center">{post.title}</td>
-                    <td className="text-center break-all">{post.message}</td>
-                    <td className="text-center">
-                      {post.user?.firstName} {post.user?.lastName}
-                    </td>
-                    <td className="text-center">
-                      {post.department.departmentName}
-                    </td>
-                    <td className="text-center">
-                      {formatDate(post.createdAt, "MMMM dd, yyyy")}
-                    </td>
-                    <td className="text-center">
-                      {formatDate(post.updatedAt, "MMMM dd, yyyy")}
-                    </td>
-                    <td
-                      onClick={() => console.log(post.pid)}
-                      className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
-                   text-center"
-                    >
-                      <Icon
-                        icon={"simple-line-icons:options"}
-                        className="mx-auto h-7 w-7 p-1 cursor-pointer hover:bg-gray-300 dark:hover:bg-neutral-600 rounded-full"
-                      />
-                    </td>
-                  </tr>
-                ))
+                sortedPosts
+                  .slice(minMax.min, minMax.max)
+                  .map((post) => <PostTr {...post} key={post.pid} />)
               ) : (
                 <tr>
                   <td
