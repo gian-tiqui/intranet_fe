@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import { INTRANET, API_BASE } from "@/app/bindings/binding";
 import { jwtDecode } from "jwt-decode";
 import apiClient from "@/app/http-common/apiUrl";
+import { motion } from "framer-motion";
 
 type FormFields = {
   email: string;
@@ -101,7 +102,7 @@ const Form = () => {
   };
 
   return (
-    <>
+    <motion.div>
       <form onSubmit={handleSubmit(handleLogin)} className="p-6 max-w-80">
         <h1 className="text-xl mb-2 text-center font-bold">Login</h1>
         <h1 className="mb-20 text-center font-semibold">
@@ -159,7 +160,7 @@ const Form = () => {
           </p>
         </div>
       </form>
-    </>
+    </motion.div>
   );
 };
 
