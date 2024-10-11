@@ -104,10 +104,7 @@ const Form = () => {
   return (
     <>
       {showLogoutArt && <SignOutSplash />}
-      <form
-        onSubmit={handleSubmit(handleLogin)}
-        className="p-6 max-w-80 bg-white dark:bg-neutral-900 rounded-2xl shadow"
-      >
+      <form onSubmit={handleSubmit(handleLogin)} className="p-6 max-w-80">
         <h1 className="text-xl mb-2 text-center font-bold">Login</h1>
         <h1 className="mb-20 text-center font-semibold">
           Sign in to your account
