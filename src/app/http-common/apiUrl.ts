@@ -4,12 +4,14 @@ import { jwtDecode } from "jwt-decode";
 import { INTRANET } from "../bindings/binding";
 
 export const API_URI = process.env.NEXT_PUBLIC_API_URL;
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: API_URI,
   withCredentials: true,
 });
 
+// Helper function to check if the token is expired
 const isTokenExpired = (token: string) => {
   if (!token) return true;
 
@@ -31,7 +33,7 @@ apiClient.interceptors.request.use(
       try {
         const refreshToken = Cookies.get(INTRANET);
         const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
+          `${API_URI}/auth/refresh`,
           { refreshToken },
           { withCredentials: true }
         );
@@ -51,6 +53,10 @@ apiClient.interceptors.request.use(
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
+    if (API_KEY) {
+      config.headers["x-api-key"] = API_KEY;
+    }
+
     return config;
   },
   (error) => Promise.reject(error)
@@ -66,7 +72,7 @@ apiClient.interceptors.response.use(
       try {
         const refreshToken = Cookies.get(INTRANET);
         const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
+          `${API_URI}/auth/refresh`,
           { refreshToken },
           { withCredentials: true }
         );

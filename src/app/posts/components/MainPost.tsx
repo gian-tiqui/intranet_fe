@@ -2,17 +2,12 @@
 import HoverBox from "@/app/components/HoverBox";
 import React, { useEffect, useState } from "react";
 import PostContainer from "./PostContainer";
-import { API_BASE, INTRANET } from "@/app/bindings/binding";
-import { Post } from "@/app/types/types";
 import useHideSearchBarStore from "@/app/store/hideSearchBar";
-import usePostUriStore from "@/app/store/usePostUri";
-import apiClient from "@/app/http-common/apiUrl";
-import { decodeUserData } from "@/app/functions/functions";
+import usePosts from "@/app/custom-hooks/posts";
 
 const MainPost = () => {
   const { setSearchBarHidden } = useHideSearchBarStore();
   const [maxNum, setMaxNum] = useState<number>(3);
-  const { uriPost } = usePostUriStore();
 
   useEffect(() => {
     setSearchBarHidden(true);
@@ -20,30 +15,7 @@ const MainPost = () => {
     return () => setSearchBarHidden(false);
   }, [setSearchBarHidden]);
 
-  const [posts, setPosts] = useState<Post[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await apiClient.get(
-          `${API_BASE}/post?search=${uriPost}&deptId=${
-            decodeUserData()?.deptId
-          }`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-            },
-          }
-        );
-
-        setPosts(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-  }, [uriPost]);
+  const posts = usePosts();
 
   return (
     <div>

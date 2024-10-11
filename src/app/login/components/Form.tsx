@@ -11,9 +11,9 @@ import useSplashToggler from "@/app/store/useSplashStore";
 import SignOutSplash from "@/app/components/SignOutSplash";
 import useLogoutArtStore from "@/app/store/useLogoutSplashStore";
 import { toast } from "react-toastify";
-import axios from "axios";
 import { INTRANET, API_BASE } from "@/app/bindings/binding";
 import { jwtDecode } from "jwt-decode";
+import apiClient from "@/app/http-common/apiUrl";
 
 type FormFields = {
   email: string;
@@ -58,7 +58,7 @@ const Form = () => {
     }
 
     try {
-      const response = await axios.post(
+      const response = await apiClient.post(
         `${API_BASE ? API_BASE : "http://localhost:8080"}/auth/login`,
         {
           email,
