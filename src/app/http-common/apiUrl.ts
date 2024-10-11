@@ -11,7 +11,6 @@ const apiClient = axios.create({
   withCredentials: true,
 });
 
-// Helper function to check if the token is expired
 const isTokenExpired = (token: string) => {
   if (!token) return true;
 
@@ -32,10 +31,16 @@ apiClient.interceptors.request.use(
     if (accessToken && isTokenExpired(accessToken)) {
       try {
         const refreshToken = Cookies.get(INTRANET);
+
         const response = await axios.post(
           `${API_URI}/auth/refresh`,
           { refreshToken },
-          { withCredentials: true }
+          {
+            withCredentials: true,
+            headers: {
+              "x-api-key": API_KEY,
+            },
+          }
         );
 
         accessToken = response.data.access_token;
