@@ -18,6 +18,7 @@ import SmallToLarge from "@/app/components/animation/SmallToLarge";
 import useEditModalStore from "@/app/store/editModal";
 import usePostIdStore from "@/app/store/postId";
 import { createWorker } from "tesseract.js";
+import { jsPDF } from "jspdf";
 
 interface Props {
   id: number;
@@ -143,21 +144,34 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const handleDownloadImage = async () => {
     if (!imageUrl) return;
 
-    const response = await fetch(imageUrl);
-    if (!response.ok) {
-      console.error("Failed to fetch image:", response.statusText);
-      return;
+    try {
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        console.error("Failed to fetch image:", response.statusText);
+        return;
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+
+      const img = new window.Image();
+      img.src = url;
+
+      img.onload = () => {
+        const pdf = new jsPDF();
+        pdf.addImage(img, "JPEG", 10, 10, 180, 160);
+        pdf.save(`post-image-${id}.pdf`);
+
+        URL.revokeObjectURL(url);
+      };
+
+      img.onerror = (error) => {
+        console.error("Error loading image:", error);
+        URL.revokeObjectURL(url);
+      };
+    } catch (error) {
+      console.error("Error in downloading image:", error);
     }
-
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `post-image-${id}.jpg`;
-    link.click();
-
-    window.URL.revokeObjectURL(url);
   };
 
   if (loading) {
@@ -279,7 +293,13 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
           layout="responsive"
           priority
         />
-        <button onClick={handleDownloadImage}>Download Image (PDF)</button>
+        <div
+          onClick={handleDownloadImage}
+          className="w-56 flex items-center gap-1 rounded-lg p-2 mb-2 hover:bg-gray-300 cursor-pointer dark:hover:bg-neutral-700"
+        >
+          <Icon icon={"akar-icons:download"} />
+          <span>Download Image as PDF</span>
+        </div>
       </div>
       <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-6" />
       {!generalPost && (

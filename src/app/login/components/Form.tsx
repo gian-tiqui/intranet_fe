@@ -8,7 +8,6 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { AnimatePresence } from "framer-motion";
 import MotionP from "@/app/components/animation/MotionP";
 import useSplashToggler from "@/app/store/useSplashStore";
-import SignOutSplash from "@/app/components/SignOutSplash";
 import useLogoutArtStore from "@/app/store/useLogoutSplashStore";
 import { toast } from "react-toastify";
 import { INTRANET, API_BASE } from "@/app/bindings/binding";
@@ -103,7 +102,6 @@ const Form = () => {
 
   return (
     <>
-      {showLogoutArt && <SignOutSplash />}
       <form onSubmit={handleSubmit(handleLogin)} className="p-6 max-w-80">
         <h1 className="text-xl mb-2 text-center font-bold">Login</h1>
         <h1 className="mb-20 text-center font-semibold">
