@@ -99,6 +99,11 @@ type ThType = {
   field: string;
 };
 
+type NavLinksType = {
+  name: string;
+  link: string;
+};
+
 export type {
   Post,
   GroupedPosts,
@@ -110,4 +115,5 @@ export type {
   Department,
   MinMax,
   ThType,
+  NavLinksType,
 };
