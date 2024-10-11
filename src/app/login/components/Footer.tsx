@@ -29,7 +29,7 @@ const Footer = () => {
                 type: "spring",
                 stiffness: 50,
                 damping: 20,
-                delay: 0.07,
+                delay: 0.15,
               }}
             >
               Alagang mapagkakatiwalaan
@@ -50,10 +50,16 @@ const Footer = () => {
             </motion.p>
           </div>
         </div>
-        <div
-          className="flex border-t h-14 items-center border-black dark:border-white w-full px-6"
-          key={1}
-        >
+        <div className="flex flex-row-reverse w-full">
+          <motion.hr
+            initial={{ width: 0 }}
+            animate={{ width: "100%" }}
+            transition={{ duration: 1 }}
+            className="border-b border-black dark:border-white w-full"
+          />
+        </div>
+
+        <div className="flex  h-14 items-center w-full px-6" key={1}>
           {word.split("").map((letter, index) => (
             <motion.p
               key={index}
