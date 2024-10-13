@@ -46,7 +46,7 @@ const Footer = () => {
                 delay: 0.05,
               }}
             >
-              © | 20XX
+              © 20xx
             </motion.p>
           </div>
         </div>

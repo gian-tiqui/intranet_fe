@@ -46,7 +46,7 @@ const Navlinks = () => {
             {link.name}
           </Link>
           {index != links.length - 1 && (
-            <motion.div className="h-1 w-1 rounded-full bg-white"></motion.div>
+            <motion.div className="h-1 w-1 rounded-full bg-black dark:bg-white"></motion.div>
           )}
         </motion.div>
       ))}

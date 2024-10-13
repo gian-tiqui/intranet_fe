@@ -1,16 +1,16 @@
 "use client";
 import ModeToggler from "@/app/components/ModeToggler";
 import React from "react";
-import Intranet from "./Intranet";
 import Navlinks from "./Navlinks";
 import { motion } from "framer-motion";
+import EaseString from "./EaseString";
 
 const Appbar = () => {
   return (
     <div className="w-full absolute top-0">
       <div className=" w-full justify-between flex px-6 sm:h-24 items-center">
         <div className="w-full">
-          <Intranet />
+          <EaseString word="INTRANET" size="text-xl" />
         </div>
 
         <Navlinks />
