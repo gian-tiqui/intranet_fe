@@ -115,6 +115,7 @@ const Form = () => {
         </div>
 
         <motion.div
+          key={"email-input"}
           initial={{ width: 0 }}
           animate={{ width: "100%" }}
           transition={{ duration: 1 }}
@@ -139,6 +140,7 @@ const Form = () => {
         </motion.div>
 
         <motion.div
+          key={"password-input"}
           initial={{ width: 0 }}
           animate={{ width: "100%" }}
           transition={{ duration: 1 }}
@@ -165,6 +167,7 @@ const Form = () => {
 
         <div className="flex flex-col items-center">
           <motion.button
+            key={"login-button"}
             initial={{ width: 0 }}
             animate={{ width: "100%" }}
             transition={{ duration: 1 }}
