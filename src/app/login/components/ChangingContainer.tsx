@@ -1,12 +1,13 @@
 "use client";
 import MotionTemplate from "@/app/components/animation/MotionTemplate";
 import React, { ReactNode, useEffect, useState } from "react";
+import EaseString from "./EaseString";
 
 const First = () => {
   return (
     <MotionTemplate>
-      <div className="text-black bg-neutral-200 h-96 w-96 rounded border grid place-content-center">
-        hi 1
+      <div className="text-black h-96 w-96 rounded border grid place-content-center">
+        <EaseString word="hehe" size="" />
       </div>
     </MotionTemplate>
   );
@@ -15,8 +16,8 @@ const First = () => {
 const Second = () => {
   return (
     <MotionTemplate>
-      <div className="bg-neutral-300 h-96 w-96 rounded border grid place-content-center text-black">
-        hi 2
+      <div className="h-96 w-96 rounded border grid place-content-center text-black">
+        <EaseString word="hehe" size="" />
       </div>
     </MotionTemplate>
   );
@@ -25,8 +26,8 @@ const Second = () => {
 const Third = () => {
   return (
     <MotionTemplate>
-      <div className="bg-neutral-400 h-96 w-96 rounded border grid place-content-center text-black">
-        hi 3
+      <div className="h-96 w-96 rounded border grid place-content-center text-black">
+        <EaseString word="hehe" size="" />
       </div>
     </MotionTemplate>
   );
@@ -49,12 +50,12 @@ const ChangingContainer = () => {
       setSelectedComp(comps[newIndex]);
     };
 
-    const timer = setTimeout(changeComp, 3000);
+    const timer = setTimeout(changeComp, 5000);
 
     return () => clearTimeout(timer);
   }, [index]);
 
-  return <div className=" h-96 w-96">{selectedComp}</div>;
+  return <div className="w-full h-full">{selectedComp}</div>;
 };
 
 export default ChangingContainer;
