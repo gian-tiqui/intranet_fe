@@ -31,7 +31,6 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const { setShowEditModal } = useEditModalStore();
   const { setIsCollapsed } = useToggleStore();
   const { register, handleSubmit, setValue } = useForm<FormFields>();
-  const [visibility, setVisibility] = useState<string>("");
 
   const [fileName, setFileName] = useState<string | undefined>("");
 
@@ -113,16 +112,6 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   };
 
   useEffect(() => {
-    if (visibility === "public") {
-      setValue("public", true);
-    } else if (visibility === "private") {
-      setValue("public", false);
-    } else {
-      return;
-    }
-  }, [setValue, visibility, setVisibility]);
-
-  useEffect(() => {
     setIsCollapsed(true);
     return () => setIsCollapsed(false);
   }, [setIsCollapsed]);
@@ -138,9 +127,23 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
       >
         <div className="flex items-start gap-3 mb-2">
           <div className="rounded-full w-10 h-10 bg-gray-400"></div>
-          <p className="font-bold">
-            {decodeUserData()?.firstName} {decodeUserData()?.lastName}
-          </p>
+
+          <div className="bg-white dark:bg-neutral-900 text-sm">
+            <p className="font-bold">
+              {decodeUserData()?.firstName} {decodeUserData()?.lastName}
+            </p>
+            <select
+              {...register("public", { required: true })}
+              className="bg-inherit outline-none text-xs"
+            >
+              <option className="" value={"public"}>
+                Public
+              </option>
+              <option className="bg-inherit" value={"private"}>
+                Private
+              </option>
+            </select>
+          </div>
         </div>
         <form onSubmit={handleSubmit(handleEditPost)}>
           <div>
@@ -196,27 +199,6 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                 </option>
               ))}
             </select>
-
-            <div className="w-full flex bg-inherit border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none">
-              <div
-                onClick={() => setVisibility("public")}
-                className={`w-full h-full flex hover:cursor-pointer items-center justify-center hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-s-xl ${
-                  visibility.toLowerCase() === "public" &&
-                  "bg-gray-200 dark:bg-neutral-700"
-                }`}
-              >
-                Public
-              </div>
-              <div
-                onClick={() => setVisibility("private")}
-                className={`w-full h-full hover:cursor-pointer flex items-center justify-center hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-e-xl ${
-                  visibility.toLowerCase() === "private" &&
-                  "bg-gray-200 dark:bg-neutral-700"
-                }`}
-              >
-                Private
-              </div>
-            </div>
 
             <button
               type="submit"

@@ -11,6 +11,7 @@ import useLogoutArtStore from "../store/useLogoutSplashStore";
 import { decodeUserData } from "../functions/functions";
 import { toast } from "react-toastify";
 import apiClient from "../http-common/apiUrl";
+import { toastClass } from "../tailwind-classes/tw_classes";
 
 interface Props {
   uVisible: boolean;
@@ -63,12 +64,15 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
           userId: userId,
         });
 
-        console.log(response);
+        toast(response.data.message, {
+          type: "success",
+          className: toastClass,
+        });
       } catch (error) {
         console.error(error);
 
         const { message } = error as { message: string };
-        toast(message, { type: "error" });
+        toast(message, { type: "error", className: toastClass });
       }
     }
 

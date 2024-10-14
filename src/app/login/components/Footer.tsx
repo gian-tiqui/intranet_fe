@@ -61,7 +61,7 @@ const Footer = () => {
         />
       </div>
 
-      <div className="flex  h-14 items-center w-full px-6" key={1}>
+      <div className="flex  h-14 items-center w-full px-4" key={1}>
         {word.split("").map((letter, index) => (
           <motion.p
             key={index}
