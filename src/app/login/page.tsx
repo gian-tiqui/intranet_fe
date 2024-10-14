@@ -10,12 +10,13 @@ import SpinningLogo from "./components/SpinningLogo";
 const Login = () => {
   return (
     <div className="relative">
+      <SpinningLogo />
+
       <LoginTemplate>
         <AnimatePresence>
-          <SpinningLogo />
           <Appbar key={"app-bar"} />
           <div
-            className="grid w-full pt-28 md:pt-0 md:grid-cols-2 h-screen"
+            className="grid w-full pt-28 md:pt-0 md:grid-cols-2 md:h-screen"
             key={"login-grid"}
           >
             <div className="grid place-content-center">
