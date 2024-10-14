@@ -32,7 +32,7 @@ const Appbar = () => {
         initial={{ width: 0 }}
         animate={{ width: "100%" }}
         transition={{ duration: 1 }}
-        className="border-b border-black dark:border-white w-full"
+        className="border-b-0 border-black dark:border-white w-full"
       />
     </div>
   );

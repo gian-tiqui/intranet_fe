@@ -8,11 +8,14 @@ import Footer from "./components/Footer";
 
 const Login = () => {
   return (
-    <div className="">
+    <div className="relative">
       <LoginTemplate>
         <AnimatePresence>
-          <Appbar />
-          <div className="grid w-full md:grid-cols-2 h-screen">
+          <Appbar key={"app-bar"} />
+          <div
+            className="grid w-full md:grid-cols-2 h-screen"
+            key={"login-grid"}
+          >
             <div className="grid place-content-center">
               <ChangingContainer />
             </div>
@@ -20,8 +23,8 @@ const Login = () => {
               <Form />
             </div>
           </div>
+          <Footer key={"footer"} />
         </AnimatePresence>
-        <Footer />
       </LoginTemplate>
     </div>
   );

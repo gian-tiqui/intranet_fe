@@ -7,23 +7,19 @@ import Link from "next/link";
 const Navlinks = () => {
   const links: NavLinksType[] = [
     {
-      name: "Dribble",
+      name: "WMC",
       link: "https://dribbble.com/shots/23311322-Ocamba-website-UI-UX",
     },
     {
-      name: "Dribble",
+      name: "Mt. Grace",
       link: "https://dribbble.com/shots/23311322-Ocamba-website-UI-UX",
     },
     {
-      name: "Dribble",
+      name: "WMC",
       link: "https://dribbble.com/shots/23311322-Ocamba-website-UI-UX",
     },
     {
-      name: "Dribble",
-      link: "https://dribbble.com/shots/23311322-Ocamba-website-UI-UX",
-    },
-    {
-      name: "Dribble",
+      name: "Mt. Grace",
       link: "https://dribbble.com/shots/23311322-Ocamba-website-UI-UX",
     },
   ];
