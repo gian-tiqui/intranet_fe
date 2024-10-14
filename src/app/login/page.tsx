@@ -5,12 +5,14 @@ import Appbar from "./components/Appbar";
 import { AnimatePresence } from "framer-motion";
 import ChangingContainer from "./components/ChangingContainer";
 import Footer from "./components/Footer";
+import SpinningLogo from "./components/SpinningLogo";
 
 const Login = () => {
   return (
     <div className="relative">
       <LoginTemplate>
         <AnimatePresence>
+          <SpinningLogo />
           <Appbar key={"app-bar"} />
           <div
             className="grid w-full md:grid-cols-2 h-screen"

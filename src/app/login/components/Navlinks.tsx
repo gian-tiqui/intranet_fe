@@ -7,19 +7,11 @@ import Link from "next/link";
 const Navlinks = () => {
   const links: NavLinksType[] = [
     {
-      name: "WMC",
+      name: "Westlake Medical Center",
       link: "https://dribbble.com/shots/23311322-Ocamba-website-UI-UX",
     },
     {
-      name: "Mt. Grace",
-      link: "https://dribbble.com/shots/23311322-Ocamba-website-UI-UX",
-    },
-    {
-      name: "WMC",
-      link: "https://dribbble.com/shots/23311322-Ocamba-website-UI-UX",
-    },
-    {
-      name: "Mt. Grace",
+      name: "Mt. Grace Hospitals",
       link: "https://dribbble.com/shots/23311322-Ocamba-website-UI-UX",
     },
   ];
