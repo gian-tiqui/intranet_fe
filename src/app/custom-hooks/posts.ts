@@ -19,7 +19,7 @@ const usePosts = () => {
         if ([1, 2, 4].includes(decoded.deptId)) deptIdQuery = "";
         else deptIdQuery = String(decoded.deptId);
 
-        const apiUri = `${API_BASE}/post?deptId=${deptIdQuery}`;
+        const apiUri = `${API_BASE}/post?deptId=${deptIdQuery}&public=true`;
 
         const response = await apiClient.get(apiUri, {
           headers: {

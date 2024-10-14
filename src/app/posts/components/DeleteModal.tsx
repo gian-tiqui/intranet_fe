@@ -1,5 +1,6 @@
 import { API_BASE } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
+import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction } from "react";
 import { toast } from "react-toastify";
@@ -19,7 +20,10 @@ const DeleteModal: React.FC<Props> = ({ postId, setShowDeleteModal }) => {
         const data = response.data;
 
         console.log(data);
-        toast("Post deleted successfully", { type: "success" });
+        toast("Post deleted successfully", {
+          type: "success",
+          className: toastClass,
+        });
 
         router.push("/posts");
       } catch (error) {

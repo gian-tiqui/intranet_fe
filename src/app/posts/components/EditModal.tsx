@@ -1,9 +1,11 @@
 "use client";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
+import useDepartments from "@/app/custom-hooks/departments";
 import { decodeUserData } from "@/app/functions/functions";
 import apiClient from "@/app/http-common/apiUrl";
 import useEditModalStore from "@/app/store/editModal";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
+import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import { Post } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { jwtDecode } from "jwt-decode";
@@ -17,6 +19,7 @@ interface FormFields {
   message?: string;
   memo?: FileList;
   title?: string;
+  public?: boolean;
 }
 
 interface EditPostModalProps {
@@ -24,12 +27,13 @@ interface EditPostModalProps {
 }
 
 const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
+  const departments = useDepartments();
   const { setShowEditModal } = useEditModalStore();
   const { setIsCollapsed } = useToggleStore();
   const { register, handleSubmit, setValue } = useForm<FormFields>();
+  const [visibility, setVisibility] = useState<string>("");
+
   const [fileName, setFileName] = useState<string | undefined>("");
-  const toastClass =
-    "bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white";
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -43,6 +47,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
 
         setValue("title", post.title);
         setValue("message", post.message);
+        setValue("deptId", post.deptId);
         setFileName(post?.imageLocation?.split("post/")[1]);
       } catch (error) {
         const err = error as { response: { data: { message: string } } };
@@ -75,8 +80,12 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
       formData.append("deptId", String(data.deptId));
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
-      if (data.memo && data.memo.length > 0)
+
+      if (data.memo && data.memo.length > 0) {
         formData.append("newMemo", data.memo[0]);
+      } else {
+        formData.append("newMemo", "");
+      }
 
       apiClient
         .put(`${API_BASE}/post/${postId}`, formData, {
@@ -102,6 +111,16 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const handleFormClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
+
+  useEffect(() => {
+    if (visibility === "public") {
+      setValue("public", true);
+    } else if (visibility === "private") {
+      setValue("public", false);
+    } else {
+      return;
+    }
+  }, [setValue, visibility, setVisibility]);
 
   useEffect(() => {
     setIsCollapsed(true);
@@ -158,6 +177,44 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                     {fileName || "Click to upload memo"}{" "}
                   </span>
                 </div>
+              </div>
+            </div>
+
+            <select
+              {...register("deptId", { required: true })}
+              className="w-full bg-inherit border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none"
+            >
+              <option value={""}>Select a department</option>
+              {departments.map((department) => (
+                <option
+                  value={department.deptId}
+                  className="w-full border rounded-xl h-10 bg-white dark:bg-neutral-900"
+                  key={department.deptId}
+                >
+                  {department.departmentName[0].toUpperCase() +
+                    department.departmentName.substring(1).toLowerCase()}
+                </option>
+              ))}
+            </select>
+
+            <div className="w-full flex bg-inherit border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none">
+              <div
+                onClick={() => setVisibility("public")}
+                className={`w-full h-full flex hover:cursor-pointer items-center justify-center hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-s-xl ${
+                  visibility.toLowerCase() === "public" &&
+                  "bg-gray-200 dark:bg-neutral-700"
+                }`}
+              >
+                Public
+              </div>
+              <div
+                onClick={() => setVisibility("private")}
+                className={`w-full h-full hover:cursor-pointer flex items-center justify-center hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-e-xl ${
+                  visibility.toLowerCase() === "private" &&
+                  "bg-gray-200 dark:bg-neutral-700"
+                }`}
+              >
+                Private
               </div>
             </div>
 

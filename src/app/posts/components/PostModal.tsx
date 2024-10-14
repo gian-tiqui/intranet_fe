@@ -1,10 +1,10 @@
 "use client";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
+import useDepartments from "@/app/custom-hooks/departments";
 import { decodeUserData } from "@/app/functions/functions";
 import apiClient from "@/app/http-common/apiUrl";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
 import useShowPostStore from "@/app/store/showPostStore";
-import { Department } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useState } from "react";
@@ -17,13 +17,15 @@ interface FormFields {
   message?: string;
   memo?: FileList;
   title?: string;
+  public: boolean;
 }
 
 const PostModal = () => {
   const { setVisible } = useShowPostStore();
   const { setIsCollapsed } = useToggleStore();
-  const [departments, setDepartments] = useState<Department[]>([]);
-  const { register, handleSubmit } = useForm<FormFields>();
+  const departments = useDepartments();
+  const { register, handleSubmit, setValue } = useForm<FormFields>();
+  const [visibility, setVisibility] = useState<string>("");
   const [fileName, setFileName] = useState<string>("");
   const toastClass =
     "bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white";
@@ -45,6 +47,7 @@ const PostModal = () => {
       const formData = new FormData();
       formData.append("userId", String(data.userId));
       formData.append("deptId", String(data.deptId));
+      formData.append("public", String(data.public));
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
       if (data.memo) formData.append("memo", data.memo[0]);
@@ -70,23 +73,14 @@ const PostModal = () => {
   };
 
   useEffect(() => {
-    const fetchDepartments = async () => {
-      const departmentEndpoint = "department";
-
-      const response = await apiClient.get(
-        `${API_BASE}/${departmentEndpoint}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-          },
-        }
-      );
-
-      setDepartments(response.data);
-    };
-
-    fetchDepartments();
-  }, []);
+    if (visibility === "public") {
+      setValue("public", true);
+    } else if (visibility === "private") {
+      setValue("public", false);
+    } else {
+      return;
+    }
+  }, [setValue, visibility, setVisibility]);
 
   const handleFormClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -165,6 +159,27 @@ const PostModal = () => {
                 </option>
               ))}
             </select>
+
+            <div className="w-full flex bg-inherit border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none">
+              <div
+                onClick={() => setVisibility("public")}
+                className={`w-full h-full flex hover:cursor-pointer items-center justify-center hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-s-xl ${
+                  visibility.toLowerCase() === "public" &&
+                  "bg-gray-200 dark:bg-neutral-700"
+                }`}
+              >
+                Public
+              </div>
+              <div
+                onClick={() => setVisibility("private")}
+                className={`w-full h-full hover:cursor-pointer flex items-center justify-center hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-e-xl ${
+                  visibility.toLowerCase() === "private" &&
+                  "bg-gray-200 dark:bg-neutral-700"
+                }`}
+              >
+                Private
+              </div>
+            </div>
 
             <button
               type="submit"
