@@ -16,7 +16,7 @@ import { motion } from "framer-motion";
 import EaseString from "./EaseString";
 
 type FormFields = {
-  email: string;
+  employeeId: number;
   password: string;
 };
 
@@ -46,22 +46,12 @@ const Form = () => {
     }
   }, [setHidden, router]);
 
-  const handleLogin = async ({ email, password }: FormFields) => {
-    if (!email.endsWith("@wmc.com")) {
-      toast("Email Invalid", {
-        type: "error",
-        className:
-          "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-white",
-      });
-
-      return;
-    }
-
+  const handleLogin = async ({ employeeId, password }: FormFields) => {
     try {
       const response = await apiClient.post(
         `${API_BASE ? API_BASE : "http://localhost:8080"}/auth/login`,
         {
-          email,
+          employeeId,
           password,
         }
       );
@@ -131,13 +121,13 @@ const Form = () => {
           />
           <input
             className="bg-neutral-100 dark:bg-neutral-800 outline-none w-full"
-            {...register("email", { required: true })}
-            placeholder="Email"
+            {...register("employeeId", { required: true })}
+            placeholder="Enter your ID"
           />
         </div>
-        {errors.email && (
+        {errors.employeeId && (
           <MotionP className="text-red-500 text-xs ms-4 font-bold">
-            Email required
+            {errors.employeeId?.message}
           </MotionP>
         )}
       </motion.div>

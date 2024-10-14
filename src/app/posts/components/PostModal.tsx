@@ -24,8 +24,7 @@ const PostModal = () => {
   const { setVisible } = useShowPostStore();
   const { setIsCollapsed } = useToggleStore();
   const departments = useDepartments();
-  const { register, handleSubmit, setValue } = useForm<FormFields>();
-  const [visibility, setVisibility] = useState<string>("");
+  const { register, handleSubmit } = useForm<FormFields>();
   const [fileName, setFileName] = useState<string>("");
   const toastClass =
     "bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white";
@@ -72,16 +71,6 @@ const PostModal = () => {
     }
   };
 
-  useEffect(() => {
-    if (visibility === "public") {
-      setValue("public", true);
-    } else if (visibility === "private") {
-      setValue("public", false);
-    } else {
-      return;
-    }
-  }, [setValue, visibility, setVisibility]);
-
   const handleFormClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
@@ -102,10 +91,27 @@ const PostModal = () => {
       >
         <div className="flex items-start gap-3 mb-2">
           <div className="rounded-full w-10 h-10 bg-gray-400"></div>
-          <p className="font-bold">
-            {decodeUserData()?.firstName} {decodeUserData()?.lastName}
-          </p>
+          <div>
+            <p className="font-bold">
+              {decodeUserData()?.firstName} {decodeUserData()?.lastName}
+            </p>
+
+            <div className="bg-white dark:bg-neutral-900 text-sm">
+              <select
+                {...register("public", { required: true })}
+                className="bg-inherit outline-none text-xs"
+              >
+                <option className="" value={"public"}>
+                  Public
+                </option>
+                <option className="bg-inherit" value={"private"}>
+                  Private
+                </option>
+              </select>
+            </div>
+          </div>
         </div>
+
         <form onSubmit={handleSubmit(handlePost)}>
           <div>
             <input
@@ -159,27 +165,6 @@ const PostModal = () => {
                 </option>
               ))}
             </select>
-
-            <div className="w-full flex bg-inherit border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none">
-              <div
-                onClick={() => setVisibility("public")}
-                className={`w-full h-full flex hover:cursor-pointer items-center justify-center hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-s-xl ${
-                  visibility.toLowerCase() === "public" &&
-                  "bg-gray-200 dark:bg-neutral-700"
-                }`}
-              >
-                Public
-              </div>
-              <div
-                onClick={() => setVisibility("private")}
-                className={`w-full h-full hover:cursor-pointer flex items-center justify-center hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-e-xl ${
-                  visibility.toLowerCase() === "private" &&
-                  "bg-gray-200 dark:bg-neutral-700"
-                }`}
-              >
-                Private
-              </div>
-            </div>
 
             <button
               type="submit"
