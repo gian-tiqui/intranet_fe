@@ -16,7 +16,7 @@ const Navlinks = () => {
     },
   ];
   return (
-    <div className="flex items-center w-full justify-center gap-3">
+    <div className="hidden md:flex items-center w-full justify-center gap-3">
       {links.map((link, index) => (
         <motion.div
           key={index}

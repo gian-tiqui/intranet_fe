@@ -7,7 +7,7 @@ const Footer = () => {
 
   return (
     <footer className="absolute bottom-0 w-full">
-      <div className="px-7 flex justify-between items-center mb-2" key={0}>
+      <div className="px-6 flex justify-between items-center mb-2" key={0}>
         <div>
           <motion.p
             initial={{ x: 20, opacity: 0 }}
@@ -73,7 +73,7 @@ const Footer = () => {
               damping: 20,
               delay: index * 0.01,
             }}
-            className="mx-1 text-lg"
+            className="md:mx-1 md:text-lg"
           >
             {letter}
           </motion.p>

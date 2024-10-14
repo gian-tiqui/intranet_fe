@@ -14,6 +14,7 @@ const SpinningLogo = () => {
         repeat: Infinity,
         ease: "linear",
       }}
+      className="hidden md:block"
     >
       <Image
         src={wmcLogo}

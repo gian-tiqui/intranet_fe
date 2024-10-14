@@ -10,7 +10,7 @@ interface Props {
 
 const EaseString: React.FC<Props> = ({ word, size }) => {
   return (
-    <div className="flex gap-2 ">
+    <div className="flex md:gap-2 ">
       {word.toLowerCase() === "intranet" && (
         <motion.div
           initial={{ scale: 0 }}
@@ -21,7 +21,7 @@ const EaseString: React.FC<Props> = ({ word, size }) => {
             damping: 20,
           }}
         >
-          <Icon icon={"ph:hospital-light"} className="h-7 w-7" />
+          <Icon icon={"ph:hospital-light"} className="h-6 w-6 md:h-7 md:w-7" />
         </motion.div>
       )}
       <div className="flex">
