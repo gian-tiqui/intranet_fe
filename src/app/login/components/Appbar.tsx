@@ -7,10 +7,10 @@ import EaseString from "./EaseString";
 
 const Appbar = () => {
   return (
-    <div className="w-full absolute top-0">
-      <div className=" w-full justify-between flex px-6 sm:h-24 items-center">
+    <div className="w-full absolute top-0 ">
+      <div className=" w-full justify-between flex px-6 sm:h-24 items-center py-3">
         <div className="w-full">
-          <EaseString word="INTRANET" size="text-xl" />
+          <EaseString word="INTRANET" size="text-md md:text-xl" />
         </div>
 
         <Navlinks />
@@ -32,7 +32,7 @@ const Appbar = () => {
         initial={{ width: 0 }}
         animate={{ width: "100%" }}
         transition={{ duration: 1 }}
-        className="border-b border-black dark:border-white w-full"
+        className="border-b-0 border-black dark:border-white w-full"
       />
     </div>
   );

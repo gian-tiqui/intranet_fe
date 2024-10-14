@@ -7,28 +7,16 @@ import Link from "next/link";
 const Navlinks = () => {
   const links: NavLinksType[] = [
     {
-      name: "Dribble",
+      name: "Westlake Medical Center",
       link: "https://dribbble.com/shots/23311322-Ocamba-website-UI-UX",
     },
     {
-      name: "Dribble",
-      link: "https://dribbble.com/shots/23311322-Ocamba-website-UI-UX",
-    },
-    {
-      name: "Dribble",
-      link: "https://dribbble.com/shots/23311322-Ocamba-website-UI-UX",
-    },
-    {
-      name: "Dribble",
-      link: "https://dribbble.com/shots/23311322-Ocamba-website-UI-UX",
-    },
-    {
-      name: "Dribble",
+      name: "Mt. Grace Hospitals",
       link: "https://dribbble.com/shots/23311322-Ocamba-website-UI-UX",
     },
   ];
   return (
-    <div className="flex items-center w-full justify-center gap-3">
+    <div className="hidden md:flex items-center w-full justify-center gap-3">
       {links.map((link, index) => (
         <motion.div
           key={index}
