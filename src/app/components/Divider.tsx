@@ -41,6 +41,36 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { postId } = usePostIdStore();
   const [editVisible, setEditVisible] = useState<boolean>(true);
 
+  useEffect(() => {
+    if (isMobile) setIsCollapsed(true);
+  }, [isMobile, setIsCollapsed]);
+
+  useEffect(() => {
+    const handleClick = () => {
+      if (isMobile && !isCollapsed) {
+        setIsCollapsed(true);
+      }
+    };
+
+    document.addEventListener("click", handleClick);
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, [isMobile, setIsCollapsed, isCollapsed]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 767);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [setIsMobile]);
+
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setSearchText(value);

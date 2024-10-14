@@ -6,25 +6,28 @@ import { motion } from "framer-motion";
 
 const SpinningLogo = () => {
   return (
-    <motion.div
-      style={{ perspective: 1000 }}
-      animate={{ rotateY: 360 }}
-      transition={{
-        duration: 10,
-        repeat: Infinity,
-        ease: "linear",
-      }}
-      className="hidden md:block"
-    >
-      <Image
-        src={wmcLogo}
-        width={100000}
-        height={100000}
-        className="absolute z-0 h-96 w-auto md:top-[160px] md:left-[600px]"
-        alt="Westlake Med"
-        style={{ transformStyle: "preserve-3d" }}
-      />
-    </motion.div>
+    <div className="h-screen w-screen absolute md:grid place-content-center hidden">
+      <motion.div
+        style={{
+          perspective: 1000,
+        }}
+        animate={{ rotateY: 360 }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+      >
+        <Image
+          src={wmcLogo}
+          width={200}
+          height={100}
+          className="h-auto w-auto"
+          alt="Westlake Med"
+          style={{ transformStyle: "preserve-3d" }}
+        />
+      </motion.div>
+    </div>
   );
 };
 
