@@ -51,6 +51,32 @@ const CommentBar: React.FC<Props> = ({ postId, parentId }) => {
 
         if (response.status === 201) {
           reset();
+
+          if (response.data.postId == null) {
+            await apiClient.post(
+              `${API_BASE}/notification/comment-reply`,
+              null,
+              {
+                params: {
+                  userId: response.data.userId,
+                  commentId: response.data.cid,
+                },
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+                },
+              }
+            );
+          } else {
+            await apiClient.post(`${API_BASE}/notification/post-reply`, null, {
+              params: {
+                userId: response.data.userId,
+                postId: response.data.postId,
+              },
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+              },
+            });
+          }
         }
       } catch (error) {
         console.error(error);
