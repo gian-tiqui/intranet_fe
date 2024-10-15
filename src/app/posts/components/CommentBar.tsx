@@ -10,8 +10,8 @@ import { decodeUserData } from "@/app/functions/functions";
 interface Props {
   postId?: number;
   parentId?: number;
-  comments: PostComment[];
-  setComments: Dispatch<SetStateAction<PostComment[]>>;
+  comments?: PostComment[];
+  setComments?: Dispatch<SetStateAction<PostComment[]>>;
 }
 
 interface FormFields {
