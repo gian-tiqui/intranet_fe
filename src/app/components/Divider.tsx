@@ -20,6 +20,7 @@ import useEditModalStore from "../store/editModal";
 import EditPostModal from "../posts/components/EditModal";
 import usePostIdStore from "../store/postId";
 import { checkDept } from "../functions/functions";
+import NotificationBell from "./NotificationBell";
 
 interface Props {
   children?: ReactNode;
@@ -236,6 +237,7 @@ const Divider: React.FC<Props> = ({ children }) => {
                   loading={loadingSearch}
                 />
               )}
+              <NotificationBell />
               <ModeToggler />
             </div>
           </div>

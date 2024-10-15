@@ -47,6 +47,7 @@ const Form = () => {
   }, [setHidden, router]);
 
   const handleLogin = async ({ employeeId, password }: FormFields) => {
+    console.log(process.env.NEXT_PUBLIC_API_KEY);
     try {
       const response = await apiClient.post(
         `${API_BASE ? API_BASE : "http://localhost:8080"}/auth/login`,

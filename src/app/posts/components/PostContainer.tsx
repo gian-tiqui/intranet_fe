@@ -39,6 +39,10 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const [message, setMessage] = useState<string>("");
   const [extracting, setExtracting] = useState<boolean>(false);
 
+  const handleReadClick = () => {
+    console.log("?");
+  };
+
   const scanImage = async (imageUrl: string) => {
     const worker = await createWorker("eng");
     try {
@@ -293,12 +297,21 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
           layout="responsive"
           priority
         />
-        <div
-          onClick={handleDownloadImage}
-          className="w-56 flex items-center gap-1 rounded-lg p-2 mb-2 hover:bg-gray-300 cursor-pointer dark:hover:bg-neutral-700"
-        >
-          <Icon icon={"akar-icons:download"} />
-          <span>Download Image as PDF</span>
+        <div className="flex items-center w-full justify-between gap-1 rounded-lg p-2 mb-2  cursor-pointer ">
+          <div
+            onClick={handleDownloadImage}
+            className="flex hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-2 items-center gap-1 rounded"
+          >
+            <Icon icon={"akar-icons:download"} />
+            <span>Download Image as PDF</span>
+          </div>
+
+          <div
+            onClick={handleReadClick}
+            className={`hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-3 rounded`}
+          >
+            Read
+          </div>
         </div>
       </div>
       <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-6" />
