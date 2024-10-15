@@ -1,8 +1,8 @@
 "use client";
-import React, { useRef } from "react";
+import React, { Dispatch, SetStateAction, useRef } from "react";
 import { Icon } from "@iconify/react";
 import { useForm } from "react-hook-form";
-import { CreateComment } from "@/app/types/types";
+import { CreateComment, PostComment } from "@/app/types/types";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
 import { decodeUserData } from "@/app/functions/functions";
@@ -10,6 +10,8 @@ import { decodeUserData } from "@/app/functions/functions";
 interface Props {
   postId?: number;
   parentId?: number;
+  comments: PostComment[];
+  setComments: Dispatch<SetStateAction<PostComment[]>>;
 }
 
 interface FormFields {

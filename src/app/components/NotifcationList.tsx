@@ -14,7 +14,7 @@ const NotifcationList = () => {
       </div>
       <div className="flex flex-col items-center px-1 w-full gap-1 overflow-auto">
         {notifications.map((notif, index) => (
-          <Notification message={notif.message} key={index} />
+          <Notification notification={notif} key={index} />
         ))}
       </div>
     </div>

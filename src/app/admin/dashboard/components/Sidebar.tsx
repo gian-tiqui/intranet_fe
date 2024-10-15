@@ -23,9 +23,11 @@ import deleteUserStore from "@/app/store/deleteUserModal";
 import DeleteModal from "./DeleteModal";
 import useDeletePostStore from "@/app/store/deletePost";
 import DeletePostModal from "./DeletePostModal";
+import { motion } from "framer-motion";
 
 const Sidebar = () => {
   const [selectedComp, setSelectedComp] = useState<ReactNode>(<Graphs />);
+  const [collapsed, setCollapsed] = useState<boolean>(false);
   const { uVisible, setUVisible } = useShowUserModalStore();
   const router = useRouter();
   const { aShown, setAShown } = useAdminHiderStore();
@@ -35,6 +37,29 @@ const Sidebar = () => {
   const { showDeleteModal, setShowDeleteModal } = deleteUserStore();
   const { deletePostModalShown, setDeletePostModalShown } =
     useDeletePostStore();
+  const [isMobile] = useState<boolean>(false);
+
+  const variants = {
+    open: isMobile
+      ? {
+          x: 0,
+          width: "75%",
+          opacity: 1,
+          transition: { type: "spring", stiffness: 300, damping: 30 },
+        }
+      : {
+          x: 0,
+          width: "45vh",
+          opacity: 1,
+          transition: { type: "spring", stiffness: 300, damping: 30 },
+        },
+    collapsed: {
+      x: isMobile ? "-100%" : "-50%",
+      width: 0,
+      opacity: 0,
+      transition: { type: "spring", stiffness: 300, damping: 30 },
+    },
+  };
 
   // Sidebar items that will change the children component.
   const components: ABoardSelector[] = [
@@ -96,41 +121,58 @@ const Sidebar = () => {
         </div>
       )}
 
-      <div className="bg-white dark:bg-neutral-900 flex flex-col justify-between shadow">
-        <div className="">
-          <div className="px-6 pt-5 clear-start mb-6 font-extrabold text-2xl gap-3 flex items-center">
-            <Icon icon={"file-icons:dashboard"} />
-            <p>DASHBOARD</p>
-          </div>
-          <hr className="mt-7 border-b border-gray-200 dark:border-gray-800 mb-2" />
-          <HoverBox className="hover:bg-gray-300 mb-2 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded mx-4">
-            <div
-              className="flex items-center gap-3"
-              onClick={() => router.push("/")}
-            >
-              <Icon icon={"ph:hospital"} className="h-7 w-7" />
-              <p className="w-full text-md">Intranet</p>
+      {!collapsed && (
+        <motion.div
+          initial="collapsed"
+          animate="open"
+          exit="collapsed"
+          variants={variants}
+          className="bg-white dark:bg-neutral-900 flex flex-col justify-between shadow"
+        >
+          <div className="">
+            <div className="px-6 pt-5 clear-start mb-6 font-extrabold text-2xl gap-3 flex items-center">
+              <Icon icon={"file-icons:dashboard"} />
+              <p>DASHBOARD</p>
             </div>
-          </HoverBox>
-          <hr className="border-b border-gray-200 dark:border-gray-800 mx-4" />
-          <div className="flex flex-col gap-0 py-2 px-4 w-72">
-            {components.map((comp, index) => (
+            <hr className="mt-7 border-b border-gray-200 dark:border-gray-800 mb-2" />
+            <HoverBox className="hover:bg-gray-300 mb-2 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded mx-4">
               <div
-                onClick={() => setSelectedComp(comp.component)}
-                key={index}
-                className="flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-neutral-800 rounded p-2"
+                className="flex items-center gap-3"
+                onClick={() => router.push("/")}
               >
-                <Icon icon={comp.icon} className="h-7 w-7" />
-                <p className="cursor-pointer">{comp.name}</p>
+                <Icon icon={"ph:hospital"} className="h-7 w-7" />
+                <p className="w-full text-md">Intranet</p>
               </div>
-            ))}
+            </HoverBox>
+            <hr className="border-b border-gray-200 dark:border-gray-800 mx-4" />
+            <div className="flex flex-col gap-0 py-2 px-4 w-72">
+              {components.map((comp, index) => (
+                <div
+                  onClick={() => setSelectedComp(comp.component)}
+                  key={index}
+                  className="flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-neutral-800 rounded p-2"
+                >
+                  <Icon icon={comp.icon} className="h-7 w-7" />
+                  <p className="cursor-pointer">{comp.name}</p>
+                </div>
+              ))}
+            </div>
+            <hr className="border-b border-gray-200 dark:border-gray-800 mx-4" />
           </div>
-          <hr className="border-b border-gray-200 dark:border-gray-800 mx-4" />
-        </div>
-        <UserButton uVisible={uVisible} setUVisible={setUVisible} />
-      </div>
+          <UserButton uVisible={uVisible} setUVisible={setUVisible} />
+        </motion.div>
+      )}
 
-      <div className="w-full bg-neutral-200 dark:bg-neutral-800 h-screen">
+      <div className="w-full bg-neutral-200 dark:bg-neutral-800 h-screen relative">
+        <div
+          onClick={() => setCollapsed(!collapsed)}
+          className={`absolute top-0 left-0 h-7 w-8 rounded-ee bg-white grid place-content-center`}
+        >
+          <Icon
+            icon={"fluent:ios-arrow-24-filled"}
+            className={`h-5 w-5 ${collapsed && "rotate-180"}`}
+          />
+        </div>
         <div className="">{selectedComp}</div>
       </div>
     </div>

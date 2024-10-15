@@ -318,7 +318,11 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
       {!generalPost && (
         <>
           {comments && <Comments comments={comments} postId={id} />}
-          <CommentBar setComments={setComments} postId={id} />
+          <CommentBar
+            comments={comments}
+            setComments={setComments}
+            postId={id}
+          />
         </>
       )}
     </>

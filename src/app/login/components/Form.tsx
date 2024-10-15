@@ -117,7 +117,7 @@ const Form = () => {
         <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl mb-1">
           <Icon
             className="h-6 w-6 text-neutral-400"
-            icon={"ic:outline-email"}
+            icon={"teenyicons:id-outline"}
           />
           <input
             className="bg-neutral-100 dark:bg-neutral-800 outline-none w-full"

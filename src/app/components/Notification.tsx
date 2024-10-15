@@ -1,13 +1,24 @@
+import { useRouter } from "next/navigation";
 import React from "react";
+import { NotificationType } from "../types/types";
 
 interface Props {
-  message: string;
+  notification: NotificationType;
 }
 
-const Notification: React.FC<Props> = ({ message }) => {
+const Notification: React.FC<Props> = ({ notification }) => {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/posts/${notification.postId}`);
+  };
+
   return (
-    <div className="border w-full p-2 bg-white dark:border-black rounded-lg text-sm dark:bg-neutral-900">
-      {message}
+    <div
+      onClick={handleClick}
+      className="border w-full p-2 bg-white dark:border-black rounded-lg text-sm dark:bg-neutral-900 cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800"
+    >
+      {notification.message}
     </div>
   );
 };
