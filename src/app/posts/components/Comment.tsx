@@ -24,12 +24,12 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
 
         {/* Comment Content Section */}
         <div className="mt-1 w-full min-w-0">
-          {comment.user.id === decodeUserData()?.sub ? (
+          {comment.userId === decodeUserData()?.sub ? (
+            <p className="font-bold">You</p>
+          ) : (
             <p className="font-bold">
               {comment.user.firstName} {comment.user.lastName}
             </p>
-          ) : (
-            <p className="font-bold">You</p>
           )}
           <div className="w-full">
             <p className="break-words overflow-wrap break-word">

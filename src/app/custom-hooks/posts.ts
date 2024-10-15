@@ -3,6 +3,7 @@ import { Post } from "../types/types";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import apiClient from "../http-common/apiUrl";
 import { jwtDecode } from "jwt-decode";
+import { decodeUserData } from "../functions/functions";
 
 const usePosts = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -19,7 +20,9 @@ const usePosts = () => {
         if ([1, 2, 4].includes(decoded.deptId)) deptIdQuery = "";
         else deptIdQuery = String(decoded.deptId);
 
-        const apiUri = `${API_BASE}/post?deptId=${deptIdQuery}`;
+        const apiUri = `${API_BASE}/post?deptId=${deptIdQuery}&userIdComment=${
+          decodeUserData()?.sub
+        }`;
 
         const response = await apiClient.get(apiUri, {
           headers: {
