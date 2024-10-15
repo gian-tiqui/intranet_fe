@@ -59,10 +59,6 @@ const PostModal = () => {
           },
         })
         .then((response) => {
-          toast(response.data.message, {
-            type: "success",
-            className: toastClass,
-          });
           setVisible(false);
 
           apiClient
@@ -77,7 +73,7 @@ const PostModal = () => {
             })
             .then(() => {
               toast("Notification sent to the department!", {
-                type: "info",
+                type: "success",
                 className: toastClass,
               });
             })

@@ -1,9 +1,10 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { useEffect, useState } from "react";
 import NotifcationList from "./NotifcationList";
+import useNotifications from "../custom-hooks/notifications";
 
 const NotificationBell = () => {
-  const [notifCount] = useState<number>(10);
+  const notifCount = useNotifications().length;
   const [openNotifs, setOpenNotifs] = useState<boolean>(false);
 
   const handleOpenNotifs = (e: React.MouseEvent) => {
