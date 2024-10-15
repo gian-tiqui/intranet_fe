@@ -53,7 +53,7 @@ const PostList = () => {
                     {groupedPosts[date].map((post, index) => (
                       <Link href={`/posts/${post.pid}`} key={index}>
                         <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 py-1 px-2 cursor-pointer rounded">
-                          <p>{post.title}</p>
+                          <p>{post.title || "Untitled"}</p>
                         </HoverBox>
                       </Link>
                     ))}
