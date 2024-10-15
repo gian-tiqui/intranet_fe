@@ -91,10 +91,16 @@ const PostModal = () => {
       >
         <div className="flex items-start gap-3 mb-2">
           <div className="rounded-full w-10 h-10 bg-gray-400"></div>
-          <div>
-            <p className="font-bold">
-              {decodeUserData()?.firstName} {decodeUserData()?.lastName}
-            </p>
+          <div className="w-full">
+            <div className="flex justify-between">
+              <p className="font-bold">
+                {decodeUserData()?.firstName} {decodeUserData()?.lastName}
+              </p>
+              <Icon
+                icon={`solar:camera-broken`}
+                className="h-8 w-8 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-neutral-800"
+              />
+            </div>
 
             <div className="bg-white dark:bg-neutral-900 text-sm">
               <select
