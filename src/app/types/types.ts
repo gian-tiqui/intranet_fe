@@ -104,7 +104,18 @@ type NavLinksType = {
   link: string;
 };
 
+type NotificationType = {
+  id: number;
+  userId: number;
+  postId: number;
+  commentId: number;
+  deptId: number;
+  message: string;
+  isRead: boolean;
+};
+
 export type {
+  NotificationType,
   Post,
   GroupedPosts,
   User,
