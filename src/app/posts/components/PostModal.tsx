@@ -64,6 +64,26 @@ const PostModal = () => {
             className: toastClass,
           });
           setVisible(false);
+
+          apiClient
+            .post(`${API_BASE}/notification/new-post`, null, {
+              params: {
+                deptId: data.deptId,
+                postId: response.data.post.post.pid,
+              },
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+              },
+            })
+            .then(() => {
+              toast("Notification sent to the department!", {
+                type: "info",
+                className: toastClass,
+              });
+            })
+            .catch((error) => {
+              console.error("Failed to send notification:", error);
+            });
         })
         .catch((error) => {
           toast(error, { type: "error", className: toastClass });

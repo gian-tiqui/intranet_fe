@@ -15,8 +15,6 @@ const usePost = (id: number) => {
           userCommentId = "";
         else userCommentId = decodeUserData()?.sub;
 
-        console.log(userCommentId);
-
         const response = await apiClient.get(
           `${API_BASE}/post/${id}?userIdComment=${userCommentId}`,
           {
