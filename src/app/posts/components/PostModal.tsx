@@ -10,7 +10,8 @@ import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs"; // ???
+import dynamic from "next/dynamic";
+import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/legacy/build/pdf.worker.min.mjs",
