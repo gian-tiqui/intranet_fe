@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Comment from "./Comment";
 import CommentSkeleton from "./CommentSkeleton";
-import { PostComment } from "@/app/types/types";
+import { MinMax, PostComment } from "@/app/types/types";
 
 interface Props {
   comments: PostComment[];
@@ -11,6 +11,7 @@ interface Props {
 
 const Comments: React.FC<Props> = ({ comments, postId }) => {
   const [loading, setLoading] = useState<boolean>(true);
+  const [minMax, setMinMax] = useState<MinMax>({ min: 0, max: 5 });
 
   useEffect(() => {
     setLoading(false);
@@ -21,10 +22,15 @@ const Comments: React.FC<Props> = ({ comments, postId }) => {
   }
 
   return (
-    <div className="flex flex-col gap-6 pb-24 ">
-      {comments.map((comment) => (
+    <div className="flex flex-col gap-6 pb-24">
+      {comments.slice(minMax.min, minMax.max).map((comment) => (
         <Comment isReply key={comment.cid} comment={comment} postId={postId} />
       ))}
+      <button
+        onClick={() => setMinMax({ min: minMax.min, max: minMax.max + 5 })}
+      >
+        Show more
+      </button>
     </div>
   );
 };

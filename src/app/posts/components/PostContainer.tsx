@@ -19,6 +19,7 @@ import useEditModalStore from "@/app/store/editModal";
 import usePostIdStore from "@/app/store/postId";
 import { createWorker } from "tesseract.js";
 import { jsPDF } from "jspdf";
+import apiClient from "@/app/http-common/apiUrl";
 
 interface Props {
   id: number;
@@ -39,8 +40,20 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const [message, setMessage] = useState<string>("");
   const [extracting, setExtracting] = useState<boolean>(false);
 
-  const handleReadClick = () => {
-    console.log("?");
+  const handleReadClick = async () => {
+    try {
+      const response = await apiClient.post(`${API_BASE}/post-reader`, {
+        userId: decodeUserData()?.sub,
+        postId: id,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+        },
+      });
+
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const scanImage = async (imageUrl: string) => {
