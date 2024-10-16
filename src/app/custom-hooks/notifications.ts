@@ -12,7 +12,7 @@ const useNotifications = () => {
       try {
         const API_URI = `${API_BASE}/notification?deptId=${
           decodeUserData()?.deptId
-        }`;
+        }&userId=${decodeUserData()?.sub}`;
         const response = await apiClient.get(API_URI);
 
         setNotifications(response.data);
