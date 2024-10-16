@@ -40,7 +40,7 @@ const First = () => {
         }}
       >
         <motion.h1
-          className="font-semibold "
+          className="font-semibold mb-2"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{
@@ -48,11 +48,12 @@ const First = () => {
             duration: 0.5,
           }}
         >
-          consectetur adipiscing elit
+          We, at Westlake Medical Center are committed to deliver Quality and
+          Holistic Healthcare Service to our patients.
         </motion.h1>
 
         <motion.h1
-          className="font-semibold "
+          className="font-semibold mb-2"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{
@@ -61,7 +62,9 @@ const First = () => {
             delay: 0.1,
           }}
         >
-          consectetur adipiscing elit asdasdasa
+          We do it by caring through exemplary medical practices, advocating
+          patient safety and meeting customer satisfaction by setting quality
+          standards thereby achieving our goals and targets.
         </motion.h1>
 
         <motion.h1
@@ -74,7 +77,9 @@ const First = () => {
             delay: 0.2,
           }}
         >
-          consectetur adipiscing elit asdasdasa
+          We guarantee firm adherence to the requirement of the standard as well
+          as regulatory bodies and ethical code of conduct in order to
+          continually review and improve suitability of our QMS.
         </motion.h1>
 
         <motion.h1
@@ -87,105 +92,80 @@ const First = () => {
             delay: 0.3,
           }}
         >
-          consectetur adipiscing elit asdasdasa
-        </motion.h1>
-
-        <motion.h1
-          className="font-semibold"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{
-            ease: "easeInOut",
-            duration: 0.4,
-            delay: 0.4,
-          }}
-        >
-          consectetur adipiscing elit asdasdasa
-        </motion.h1>
-
-        <motion.h1
-          className="font-semibold"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{
-            ease: "easeInOut",
-            duration: 0.4,
-            delay: 0.5,
-          }}
-        >
-          consectetur adipiscing elit asdasdasa
-        </motion.h1>
-
-        <motion.h1
-          className="font-semibold"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{
-            ease: "easeInOut",
-            duration: 0.4,
-            delay: 0.6,
-          }}
-        >
-          consectetur adipiscing elit asdasdasa
-        </motion.h1>
-
-        <motion.h1
-          className="font-semibold"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{
-            ease: "easeInOut",
-            duration: 0.4,
-            delay: 0.7,
-          }}
-        >
-          consectetur adipiscing elit asdasdasa
-        </motion.h1>
-
-        <motion.h1
-          className="font-semibold"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{
-            ease: "easeInOut",
-            duration: 0.4,
-            delay: 0.8,
-          }}
-        >
-          consectetur adipiscing elit asdasdasa
-        </motion.h1>
-
-        <motion.h1
-          className="font-semibold"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{
-            ease: "easeInOut",
-            duration: 0.4,
-            delay: 0.9,
-          }}
-        >
-          consectetur adipiscing elit asdasdasa
-        </motion.h1>
-
-        <motion.h1
-          className="font-semibold"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{
-            ease: "easeInOut",
-            duration: 0.4,
-            delay: 0.99,
-          }}
-        >
-          consectetur adipiscing elit asdasdasa
+          Jose Mari G. Pratz President
         </motion.h1>
       </div>
     </div>
   );
 };
 const Second = () => {
-  return <First />;
+  return (
+    <div className="text-black h-96 w-full md:w-96">
+      <div
+        className="flex flex-wrap mb-7"
+        style={{
+          overflow: "hidden",
+          wordWrap: "break-word",
+          wordBreak: "break-word",
+        }}
+      ></div>
+
+      <div
+        className="flex flex-wrap mb-7 dark:text-white"
+        style={{
+          overflow: "hidden",
+          wordWrap: "break-word",
+          wordBreak: "break-word",
+        }}
+      >
+        <motion.h1
+          className="font-semibold mb-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{
+            ease: "easeInOut",
+            duration: 0.5,
+          }}
+        >
+          At Westlake, your health comes first. Efficient services and
+          high-quality equipment is available for you at a cost more affordable
+          compared to major hospitals in the Metro.
+        </motion.h1>
+
+        <motion.h1
+          className="font-semibold mb-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{
+            ease: "easeInOut",
+            duration: 0.4,
+            delay: 0.1,
+          }}
+        >
+          Westlake’s efforts to provide affordable and quality healthcare began
+          to concretize in 2015 when they became part of Mount Grace Hospitals
+          Inc. (MGHI)-- a nationwide network of hospitals whose purpose it is to
+          ensure equipped and capable hospitals that offer comprehensive,
+          excellent, and compassionate healthcare to Filipinos.
+        </motion.h1>
+
+        <motion.h1
+          className="font-semibold"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{
+            ease: "easeInOut",
+            duration: 0.4,
+            delay: 0.2,
+          }}
+        >
+          We guarantee firm adherence to the requirement of the standard as well
+          as regulatory bodies and ethical code of conduct in order to
+          continually review and improve suitability of our QMS.
+        </motion.h1>
+      </div>
+    </div>
+  );
 };
 
 const ChangingContainer = () => {
@@ -201,7 +181,7 @@ const ChangingContainer = () => {
       setSelectedComp(comps[newIndex]);
     };
 
-    const timer = setTimeout(changeComp, 6000);
+    const timer = setTimeout(changeComp, 7000);
 
     return () => clearTimeout(timer);
   }, [index]);
