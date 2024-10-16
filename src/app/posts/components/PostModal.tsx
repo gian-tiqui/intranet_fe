@@ -12,18 +12,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { pdfjs } from "react-pdf";
 
-if (typeof Promise.withResolvers === "undefined") {
-  (Promise as any).withResolvers = function () {
-    let resolve: (value: unknown) => void;
-    let reject: (reason?: any) => void;
-    const promise = new Promise((res, rej) => {
-      resolve = res;
-      reject = rej;
-    });
-    return { promise, resolve: resolve!, reject: reject! };
-  };
-}
-
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/legacy/build/pdf.worker.min.mjs",
   import.meta.url
