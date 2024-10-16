@@ -112,10 +112,10 @@ const PostModal = () => {
               <p className="font-bold">
                 {decodeUserData()?.firstName} {decodeUserData()?.lastName}
               </p>
-              <Icon
+              {/* <Icon
                 icon={`solar:camera-broken`}
                 className="h-8 w-8 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-neutral-800"
-              />
+              /> */}
             </div>
 
             <div className="bg-white dark:bg-neutral-900 text-sm">
