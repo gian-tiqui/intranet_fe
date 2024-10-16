@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HoverBox from "@/app/components/HoverBox";
 import CommentBar from "./CommentBar";
 import MotionTemplate from "@/app/components/animation/MotionTemplate";
 import { AnimatePresence } from "framer-motion";
 import { PostComment } from "@/app/types/types";
 import { decodeUserData } from "@/app/functions/functions";
+import useReply from "@/app/custom-hooks/reply";
 
 interface Props {
   isReply?: boolean;
@@ -15,6 +16,13 @@ interface Props {
 
 const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
   const [showReplies, setShowReplies] = useState<boolean>(false);
+  const [mReplies, setMReplies] = useState<PostComment[]>([]);
+
+  const reply = useReply(comment.cid);
+
+  useEffect(() => {
+    setMReplies(reply);
+  }, [reply, isReply]);
 
   return (
     <div>
@@ -28,7 +36,9 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
             <p className="font-bold">You</p>
           ) : (
             <p className="font-bold">
-              {comment.user.firstName} {comment.user.lastName}
+              {comment.user
+                ? comment.user.firstName + " " + comment.user.lastName
+                : "You (New)"}
             </p>
           )}
           <div className="w-full">
@@ -51,11 +61,15 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
             {showReplies && (
               <MotionTemplate>
                 <div className="flex flex-col gap-2 mb-5">
-                  {comment.replies?.map((reply) => (
+                  {mReplies?.map((reply) => (
                     <Comment key={reply.cid} comment={reply} postId={postId} />
                   ))}
                 </div>
-                <CommentBar parentId={comment.cid} />
+                <CommentBar
+                  parentId={comment.cid}
+                  comments={mReplies}
+                  setComments={setMReplies}
+                />
               </MotionTemplate>
             )}
           </AnimatePresence>

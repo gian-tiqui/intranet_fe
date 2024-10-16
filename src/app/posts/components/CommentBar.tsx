@@ -6,6 +6,7 @@ import { CreateComment, PostComment } from "@/app/types/types";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
 import { decodeUserData } from "@/app/functions/functions";
+import { useRouter } from "next/navigation";
 
 interface Props {
   postId?: number;
@@ -18,9 +19,15 @@ interface FormFields {
   message: string;
 }
 
-const CommentBar: React.FC<Props> = ({ postId, parentId }) => {
+const CommentBar: React.FC<Props> = ({
+  postId,
+  parentId,
+  comments,
+  setComments,
+}) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { register, handleSubmit, reset } = useForm<FormFields>();
+  const router = useRouter();
 
   const handleInput = () => {
     const textarea = textareaRef.current;
@@ -29,6 +36,14 @@ const CommentBar: React.FC<Props> = ({ postId, parentId }) => {
 
     textarea.style.height = "auto";
     textarea.style.height = `${textarea.scrollHeight}px`;
+  };
+
+  const handleCommentAdded = (comment: PostComment) => {
+    if (comments && setComments) {
+      const mComments = [comment, ...comments?.map((comment) => comment)];
+
+      setComments(mComments as PostComment[]);
+    }
   };
 
   const handleCommentSubmit = async (data: FormFields) => {
@@ -51,6 +66,10 @@ const CommentBar: React.FC<Props> = ({ postId, parentId }) => {
 
         if (response.status === 201) {
           reset();
+
+          router.refresh();
+
+          handleCommentAdded(response.data);
 
           if (response.data.postId == null) {
             await apiClient.post(
