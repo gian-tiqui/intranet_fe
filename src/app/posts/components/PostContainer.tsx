@@ -42,15 +42,13 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
 
   const handleReadClick = async () => {
     try {
-      const response = await apiClient.post(`${API_BASE}/post-reader`, {
+      await apiClient.post(`${API_BASE}/post-reader`, {
         userId: decodeUserData()?.sub,
         postId: id,
         headers: {
           Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
         },
       });
-
-      console.log(response);
     } catch (error) {
       console.error(error);
     }
