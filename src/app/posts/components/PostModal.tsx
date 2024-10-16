@@ -10,9 +10,13 @@ import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import * as pdfjs from "pdfjs-dist";
+import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
 
-pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/legacy/build/pdf.worker.min.mjs",
+  import.meta.url
+).toString();
+
 interface FormFields {
   userId: number;
   deptId: number;

@@ -26,7 +26,7 @@
     "particles.js": "^2.0.0",
     "pdf-img-convert": "^2.0.0",
     "pdf-lib": "^1.17.1",
-    "pdfjs-dist": "^4.7.76",
+    "pdfjs-dist": "4.4.168",
     "pusher-js": "^8.4.0-rc2",
     "react": "^18",
     "react-dom": "^18",
