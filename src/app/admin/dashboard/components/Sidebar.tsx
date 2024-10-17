@@ -172,7 +172,7 @@ const Sidebar = () => {
       <div className="w-full bg-neutral-200 dark:bg-neutral-800 h-screen relative">
         <div
           onClick={() => setCollapsed(!collapsed)}
-          className={`absolute top-0 left-0 h-7 w-8 rounded-ee bg-white grid place-content-center`}
+          className={`absolute top-0 left-0 h-7 w-8 rounded-ee bg-white grid place-content-center dark:bg-neutral-900`}
         >
           <Icon
             icon={"fluent:ios-arrow-24-filled"}
