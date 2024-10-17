@@ -325,7 +325,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
             <Icon icon={"akar-icons:download"} />
             <span>Download Image as PDF</span>
           </div>
-
           {decodeUserData()?.deptId === post?.deptId && (
             <div
               onClick={handleReadClick}
@@ -333,7 +332,8 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
             >
               Read
             </div>
-          )}
+          )}{" "}
+          {}
         </div>
       </div>
       <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-6" />

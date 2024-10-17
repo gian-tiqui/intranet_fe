@@ -3,6 +3,7 @@ import React from "react";
 import { NotificationType } from "../types/types";
 import apiClient from "../http-common/apiUrl";
 import { API_BASE, INTRANET } from "../bindings/binding";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 interface Props {
   notification: NotificationType;
@@ -39,7 +40,8 @@ const Notification: React.FC<Props> = ({ notification }) => {
           : "bg-white dark:bg-neutral-900"
       }`}
     >
-      {notification.message}
+      <Icon icon={`akar-icons:info`} className="h-5 w-5 mb-1" />
+      <p>{notification.message}</p>
     </div>
   );
 };
