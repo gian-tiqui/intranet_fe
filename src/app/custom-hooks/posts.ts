@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Post } from "../types/types";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import apiClient from "../http-common/apiUrl";
-import { jwtDecode } from "jwt-decode";
 import { decodeUserData } from "../functions/functions";
 
 const usePosts = () => {
@@ -11,18 +10,9 @@ const usePosts = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const at = localStorage.getItem(INTRANET);
-        let deptIdQuery: string | null;
-
-        if (!at) return;
-        const decoded: { deptId: number } = jwtDecode(at);
-
-        if ([1, 2, 4].includes(decoded.deptId)) deptIdQuery = "";
-        else deptIdQuery = String(decoded.deptId);
-
-        const apiUri = `${API_BASE}/post?deptId=${deptIdQuery}&userIdComment=${
-          decodeUserData()?.sub
-        }`;
+        const apiUri = `${API_BASE}/post?deptId=${
+          decodeUserData()?.deptId
+        }&userIdComment=${decodeUserData()?.sub}`;
 
         const response = await apiClient.get(apiUri, {
           headers: {

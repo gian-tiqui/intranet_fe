@@ -20,6 +20,8 @@ import usePostIdStore from "@/app/store/postId";
 import { createWorker } from "tesseract.js";
 import { jsPDF } from "jspdf";
 import apiClient from "@/app/http-common/apiUrl";
+import { toast } from "react-toastify";
+import { toastClass } from "@/app/tailwind-classes/tw_classes";
 
 interface Props {
   id: number;
@@ -144,9 +146,16 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
 
   useEffect(() => {
     if (post) {
+      if (!post.public && decodeUserData()?.deptId !== post.deptId) {
+        toast(
+          "You are trying to view a private post that is not for your department. :)",
+          { type: "error", className: toastClass }
+        );
+        router.push("/bulletin");
+      }
       setLoading(false);
     }
-  }, [post]);
+  }, [post, router]);
 
   const handleClick = () => {
     router.push(`/posts/${id}`);
@@ -317,12 +326,14 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
             <span>Download Image as PDF</span>
           </div>
 
-          <div
-            onClick={handleReadClick}
-            className={`hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-3 rounded`}
-          >
-            Read
-          </div>
+          {decodeUserData()?.deptId === post?.deptId && (
+            <div
+              onClick={handleReadClick}
+              className={`hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-3 rounded`}
+            >
+              Read
+            </div>
+          )}
         </div>
       </div>
       <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-6" />
