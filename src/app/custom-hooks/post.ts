@@ -11,7 +11,10 @@ const usePost = (id: number) => {
     const fetchPosts = async () => {
       try {
         let userCommentId;
-        if (decodeUserData()?.departmentName.toLowerCase() === "hr")
+        if (
+          decodeUserData()?.departmentName.toLowerCase() === "hr" ||
+          decodeUserData()?.departmentName.toLowerCase() === "qm"
+        )
           userCommentId = "";
         else userCommentId = decodeUserData()?.sub;
 
