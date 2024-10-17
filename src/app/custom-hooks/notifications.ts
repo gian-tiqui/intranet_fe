@@ -10,9 +10,11 @@ const useNotifications = () => {
   useEffect(() => {
     const fetchNotifs = async () => {
       try {
-        const API_URI = `${API_BASE}/notification?deptId=${
-          decodeUserData()?.deptId === 4 ? "" : decodeUserData()?.deptId
-        }&userId=${decodeUserData()?.sub === 4 ? decodeUserData()?.sub : ""}`;
+        const deptId =
+          decodeUserData()?.deptId === 4 ? "" : decodeUserData()?.deptId;
+        const userId = decodeUserData()?.sub === 4 ? "" : decodeUserData()?.sub;
+        const API_URI = `${API_BASE}/notification?deptId=${deptId}&userId=${userId}`;
+
         const response = await apiClient.get(API_URI);
 
         setNotifications(response.data);
