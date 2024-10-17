@@ -114,6 +114,7 @@ const Divider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     const refreshData = async () => {
+      console.log(debouncedSearch);
       setPostUri(debouncedSearch);
     };
 
