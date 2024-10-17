@@ -8,6 +8,7 @@ import Link from "next/link";
 import usePosts from "@/app/custom-hooks/posts";
 import PostListSkeleton from "./PostListSkeleton";
 import NoPosts from "./NoPosts";
+import useBulletin from "@/app/custom-hooks/bulletin";
 
 const groupPostsByDate = (posts: Post[]) => {
   return posts.reduce((groups: GroupedPosts, post: Post) => {
@@ -20,9 +21,20 @@ const groupPostsByDate = (posts: Post[]) => {
   }, {});
 };
 
-const PostList = () => {
+interface Props {
+  selectedVis: string;
+}
+
+const PostList: React.FC<Props> = ({ selectedVis }) => {
   const posts = usePosts();
-  const groupedPosts = useMemo(() => groupPostsByDate(posts), [posts]);
+  const allPosts = useBulletin();
+
+  // Use posts or allPosts depending on selectedVis
+  const groupedPosts = useMemo(
+    () => groupPostsByDate(selectedVis === "dept" ? posts : allPosts),
+    [selectedVis, posts, allPosts]
+  );
+
   const [maxNum, setMaxNum] = useState<number>(2);
 
   const showMore = () => {
@@ -33,7 +45,7 @@ const PostList = () => {
     return <PostListSkeleton />;
   }
 
-  if (posts.length === 0) {
+  if (posts.length === 0 && allPosts.length === 0) {
     return <NoPosts />;
   }
 

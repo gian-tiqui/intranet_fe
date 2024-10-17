@@ -17,6 +17,14 @@ const MainPost = () => {
 
   const posts = usePosts();
 
+  if (posts.length === 0) {
+    return (
+      <div className="w-full h-full grid place-content-center">
+        <p className="font-semibold mt-20">No memos to show yet</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       {posts.slice(0, maxNum).map((post) => (

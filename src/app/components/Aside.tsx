@@ -24,6 +24,7 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
   const { uVisible, setUVisible } = useShowUserModalStore();
   const { setToken } = useTokenStore();
   const [editVisible, setEditVisible] = useState<boolean>(true);
+  const [selectedVis, setSelectedVis] = useState<string>("dept");
 
   useEffect(() => {
     setToken(localStorage.getItem(INTRANET) || "");
@@ -88,13 +89,36 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
                 className="flex items-center gap-3"
                 onClick={() => router.push("/bulletin")}
               >
-                <Icon icon={"ph:hospital"} className="h-5 w-5" />
+                <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
                 <p className="w-full text-md">General Bulletin</p>
               </div>
             </HoverBox>
           </div>
           <div className="flex flex-col">
-            <PostList />
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="w-full flex text-center text-sm rounded mb-6 border dark:border-neutral-900"
+            >
+              <div
+                className={`w-full py-2 grid place-content-center cursor-pointer ${
+                  selectedVis === "all" &&
+                  "bg-gray-200 dark:bg-neutral-700 rounded-s"
+                }`}
+                onClick={() => setSelectedVis("all")}
+              >
+                All
+              </div>
+              <div
+                className={`w-full py-2 grid place-content-center cursor-pointer ${
+                  selectedVis === "dept" &&
+                  "bg-gray-200 dark:bg-neutral-700 rounded-e"
+                }`}
+                onClick={() => setSelectedVis("dept")}
+              >
+                Dept
+              </div>
+            </div>
+            <PostList selectedVis={selectedVis} />
           </div>
         </div>
         <UserButton uVisible={uVisible} setUVisible={setUVisible} />
@@ -153,7 +177,33 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
             </HoverBox>
           </div>
           <div className="flex flex-col">
-            <PostList />
+            <div className="flex flex-col">
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className="w-full flex text-center text-sm rounded mb-6 border dark:border-neutral-900"
+              >
+                <div
+                  className={`w-full py-2 grid place-content-center cursor-pointer ${
+                    selectedVis === "all" &&
+                    "bg-gray-200 dark:bg-neutral-700 rounded-s"
+                  }`}
+                  onClick={() => setSelectedVis("all")}
+                >
+                  All
+                </div>
+                <div
+                  className={`w-full py-2 grid place-content-center cursor-pointer ${
+                    selectedVis === "dept" &&
+                    "bg-gray-200 dark:bg-neutral-700 rounded-e"
+                  }`}
+                  onClick={() => setSelectedVis("dept")}
+                >
+                  Dept
+                </div>
+              </div>
+              <PostList selectedVis={selectedVis} />
+            </div>
+            <PostList selectedVis={selectedVis} />
           </div>
         </div>
         <UserButton uVisible={uVisible} setUVisible={setUVisible} />
