@@ -1,8 +1,8 @@
 "use client";
 import ModeToggler from "@/app/components/ModeToggler";
+import useAdminPosts from "@/app/custom-hooks/adminPost";
 import useComments from "@/app/custom-hooks/comments";
 import useDepartments from "@/app/custom-hooks/departments";
-import usePosts from "@/app/custom-hooks/posts";
 import useReplies from "@/app/custom-hooks/replies";
 import useUsers from "@/app/custom-hooks/users";
 import { Department, Post, PostComment, User } from "@/app/types/types";
@@ -73,22 +73,6 @@ const UsersPieChart: React.FC<PostsBarProps> = ({ departments }) => {
 };
 
 interface CommentsProp {
-  comments: PostComment[];
-}
-
-const CommentsBarChart: React.FC<CommentsProp> = () => {
-  return <div></div>;
-};
-
-interface RepliesProp {
-  replies: PostComment[];
-}
-
-const RepliesBarChart: React.FC<RepliesProp> = () => {
-  return <div></div>;
-};
-
-interface CommentsProp {
   comments: {
     cid: number;
     userId: number;
@@ -140,7 +124,7 @@ const Graphs = () => {
   const comments = useComments();
   const users = useUsers();
   const departments = useDepartments();
-  const posts = usePosts();
+  const posts = useAdminPosts();
   const replies = useReplies();
 
   return (
@@ -230,24 +214,16 @@ const Graphs = () => {
 
         {/* 3rd row */}
 
-        <div className="w-full font-extrabold h-full mt-1 p-4 bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-900 shadow">
-          <h1 className="text-2xl font-bold mb-10">Comments over time</h1>
-
-          <PostCommentsLineChart comments={comments} />
-        </div>
-
-        {/* 4th row */}
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
           <div className="w-full bg-white dark:bg-neutral-900 p-5 shadow mt-1">
-            <h1 className="text-2xl font-bold mb-10">Comments</h1>
+            <h1 className="text-2xl font-bold mb-10">Comments over time</h1>
 
-            <CommentsBarChart comments={comments} />
+            <PostCommentsLineChart comments={comments} />
           </div>
           <div className="w-full bg-white dark:bg-neutral-900 p-5 shadow mt-1">
-            <h1 className="text-2xl font-bold mb-10">Replies</h1>
+            <h1 className="text-2xl font-bold mb-10">Replies over time</h1>
 
-            <RepliesBarChart replies={replies} />
+            <PostCommentsLineChart comments={replies} />
           </div>
         </div>
       </div>

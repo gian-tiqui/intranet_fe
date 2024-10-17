@@ -1,15 +1,15 @@
 "use client";
 import ModeToggler from "@/app/components/ModeToggler";
 import Searchbar from "@/app/components/Searchbar";
-import usePosts from "@/app/custom-hooks/posts";
 import useShowPostStore from "@/app/store/showPostStore";
 import { MinMax, ThType, Post } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import PostTr from "../components/PostTr";
+import useAdminPosts from "@/app/custom-hooks/adminPost";
 
 const Posts = () => {
-  const posts = usePosts();
+  const posts = useAdminPosts();
 
   const [sortedPosts, setSortedPosts] = useState<Post[]>([]);
   const [page, setPage] = useState<number>(1);

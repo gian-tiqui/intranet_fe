@@ -19,8 +19,12 @@ import usePostUriStore from "../store/usePostUri";
 import useEditModalStore from "../store/editModal";
 import EditPostModal from "../posts/components/EditModal";
 import usePostIdStore from "../store/postId";
-import { checkDept } from "../functions/functions";
+import { checkDept, decodeUserData } from "../functions/functions";
 import NotificationBell from "./NotificationBell";
+import { toast } from "react-toastify";
+import { API_BASE, INTRANET } from "../bindings/binding";
+import apiClient from "../http-common/apiUrl";
+import { toastClass } from "../tailwind-classes/tw_classes";
 
 interface Props {
   children?: ReactNode;
@@ -41,6 +45,28 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { showEditModal } = useEditModalStore();
   const { postId } = usePostIdStore();
   const [editVisible, setEditVisible] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchReads = async () => {
+      const response = await apiClient.post(
+        `${API_BASE}/notification/user-reads`,
+        {
+          userId: decodeUserData()?.sub,
+          deptId: decodeUserData()?.deptId,
+
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+          },
+        }
+      );
+
+      if (!response.data.readAll) {
+        toast(response.data.message, { type: "error", className: toastClass });
+      }
+    };
+
+    fetchReads();
+  }, []);
 
   useEffect(() => {
     if (isMobile) setIsCollapsed(true);
