@@ -17,6 +17,7 @@ interface Props {
 const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
   const [showReplies, setShowReplies] = useState<boolean>(false);
   const [mReplies, setMReplies] = useState<PostComment[]>([]);
+  const [editMode, setEditMode] = useState<boolean>(false);
 
   const reply = useReply(comment.cid);
 
@@ -41,20 +42,52 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
                 : "You (New)"}
             </p>
           )}
-          <div className="w-full">
-            <p className="break-words overflow-wrap break-word">
-              {comment.message}
-            </p>
-          </div>
+          <form
+            className={`w-full flex pe-5 py-1 ${
+              editMode
+                ? "bg-white dark:bg-neutral-700 rounded shadow"
+                : "bg-inherit"
+            }`}
+          >
+            <input
+              className={`break-words overflow-wrap break-word outline-none px-2 bg-inherit w-full`}
+              disabled={!editMode}
+              value={comment.message}
+            />
+
+            {editMode && (
+              <button onClick={() => setEditMode(false)}>Save</button>
+            )}
+          </form>
 
           {/* Replies Section */}
-          {isReply && (
-            <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-700 p-1 cursor-pointer rounded w-16 mb-5 mt-1">
-              <div onClick={() => setShowReplies(!showReplies)}>
-                <p className="text-sm">Replies</p>
-              </div>
-            </HoverBox>
-          )}
+          <div className="flex gap-1">
+            {isReply && (
+              <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center">
+                <div onClick={() => setShowReplies(!showReplies)}>
+                  <p className="text-sm">Replies</p>
+                </div>
+              </HoverBox>
+            )}
+            {comment.userId === decodeUserData()?.sub && (
+              <>
+                {!editMode && (
+                  <>
+                    <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center">
+                      <div onClick={() => setEditMode(true)}>
+                        <p className="text-sm">Edit</p>
+                      </div>
+                    </HoverBox>
+                    <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center">
+                      <div>
+                        <p className="text-sm">Delete</p>
+                      </div>
+                    </HoverBox>
+                  </>
+                )}
+              </>
+            )}
+          </div>
 
           {/* Show Replies Animation */}
           <AnimatePresence>
