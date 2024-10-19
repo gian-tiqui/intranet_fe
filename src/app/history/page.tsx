@@ -1,14 +1,14 @@
 import React from "react";
-import GeneralBulletin from "./components/GeneralBulletin";
 import AuthListener from "../components/AuthListener";
+import HistoryMain from "./components/HistoryMain";
 
-const Bulletin = () => {
+const page = () => {
   return (
     <div>
       <AuthListener />
-      <GeneralBulletin />
+      <HistoryMain />
     </div>
   );
 };
 
-export default Bulletin;
+export default page;
