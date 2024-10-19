@@ -4,10 +4,40 @@ import React, { useEffect, useState } from "react";
 import useHideSearchBarStore from "@/app/store/hideSearchBar";
 import PostContainer from "../posts/components/PostContainer";
 import usePosts from "../custom-hooks/posts";
+import { Post } from "../types/types";
+import usePostUriStore from "../store/usePostUri";
+import { API_BASE, INTRANET } from "../bindings/binding";
+import { decodeUserData } from "../functions/functions";
+import apiClient from "../http-common/apiUrl";
 
 const DepartmentsBulletin = () => {
   const { setSearchBarHidden } = useHideSearchBarStore();
   const [maxNum, setMaxNum] = useState<number>(3);
+
+  const [departmentsPost, setDepartmentsPost] = useState<Post[]>([]);
+  const { uriPost } = usePostUriStore();
+
+  useEffect(() => {
+    const fetchDepartmentPosts = async () => {
+      try {
+        const apiUri = `${API_BASE}/post?deptId=${
+          decodeUserData()?.deptId
+        }&userIdComment=${decodeUserData()?.sub}&search=${uriPost}`;
+
+        const response = await apiClient.get(apiUri, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+          },
+        });
+
+        setDepartmentsPost(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchDepartmentPosts();
+  }, [uriPost]);
 
   useEffect(() => {
     setSearchBarHidden(true);
@@ -17,9 +47,13 @@ const DepartmentsBulletin = () => {
 
   const posts = usePosts();
 
+  useEffect(() => {
+    setDepartmentsPost(posts);
+  }, [posts]);
+
   return (
     <div>
-      {posts.slice(0, maxNum).map((post) => (
+      {departmentsPost.slice(0, maxNum).map((post) => (
         <PostContainer id={post.pid} key={post.pid} generalPost />
       ))}
       <HoverBox className=" py-1 px-2 cursor-pointer rounded grid place-content-center">
