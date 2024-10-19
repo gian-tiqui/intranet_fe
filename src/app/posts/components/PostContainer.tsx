@@ -22,6 +22,7 @@ import { jsPDF } from "jspdf";
 import apiClient from "@/app/http-common/apiUrl";
 import { toast } from "react-toastify";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
+import useSetCommentsStore from "@/app/store/useCommentsStore";
 
 interface Props {
   id: number;
@@ -41,6 +42,13 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const { setPostId } = usePostIdStore();
   const [message, setMessage] = useState<string>("");
   const [extracting, setExtracting] = useState<boolean>(false);
+  const { setSetComments, setThisComments } = useSetCommentsStore();
+
+  useEffect(() => {
+    if (setComments) {
+      setSetComments(setComments);
+    }
+  }, [setComments, setSetComments]);
 
   const handleReadClick = async () => {
     try {
@@ -117,8 +125,9 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   useEffect(() => {
     if (post) {
       setComments(post?.comments as PostComment[]);
+      setThisComments(post?.comments as PostComment[]);
     }
-  }, [post]);
+  }, [post, setThisComments]);
 
   useEffect(() => {
     const fetchImage = async () => {

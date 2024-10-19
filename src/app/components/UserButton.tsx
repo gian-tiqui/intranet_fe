@@ -30,6 +30,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
     departmentName: string;
   } | null>(null);
   const router = useRouter();
+  const [showMyPosts, setShowMyPosts] = useState<boolean>(false);
 
   useEffect(() => {
     const handleClick = () => {
@@ -92,6 +93,11 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    const dept = decodeUserData()?.departmentName.toLowerCase();
+    if (dept && ["hr", "qm"].includes(dept)) setShowMyPosts(true);
+  }, []);
+
   const handleShowSettings = (event: React.MouseEvent) => {
     event.stopPropagation();
     setShown(true);
@@ -127,16 +133,30 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
               </HoverBox>
             </>
           )}
+          {showMyPosts && (
+            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
+              <div
+                className="w-full flex gap-2 items-center"
+                onClick={() => router.push("/")}
+              >
+                <Icon
+                  icon={"material-symbols:post-outline"}
+                  className="w-6 h-6"
+                />
+                <p>My posts</p>
+              </div>
+            </HoverBox>
+          )}
           <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
             <div
               className="w-full flex gap-2 items-center"
-              onClick={() => router.push("/")}
+              onClick={() => router.push("/history")}
             >
               <Icon
                 icon={"material-symbols:post-outline"}
                 className="w-6 h-6"
               />
-              <p>My posts</p>
+              <p>History</p>
             </div>
           </HoverBox>
           <HoverBox className="hidden md:block hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">

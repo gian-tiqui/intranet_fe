@@ -7,6 +7,8 @@ import { AnimatePresence } from "framer-motion";
 import { PostComment } from "@/app/types/types";
 import { decodeUserData } from "@/app/functions/functions";
 import useReply from "@/app/custom-hooks/reply";
+import showDeleteCommentModalStore from "@/app/store/deleteComment";
+import commentIdStore from "@/app/store/commentId";
 
 interface Props {
   isReply?: boolean;
@@ -18,8 +20,15 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
   const [showReplies, setShowReplies] = useState<boolean>(false);
   const [mReplies, setMReplies] = useState<PostComment[]>([]);
   const [editMode, setEditMode] = useState<boolean>(false);
+  const { setShowDeleteComment } = showDeleteCommentModalStore();
+  const { setCommentId } = commentIdStore();
 
   const reply = useReply(comment.cid);
+
+  const handleDeleteClicked = () => {
+    setShowDeleteComment(true);
+    setCommentId(comment.cid);
+  };
 
   useEffect(() => {
     setMReplies(reply);
@@ -79,7 +88,7 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
                       </div>
                     </HoverBox>
                     <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center">
-                      <div>
+                      <div onClick={handleDeleteClicked}>
                         <p className="text-sm">Delete</p>
                       </div>
                     </HoverBox>
