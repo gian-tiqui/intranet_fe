@@ -25,6 +25,8 @@ import { toast } from "react-toastify";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import apiClient from "../http-common/apiUrl";
 import { toastClass } from "../tailwind-classes/tw_classes";
+import DeleteCommentPopup from "../posts/components/DeleteCommentPopup";
+import showDeleteCommentModalStore from "../store/deleteComment";
 
 interface Props {
   children?: ReactNode;
@@ -45,6 +47,7 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { showEditModal } = useEditModalStore();
   const { postId } = usePostIdStore();
   const [editVisible, setEditVisible] = useState<boolean>(true);
+  const { showDeleteComment } = showDeleteCommentModalStore();
 
   useEffect(() => {
     const fetchReads = async () => {
@@ -174,6 +177,7 @@ const Divider: React.FC<Props> = ({ children }) => {
       {shown && <Settings />}
       {showSplash && <LoginSplash />}
       {showEditModal && <EditPostModal postId={postId} />}
+      {showDeleteComment && <DeleteCommentPopup />}
 
       <AnimatePresence>
         {isCollapsed ||
