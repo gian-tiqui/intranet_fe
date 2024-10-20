@@ -115,7 +115,24 @@ type NotificationType = {
   isRead: boolean;
 };
 
+type DepartmentMonitoring = {
+  departmentId: number;
+  departmentName: string;
+  postCount: number;
+  users: UserMonitoring[];
+};
+
+type UserMonitoring = {
+  userId: number;
+  firstName: string;
+  lastName: string;
+  readCount: number;
+  unreadCount: number;
+};
+
 export type {
+  DepartmentMonitoring,
+  UserMonitoring,
   NotificationType,
   Post,
   GroupedPosts,

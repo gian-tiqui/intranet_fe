@@ -1,5 +1,6 @@
 import { jwtDecode } from "jwt-decode";
-import { INTRANET } from "../bindings/binding";
+import { API_BASE, INTRANET } from "../bindings/binding";
+import apiClient from "../http-common/apiUrl";
 
 const decodeUserData = () => {
   const at = localStorage.getItem(INTRANET);
@@ -30,4 +31,13 @@ const checkDept = () => {
   return true;
 };
 
-export { decodeUserData, checkDept };
+const fetchMonitoringData = async () => {
+  const response = await apiClient.get(`${API_BASE}/monitoring/users`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+    },
+  });
+  return response.data;
+};
+
+export { decodeUserData, checkDept, fetchMonitoringData };
