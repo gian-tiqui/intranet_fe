@@ -61,6 +61,10 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
       });
     } catch (error) {
       console.error(error);
+      toast("You have read the post already.", {
+        type: "error",
+        className: toastClass,
+      });
     }
   };
 
