@@ -137,13 +137,10 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
             <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
               <div
                 className="w-full flex gap-2 items-center"
-                onClick={() => router.push("/")}
+                onClick={() => router.push("/monitoring")}
               >
-                <Icon
-                  icon={"material-symbols:post-outline"}
-                  className="w-6 h-6"
-                />
-                <p>My posts</p>
+                <Icon icon={"mdi:list-status"} className="w-6 h-6" />
+                <p>Monitoring</p>
               </div>
             </HoverBox>
           )}
