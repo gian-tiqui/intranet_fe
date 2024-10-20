@@ -294,9 +294,13 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
           {message === "" && (
             <button
               onClick={handleExtractImageClicked}
-              className="hover:bg-gray-300 dark:hover:bg-neutral-700 px-2 h-10 rounded"
+              className="hover:bg-gray-300 dark:hover:bg-neutral-700 flex items-center gap-1 px-2 text-sm rounded"
             >
-              Extract text from image
+              <Icon
+                icon={`fluent:document-text-extract-20-regular`}
+                className="h-5 w-5"
+              />
+              Extract text
             </button>
           )}
         </div>
@@ -332,14 +336,18 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
             className="flex hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-2 items-center gap-1 rounded"
           >
             <Icon icon={"akar-icons:download"} />
-            <span>Download Image as PDF</span>
+            <span className="text-sm">Download Image as PDF</span>
           </div>
           {decodeUserData()?.deptId === post?.deptId && (
             <div
               onClick={handleReadClick}
-              className={`hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-3 rounded`}
+              className={`hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-3 rounded flex items-center gap-1`}
             >
-              Read
+              <Icon
+                icon={"material-symbols-light:mark-email-read-outline"}
+                className="h-6 w-6"
+              />
+              <p className="text-sm">Read</p>
             </div>
           )}{" "}
           {}

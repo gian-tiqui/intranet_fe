@@ -9,11 +9,19 @@ import { decodeUserData } from "@/app/functions/functions";
 import useReply from "@/app/custom-hooks/reply";
 import showDeleteCommentModalStore from "@/app/store/deleteComment";
 import commentIdStore from "@/app/store/commentId";
+import { useForm } from "react-hook-form";
+import useSetCommentsStore from "@/app/store/useCommentsStore";
+import apiClient from "@/app/http-common/apiUrl";
+import { API_BASE, INTRANET } from "@/app/bindings/binding";
 
 interface Props {
   isReply?: boolean;
   comment: PostComment;
   postId: number;
+}
+
+interface FormFields {
+  message: string;
 }
 
 const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
@@ -22,12 +30,51 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const { setShowDeleteComment } = showDeleteCommentModalStore();
   const { setCommentId } = commentIdStore();
+  const { handleSubmit, register, setValue } = useForm<FormFields>();
+  const { setComments, comments } = useSetCommentsStore();
 
   const reply = useReply(comment.cid);
 
   const handleDeleteClicked = () => {
     setShowDeleteComment(true);
     setCommentId(comment.cid);
+  };
+
+  useEffect(() => {
+    if (comment.message) setValue("message", comment.message);
+  }, [comment, setValue]);
+
+  const handleEditSaved = async (data: FormFields) => {
+    if (comment.message === data.message) {
+      setEditMode(false);
+      return;
+    }
+    try {
+      const response = await apiClient.put(
+        `${API_BASE}/comment/${comment.cid}`,
+        {
+          message: data.message,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+          },
+        }
+      );
+
+      if (response.data.statusCode === 204) {
+        const newComment = response.data.comment;
+
+        const updatedComments = [
+          ...comments.filter((mComment) => comment.cid !== mComment.cid),
+          newComment,
+        ];
+
+        setComments(updatedComments);
+      }
+
+      setEditMode(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -52,6 +99,7 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
             </p>
           )}
           <form
+            onSubmit={handleSubmit(handleEditSaved)}
             className={`w-full flex pe-5 py-1 ${
               editMode
                 ? "bg-white dark:bg-neutral-700 rounded shadow"
@@ -59,14 +107,12 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
             }`}
           >
             <input
+              {...register("message", { required: true })}
               className={`break-words overflow-wrap break-word outline-none px-2 bg-inherit w-full`}
               disabled={!editMode}
-              value={comment.message}
             />
 
-            {editMode && (
-              <button onClick={() => setEditMode(false)}>Save</button>
-            )}
+            {editMode && <button type="submit">Save</button>}
           </form>
 
           {/* Replies Section */}
