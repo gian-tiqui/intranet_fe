@@ -27,6 +27,7 @@ import apiClient from "../http-common/apiUrl";
 import { toastClass } from "../tailwind-classes/tw_classes";
 import DeleteCommentPopup from "../posts/components/DeleteCommentPopup";
 import showDeleteCommentModalStore from "../store/deleteComment";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 interface Props {
   children?: ReactNode;
@@ -48,6 +49,7 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { postId } = usePostIdStore();
   const [editVisible, setEditVisible] = useState<boolean>(true);
   const { showDeleteComment } = showDeleteCommentModalStore();
+  const queryClient = new QueryClient();
 
   useEffect(() => {
     const fetchReads = async () => {
@@ -172,42 +174,74 @@ const Divider: React.FC<Props> = ({ children }) => {
   };
 
   return (
-    <div className="flex h-screen text-neutral-800 dark:text-neutral-100">
-      {visible && <PostModal />}
-      {shown && <Settings />}
-      {showSplash && <LoginSplash />}
-      {showEditModal && <EditPostModal postId={postId} />}
-      {showDeleteComment && <DeleteCommentPopup />}
+    <QueryClientProvider client={queryClient}>
+      <div className="flex h-screen text-neutral-800 dark:text-neutral-100">
+        {visible && <PostModal />}
+        {shown && <Settings />}
+        {showSplash && <LoginSplash />}
+        {showEditModal && <EditPostModal postId={postId} />}
+        {showDeleteComment && <DeleteCommentPopup />}
 
-      <AnimatePresence>
-        {isCollapsed ||
-          (hidden && (
-            <Aside
-              isCollapsed={isCollapsed}
-              setIsCollapsed={setIsCollapsed}
-              variants={variants}
-            />
-          ))}
-      </AnimatePresence>
+        <AnimatePresence>
+          {isCollapsed ||
+            (hidden && (
+              <Aside
+                isCollapsed={isCollapsed}
+                setIsCollapsed={setIsCollapsed}
+                variants={variants}
+              />
+            ))}
+        </AnimatePresence>
 
-      <main
-        className={`max-h-screen overflow-auto relative w-full ${
-          hidden && "px-3"
-        }`}
-      >
-        {hidden && (
-          <div
-            className="sticky w-full flex justify-between pt-3 pb-3 top-0 bg-neutral-200 dark:bg-neutral-800"
-            id="hi"
-          >
-            <div id="buttons" className="flex w-full pt-2 mb-2 gap-3">
-              {/* THIS IS FOR DESKTOP VIEW */}
+        <main
+          className={`max-h-screen overflow-auto relative w-full ${
+            hidden && "px-3"
+          }`}
+        >
+          {hidden && (
+            <div
+              className="sticky w-full flex justify-between pt-3 pb-3 top-0 bg-neutral-200 dark:bg-neutral-800"
+              id="hi"
+            >
+              <div id="buttons" className="flex w-full pt-2 mb-2 gap-3">
+                {/* THIS IS FOR DESKTOP VIEW */}
 
-              <div className="md:flex gap-1 hidden">
-                {isCollapsed && (
+                <div className="md:flex gap-1 hidden">
+                  {isCollapsed && (
+                    <>
+                      <HoverBox
+                        key="desktop-collapser"
+                        collapser={true}
+                        className="hover:bg-neutral-300 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded"
+                      >
+                        <Icon
+                          icon="iconoir:sidebar-collapse"
+                          className="h-5 w-5"
+                        />
+                      </HoverBox>
+
+                      {editVisible && (
+                        <HoverBox
+                          key="desktop-edit"
+                          className="hover:bg-neutral-300 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded"
+                        >
+                          <Icon
+                            onClick={() => setVisible(true)}
+                            icon="lucide:edit"
+                            className="h-5 w-5"
+                          />
+                        </HoverBox>
+                      )}
+                    </>
+                  )}
+                </div>
+
+                {/* THIS IS FOR MOBILE VIEW */}
+
+                <div className="flex gap-1 md:hidden">
                   <>
                     <HoverBox
-                      key="desktop-collapser"
+                      key="mobile-collapser"
                       collapser={true}
                       className="hover:bg-neutral-300 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded"
                     >
@@ -217,69 +251,44 @@ const Divider: React.FC<Props> = ({ children }) => {
                       />
                     </HoverBox>
 
-                    {editVisible && (
-                      <HoverBox
-                        key="desktop-edit"
-                        className="hover:bg-neutral-300 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded"
-                      >
-                        <Icon
-                          onClick={() => setVisible(true)}
-                          icon="lucide:edit"
-                          className="h-5 w-5"
-                        />
-                      </HoverBox>
-                    )}
+                    <HoverBox
+                      key="mobile-edit"
+                      className="hover:bg-neutral-300 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded"
+                    >
+                      <Icon
+                        onClick={() => setVisible(true)}
+                        icon="lucide:edit"
+                        className="h-5 w-5"
+                      />
+                    </HoverBox>
                   </>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 px-3">
+                {searchBarHidden && (
+                  <Searchbar
+                    searchText={searchText}
+                    handleSearchChange={handleSearchChange}
+                    loading={loadingSearch}
+                  />
                 )}
-              </div>
-
-              {/* THIS IS FOR MOBILE VIEW */}
-
-              <div className="flex gap-1 md:hidden">
-                <>
-                  <HoverBox
-                    key="mobile-collapser"
-                    collapser={true}
-                    className="hover:bg-neutral-300 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded"
-                  >
-                    <Icon icon="iconoir:sidebar-collapse" className="h-5 w-5" />
-                  </HoverBox>
-
-                  <HoverBox
-                    key="mobile-edit"
-                    className="hover:bg-neutral-300 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded"
-                  >
-                    <Icon
-                      onClick={() => setVisible(true)}
-                      icon="lucide:edit"
-                      className="h-5 w-5"
-                    />
-                  </HoverBox>
-                </>
+                <NotificationBell />
+                <ModeToggler />
               </div>
             </div>
+          )}
 
-            <div className="flex items-center gap-3 px-3">
-              {searchBarHidden && (
-                <Searchbar
-                  searchText={searchText}
-                  handleSearchChange={handleSearchChange}
-                  loading={loadingSearch}
-                />
-              )}
-              <NotificationBell />
-              <ModeToggler />
-            </div>
+          <div
+            className={`mx-auto w-full ${
+              hidden && "max-w-[750px]"
+            } px-3 md:px-0`}
+          >
+            {children}
           </div>
-        )}
-
-        <div
-          className={`mx-auto w-full ${hidden && "max-w-[750px]"} px-3 md:px-0`}
-        >
-          {children}
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </QueryClientProvider>
   );
 };
 
