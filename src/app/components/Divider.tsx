@@ -28,6 +28,7 @@ import { toastClass } from "../tailwind-classes/tw_classes";
 import DeleteCommentPopup from "../posts/components/DeleteCommentPopup";
 import showDeleteCommentModalStore from "../store/deleteComment";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Cookies from "js-cookie";
 
 interface Props {
   children?: ReactNode;
@@ -70,7 +71,7 @@ const Divider: React.FC<Props> = ({ children }) => {
       }
     };
 
-    fetchReads();
+    if (Cookies.get(INTRANET)) fetchReads();
   }, []);
 
   useEffect(() => {
