@@ -26,11 +26,13 @@ const Comments: React.FC<Props> = ({ comments, postId }) => {
       {comments.slice(minMax.min, minMax.max).map((comment) => (
         <Comment isReply key={comment.cid} comment={comment} postId={postId} />
       ))}
-      <button
-        onClick={() => setMinMax({ min: minMax.min, max: minMax.max + 5 })}
-      >
-        Show more
-      </button>
+      {comments.length > 3 && (
+        <button
+          onClick={() => setMinMax({ min: minMax.min, max: minMax.max + 5 })}
+        >
+          Show more
+        </button>
+      )}
     </div>
   );
 };
