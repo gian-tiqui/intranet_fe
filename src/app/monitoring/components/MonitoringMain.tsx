@@ -1,14 +1,26 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { decodeUserData, fetchMonitoringData } from "@/app/functions/functions";
 import { DepartmentMonitoring } from "@/app/types/types";
+import DepartmentUsers from "./DepartmentUsers";
 
 const MonitoringMain = () => {
   const router = useRouter();
+  const [dept, setDept] = useState<DepartmentMonitoring>();
+
+  const {
+    data: departments,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["monitoring"],
+    queryFn: fetchMonitoringData,
+  });
 
   useEffect(() => {
     const deptName = decodeUserData()?.departmentName;
@@ -24,42 +36,31 @@ const MonitoringMain = () => {
     }
   }, [router]);
 
-  const {
-    data: departments,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["monitoring"],
-    queryFn: fetchMonitoringData,
-  });
+  useEffect(() => {
+    if (departments) setDept(departments[0]);
+  }, [departments]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div className="text-center">Loading...</div>;
   if (isError)
     return (
-      <div>
+      <div className="text-center">
         Error: {error instanceof Error ? error.message : "Unknown error"}
       </div>
     );
 
   return (
-    <div>
-      <h1>Monitoring Data</h1>
-      {departments?.map((department: DepartmentMonitoring) => (
-        <div key={department.departmentId}>
-          <h2>
-            {department.departmentName} - Posts: {department.postCount}
-          </h2>
-          <ul>
-            {department.users.map((user) => (
-              <li key={user.userId}>
-                {user.firstName} {user.lastName} - Read: {user.readCount},
-                Unread: {user.unreadCount}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+    <div className="container mx-auto p-5">
+      <h1 className="text-sm font-semibold">Users / Read counts</h1>
+      <h1 className="text-2xl font-bold mb-5">Monitoring Dashboard</h1>
+
+      <div className="mb-5"></div>
+
+      <DepartmentUsers
+        department={dept}
+        departments={departments}
+        dept={dept}
+        setDept={setDept}
+      />
     </div>
   );
 };
