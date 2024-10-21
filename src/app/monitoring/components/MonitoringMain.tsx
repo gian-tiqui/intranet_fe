@@ -50,19 +50,17 @@ const MonitoringMain = () => {
 
   return (
     <div className="container mx-auto p-5">
+      <h1 className="text-sm font-semibold">Users / Read counts</h1>
       <h1 className="text-2xl font-bold mb-5">Monitoring Dashboard</h1>
-      <div className="flex flex-col md:flex-row justify-center gap-4 mb-5">
-        {departments?.map((department: DepartmentMonitoring) => (
-          <div
-            className="flex-1 h-12 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-neutral-900 dark:hover:bg-neutral-800 transition duration-200 cursor-pointer"
-            key={department.departmentId}
-            onClick={() => setDept(department)}
-          >
-            <h2 className="font-semibold">{department.departmentName}</h2>
-          </div>
-        ))}
-      </div>
-      <DepartmentUsers department={dept} />
+
+      <div className="mb-5"></div>
+
+      <DepartmentUsers
+        department={dept}
+        departments={departments}
+        dept={dept}
+        setDept={setDept}
+      />
     </div>
   );
 };
