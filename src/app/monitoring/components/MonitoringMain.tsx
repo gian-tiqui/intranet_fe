@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { decodeUserData, fetchMonitoringData } from "@/app/functions/functions";
 import { DepartmentMonitoring } from "@/app/types/types";
 import DepartmentUsers from "./DepartmentUsers";
+import MonitoringLoading from "./MonitoringLoading";
 
 const MonitoringMain = () => {
   const router = useRouter();
@@ -40,7 +41,6 @@ const MonitoringMain = () => {
     if (departments) setDept(departments[0]);
   }, [departments]);
 
-  if (isLoading) return <div className="text-center">Loading...</div>;
   if (isError)
     return (
       <div className="text-center">
@@ -55,12 +55,16 @@ const MonitoringMain = () => {
 
       <div className="mb-5"></div>
 
-      <DepartmentUsers
-        department={dept}
-        departments={departments}
-        dept={dept}
-        setDept={setDept}
-      />
+      {isLoading ? (
+        <MonitoringLoading />
+      ) : (
+        <DepartmentUsers
+          department={dept}
+          departments={departments}
+          dept={dept}
+          setDept={setDept}
+        />
+      )}
     </div>
   );
 };

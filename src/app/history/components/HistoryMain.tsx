@@ -5,6 +5,8 @@ import HistoryList from "./HistoryList";
 import { useQuery } from "@tanstack/react-query";
 import useHideSearchBarStore from "@/app/store/hideSearchBar";
 import usePostUriStore from "@/app/store/usePostUri";
+import HistorySkeleton from "./HistorySkeleton";
+import NoReads from "./NoReads";
 
 const HistoryMain = () => {
   const { data, isError, isLoading, refetch } = useQuery({
@@ -29,11 +31,20 @@ const HistoryMain = () => {
     return <p>Error loading data</p>;
   }
 
-  if (isLoading) {
-    return <p>Loading data</p>;
-  }
-
-  return <div>{data && <HistoryList history={data} />}</div>;
+  return (
+    <div>
+      {isLoading ? (
+        <>
+          <HistorySkeleton />
+          <HistorySkeleton />
+        </>
+      ) : data && data.length > 0 ? (
+        <HistoryList history={data} />
+      ) : (
+        <NoReads />
+      )}
+    </div>
+  );
 };
 
 export default HistoryMain;
