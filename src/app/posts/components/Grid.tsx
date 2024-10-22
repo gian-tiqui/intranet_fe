@@ -1,81 +1,54 @@
 "use client";
-import { decodeUserData } from "@/app/functions/functions";
-import useShowPostStore from "@/app/store/showPostStore";
-import useShowSettingsStore from "@/app/store/showSettingStore";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import React from "react";
 
 const Grid = () => {
-  const router = useRouter();
-  const { setVisible } = useShowPostStore();
-  const { setShown } = useShowSettingsStore();
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
-
-  const handleGotoDashboardClicked = () => {
-    router.push("/admin/dashboard");
-  };
-
-  useEffect(() => {
-    const checkAdmin = () => {
-      const userDept = decodeUserData()?.departmentName;
-
-      if (userDept?.toLowerCase() === "admin") {
-        setIsAdmin(true);
-      }
-    };
-
-    checkAdmin();
-  }, []);
-
   return (
-    <div className="grid place-content-center h-[600px]">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
-        {isAdmin && (
-          <div
-            onClick={handleGotoDashboardClicked}
-            className="w-32 h-32 p-4 rounded-lg dark:bg-neutral-800 border border-neutral-300 hover:bg-gray-300 cursor-pointer dark:border-neutral-700 dark:hover:bg-neutral-700"
-          >
-            <Icon icon={"file-icons:dashboard"} className="mb-2 h-5 w-5" />
-            <p>Go to dashboard</p>
+    <div className="grid gap-20 pb-20">
+      <div className="w-full grid gap-1">
+        <p className="text-lg font-bold mb-6">Latest public memos</p>
+        <div className="grid md:grid-cols-3 gap-1">
+          <div className="h-82 md:col-span-2 bg-white dark:bg-neutral-900 shadow">
+            Latest public memo
           </div>
-        )}
-        <div
-          onClick={() => router.push("/posts")}
-          className="w-32 h-32 p-4 rounded-lg dark:bg-neutral-800 border border-neutral-300 hover:bg-gray-300 cursor-pointer dark:border-neutral-700 dark:hover:bg-neutral-700"
-        >
-          <Icon icon={"carbon:view"} className="mb-2 h-5 w-5" />
-          <p>View all memos</p>
+          <div className="md:col-span-1 grid grid-cols-1 gap-1">
+            <div className="h-40 bg-white dark:bg-neutral-900 shadow">
+              Memo 2
+            </div>
+            <div className="h-40 bg-white dark:bg-neutral-900 shadow">
+              Memo 2
+            </div>
+          </div>
         </div>
-        <div
-          onClick={() => setVisible(true)}
-          className="w-32 h-32 p-4 rounded-lg dark:bg-neutral-800 border border-neutral-300 hover:bg-gray-300 cursor-pointer dark:border-neutral-700 dark:hover:bg-neutral-700"
-        >
-          <Icon
-            icon={"material-symbols:post-add-sharp"}
-            className="mb-2 h-5 w-5"
-          />
-          <p>Post a memo</p>
+        <div className="grid md:grid-cols-3 gap-1 mb-12">
+          <div className="h-40 bg-white dark:bg-neutral-900 shadow">Memo 2</div>
+          <div className="h-40 bg-white dark:bg-neutral-900 shadow">Memo 2</div>
+          <div className="h-40 bg-white dark:bg-neutral-900 shadow">Memo 2</div>
         </div>
-        <div
-          onClick={() => setShown(true)}
-          className="w-32 h-32 p-4 rounded-lg dark:bg-neutral-800 border border-neutral-300 hover:bg-gray-300 cursor-pointer dark:border-neutral-700 dark:hover:bg-neutral-700"
-        >
-          <Icon
-            icon={"material-symbols:settings-outline"}
-            className="mb-2 h-5 w-5"
-          />
-          <p>Edit your settings</p>
+        <div className="flex justify-center">
+          <Link
+            href={"/bulletin"}
+            className="bg-white dark:bg-neutral-900 hover:shadow w-32 h-10 rounded font-bold text-sm grid place-content-center"
+          >
+            View more
+          </Link>
         </div>
-        <div
-          onClick={() => router.push("/myposts")}
-          className="w-32 h-32 p-4 rounded-lg dark:bg-neutral-800 border border-neutral-300 hover:bg-gray-300 cursor-pointer dark:border-neutral-700 dark:hover:bg-neutral-700"
-        >
-          <Icon
-            icon={"material-symbols:post-outline"}
-            className="mb-2 h-5 w-5"
-          />
-          <p>View your posts</p>
+      </div>
+
+      <div className="w-full">
+        <p className="text-lg font-bold mb-6">Memos for your department</p>
+        <div className="grid md:grid-cols-3 gap-1 mb-12">
+          <div className="h-40 bg-white dark:bg-neutral-900 shadow">Memo 2</div>
+          <div className="h-40 bg-white dark:bg-neutral-900 shadow">Memo 2</div>
+          <div className="h-40 bg-white dark:bg-neutral-900 shadow">Memo 2</div>
+        </div>
+        <div className="flex justify-center">
+          <Link
+            href={"/departments-memo"}
+            className="bg-white dark:bg-neutral-900 hover:shadow w-32 h-10 rounded font-bold text-sm grid place-content-center"
+          >
+            View more
+          </Link>
         </div>
       </div>
     </div>

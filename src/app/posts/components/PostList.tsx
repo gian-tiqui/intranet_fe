@@ -40,7 +40,7 @@ const Skeleton = () => {
 };
 
 const PostList: React.FC<Props> = ({ selectedVis, isMobile }) => {
-  const { data: _posts } = useQuery({
+  const { data: _posts, isLoading } = useQuery({
     queryKey: ["public_posts"],
     queryFn: fetchPosts,
     staleTime: 1000 * 60 * 5,
@@ -67,7 +67,6 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile }) => {
     if (_allPosts) setAllPosts(_allPosts);
   }, [_allPosts]);
 
-  const [loading, setLoading] = useState<boolean>(true);
   const { isCollapsed, setIsCollapsed } = useToggleStore();
 
   const groupedPosts = useMemo(
@@ -75,17 +74,13 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile }) => {
     [selectedVis, posts, allPosts]
   );
 
-  useEffect(() => {
-    if (posts.length > 0 && allPosts.length > 0) setLoading(false);
-  }, [posts, allPosts]);
-
   const [maxNum, setMaxNum] = useState<number>(2);
 
   const showMore = () => {
     setMaxNum((prevMax) => prevMax + 3);
   };
 
-  if (loading) {
+  if (isLoading) {
     return <Skeleton />;
   }
 

@@ -2,7 +2,6 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { motion, Variants } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import HoverBox from "./HoverBox";
 import useShowPostStore from "../store/showPostStore";
 import useShowUserModalStore from "../store/showUserModal";
 import UserButton from "./UserButton";
@@ -56,62 +55,54 @@ const Aside: React.FC<Props> = ({
           id="buttons"
           className="flex justify-between w-full px-3 pt-2 mb-2"
         >
-          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-            <Icon
-              icon="iconoir:sidebar-collapse"
-              className="h-5 w-5"
-              onClick={
-                setIsCollapsed ? () => setIsCollapsed(!isCollapsed) : undefined
-              }
-            />
-          </HoverBox>
+          <div
+            onClick={
+              setIsCollapsed ? () => setIsCollapsed(!isCollapsed) : undefined
+            }
+            className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+          >
+            <Icon icon="iconoir:sidebar-collapse" className="h-5 w-5" />
+          </div>
 
           {editVisible && (
-            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-              <Icon
-                onClick={() => setVisible(true)}
-                icon="lucide:edit"
-                className="h-5 w-5"
-              />
-            </HoverBox>
+            <div
+              onClick={() => setVisible(true)}
+              className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+            >
+              <Icon icon="lucide:edit" className="h-5 w-5" />
+            </div>
           )}
         </div>
 
         {/* THIS CONTAINS YOUR POSTS/MEMOS */}
         <div className="overflow-auto flex-grow mb-3">
           <div id="menu-buttons" className="px-3 mt-2 mb-6">
-            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-              <div
-                className="flex items-center gap-3"
-                onClick={() => router.push("/")}
-              >
-                <Icon icon={"ph:hospital"} className="h-5 w-5" />
-                <p className="w-full text-md">Intranet</p>
-              </div>
-            </HoverBox>
+            <div
+              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              onClick={() => router.push("/")}
+            >
+              <Icon icon={"ph:hospital"} className="h-5 w-5" />
+              <p className="w-full text-md">Intranet</p>
+            </div>
 
-            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-              <div
-                className="flex items-center gap-3"
-                onClick={() => router.push("/bulletin")}
-              >
-                <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
-                <p className="w-full text-md">General Bulletin</p>
-              </div>
-            </HoverBox>
+            <div
+              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              onClick={() => router.push("/bulletin")}
+            >
+              <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
+              <p className="w-full text-md">General Bulletin</p>
+            </div>
 
-            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-              <div
-                className="flex items-center gap-3"
-                onClick={() => router.push("/departments-memo")}
-              >
-                <Icon
-                  icon={"arcticons:emoji-department-store"}
-                  className="h-5 w-5"
-                />
-                <p className="w-full text-md">Department Bulletin</p>
-              </div>
-            </HoverBox>
+            <div
+              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              onClick={() => router.push("/departments-memo")}
+            >
+              <Icon
+                icon={"arcticons:emoji-department-store"}
+                className="h-5 w-5"
+              />
+              <p className="w-full text-md">Department Bulletin</p>
+            </div>
           </div>
           <div className="flex flex-col">
             <div
@@ -155,45 +146,36 @@ const Aside: React.FC<Props> = ({
           id="buttons"
           className="flex justify-between w-full px-3 pt-2 mb-2"
         >
-          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-            <Icon
-              icon="iconoir:sidebar-collapse"
-              className="h-5 w-5"
-              onClick={
-                setIsCollapsed ? () => setIsCollapsed(!isCollapsed) : undefined
-              }
-            />
-          </HoverBox>
+          <div
+            onClick={
+              setIsCollapsed ? () => setIsCollapsed(!isCollapsed) : undefined
+            }
+            className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+          >
+            <Icon icon="iconoir:sidebar-collapse" className="h-5 w-5" />
+          </div>
 
           {editVisible && (
-            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-              <Icon
-                onClick={() => setVisible(true)}
-                icon="lucide:edit"
-                className="h-5 w-5"
-              />
-            </HoverBox>
+            <div
+              onClick={() => setVisible(true)}
+              className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+            >
+              <Icon icon="lucide:edit" className="h-5 w-5" />
+            </div>
           )}
         </div>
 
         {/* THIS CONTAINS YOUR POSTS/MEMOS */}
         <div className="overflow-auto flex-grow mb-3">
           <div id="menu-buttons" className="px-3 mt-2 mb-6">
-            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-              <div className="flex items-center gap-3">
-                <Icon icon="ph:hospital-fill" className="h-5 w-5" />
-                <p className="w-full text-md">Intranet</p>
-              </div>
-            </HoverBox>
-            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-              <div className="flex items-center gap-3">
-                <Icon
-                  icon="fluent:grid-circles-24-regular"
-                  className="h-5 w-5"
-                />
-                <p className="w-full text-md">Explore Intranet</p>
-              </div>
-            </HoverBox>
+            <div className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
+              <Icon icon="ph:hospital-fill" className="h-5 w-5" />
+              <p className="w-full text-md">Intranet</p>
+            </div>
+            <div className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
+              <Icon icon="fluent:grid-circles-24-regular" className="h-5 w-5" />
+              <p className="w-full text-md">Explore Intranet</p>
+            </div>
           </div>
           <div className="flex flex-col">
             <div className="flex flex-col">

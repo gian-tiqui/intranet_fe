@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchNotifs } from "../functions/functions";
 import { NotificationType } from "../types/types";
 
-const NotificationBell = () => {
+const Unread = () => {
   const { data: notifications, isLoading } = useQuery({
     queryKey: ["notifications"],
     queryFn: fetchNotifs,
@@ -43,7 +43,7 @@ const NotificationBell = () => {
         className="relative h-10 w-10 cursor-pointer"
         onClick={handleOpenNotifs}
       >
-        <Icon icon={"mdi:bell-outline"} className="h-8 w-8" />
+        <Icon icon={"material-symbols:post-outline"} className="h-8 w-8" />
         <p className="absolute bottom-0 right-0 px-2 py-1 font-extrabold bg-black dark:bg-white text-white rounded-full dark:text-black text-[10px]">
           {isLoading ? (
             <Icon icon={"line-md:loading-loop"} />
@@ -57,4 +57,4 @@ const NotificationBell = () => {
   );
 };
 
-export default NotificationBell;
+export default Unread;

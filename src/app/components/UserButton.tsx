@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import HoverBox from "./HoverBox";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
@@ -122,88 +121,71 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
         >
           {isAdmin && (
             <>
-              <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-                <div
-                  className="w-full flex gap-2 items-center"
-                  onClick={() => router.push("/admin/dashboard")}
-                >
-                  <Icon icon={"file-icons:dashboard"} className="w-6 h-6" />
-                  <p>Dashboard</p>
-                </div>
-              </HoverBox>
+              <div
+                className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+                onClick={() => router.push("/admin/dashboard")}
+              >
+                <Icon icon={"file-icons:dashboard"} className="w-6 h-6" />
+                <p>Dashboard</p>
+              </div>
             </>
           )}
           {showMyPosts && (
-            <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-              <div
-                className="w-full flex gap-2 items-center"
-                onClick={() => router.push("/monitoring")}
-              >
-                <Icon icon={"mdi:list-status"} className="w-6 h-6" />
-                <p>Monitoring</p>
-              </div>
-            </HoverBox>
+            <div
+              className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              onClick={() => router.push("/monitoring")}
+            >
+              <Icon icon={"mdi:list-status"} className="w-6 h-6" />
+              <p>Monitoring</p>
+            </div>
           )}
-          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-            <div
-              className="w-full flex gap-2 items-center"
-              onClick={() => router.push("/history")}
-            >
-              <Icon
-                icon={"material-symbols:post-outline"}
-                className="w-6 h-6"
-              />
-              <p>History</p>
-            </div>
-          </HoverBox>
-          <HoverBox className="hidden md:block hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-            <div
-              className="w-full flex gap-2 items-center"
-              onClick={handleShowSettings}
-            >
-              <Icon icon={"uil:setting"} className="w-6 h-6" />
-              <p>Settings</p>
-            </div>
-          </HoverBox>
+          <div
+            className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+            onClick={() => router.push("/history")}
+          >
+            <Icon icon={"material-symbols:post-outline"} className="w-6 h-6" />
+            <p>History</p>
+          </div>
+          <div
+            className="w-full gap-2 items-center hidden md:flex hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+            onClick={handleShowSettings}
+          >
+            <Icon icon={"uil:setting"} className="w-6 h-6" />
+            <p>Settings</p>
+          </div>
 
-          <HoverBox className="block md:hidden hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-            <div
-              className="w-full flex gap-2 items-center"
-              onClick={handleShowSettingsMobile}
-            >
-              <Icon icon={"uil:setting"} className="w-6 h-6" />
-              <p>Settings</p>
-            </div>
-          </HoverBox>
+          <div
+            className="w-full flex gap-2 items-center md:hidden hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+            onClick={handleShowSettingsMobile}
+          >
+            <Icon icon={"uil:setting"} className="w-6 h-6" />
+            <p>Settings</p>
+          </div>
           <hr className="w-full border border-neutral-200 dark:border-neutral-700" />
-          <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-            <div
-              className="w-full flex gap-2 items-center"
-              onClick={handleLogout}
-            >
-              <Icon icon={"material-symbols:logout"} className="w-6 h-6" />
-              <p>Logout</p>
-            </div>
-          </HoverBox>
-        </div>
-      )}
-      <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-        <div className="flex items-center gap-3">
-          <div className="rounded-full bg-neutral-200 h-8 w-8"></div>
-          <div>
-            {loading ? (
-              <p className="text-sm">Loading...</p>
-            ) : userData ? (
-              <>
-                <p className="text-sm">{`${userData.firstName} ${userData.lastName}`}</p>
-                <p className="text-xs truncate">{userData.departmentName}</p>
-              </>
-            ) : (
-              <p className="text-sm">User not found</p>
-            )}
+          <div
+            className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+            onClick={handleLogout}
+          >
+            <Icon icon={"material-symbols:logout"} className="w-6 h-6" />
+            <p>Logout</p>
           </div>
         </div>
-      </HoverBox>
+      )}
+      <div className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
+        <div className="rounded-full bg-neutral-200 h-8 w-8"></div>
+        <div>
+          {loading ? (
+            <p className="text-sm">Loading...</p>
+          ) : userData ? (
+            <>
+              <p className="text-sm">{`${userData.firstName} ${userData.lastName}`}</p>
+              <p className="text-xs truncate">{userData.departmentName}</p>
+            </>
+          ) : (
+            <p className="text-sm">User not found</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

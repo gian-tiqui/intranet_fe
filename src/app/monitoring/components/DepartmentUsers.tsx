@@ -48,9 +48,17 @@ const DepartmentUsers: React.FC<Props> = ({
         </select>
       </div>
       <section className="grid grid-cols-1 gap-4 bg-white dark:bg-neutral-900 h-96 py-3 px-2 rounded-lg overflow-auto">
-        {department?.users.map((user) => (
-          <UserCard key={user.userId} user={user} />
-        ))}
+        {departments && departments.length > 0 ? (
+          <>
+            {department?.users.map((user) => (
+              <UserCard key={user.userId} user={user} />
+            ))}
+          </>
+        ) : (
+          <div className="h-full w-full grid place-content-center">
+            <p>Nothing to show here</p>
+          </div>
+        )}
       </section>
     </div>
   );
