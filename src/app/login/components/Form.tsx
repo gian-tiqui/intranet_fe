@@ -48,13 +48,10 @@ const Form = () => {
 
   const handleLogin = async ({ employeeId, password }: FormFields) => {
     try {
-      const response = await apiClient.post(
-        `${API_BASE ? API_BASE : "http://localhost:8080"}/auth/login`,
-        {
-          employeeId,
-          password,
-        }
-      );
+      const response = await apiClient.post(`${API_BASE}/auth/login`, {
+        employeeId,
+        password,
+      });
 
       toast.dismiss();
 
