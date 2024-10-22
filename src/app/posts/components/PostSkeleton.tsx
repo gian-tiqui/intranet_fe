@@ -1,4 +1,3 @@
-import { Icon } from "@iconify/react/dist/iconify.js";
 import React from "react";
 
 const PostSkeleton = () => {
@@ -21,22 +20,6 @@ const PostSkeleton = () => {
       <div className="w-96 h-4 bg-gray-400 animate-pulse mb-7"></div>
 
       <div className="h-96 w-full bg-gray-400 animate-pulse mb-6"></div>
-      <div className="flex flex-grow w-full mb-6">
-        <div className="w-full gap-3 flex justify-center dark:hover:bg-neutral-700 py-2 animate-pulse">
-          <Icon icon={"mdi:like-outline"} className="h-6 w-6" />
-          <p className="cursor-pointer">Like</p>
-        </div>
-        <div className="w-full gap-3 flex justify-center dark:hover:bg-neutral-700 py-2 animate-pulse">
-          <Icon icon={"material-symbols:comment-outline"} className="h-6 w-6" />
-
-          <p className="text-center cursor-pointer">Comment</p>
-        </div>
-        <div className="w-full gap-3 flex justify-center dark:hover:bg-neutral-700 py-2 animate-pulse">
-          <Icon icon={"fluent-mdl2:share"} className="h-6 w-6" />
-
-          <p className="text-end cursor-pointer">Share</p>
-        </div>
-      </div>
     </div>
   );
 };

@@ -245,7 +245,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
             </h1>
           </div>
           {editable && (
-            <div className="rounded relative">
+            <div className="rounded">
               <div className="hover:bg-gray-300 hover:dark:bg-neutral-700 p-1 mb-1">
                 <Icon
                   icon={"iwwa:option-horizontal"}
