@@ -10,6 +10,7 @@ import { decodeUserData, fetchPublicPosts } from "../functions/functions";
 import apiClient from "../http-common/apiUrl";
 import { useQuery } from "@tanstack/react-query";
 import PostSkeleton from "../posts/components/PostSkeleton";
+import NoPosts from "../bulletin/components/NoPosts";
 
 const DepartmentsBulletin = () => {
   const { setSearchBarHidden } = useHideSearchBarStore();
@@ -64,17 +65,23 @@ const DepartmentsBulletin = () => {
         <PostSkeleton />
       ) : (
         <>
-          {departmentsPost.slice(0, maxNum).map((post) => (
-            <PostContainer id={post.pid} key={post.pid} generalPost />
-          ))}
-          <HoverBox className=" py-1 px-2 cursor-pointer rounded grid place-content-center">
-            <button
-              onClick={() => setMaxNum((prevMax) => prevMax + 3)}
-              className="w-36 h-10 rounded-md my-5 hover:bg-gray-300 dark:hover:bg-neutral-800"
-            >
-              Show more
-            </button>
-          </HoverBox>
+          {departmentsPost.length > 0 ? (
+            <>
+              {departmentsPost.slice(0, maxNum).map((post) => (
+                <PostContainer id={post.pid} key={post.pid} generalPost />
+              ))}
+              <HoverBox className=" py-1 px-2 cursor-pointer rounded grid place-content-center">
+                <button
+                  onClick={() => setMaxNum((prevMax) => prevMax + 3)}
+                  className="w-36 h-10 rounded-md my-5 hover:bg-gray-300 dark:hover:bg-neutral-800"
+                >
+                  Show more
+                </button>
+              </HoverBox>
+            </>
+          ) : (
+            <NoPosts />
+          )}
         </>
       )}
     </div>

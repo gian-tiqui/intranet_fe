@@ -29,6 +29,7 @@ import DeleteCommentPopup from "../posts/components/DeleteCommentPopup";
 import showDeleteCommentModalStore from "../store/deleteComment";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Cookies from "js-cookie";
+import Unseen from "./Unseen";
 
 interface Props {
   children?: ReactNode;
@@ -276,6 +277,7 @@ const Divider: React.FC<Props> = ({ children }) => {
                     loading={loadingSearch}
                   />
                 )}
+                <Unseen />
                 <NotificationBell />
                 <ModeToggler />
               </div>

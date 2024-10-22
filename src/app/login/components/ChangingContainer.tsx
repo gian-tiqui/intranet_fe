@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const First = () => {
   return (
-    <div className="text-black h-96 w-full md:w-96">
+    <div className="text-black w-full md:w-96">
       <div
         className="flex flex-wrap mb-7"
         style={{
@@ -92,7 +92,7 @@ const First = () => {
             delay: 0.3,
           }}
         >
-          Jose Mari G. Pratz President
+          Jose Mari G. Pratz - President
         </motion.h1>
       </div>
     </div>
@@ -100,7 +100,7 @@ const First = () => {
 };
 const Second = () => {
   return (
-    <div className="text-black h-96 w-full md:w-96">
+    <div className="text-black w-full md:w-96">
       <div
         className="flex flex-wrap mb-7"
         style={{
@@ -186,7 +186,11 @@ const ChangingContainer = () => {
     return () => clearTimeout(timer);
   }, [index]);
 
-  return <div className="mx-auto">{selectedComp}</div>;
+  return (
+    <div className="mx-auto h-[500px] px-4 md:h-auto md:px-0">
+      {selectedComp}
+    </div>
+  );
 };
 
 export default ChangingContainer;

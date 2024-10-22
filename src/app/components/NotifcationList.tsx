@@ -3,6 +3,7 @@ import React from "react";
 import Notification from "./Notification";
 import { useQuery } from "@tanstack/react-query";
 import { fetchNotifs } from "../functions/functions";
+import NotificationSkeleton from "./NotificationSkeleton";
 
 const NotifcationList = () => {
   const {
@@ -20,9 +21,16 @@ const NotifcationList = () => {
         <p className="font-bold">Notifications</p>
         <Icon icon={"gridicons:cross"} className="h-4 w-4" />
       </div>
+
       <div className="flex flex-col items-center px-1 w-full gap-1 overflow-auto">
         {isLoading && (
-          <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
+          <>
+            {Array(2)
+              .fill(0)
+              .map((_, index) => (
+                <NotificationSkeleton key={index} />
+              ))}
+          </>
         )}
         {isError && <p>Error loading notifications</p>}
         {notifications &&
