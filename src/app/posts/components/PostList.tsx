@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { GroupedPosts, Post } from "@/app/types/types";
 import MotionTemplate from "@/app/components/animation/MotionTemplate";
@@ -9,6 +9,7 @@ import usePosts from "@/app/custom-hooks/posts";
 import PostListSkeleton from "./PostListSkeleton";
 import NoPosts from "./NoPosts";
 import useBulletin from "@/app/custom-hooks/bulletin";
+import useToggleStore from "@/app/store/navbarCollapsedStore";
 
 const groupPostsByDate = (posts: Post[]) => {
   return posts.reduce((groups: GroupedPosts, post: Post) => {
@@ -23,11 +24,27 @@ const groupPostsByDate = (posts: Post[]) => {
 
 interface Props {
   selectedVis: string;
+  isMobile: boolean;
 }
 
-const PostList: React.FC<Props> = ({ selectedVis }) => {
+const Skeleton = () => {
+  return Array(3)
+    .fill(0)
+    .map((_, index) => (
+      <div key={index} className="px-4 grid gap-2 mb-6">
+        <div className="w-1/3 animate-pulse h-4 bg-gray-300 rounded"></div>
+        <div className="w-full animate-pulse h-4 bg-gray-300 rounded"></div>
+        <div className="w-full animate-pulse h-4 bg-gray-300 rounded"></div>
+        <div className="w-full animate-pulse h-4 bg-gray-300 rounded"></div>
+      </div>
+    ));
+};
+
+const PostList: React.FC<Props> = ({ selectedVis, isMobile }) => {
   const posts = usePosts();
   const allPosts = useBulletin();
+  const [loading, setLoading] = useState<boolean>(true);
+  const { isCollapsed, setIsCollapsed } = useToggleStore();
 
   // Use posts or allPosts depending on selectedVis
   const groupedPosts = useMemo(
@@ -35,11 +52,19 @@ const PostList: React.FC<Props> = ({ selectedVis }) => {
     [selectedVis, posts, allPosts]
   );
 
+  useEffect(() => {
+    if (posts.length > 0 && allPosts.length > 0) setLoading(false);
+  }, [posts, allPosts]);
+
   const [maxNum, setMaxNum] = useState<number>(2);
 
   const showMore = () => {
     setMaxNum((prevMax) => prevMax + 3);
   };
+
+  if (loading) {
+    return <Skeleton />;
+  }
 
   if (!posts) {
     return <PostListSkeleton />;
@@ -56,7 +81,12 @@ const PostList: React.FC<Props> = ({ selectedVis }) => {
           .slice(0, maxNum)
           .map((date) => (
             <MotionTemplate key={date}>
-              <div className="px-3 mb-8">
+              <div
+                onClick={
+                  isMobile ? () => setIsCollapsed(!isCollapsed) : undefined
+                }
+                className="px-3 mb-8"
+              >
                 <div key={date}>
                   <h2 className="text-xs font-semibold ms-2 mb-2">
                     {format(new Date(date), "MMMM dd, yyyy")}

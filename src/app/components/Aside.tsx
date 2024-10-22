@@ -16,9 +16,15 @@ interface Props {
   variants?: Variants;
   isCollapsed?: boolean;
   setIsCollapsed?: (collapsed: boolean) => void;
+  isMobile: boolean;
 }
 
-const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
+const Aside: React.FC<Props> = ({
+  isCollapsed,
+  setIsCollapsed,
+  variants,
+  isMobile,
+}) => {
   const { setVisible } = useShowPostStore();
   const router = useRouter();
   const { uVisible, setUVisible } = useShowUserModalStore();
@@ -131,7 +137,7 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
                 Dept
               </div>
             </div>
-            <PostList selectedVis={selectedVis} />
+            <PostList selectedVis={selectedVis} isMobile={isMobile} />
           </div>
         </div>
         <UserButton uVisible={uVisible} setUVisible={setUVisible} />
@@ -214,9 +220,8 @@ const Aside: React.FC<Props> = ({ isCollapsed, setIsCollapsed, variants }) => {
                   Dept
                 </div>
               </div>
-              <PostList selectedVis={selectedVis} />
+              <PostList selectedVis={selectedVis} isMobile={isMobile} />
             </div>
-            <PostList selectedVis={selectedVis} />
           </div>
         </div>
         <UserButton uVisible={uVisible} setUVisible={setUVisible} />

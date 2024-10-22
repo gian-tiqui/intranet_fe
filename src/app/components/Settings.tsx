@@ -34,7 +34,7 @@ const Settings = () => {
       onClick={handleOuterChange}
     >
       <div
-        className="md:w-[700px] rounded-3xl h-96 bg-white dark:bg-neutral-900 p-8"
+        className="w-82 md:w-[700px] rounded-3xl bg-white dark:bg-neutral-900 p-8"
         onClick={stopPropa}
       >
         <div className="flex justify-between items-start w-full mb-5">
@@ -56,8 +56,9 @@ const Settings = () => {
           </HoverBox>
         </div>
         <hr className="w-full mb-4 border-t dark:border-gray-700" />
-        <div className="flex">
-          <div className="w-1/3 flex flex-col p-2">
+
+        <div className="grid md:flex">
+          <div className="md::w-1/3 flex flex-col p-2">
             <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
               <div
                 className=" flex items-center gap-3"
@@ -77,7 +78,7 @@ const Settings = () => {
               </div>
             </HoverBox>
           </div>
-          <div className="w-2/3 p-2 overflow-auto h-64">
+          <div className="md:w-2/3 p-2 overflow-auto">
             {fragment === "userInfo" && (
               <UserInfo mode={mode} handleModeChange={handleModeChange} />
             )}

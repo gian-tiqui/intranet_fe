@@ -31,8 +31,9 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const { setShowEditModal } = useEditModalStore();
   const { setIsCollapsed } = useToggleStore();
   const { register, handleSubmit, setValue } = useForm<FormFields>();
-
+  const [loading, setLoading] = useState<boolean>(true);
   const [fileName, setFileName] = useState<string | undefined>("");
+  const [saving, setSaving] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -54,6 +55,8 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
           type: "error",
           className: toastClass,
         });
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -70,6 +73,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
     const at = localStorage.getItem(INTRANET);
 
     if (at) {
+      setSaving(true);
       const decode: { sub: number } = jwtDecode(at);
 
       data.userId = decode.sub;
@@ -98,18 +102,18 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
           },
         })
         .then((response) => {
-          console.log(formData.get("public"));
-          console.log(response.data.post.public);
           toast(response.data.message, {
             type: "success",
             className: toastClass,
           });
+
           setShowEditModal(false);
           window.location.reload();
         })
         .catch((error) => {
           toast(error.message, { type: "error", className: toastClass });
-        });
+        })
+        .finally(() => setSaving(false));
     }
   };
 
@@ -138,32 +142,49 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
             <p className="font-bold">
               {decodeUserData()?.firstName} {decodeUserData()?.lastName}
             </p>
-            <select
-              {...register("public", { required: true })}
-              className="bg-inherit outline-none text-xs"
-            >
-              <option className="" value={"public"}>
-                Public
-              </option>
-              <option className="bg-inherit" value={"private"}>
-                Private
-              </option>
-            </select>
+            {loading ? (
+              <div className="h-3 w-1/3 rounded bg-gray-300 animate-pulse"></div>
+            ) : (
+              <select
+                {...register("public", { required: true })}
+                className={`bg-inherit outline-none text-xs`}
+              >
+                <option className="" value={"public"}>
+                  Public
+                </option>
+                <option className="bg-inherit" value={"private"}>
+                  Private
+                </option>
+              </select>
+            )}
           </div>
         </div>
         <form onSubmit={handleSubmit(handleEditPost)}>
           <div>
-            <input
-              className="w-full outline-none p-2 dark:bg-neutral-900"
-              placeholder="Memo title"
-              {...register("title")}
-            />
+            {loading ? (
+              <div className="h-4 w-1/3 rounded bg-gray-300 animate-pulse mb-2"></div>
+            ) : (
+              <input
+                className="w-full outline-none p-2 dark:bg-neutral-900"
+                placeholder="Memo title"
+                {...register("title")}
+              />
+            )}
             <hr className="w-full border-b border dark:border-neutral-800" />
-            <textarea
-              className="w-full h-40 outline-none p-2 dark:bg-neutral-900"
-              placeholder="Edit your memo content"
-              {...register("message")}
-            />
+            {loading ? (
+              <>
+                <div className="h-4 w-full rounded bg-gray-300 animate-pulse mb-2 mt-2"></div>
+                <div className="h-4 w-full rounded bg-gray-300 animate-pulse mb-2 mt-2"></div>
+                <div className="h-4 w-full rounded bg-gray-300 animate-pulse mb-2 mt-2"></div>
+                <div className="h-4 w-2/3 rounded bg-gray-300 animate-pulse mb-10 mt-2"></div>
+              </>
+            ) : (
+              <textarea
+                className="w-full h-40 outline-none p-2 dark:bg-neutral-900"
+                placeholder="Edit your memo content"
+                {...register("message")}
+              />
+            )}
 
             <div className="w-full p-4 mb-4 dark:bg-neutral-900 rounded-md">
               <div className="relative w-full border border-dashed border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-all duration-200">
@@ -174,7 +195,9 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                   onChange={handleFileChange}
                 />
                 <div className="flex flex-col items-center justify-center text-gray-500">
-                  {fileName ? (
+                  {loading ? (
+                    <Icon icon={"line-md:loading-loop"} className="h-8 w-8" />
+                  ) : fileName ? (
                     <Icon icon={"weui:done2-outlined"} className="h-10 w-10" />
                   ) : (
                     <Icon
@@ -182,16 +205,25 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                       className="h-10 w-10"
                     />
                   )}
-                  <span className="mt-2 text-sm">
-                    {fileName || "Click to upload memo"}{" "}
-                  </span>
+                  {loading ? (
+                    <>
+                      <div className="h-4 w-full rounded bg-gray-300 animate-pulse my-1"></div>
+                      <div className="h-4 w-2/3 rounded bg-gray-300 animate-pulse my-1"></div>
+                    </>
+                  ) : (
+                    <span className="mt-2 text-sm">
+                      {fileName || "Click to upload memo"}{" "}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
 
             <select
               {...register("deptId", { required: true })}
-              className="w-full bg-inherit border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none"
+              className={`${
+                loading ? "animate-pulse bg-gray-300" : "bg-inherit"
+              } w-full border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none`}
             >
               <option value={""}>Select a department</option>
               {departments.map((department) => (
@@ -207,10 +239,29 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
             </select>
 
             <button
+              disabled={loading}
               type="submit"
-              className="w-full border rounded-xl h-10 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-700"
+              className={`w-full border rounded-xl h-10 dark:border-neutral-700 flex justify-center items-center gap-1 ${
+                !loading && "hover:bg-gray-100 dark:hover:bg-neutral-700"
+              }`}
             >
-              Save Changes
+              {loading ? (
+                <>
+                  <Icon icon={"line-md:loading-loop"} className="h-5 w-5" />
+
+                  <p>Getting post...</p>
+                </>
+              ) : saving ? (
+                <>
+                  <Icon icon={"line-md:loading-loop"} className="h-5 w-5" />
+                  <p>Saving</p>
+                </>
+              ) : (
+                <>
+                  <Icon icon={"lucide:edit"} className="h-5 w-5" />
+                  <p>Save</p>
+                </>
+              )}
             </button>
           </div>
         </form>
