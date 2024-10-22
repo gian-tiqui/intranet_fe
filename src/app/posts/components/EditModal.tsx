@@ -19,7 +19,7 @@ interface FormFields {
   message?: string;
   memo?: FileList;
   title?: string;
-  public?: boolean;
+  public?: string;
 }
 
 interface EditPostModalProps {
@@ -79,6 +79,10 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
       formData.append("deptId", String(data.deptId));
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
+      formData.append(
+        "public",
+        String(data.public === "public" ? "public" : "private")
+      );
 
       if (data.memo && data.memo.length > 0) {
         formData.append("newMemo", data.memo[0]);
@@ -94,6 +98,8 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
           },
         })
         .then((response) => {
+          console.log(formData.get("public"));
+          console.log(response.data.post.public);
           toast(response.data.message, {
             type: "success",
             className: toastClass,

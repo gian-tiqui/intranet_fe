@@ -23,7 +23,7 @@ interface FormFields {
   message?: string;
   memo?: FileList;
   title?: string;
-  public: boolean;
+  public: string;
 }
 
 const PostModal = () => {
@@ -142,7 +142,10 @@ const PostModal = () => {
       const formData = new FormData();
       formData.append("userId", String(data.userId));
       formData.append("deptId", String(data.deptId));
-      formData.append("public", String(data.public));
+      formData.append(
+        "public",
+        String(data.public === "public" ? "true" : "false")
+      );
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
 
@@ -160,6 +163,8 @@ const PostModal = () => {
           },
         })
         .then((response) => {
+          console.log(formData.get("public"));
+          console.log(response.data.post.post);
           setVisible(false);
 
           apiClient
