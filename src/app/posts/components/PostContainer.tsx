@@ -45,10 +45,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const { setSetComments, setThisComments } = useSetCommentsStore();
 
   useEffect(() => {
-    console.log(imageUrl);
-  }, [imageUrl]);
-
-  useEffect(() => {
     if (setComments) {
       setSetComments(setComments);
     }
