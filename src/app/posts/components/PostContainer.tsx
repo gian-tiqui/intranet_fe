@@ -17,7 +17,7 @@ import MotionTemplate from "@/app/components/animation/MotionTemplate";
 import SmallToLarge from "@/app/components/animation/SmallToLarge";
 import useEditModalStore from "@/app/store/editModal";
 import usePostIdStore from "@/app/store/postId";
-import { createWorker } from "tesseract.js";
+// import { createWorker } from "tesseract.js";
 import { jsPDF } from "jspdf";
 import apiClient from "@/app/http-common/apiUrl";
 import { toast } from "react-toastify";
@@ -40,8 +40,8 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const { setShowEditModal } = useEditModalStore();
   const { setPostId } = usePostIdStore();
-  const [message, setMessage] = useState<string>("");
-  const [extracting, setExtracting] = useState<boolean>(false);
+  const [message] = useState<string>("");
+  const [extracting] = useState<boolean>(false);
   const { setSetComments, setThisComments } = useSetCommentsStore();
 
   useEffect(() => {
@@ -68,28 +68,28 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     }
   };
 
-  const scanImage = async (imageUrl: string) => {
-    const worker = await createWorker("eng");
-    try {
-      setExtracting(true);
-      const {
-        data: { text },
-      } = await worker.recognize(imageUrl);
-      setMessage(text);
-    } catch (error) {
-      console.error("Error scanning image:", error);
-    } finally {
-      await worker.terminate();
-      setExtracting(false);
-    }
-  };
+  // const scanImage = async (imageUrl: string) => {
+  //   const worker = await createWorker("eng");
+  //   try {
+  //     setExtracting(true);
+  //     const {
+  //       data: { text },
+  //     } = await worker.recognize(imageUrl);
+  //     setMessage(text);
+  //   } catch (error) {
+  //     console.error("Error scanning image:", error);
+  //   } finally {
+  //     await worker.terminate();
+  //     setExtracting(false);
+  //   }
+  // };
 
-  const handleExtractImageClicked = () => {
-    if (message) return;
-    if (imageUrl) {
-      scanImage(imageUrl);
-    }
-  };
+  // const handleExtractImageClicked = () => {
+  //   if (message) return;
+  //   if (imageUrl) {
+  //     scanImage(imageUrl);
+  //   }
+  // };
 
   useEffect(() => {
     const handleClick = () => {
@@ -295,7 +295,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
                 : "Unknown Date"}
             </h4>
           </div>
-          {message === "" && (
+          {/* {message === "" && (
             <button
               onClick={handleExtractImageClicked}
               className="hover:bg-gray-300 dark:hover:bg-neutral-700 flex items-center gap-1 px-2 text-sm rounded"
@@ -306,7 +306,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
               />
               Extract text
             </button>
-          )}
+          )} */}
         </div>
 
         <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-2" />
