@@ -2,7 +2,7 @@
 import Cookies from "js-cookie";
 import useNavbarVisibilityStore from "@/app/store/navbarVisibilityStore";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import MotionP from "@/app/components/animation/MotionP";
@@ -22,6 +22,7 @@ type FormFields = {
 
 const Form = () => {
   const { setHidden } = useNavbarVisibilityStore();
+  const [loading, setLoading] = useState<boolean>(false);
   const { setShowSplash } = useSplashToggler();
   const { showLogoutArt, setShowLogoutArt } = useLogoutArtStore();
   const router = useRouter();
@@ -48,6 +49,7 @@ const Form = () => {
 
   const handleLogin = async ({ employeeId, password }: FormFields) => {
     try {
+      setLoading(true);
       const response = await apiClient.post(`${API_BASE}/auth/login`, {
         employeeId,
         password,
@@ -83,6 +85,8 @@ const Form = () => {
       } else {
         console.error("Unexpected error:", error);
       }
+    } finally {
+      setLoading(false);
     }
 
     return;
@@ -158,9 +162,15 @@ const Form = () => {
         <motion.button
           initial={{ width: 0 }}
           animate={{ width: "100%" }}
+          disabled={loading}
           transition={{ duration: 1, delay: 0.7 }}
-          className="mb-2 rounded-2xl h-10 text-neutral-200 border border-neutral-300 font-bold bg-neutral-800 dark:bg-neutral-200 dark:text-neutral-800 hover:bg-neutral-900"
+          className={`${
+            loading && "opacity-80"
+          } mb-2 rounded-2xl justify-center flex gap-2 items-center h-10 text-neutral-200 border border-neutral-300 font-bold bg-neutral-800 dark:bg-neutral-200 dark:text-neutral-800 hover:bg-neutral-900`}
         >
+          {loading && (
+            <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
+          )}
           Login
         </motion.button>
       </div>
