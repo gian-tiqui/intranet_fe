@@ -26,6 +26,8 @@ interface FormFields {
 const UserInfo: React.FC<Props> = ({ mode, handleModeChange }) => {
   const { register, handleSubmit, setValue } = useForm<FormFields>();
   const [user, setUser] = useState<User | undefined>(undefined);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [saving, setSaving] = useState<boolean>(false);
 
   const handleEditProfile = async (data: FormFields) => {
     const userId = decodeUserData()?.sub;
@@ -34,6 +36,7 @@ const UserInfo: React.FC<Props> = ({ mode, handleModeChange }) => {
       return;
     } else {
       try {
+        setSaving(true);
         const response = await apiClient.put(
           `${API_BASE}/users/${Number(userId)}`,
           { ...data },
@@ -59,6 +62,7 @@ const UserInfo: React.FC<Props> = ({ mode, handleModeChange }) => {
         });
       } finally {
         handleModeChange();
+        setSaving(false);
       }
     }
   };
@@ -78,6 +82,8 @@ const UserInfo: React.FC<Props> = ({ mode, handleModeChange }) => {
           const { message } = error as { message: string };
 
           toast(message, { type: "error" });
+        } finally {
+          setLoading(false);
         }
       }
     };
@@ -103,21 +109,33 @@ const UserInfo: React.FC<Props> = ({ mode, handleModeChange }) => {
   return (
     <form onSubmit={handleSubmit(handleEditProfile)}>
       <div className="flex flex-row-reverse">
-        <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-1 cursor-pointer rounded mb-5">
-          <button type="submit" className="flex items-center gap-3">
-            {mode === "save" ? (
-              <>
-                <Icon icon={"lucide:edit"} className="w-5 h-5" />
-                <p className="text-md">Edit profile</p>
-              </>
-            ) : (
-              <>
-                <Icon icon={"mingcute:save-line"} className="w-5 h-5" />
-                <p className="text-md">Save profile</p>
-              </>
-            )}
-          </button>
-        </HoverBox>
+        {saving ? (
+          <HoverBox className="p-1 cursor-pointer rounded mb-5">
+            <div className="flex items-center gap-3">
+              <Icon
+                icon={"material-symbols:save-outline"}
+                className="w-5 h-5 animate-spin"
+              />
+              <p className="text-md">Saving...</p>
+            </div>
+          </HoverBox>
+        ) : (
+          <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-1 cursor-pointer rounded mb-5">
+            <button type="submit" className="flex items-center gap-3">
+              {mode === "save" ? (
+                <>
+                  <Icon icon={"lucide:edit"} className="w-5 h-5" />
+                  <p className="text-md">Edit profile</p>
+                </>
+              ) : (
+                <>
+                  <Icon icon={"mingcute:save-line"} className="w-5 h-5" />
+                  <p className="text-md">Save profile</p>
+                </>
+              )}
+            </button>
+          </HoverBox>
+        )}
       </div>
       <div className="w-full flex flex-col gap-1">
         <div className="flex justify-between">
@@ -125,7 +143,9 @@ const UserInfo: React.FC<Props> = ({ mode, handleModeChange }) => {
           <input
             {...register("firstName", { required: true })}
             disabled={mode === "save"}
-            className="border-b dark:border-neutral-700 dark:bg-neutral-900 outline-none"
+            className={`${
+              loading && "animate-pulse"
+            } border-b dark:border-neutral-700 dark:bg-neutral-900 outline-none`}
           />
         </div>
         <div className="flex justify-between">
@@ -133,7 +153,9 @@ const UserInfo: React.FC<Props> = ({ mode, handleModeChange }) => {
           <input
             {...register("middleName", { required: true })}
             disabled={mode === "save"}
-            className="border-b dark:border-neutral-700 dark:bg-neutral-900 outline-none"
+            className={`${
+              loading && "animate-pulse"
+            } border-b dark:border-neutral-700 dark:bg-neutral-900 outline-none`}
           />
         </div>
         <div className="flex justify-between">
@@ -141,7 +163,9 @@ const UserInfo: React.FC<Props> = ({ mode, handleModeChange }) => {
           <input
             {...register("lastName", { required: true })}
             disabled={mode === "save"}
-            className="border-b dark:border-neutral-700 dark:bg-neutral-900 outline-none"
+            className={`${
+              loading && "animate-pulse"
+            } border-b dark:border-neutral-700 dark:bg-neutral-900 outline-none`}
           />
         </div>
         <div className="flex justify-between">
@@ -149,7 +173,9 @@ const UserInfo: React.FC<Props> = ({ mode, handleModeChange }) => {
           <input
             {...register("suffix")}
             disabled={mode === "save"}
-            className="border-b dark:border-neutral-700 dark:bg-neutral-900 outline-none"
+            className={`${
+              loading && "animate-pulse"
+            } border-b dark:border-neutral-700 dark:bg-neutral-900 outline-none`}
           />
         </div>
         <div className="flex justify-between">
@@ -157,7 +183,9 @@ const UserInfo: React.FC<Props> = ({ mode, handleModeChange }) => {
           <input
             {...register("gender", { required: true })}
             disabled={mode === "save"}
-            className="border-b dark:border-neutral-700 dark:bg-neutral-900 outline-none"
+            className={`${
+              loading && "animate-pulse"
+            } border-b dark:border-neutral-700 dark:bg-neutral-900 outline-none`}
           />
         </div>
 
@@ -166,7 +194,9 @@ const UserInfo: React.FC<Props> = ({ mode, handleModeChange }) => {
           <input
             {...register("address", { required: true })}
             disabled={mode === "save"}
-            className="border-b dark:border-neutral-700 dark:bg-neutral-900 outline-none"
+            className={`${
+              loading && "animate-pulse"
+            } border-b dark:border-neutral-700 dark:bg-neutral-900 outline-none`}
           />
         </div>
       </div>

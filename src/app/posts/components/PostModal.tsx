@@ -36,6 +36,7 @@ const PostModal = () => {
   const [isConverting, setIsConverting] = useState<boolean>(false);
   const toastClass =
     "bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white";
+  const [posting, setPosting] = useState<boolean>(false);
 
   const convertPdfToImage = async (pdfFile: File): Promise<File> => {
     try {
@@ -136,6 +137,7 @@ const PostModal = () => {
     const at = localStorage.getItem(INTRANET);
 
     if (at) {
+      setPosting(true);
       const decode: { sub: number } = jwtDecode(at);
       data.userId = decode.sub;
 
@@ -163,8 +165,6 @@ const PostModal = () => {
           },
         })
         .then((response) => {
-          console.log(formData.get("public"));
-          console.log(response.data.post.post);
           setVisible(false);
 
           apiClient
@@ -183,9 +183,11 @@ const PostModal = () => {
                 className: toastClass,
               });
             })
+
             .catch((error) => {
               console.error("Failed to send notification:", error);
-            });
+            })
+            .finally(() => setPosting(false));
         })
         .catch((error) => {
           toast(error, { type: "error", className: toastClass });
@@ -309,10 +311,30 @@ const PostModal = () => {
 
             <button
               type="submit"
-              className="w-full border rounded-xl h-10 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-700"
-              disabled={isConverting}
+              className={`${
+                posting && "opacity-80"
+              } w-full border rounded-xl h-10 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-700 flex justify-center gap-2 items-center`}
+              disabled={isConverting || posting}
             >
-              Post
+              {posting ? (
+                <>
+                  {" "}
+                  <Icon
+                    icon={"material-symbols:post-add"}
+                    className="h-5 w-5 animate-spin"
+                  />
+                  <p>Posting...</p>
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <Icon
+                    icon={"material-symbols:post-add"}
+                    className="h-5 w-5"
+                  />
+                  <p>Post</p>
+                </>
+              )}
             </button>
           </div>
         </form>

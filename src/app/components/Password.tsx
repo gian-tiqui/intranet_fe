@@ -47,7 +47,7 @@ const Password = () => {
 
   return (
     <form
-      className="flex flex-col gap-3"
+      className="flex w-72 md:w-auto flex-col gap-3"
       onSubmit={handleSubmit(onPasswordReset)}
     >
       <h1 className="text-center font-bold mb-3">Change password</h1>

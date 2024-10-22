@@ -1,10 +1,18 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React from "react";
 import Notification from "./Notification";
-import useNotifications from "../custom-hooks/notifications";
+import { useQuery } from "@tanstack/react-query";
+import { fetchNotifs } from "../functions/functions";
 
 const NotifcationList = () => {
-  const notifications = useNotifications();
+  const {
+    data: notifications,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: fetchNotifs,
+  });
 
   return (
     <div className="flex pb-1 h-64 shadow flex-col items-center w-64 absolute right-0 bg-neutral-200 dark:bg-neutral-800 rounded-xl border border-gray-300 top-8 dark:border-black">
@@ -13,9 +21,14 @@ const NotifcationList = () => {
         <Icon icon={"gridicons:cross"} className="h-4 w-4" />
       </div>
       <div className="flex flex-col items-center px-1 w-full gap-1 overflow-auto">
-        {notifications.map((notif, index) => (
-          <Notification notification={notif} key={index} />
-        ))}
+        {isLoading && (
+          <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
+        )}
+        {isError && <p>Error loading notifications</p>}
+        {notifications &&
+          notifications?.map((notif, index) => (
+            <Notification notification={notif} key={index} />
+          ))}
       </div>
     </div>
   );

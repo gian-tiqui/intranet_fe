@@ -1,10 +1,14 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { useEffect, useState } from "react";
 import NotifcationList from "./NotifcationList";
-import useNotifications from "../custom-hooks/notifications";
+import { useQuery } from "@tanstack/react-query";
+import { fetchNotifs } from "../functions/functions";
 
 const NotificationBell = () => {
-  const notifCount = useNotifications().length;
+  const { data: notifications, isLoading } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: fetchNotifs,
+  });
   const [openNotifs, setOpenNotifs] = useState<boolean>(false);
 
   const handleOpenNotifs = (e: React.MouseEvent) => {
@@ -32,7 +36,11 @@ const NotificationBell = () => {
       >
         <Icon icon={"mdi:bell-outline"} className="h-8 w-8" />
         <p className="absolute bottom-0 right-0 px-2 py-1 font-extrabold bg-black dark:bg-white text-white rounded-full dark:text-black text-[10px]">
-          {notifCount}
+          {isLoading ? (
+            <Icon icon={"line-md:loading-loop"} />
+          ) : (
+            notifications?.length
+          )}
         </p>
       </div>
       {openNotifs && <NotifcationList />}

@@ -1,6 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import apiClient from "../http-common/apiUrl";
+import { NotificationType, Post } from "../types/types";
 
 const decodeUserData = () => {
   const at = localStorage.getItem(INTRANET);
@@ -40,4 +41,53 @@ const fetchMonitoringData = async () => {
   return response.data;
 };
 
-export { decodeUserData, checkDept, fetchMonitoringData };
+const fetchNotifs = async () => {
+  try {
+    const deptId = decodeUserData()?.deptId;
+    const userId = decodeUserData()?.sub;
+    const API_URI = `${API_BASE}/notification?deptId=${deptId}&userId=${userId}`;
+
+    const response = await apiClient.get(API_URI);
+
+    return response.data as NotificationType[];
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const fetchPublicPosts = async () => {
+  try {
+    const response = await apiClient.get(`${API_BASE}/post?public=true`);
+
+    return response.data as Post[];
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const fetchPosts = async () => {
+  try {
+    const apiUri = `${API_BASE}/post?deptId=${
+      decodeUserData()?.deptId
+    }&userIdComment=${decodeUserData()?.sub}`;
+
+    const response = await apiClient.get(apiUri, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+      },
+    });
+
+    return response.data as Post[];
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export {
+  decodeUserData,
+  checkDept,
+  fetchMonitoringData,
+  fetchNotifs,
+  fetchPublicPosts,
+  fetchPosts,
+};

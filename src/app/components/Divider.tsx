@@ -75,24 +75,6 @@ const Divider: React.FC<Props> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (isMobile) setIsCollapsed(true);
-  }, [isMobile, setIsCollapsed]);
-
-  useEffect(() => {
-    const handleClick = () => {
-      if (isMobile && !isCollapsed) {
-        setIsCollapsed(true);
-      }
-    };
-
-    document.addEventListener("click", handleClick);
-
-    return () => {
-      document.removeEventListener("click", handleClick);
-    };
-  }, [isMobile, setIsCollapsed, isCollapsed]);
-
-  useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 767);
     };
@@ -125,6 +107,23 @@ const Divider: React.FC<Props> = ({ children }) => {
 
     refreshData();
   }, [debouncedSearch, setPostUri]);
+
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const sidebar = document.getElementById("sidebar");
+
+      if (sidebar && !sidebar.contains(target) && isMobile) {
+        setIsCollapsed(true);
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, [isMobile, isCollapsed, setIsCollapsed]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -183,16 +182,19 @@ const Divider: React.FC<Props> = ({ children }) => {
         {showEditModal && <EditPostModal postId={postId} />}
         {showDeleteComment && <DeleteCommentPopup />}
 
-        <AnimatePresence>
-          {isCollapsed ||
-            (hidden && (
-              <Aside
-                isCollapsed={isCollapsed}
-                setIsCollapsed={setIsCollapsed}
-                variants={variants}
-              />
-            ))}
-        </AnimatePresence>
+        <div id="sidebar" onClick={(e) => e.stopPropagation()}>
+          <AnimatePresence>
+            {isCollapsed ||
+              (hidden && (
+                <Aside
+                  isMobile={isMobile}
+                  isCollapsed={isCollapsed}
+                  setIsCollapsed={setIsCollapsed}
+                  variants={variants}
+                />
+              ))}
+          </AnimatePresence>
+        </div>
 
         <main
           className={`max-h-screen overflow-auto relative w-full ${
