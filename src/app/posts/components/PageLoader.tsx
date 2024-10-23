@@ -5,16 +5,21 @@ import { useRouter } from "next/compat/router";
 
 const PageLoader = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [delayUnmount, setDelayUnmount] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    const handleStart = () => setIsLoading(true);
-    const handleComplete = () => {
-      setIsLoading(false);
+    const handleStart = () => {
+      setIsLoading(true);
+      setDelayUnmount(false);
+    };
 
+    const handleComplete = () => {
       setTimeout(() => {
         setIsLoading(false);
-      }, 50000);
+      }, 10000);
+
+      setDelayUnmount(true);
     };
 
     const handleBeforeUnload = () => {
@@ -35,11 +40,11 @@ const PageLoader = () => {
     };
   }, [router]);
 
-  if (!isLoading) return null;
+  if (!isLoading && !delayUnmount) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 z-50 w-full h-full flex items-center justify-center">
-      <div className="text-white text-2xl">Loading...</div>
+    <div className="fixed inset-0 bg-neutral-200 text-black dark:text-white dark:bg-neutral-900 z-50 w-full h-full flex items-center justify-center">
+      <p className="text-3xl font-bold"> Refreshing...</p>
     </div>
   );
 };
