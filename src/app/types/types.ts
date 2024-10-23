@@ -130,7 +130,16 @@ type UserMonitoring = {
   unreadCount: number;
 };
 
+type UnreadPost = {
+  deptId: number;
+  title: string;
+  message: string;
+  createdAt: Date;
+  pid: number;
+};
+
 export type {
+  UnreadPost,
   DepartmentMonitoring,
   UserMonitoring,
   NotificationType,

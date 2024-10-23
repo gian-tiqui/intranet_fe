@@ -1,7 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import apiClient from "../http-common/apiUrl";
-import { NotificationType, Post } from "../types/types";
+import { NotificationType, Post, UnreadPost } from "../types/types";
 
 const decodeUserData = () => {
   const at = localStorage.getItem(INTRANET);
@@ -83,7 +83,25 @@ const fetchPosts = async () => {
   }
 };
 
+const fetchUserUnreads = async () => {
+  try {
+    const apiUri = `${API_BASE}/notification/unreads/${
+      decodeUserData()?.sub
+    }?deptId=${decodeUserData()?.deptId}`;
+    const response = await apiClient.get(apiUri, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+      },
+    });
+
+    return response.data.unreadPosts as UnreadPost[];
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export {
+  fetchUserUnreads,
   decodeUserData,
   checkDept,
   fetchMonitoringData,
