@@ -41,7 +41,7 @@ const Skeleton = () => {
 
 const PostList: React.FC<Props> = ({ selectedVis, isMobile }) => {
   const { data: _posts, isLoading } = useQuery({
-    queryKey: ["public_posts"],
+    queryKey: ["private_posts"],
     queryFn: fetchPosts,
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
@@ -49,7 +49,7 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile }) => {
   });
 
   const { data: _allPosts } = useQuery({
-    queryKey: ["private_posts"],
+    queryKey: ["public_posts"],
     queryFn: fetchPublicPosts,
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
