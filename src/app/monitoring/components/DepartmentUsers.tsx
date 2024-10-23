@@ -1,5 +1,5 @@
 import { DepartmentMonitoring } from "@/app/types/types";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import UserCard from "./UserCard";
 
 interface Props {
@@ -15,12 +15,23 @@ const DepartmentUsers: React.FC<Props> = ({
   dept,
   setDept,
 }) => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredUsers = department?.users.filter(
+    (user) =>
+      user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.lastName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div>
       <div className="w-full flex flex-col gap-2 md:gap-0 md:flex-row mb-3 justify-between">
         <input
+          type="text"
           placeholder="Search"
           className="rounded-lg h-10 px-5 outline-none border border-gray-300 dark:border-neutral-950 dark:bg-neutral-900"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
 
         <select
@@ -48,9 +59,9 @@ const DepartmentUsers: React.FC<Props> = ({
         </select>
       </div>
       <section className="grid grid-cols-1 gap-4 bg-white dark:bg-neutral-900 h-96 py-3 px-2 rounded-lg overflow-auto">
-        {departments && departments.length > 0 ? (
+        {filteredUsers && filteredUsers.length > 0 ? (
           <>
-            {department?.users.map((user) => (
+            {filteredUsers.map((user) => (
               <UserCard key={user.userId} user={user} />
             ))}
           </>

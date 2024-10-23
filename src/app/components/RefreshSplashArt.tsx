@@ -7,7 +7,7 @@ interface Props {
   children?: ReactNode;
 }
 
-const LoginSplash: React.FC<Props> = ({ children }) => {
+const RefreshSplashArt: React.FC<Props> = ({ children }) => {
   const logginAnimOptions = {
     animationData: loginAnim,
     loop: true,
@@ -21,4 +21,4 @@ const LoginSplash: React.FC<Props> = ({ children }) => {
   );
 };
 
-export default LoginSplash;
+export default RefreshSplashArt;

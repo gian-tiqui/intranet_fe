@@ -1,6 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import HoverBox from "@/app/components/HoverBox";
+import React, { useEffect, useRef, useState } from "react";
 import CommentBar from "./CommentBar";
 import MotionTemplate from "@/app/components/animation/MotionTemplate";
 import { AnimatePresence } from "framer-motion";
@@ -13,6 +12,7 @@ import { useForm } from "react-hook-form";
 import useSetCommentsStore from "@/app/store/useCommentsStore";
 import apiClient from "@/app/http-common/apiUrl";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 interface Props {
   isReply?: boolean;
@@ -32,6 +32,8 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
   const { setCommentId } = commentIdStore();
   const { handleSubmit, register, setValue } = useForm<FormFields>();
   const { setComments, comments } = useSetCommentsStore();
+  const [saving, setSaving] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const reply = useReply(comment.cid);
 
@@ -39,6 +41,23 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
     setShowDeleteComment(true);
     setCommentId(comment.cid);
   };
+
+  useEffect(() => {
+    const handleEditMode = (event: MouseEvent) => {
+      if (
+        inputRef.current &&
+        !inputRef.current.contains(event.target as Node)
+      ) {
+        if (editMode === true) {
+          setEditMode(false);
+        }
+      }
+    };
+
+    document.addEventListener("click", handleEditMode);
+
+    return () => document.removeEventListener("click", handleEditMode);
+  }, [editMode]);
 
   useEffect(() => {
     if (comment.message) setValue("message", comment.message);
@@ -50,6 +69,7 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
       return;
     }
     try {
+      setSaving(true);
       const response = await apiClient.put(
         `${API_BASE}/comment/${comment.cid}`,
         {
@@ -61,11 +81,11 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
       );
 
       if (response.data.statusCode === 204) {
-        const newComment = response.data.comment;
+        // const newComment = response.data.comment;
 
         const updatedComments = [
+          // newComment,
           ...comments.filter((mComment) => comment.cid !== mComment.cid),
-          newComment,
         ];
 
         setComments(updatedComments);
@@ -74,6 +94,8 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
       setEditMode(false);
     } catch (error) {
       console.error(error);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -98,47 +120,64 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
                 : "You (New)"}
             </p>
           )}
-          <form
-            onSubmit={handleSubmit(handleEditSaved)}
-            className={`w-full flex pe-5 py-1 ${
-              editMode
-                ? "bg-white dark:bg-neutral-700 rounded shadow"
-                : "bg-inherit"
-            }`}
-          >
-            <input
-              {...register("message", { required: true })}
-              className={`break-words overflow-wrap break-word outline-none px-2 bg-inherit w-full`}
-              disabled={!editMode}
-            />
+          <div ref={inputRef}>
+            <form
+              onSubmit={handleSubmit(handleEditSaved)}
+              className={`w-full flex pe-5 py-1 ${
+                editMode
+                  ? "bg-white dark:bg-neutral-700 rounded shadow"
+                  : "bg-inherit"
+              }`}
+            >
+              <input
+                {...register("message", { required: true })}
+                className={`break-words overflow-wrap break-word outline-none px-2 bg-inherit w-full`}
+                disabled={!editMode}
+              />
 
-            {editMode && <button type="submit">Save</button>}
-          </form>
+              {editMode &&
+                (saving ? (
+                  <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
+                ) : (
+                  <button type="submit">Save</button>
+                ))}
+            </form>
+          </div>
 
           {/* Replies Section */}
           <div className="flex gap-1">
             {isReply && (
-              <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center">
-                <div onClick={() => setShowReplies(!showReplies)}>
-                  <p className="text-sm">Replies</p>
-                </div>
-              </HoverBox>
+              <div
+                onClick={() => setShowReplies(!showReplies)}
+                className="hover:bg-neutral-300 dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center"
+              >
+                <p className="text-sm">Replies</p>
+              </div>
             )}
             {comment.userId === decodeUserData()?.sub && (
               <>
-                {!editMode && (
+                {!editMode ? (
                   <>
-                    <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center">
-                      <div onClick={() => setEditMode(true)}>
-                        <p className="text-sm">Edit</p>
-                      </div>
-                    </HoverBox>
-                    <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center">
-                      <div onClick={handleDeleteClicked}>
-                        <p className="text-sm">Delete</p>
-                      </div>
-                    </HoverBox>
+                    <div
+                      onClick={() => setEditMode(true)}
+                      className="hover:bg-neutral-300 dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center"
+                    >
+                      <p className="text-sm">Edit</p>
+                    </div>
+                    <div
+                      onClick={handleDeleteClicked}
+                      className="hover:bg-neutral-300 dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center"
+                    >
+                      <p className="text-sm">Delete</p>
+                    </div>
                   </>
+                ) : (
+                  <div
+                    onClick={() => setEditMode(false)}
+                    className="hover:bg-neutral-300 dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center"
+                  >
+                    <p className="text-sm">Cancel</p>
+                  </div>
                 )}
               </>
             )}

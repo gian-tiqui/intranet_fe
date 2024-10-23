@@ -177,7 +177,7 @@ const Divider: React.FC<Props> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex h-screen text-neutral-800 dark:text-neutral-100">
-        {visible && <PostModal />}
+        {visible && <PostModal isMobile={isMobile} />}
         {shown && <Settings />}
         {showSplash && <LoginSplash />}
         {showEditModal && <EditPostModal postId={postId} />}

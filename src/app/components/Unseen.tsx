@@ -10,10 +10,6 @@ const Unread = () => {
     queryFn: fetchUserUnreads,
   });
 
-  useEffect(() => {
-    console.log(unreads?.length);
-  }, [unreads]);
-
   const [openNotifs, setOpenNotifs] = useState<boolean>(false);
 
   const handleOpenNotifs = (e: React.MouseEvent) => {

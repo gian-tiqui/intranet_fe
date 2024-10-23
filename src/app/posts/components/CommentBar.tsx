@@ -1,5 +1,5 @@
 "use client";
-import React, { Dispatch, SetStateAction, useRef } from "react";
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useForm } from "react-hook-form";
 import { CreateComment, PostComment } from "@/app/types/types";
@@ -28,6 +28,7 @@ const CommentBar: React.FC<Props> = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { register, handleSubmit, reset } = useForm<FormFields>();
   const router = useRouter();
+  const [spamming, setSpamming] = useState<boolean>(false);
 
   const handleInput = () => {
     const textarea = textareaRef.current;
@@ -57,6 +58,7 @@ const CommentBar: React.FC<Props> = ({
       };
 
       try {
+        setSpamming(true);
         const response = await apiClient.post(`${API_BASE}/comment`, {
           ...createComment,
           headers: {
@@ -99,6 +101,10 @@ const CommentBar: React.FC<Props> = ({
         }
       } catch (error) {
         console.error(error);
+        setSpamming(true);
+        setTimeout(() => setSpamming(false), 5000);
+      } finally {
+        setSpamming(false);
       }
     }
   };
@@ -119,12 +125,16 @@ const CommentBar: React.FC<Props> = ({
           rows={1}
           onInput={handleInput}
         />
-        <button
-          type="submit"
-          className="bg-neutral-200 rounded-2xl grid place-content-center h-9 w-10 dark:bg-neutral-500 hover:bg-neutral-300 dark:hover:bg-neutral-800"
-        >
-          <Icon icon={"mi:send"} className="h-5 w-5 cursor-pointer" />
-        </button>
+        {spamming ? (
+          <Icon icon={"line-md:loading-loop"} className="h-8 w-8" />
+        ) : (
+          <button
+            type="submit"
+            className="bg-neutral-200 rounded-2xl grid place-content-center h-9 w-10 dark:bg-neutral-500 hover:bg-neutral-300 dark:hover:bg-neutral-800"
+          >
+            <Icon icon={"mi:send"} className="h-5 w-5 cursor-pointer" />
+          </button>
+        )}
       </div>
     </form>
   );

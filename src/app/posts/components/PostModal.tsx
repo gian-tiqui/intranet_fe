@@ -26,7 +26,11 @@ interface FormFields {
   public: string;
 }
 
-const PostModal = () => {
+interface Props {
+  isMobile: boolean;
+}
+
+const PostModal: React.FC<Props> = ({ isMobile }) => {
   const { setVisible } = useShowPostStore();
   const { setIsCollapsed } = useToggleStore();
   const departments = useDepartments();
@@ -200,14 +204,15 @@ const PostModal = () => {
   };
 
   useEffect(() => {
-    setIsCollapsed(true);
-    return () => setIsCollapsed(false);
-  }, [setIsCollapsed]);
+    if (isMobile) {
+      setIsCollapsed(true);
+    }
+  }, [setIsCollapsed, isMobile]);
 
   return (
     <div
       onClick={() => setVisible(false)}
-      className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-40 grid place-content-center"
+      className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-50 grid place-content-center"
     >
       <div
         className="p-4 w-80 rounded-2xl bg-white dark:bg-neutral-900"
