@@ -4,10 +4,10 @@ import Grid from "./components/Grid";
 
 const Home = () => {
   return (
-    <>
+    <div>
       <AuthListener />
       <Grid />
-    </>
+    </div>
   );
 };
 

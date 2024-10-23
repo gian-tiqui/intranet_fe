@@ -19,12 +19,12 @@ const decodeUserData = () => {
 };
 
 const checkDept = () => {
-  const userDeptId = decodeUserData()?.deptId;
+  const userDept = decodeUserData()?.departmentName;
 
-  if (userDeptId) {
-    const deptIds: number[] = [1, 2, 4]; // 4 is initial id for admin.
+  if (userDept) {
+    const depts: string[] = ["hr", "qm", "admin"];
 
-    if (!deptIds.includes(userDeptId)) {
+    if (!depts.includes(userDept)) {
       return false;
     }
   }
