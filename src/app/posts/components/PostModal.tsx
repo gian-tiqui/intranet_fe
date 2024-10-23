@@ -148,10 +148,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       const formData = new FormData();
       formData.append("userId", String(data.userId));
       formData.append("deptId", String(data.deptId));
-      formData.append(
-        "public",
-        String(data.public === "public" ? "true" : "false")
-      );
+      formData.append("public", data.public);
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
 

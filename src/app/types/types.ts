@@ -58,6 +58,7 @@ type Comment = {
 type Department = {
   deptId: number;
   departmentName: string;
+  departmentCode: string;
   users: User[];
   posts: Post[];
 };
@@ -138,7 +139,18 @@ type UnreadPost = {
   pid: number;
 };
 
+type Decoder = {
+  departmentName: string;
+  firstName: string;
+  lastName: string;
+  sub: number;
+  email: string;
+  deptId: number;
+  departmentCode: string;
+};
+
 export type {
+  Decoder,
   UnreadPost,
   DepartmentMonitoring,
   UserMonitoring,

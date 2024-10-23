@@ -255,16 +255,18 @@ const Divider: React.FC<Props> = ({ children }) => {
                       />
                     </HoverBox>
 
-                    <HoverBox
-                      key="mobile-edit"
-                      className="hover:bg-neutral-300 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded"
-                    >
-                      <Icon
-                        onClick={() => setVisible(true)}
-                        icon="lucide:edit"
-                        className="h-5 w-5"
-                      />
-                    </HoverBox>
+                    {editVisible && (
+                      <HoverBox
+                        key="mobile-edit"
+                        className="hover:bg-neutral-300 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded"
+                      >
+                        <Icon
+                          onClick={() => setVisible(true)}
+                          icon="lucide:edit"
+                          className="h-5 w-5"
+                        />
+                      </HoverBox>
+                    )}
                   </>
                 </div>
               </div>
