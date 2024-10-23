@@ -14,6 +14,7 @@ import { jwtDecode } from "jwt-decode";
 import apiClient from "@/app/http-common/apiUrl";
 import { motion } from "framer-motion";
 import EaseString from "./EaseString";
+import { toastClass } from "@/app/tailwind-classes/tw_classes";
 
 type FormFields = {
   employeeId: number;
@@ -75,12 +76,11 @@ const Form = () => {
 
       router.push("/");
     } catch (error: unknown) {
+      console.error(error);
       if (typeof error === "object" && error !== null) {
-        const errorObj = error as { response: { data: { message: string } } };
-        toast(errorObj.response.data.message, {
+        toast("Theres a problem with your ID or password", {
           type: "error",
-          className:
-            "bg-neutral-200 dark:bg-neutral-900 text-neutral-900 dark:text-white",
+          className: toastClass,
         });
       } else {
         console.error("Unexpected error:", error);
