@@ -1,30 +1,23 @@
 import { jwtDecode } from "jwt-decode";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import apiClient from "../http-common/apiUrl";
-import { NotificationType, Post, UnreadPost } from "../types/types";
+import { Decoder, NotificationType, Post, UnreadPost } from "../types/types";
 
 const decodeUserData = () => {
   const at = localStorage.getItem(INTRANET);
   if (at) {
-    return jwtDecode<{
-      departmentName: string;
-      firstName: string;
-      lastName: string;
-      sub: number;
-      email: string;
-      deptId: number;
-    }>(at);
+    return jwtDecode<Decoder>(at);
   }
   return null;
 };
 
 const checkDept = () => {
-  const userDept = decodeUserData()?.departmentName;
+  const userDeptCode = decodeUserData()?.departmentCode.toLowerCase();
 
-  if (userDept) {
+  if (userDeptCode) {
     const depts: string[] = ["hr", "qm", "admin"];
 
-    if (!depts.includes(userDept)) {
+    if (!depts.includes(userDeptCode)) {
       return false;
     }
   }

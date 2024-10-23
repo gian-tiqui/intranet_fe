@@ -15,7 +15,7 @@ const DashboardGuard = () => {
 
     if (at) {
       // Retrieve the department name via access token.
-      const deptName = decodeUserData()?.departmentName;
+      const deptName = decodeUserData()?.departmentCode;
 
       // Do not allow the user to go to the dashboard if he is not an admin.
       if (deptName !== "ADMIN") router.push("/");

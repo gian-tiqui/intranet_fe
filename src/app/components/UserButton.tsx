@@ -47,7 +47,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
 
   useEffect(() => {
     const checkRole = () => {
-      const userDept = decodeUserData()?.departmentName;
+      const userDept = decodeUserData()?.departmentCode;
 
       if (userDept?.toLowerCase() === "admin") setIsAdmin(true);
     };
@@ -93,7 +93,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
   }, []);
 
   useEffect(() => {
-    const dept = decodeUserData()?.departmentName.toLowerCase();
+    const dept = decodeUserData()?.departmentCode.toLowerCase();
     if (dept && ["hr", "qm"].includes(dept)) setShowMyPosts(true);
   }, []);
 

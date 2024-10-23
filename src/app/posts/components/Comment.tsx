@@ -81,12 +81,15 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
       );
 
       if (response.data.statusCode === 204) {
-        // const newComment = response.data.comment;
-
         const updatedComments = [
-          // newComment,
           ...comments.filter((mComment) => comment.cid !== mComment.cid),
         ];
+
+        if (isReply) {
+          const newComment = response.data.comment;
+
+          updatedComments.unshift(newComment);
+        }
 
         setComments(updatedComments);
       }

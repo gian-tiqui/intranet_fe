@@ -14,16 +14,11 @@ const Notification: React.FC<Props> = ({ notification }) => {
 
   const handleClick = async () => {
     try {
-      const response = await apiClient.put(
-        `${API_BASE}/notification/read/${notification.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-          },
-        }
-      );
-
-      console.log(response);
+      await apiClient.put(`${API_BASE}/notification/read/${notification.id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+        },
+      });
 
       if (notification.postId) router.push(`/posts/${notification.postId}`);
     } catch (error) {

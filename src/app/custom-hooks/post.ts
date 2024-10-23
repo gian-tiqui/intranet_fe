@@ -12,8 +12,8 @@ const usePost = (id: number) => {
       try {
         let userCommentId;
         if (
-          decodeUserData()?.departmentName.toLowerCase() === "hr" ||
-          decodeUserData()?.departmentName.toLowerCase() === "qm"
+          decodeUserData()?.departmentCode.toLowerCase() === "hr" ||
+          decodeUserData()?.departmentCode.toLowerCase() === "qm"
         )
           userCommentId = "";
         else userCommentId = decodeUserData()?.sub;
