@@ -6,6 +6,7 @@ import LatestPublicMemo from "./LatestPublicMemo";
 import DepartmentMemos from "./DepartmentMemos";
 import PostGridSkeleton from "./PostGridSkeleton";
 import PostGridSkeleton2 from "./PostGridSkeleton2";
+import Welcome from "./Welcome";
 
 const Grid = () => {
   const {
@@ -42,6 +43,7 @@ const Grid = () => {
 
   return (
     <div className="grid gap-20 pb-20">
+      <Welcome />
       {isLoading ? (
         <PostGridSkeleton />
       ) : (
