@@ -33,7 +33,7 @@ const DeleteModal: React.FC<Props> = ({ postId, setShowDeleteModal }) => {
   };
 
   return (
-    <div className="w-52 flex flex-col text-black dark:text-white absolute bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 rounded-2xl p-4 transform translate-x-[100%] translate-y-[50%]">
+    <div className="w-52 flex flex-col text-black dark:text-white absolute bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 rounded-2xl p-4 transform translate-x-[30%] md:translate-x-[100%] translate-y-[50%]">
       <p className="text-red-600 dark:text-red-500 font-bold mb-10">
         Are you sure that you want to delete this post?
       </p>

@@ -1,11 +1,12 @@
 import React from "react";
 import AuthListener from "../components/AuthListener";
+import UnreadMain from "./components/UnreadMain";
 
 const Unreads = () => {
   return (
     <div>
       <AuthListener />
-      <p>This is where your unread posts will be shown</p>
+      <UnreadMain />
     </div>
   );
 };
