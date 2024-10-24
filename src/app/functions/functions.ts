@@ -1,7 +1,13 @@
 import { jwtDecode } from "jwt-decode";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import apiClient from "../http-common/apiUrl";
-import { Decoder, NotificationType, Post, UnreadPost } from "../types/types";
+import {
+  Decoder,
+  Level,
+  NotificationType,
+  Post,
+  UnreadPost,
+} from "../types/types";
 
 const decodeUserData = () => {
   const at = localStorage.getItem(INTRANET);
@@ -38,7 +44,8 @@ const fetchNotifs = async () => {
   try {
     const deptId = decodeUserData()?.deptId;
     const userId = decodeUserData()?.sub;
-    const API_URI = `${API_BASE}/notification?deptId=${deptId}&userId=${userId}`;
+    const lid = decodeUserData()?.lid;
+    const API_URI = `${API_BASE}/notification?deptId=${deptId}&userId=${userId}&lid=${lid}`;
 
     const response = await apiClient.get(API_URI);
 
@@ -50,7 +57,9 @@ const fetchNotifs = async () => {
 
 const fetchPublicPosts = async () => {
   try {
-    const response = await apiClient.get(`${API_BASE}/post?public=true`);
+    const response = await apiClient.get(
+      `${API_BASE}/post?public=true&lid=${decodeUserData()?.lid}`
+    );
 
     return response.data as Post[];
   } catch (error) {
@@ -62,7 +71,7 @@ const fetchPosts = async () => {
   try {
     const apiUri = `${API_BASE}/post?deptId=${
       decodeUserData()?.deptId
-    }&userIdComment=${decodeUserData()?.sub}`;
+    }&userIdComment=${decodeUserData()?.sub}&lid=${decodeUserData()?.lid}`;
 
     const response = await apiClient.get(apiUri, {
       headers: {
@@ -93,7 +102,22 @@ const fetchUserUnreads = async () => {
   }
 };
 
+const fetchAllLevels = async () => {
+  try {
+    const response = await apiClient.get(`${API_BASE}/level`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+      },
+    });
+
+    return response.data as Level[];
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export {
+  fetchAllLevels,
   fetchUserUnreads,
   decodeUserData,
   checkDept,
