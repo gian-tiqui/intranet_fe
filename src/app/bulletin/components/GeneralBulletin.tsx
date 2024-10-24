@@ -7,7 +7,7 @@ import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
 import usePostUriStore from "@/app/store/usePostUri";
 import { Post } from "@/app/types/types";
-import { fetchPosts } from "@/app/functions/functions";
+import { decodeUserData, fetchPosts } from "@/app/functions/functions";
 import { useQuery } from "@tanstack/react-query";
 import PostSkeleton from "@/app/posts/components/PostSkeleton";
 import NoPosts from "./NoPosts";
@@ -30,7 +30,9 @@ const GeneralBulletin = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const apiUri = `${API_BASE}/post?public=true&search=${uriPost}`;
+        const apiUri = `${API_BASE}/post?public=true&search=${uriPost}&lid=${
+          decodeUserData()?.lid
+        }`;
 
         const response = await apiClient.get(apiUri, {
           headers: {
