@@ -32,7 +32,9 @@ const DepartmentsBulletin = () => {
       try {
         const apiUri = `${API_BASE}/post?deptId=${
           decodeUserData()?.deptId
-        }&userIdComment=${decodeUserData()?.sub}&search=${uriPost}`;
+        }&userIdComment=${decodeUserData()?.sub}&search=${uriPost}&lid=${
+          decodeUserData()?.lid
+        }`;
 
         const response = await apiClient.get(apiUri, {
           headers: {
