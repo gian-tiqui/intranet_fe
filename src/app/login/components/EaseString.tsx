@@ -10,7 +10,7 @@ interface Props {
 
 const EaseString: React.FC<Props> = ({ word, size }) => {
   return (
-    <div className="flex md:gap-2 ">
+    <div className="flex md:gap-2 text-xl font-bold">
       {word.toLowerCase() === "intranet" && (
         <motion.div
           initial={{ scale: 0 }}

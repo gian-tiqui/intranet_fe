@@ -93,15 +93,16 @@ const Form = () => {
   };
 
   return (
-    <motion.form
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      transition={{ duration: 0.5 }}
+    <form
       onSubmit={handleSubmit(handleLogin)}
-      className="p-6 max-w-80 border-0 rounded-3xl bg-white border-neutral-300 dark:bg-neutral-900 shadow dark:border-black"
+      className="bg-white bg-opacity-50 p-6 max-w-96 w-96 border-0 flex flex-col justify-center relative h-screen border-neutral-300 dark:bg-neutral-900 dark:bg-opacity-50 shadow dark:border-black"
     >
       <div className="flex flex-col items-center">
-        <EaseString size="" word="Login" />
+        <div className="flex gap-1 mb-3">
+          {"Welcome back!".split(" ").map((word, index) => (
+            <EaseString size="" word={word} key={index} />
+          ))}
+        </div>
         <div className="flex gap-1 mb-16">
           {"Sign in to your account".split(" ").map((word, index) => (
             <EaseString size="" word={word} key={index} />
@@ -166,7 +167,7 @@ const Form = () => {
           transition={{ duration: 1, delay: 0.7 }}
           className={`${
             loading && "opacity-80"
-          } mb-2 rounded-2xl justify-center flex gap-2 items-center h-10 text-neutral-200 border border-neutral-300 font-bold bg-neutral-800 dark:bg-neutral-200 dark:text-neutral-800 hover:bg-neutral-900`}
+          } mb-2 rounded-2xl justify-center flex gap-2 items-center h-10 text-neutral-200 border border-neutral-900 dark:border-neutral-300 font-bold bg-neutral-800 dark:bg-neutral-200 dark:text-neutral-800 hover:bg-neutral-900`}
         >
           {loading && (
             <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
@@ -174,7 +175,7 @@ const Form = () => {
           Login
         </motion.button>
       </div>
-    </motion.form>
+    </form>
   );
 };
 
