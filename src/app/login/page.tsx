@@ -1,33 +1,24 @@
 import React from "react";
 import Form from "./components/Form";
 import LoginTemplate from "./template/LoginTemplate";
-import Appbar from "./components/Appbar";
-import { AnimatePresence } from "framer-motion";
-import ChangingContainer from "./components/ChangingContainer";
-import Footer from "./components/Footer";
+import bg from "../assets/Hospital Facade Edited 2.png";
+import Image from "next/image";
 import SpinningLogo from "./components/SpinningLogo";
 
 const Login = () => {
   return (
     <div className="relative">
       <SpinningLogo />
-
       <LoginTemplate>
-        <AnimatePresence>
-          <Appbar key={"app-bar"} />
-          <div
-            className="grid w-full pt-28 md:pt-0 md:grid-cols-2 md:h-screen"
-            key={"login-grid"}
-          >
-            <div className="grid place-content-center">
-              <ChangingContainer />
-            </div>
-            <div className="grid place-content-center">
-              <Form />
-            </div>
-          </div>
-          <Footer key={"footer"} />
-        </AnimatePresence>
+        <div className="flex md:justify-end">
+          <Image
+            src={bg}
+            alt="Background"
+            fill
+            className="z-[-1] bg-top bg-no-repeat"
+          />
+          <Form />
+        </div>
       </LoginTemplate>
     </div>
   );

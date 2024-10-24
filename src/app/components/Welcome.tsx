@@ -1,6 +1,7 @@
 import React from "react";
 import MotionTemplate from "./animation/MotionTemplate";
 import GlobalSearch from "./GlobalSearch";
+import Link from "next/link";
 
 const Welcome = () => {
   return (
@@ -12,14 +13,24 @@ const Welcome = () => {
         </p>
         <GlobalSearch />
         <div className="flex justify-center flex-wrap p-4 w-full gap-2">
-          {Array(7)
-            .fill(0)
-            .map((_, index) => (
-              <div
-                key={index}
-                className="w-36 h-10 bg-white dark:bg-neutral-900 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-neutral-700"
-              ></div>
-            ))}
+          <Link
+            href={"/bulletin"}
+            className="px-3 h-10 grid place-content-center bg-white dark:bg-neutral-900 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-neutral-700"
+          >
+            General Bulletin
+          </Link>
+          <Link
+            href={"/department-memos"}
+            className="px-3 h-10 grid place-content-center bg-white dark:bg-neutral-900 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-neutral-700"
+          >
+            Department Bulletin
+          </Link>
+          <Link
+            href={"/history"}
+            className="px-3 h-10 grid place-content-center bg-white dark:bg-neutral-900 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-neutral-700"
+          >
+            View History
+          </Link>
         </div>
       </div>
     </MotionTemplate>
