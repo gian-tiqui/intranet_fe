@@ -3,10 +3,13 @@ import apiClient from "@/app/http-common/apiUrl";
 import useAdminHiderStore from "@/app/store/adminOpacitor";
 import deleteUserStore from "@/app/store/deleteUserModal";
 import userIdStore from "@/app/store/userId";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "react-toastify";
 
 const DeleteModal = () => {
+  const router = useRouter();
+
   // User ID global variable.
   const { selectedId } = userIdStore();
 
@@ -33,6 +36,7 @@ const DeleteModal = () => {
         toast(response.data.message, { type: "success" });
         setShowDeleteModal(false);
         setAShown(false);
+        router.push("/");
       }
     } catch (error) {
       console.error(error);

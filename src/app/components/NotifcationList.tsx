@@ -33,10 +33,13 @@ const NotifcationList = () => {
           </>
         )}
         {isError && <p>Error loading notifications</p>}
-        {notifications &&
+        {notifications && notifications.length > 0 ? (
           notifications?.map((notif, index) => (
             <Notification notification={notif} key={index} />
-          ))}
+          ))
+        ) : (
+          <p className="text-sm mx-5 text-center">You have no notifications.</p>
+        )}
       </div>
     </div>
   );

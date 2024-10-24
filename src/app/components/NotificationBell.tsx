@@ -40,11 +40,11 @@ const NotificationBell = () => {
   return (
     <div className="relative">
       <div
-        className="relative h-10 w-10 cursor-pointer"
+        className="relative h-10 w-10 cursor-pointer grid place-content-center hover:bg-neutral-300 rounded dark:hover:bg-neutral-700"
         onClick={handleOpenNotifs}
       >
-        <Icon icon={"mdi:bell-outline"} className="h-8 w-8" />
-        <p className="absolute bottom-0 right-0 px-2 py-1 font-extrabold bg-black dark:bg-white text-white rounded-full dark:text-black text-[10px]">
+        <Icon icon={"mdi:bell-outline"} className="h-7 w-7" />
+        <p className="absolute bottom-0 right-0 h-4 w-4 grid place-content-center font-extrabold bg-black dark:bg-white text-white rounded-full dark:text-black text-[10px]">
           {isLoading ? (
             <Icon icon={"line-md:loading-loop"} />
           ) : (

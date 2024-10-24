@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
-import { fetchPublicPosts } from "../functions/functions";
+import { decodeUserData, fetchPublicPosts } from "../functions/functions";
 import { Post } from "../types/types";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import apiClient from "../http-common/apiUrl";
@@ -40,13 +40,17 @@ const GlobalSearch = () => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const apiUri = `${API_BASE}/post?public=true&search=${debouncedSearch}`;
+        const apiUri = `${API_BASE}/post?public=true&search=${debouncedSearch}&lid=${
+          decodeUserData()?.lid
+        }`;
 
         const response = await apiClient.get(apiUri, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
           },
         });
+
+        console.log(response.data);
 
         setPublicPosts(response.data);
       } catch (error) {
@@ -91,7 +95,7 @@ const GlobalSearch = () => {
       >
         <Icon icon={"line-md:search-twotone"} className="h-6 w-6" />
         <input
-          placeholder="Search a memo"
+          placeholder="Search something..."
           className="bg-inherit w-full outline-none"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
