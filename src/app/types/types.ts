@@ -35,6 +35,7 @@ type Post = {
   edited: boolean;
   department: Department;
   public: boolean;
+  lid: number;
 };
 
 type GroupedPosts = {
@@ -147,9 +148,18 @@ type Decoder = {
   email: string;
   deptId: number;
   departmentCode: string;
+  lid: number;
+};
+
+type Level = {
+  lid: number;
+  level: string;
+  posts?: Post[];
+  users?: User[];
 };
 
 export type {
+  Level,
   Decoder,
   UnreadPost,
   DepartmentMonitoring,

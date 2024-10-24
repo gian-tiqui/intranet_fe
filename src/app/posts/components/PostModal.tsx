@@ -1,7 +1,7 @@
 "use client";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import useDepartments from "@/app/custom-hooks/departments";
-import { decodeUserData } from "@/app/functions/functions";
+import { decodeUserData, fetchAllLevels } from "@/app/functions/functions";
 import apiClient from "@/app/http-common/apiUrl";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
 import useShowPostStore from "@/app/store/showPostStore";
@@ -11,6 +11,8 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { pdfjs } from "react-pdf";
+import { Level } from "@/app/types/types";
+import { useQuery } from "@tanstack/react-query";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -24,6 +26,7 @@ interface FormFields {
   memo?: FileList;
   title?: string;
   public: string;
+  lid: number;
 }
 
 interface Props {
@@ -41,6 +44,18 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const toastClass =
     "bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white";
   const [posting, setPosting] = useState<boolean>(false);
+
+  const [levels, setLevels] = useState<Level[]>([]);
+  const { data, isError, error } = useQuery({
+    queryKey: ["level"],
+    queryFn: fetchAllLevels,
+  });
+
+  useEffect(() => {
+    if (data) setLevels(data);
+  }, [data]);
+
+  if (isError) console.error(error);
 
   const convertPdfToImage = async (pdfFile: File): Promise<File> => {
     try {
@@ -149,13 +164,14 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       formData.append("userId", String(data.userId));
       formData.append("deptId", String(data.deptId));
       formData.append("public", data.public);
+      formData.append("lid", String(data.lid));
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
 
       if (convertedFile) {
-        formData.append("memo", convertedFile);
+        formData.append("newMemo", convertedFile);
       } else if (data.memo && data.memo[0]) {
-        formData.append("memo", data.memo[0]);
+        formData.append("newMemo", data.memo[0]);
       }
 
       apiClient
@@ -307,6 +323,22 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 >
                   {department.departmentName[0].toUpperCase() +
                     department.departmentName.substring(1).toLowerCase()}
+                </option>
+              ))}
+            </select>
+
+            <select
+              {...register("lid", { required: true })}
+              className="w-full bg-inherit border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none"
+            >
+              <option value={""}>Select employee level</option>
+              {levels.map((level) => (
+                <option
+                  value={level.lid}
+                  className="w-full border rounded-xl h-10 bg-white dark:bg-neutral-900"
+                  key={level.lid}
+                >
+                  {level.level[0].toUpperCase() + level.level.substring(1)}
                 </option>
               ))}
             </select>

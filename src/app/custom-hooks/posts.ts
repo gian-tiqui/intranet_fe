@@ -12,7 +12,7 @@ const usePosts = () => {
       try {
         const apiUri = `${API_BASE}/post?deptId=${
           decodeUserData()?.deptId
-        }&userIdComment=${decodeUserData()?.sub}`;
+        }&userIdComment=${decodeUserData()?.sub}&lid=4`;
 
         const response = await apiClient.get(apiUri, {
           headers: {

@@ -325,23 +325,31 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
             {message || post?.message}
           </div>
         )}
-        <Image
-          className="h-96 w-full bg-neutral-100 mb-6"
-          src={imageUrl || "https://nextjs.org/icons/next.svg"}
-          alt="Post image"
-          width={600}
-          height={400}
-          layout="responsive"
-          priority
-        />
-        <div className="flex items-center w-full justify-between gap-1 rounded-lg p-2 mb-2  cursor-pointer ">
-          <div
-            onClick={handleDownloadImage}
-            className="flex hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-2 items-center gap-1 rounded"
-          >
-            <Icon icon={"akar-icons:download"} />
-            <span className="text-sm">Download Image as PDF</span>
-          </div>
+        {imageUrl && (
+          <Image
+            className="h-96 w-full bg-neutral-100 mb-6"
+            src={imageUrl}
+            alt="Post image"
+            width={600}
+            height={400}
+            layout="responsive"
+            priority
+          />
+        )}
+        <div
+          className={`flex items-center w-full ${
+            imageUrl ? "justify-between" : "justify-end"
+          } gap-1 rounded-lg p-2 mb-2  cursor-pointer `}
+        >
+          {imageUrl && (
+            <div
+              onClick={handleDownloadImage}
+              className="flex hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-2 items-center gap-1 rounded"
+            >
+              <Icon icon={"akar-icons:download"} />
+              <span className="text-sm">Download Image as PDF</span>
+            </div>
+          )}
           {decodeUserData()?.deptId === post?.deptId && (
             <div
               onClick={handleReadClick}

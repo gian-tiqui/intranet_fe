@@ -58,7 +58,7 @@ const DepartmentUsers: React.FC<Props> = ({
           ))}
         </select>
       </div>
-      <section className="grid grid-cols-1 gap-4 bg-white dark:bg-neutral-900 h-96 py-3 px-2 rounded-lg overflow-auto">
+      <section className="flex flex-col gap-2 bg-white dark:bg-neutral-900 h-96 py-3 px-2 rounded-lg overflow-auto">
         {filteredUsers && filteredUsers.length > 0 ? (
           <>
             {filteredUsers.map((user) => (
