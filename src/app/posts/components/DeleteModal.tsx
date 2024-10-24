@@ -25,7 +25,7 @@ const DeleteModal: React.FC<Props> = ({ postId, setShowDeleteModal }) => {
           className: toastClass,
         });
 
-        router.push("/posts");
+        router.push("/bulletin");
       } catch (error) {
         console.error(error);
       }

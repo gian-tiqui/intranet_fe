@@ -209,6 +209,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
           },
         })
         .then((response) => {
+          console.log(response.data.post.imageLocation);
           toast(response.data.message, {
             type: "success",
             className: toastClass,

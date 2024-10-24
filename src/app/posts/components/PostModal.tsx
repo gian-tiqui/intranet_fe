@@ -169,9 +169,9 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       if (data.message) formData.append("message", data.message);
 
       if (convertedFile) {
-        formData.append("newMemo", convertedFile);
+        formData.append("memo", convertedFile);
       } else if (data.memo && data.memo[0]) {
-        formData.append("newMemo", data.memo[0]);
+        formData.append("memo", data.memo[0]);
       }
 
       apiClient
