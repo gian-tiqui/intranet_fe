@@ -33,8 +33,13 @@ const UnseenList = () => {
           </>
         )}
         {isError && <p>Error loading notifications</p>}
-        {unreads &&
-          unreads?.map((item, index) => <UnseenItem key={index} item={item} />)}
+        {unreads && unreads.length > 0 ? (
+          unreads?.map((item, index) => <UnseenItem key={index} item={item} />)
+        ) : (
+          <p className="text-sm mx-5 text-center">
+            You have read all the posts for your departments.
+          </p>
+        )}
       </div>
     </div>
   );
