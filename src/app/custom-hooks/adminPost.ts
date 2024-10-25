@@ -8,7 +8,7 @@ const useAdminPosts = () => {
 
   useEffect(() => {
     const fetchAllPosts = async () => {
-      const response = await apiClient.get(`${API_BASE}/post`, {
+      const response = await apiClient.get(`${API_BASE}/post/admin`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
         },

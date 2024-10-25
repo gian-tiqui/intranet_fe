@@ -105,7 +105,7 @@ const GlobalSearch = () => {
       {showSuggestions &&
         (!isLoading ? (
           <div className="p-2 bg-white dark:bg-neutral-900 absolute w-[90%] mt-14 rounded-b-xl h-52 overflow-y-auto flex flex-col gap-1">
-            {publicPosts &&
+            {publicPosts && publicPosts.length > 0 ? (
               publicPosts.map((post) => (
                 <div
                   key={post.pid}
@@ -117,7 +117,12 @@ const GlobalSearch = () => {
                     <span className="truncate">{post.message}</span>
                   </p>
                 </div>
-              ))}
+              ))
+            ) : (
+              <div className="grid place-content-center h-full">
+                <p className="text-center">No results to show.</p>
+              </div>
+            )}
           </div>
         ) : (
           <div className="p-2 bg-white dark:bg-neutral-900 absolute w-[90%] mt-14 rounded-b-xl h-52 overflow-y-auto grid gap-1">

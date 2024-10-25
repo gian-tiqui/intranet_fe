@@ -95,7 +95,7 @@ const Form = () => {
   return (
     <form
       onSubmit={handleSubmit(handleLogin)}
-      className="bg-white bg-opacity-50 p-6 max-w-96 w-96 border-0 flex flex-col justify-center relative h-screen border-neutral-300 dark:bg-neutral-900 dark:bg-opacity-50 shadow dark:border-black"
+      className="bg-white bg-opacity-50 p-6 max-w-96 w-96 border-0 flex flex-col justify-center relative h-screen border-neutral-300 dark:bg-neutral-900 dark:bg-opacity-50 dark:border-black"
     >
       <div className="flex flex-col items-center">
         <div className="flex gap-1 mb-3">

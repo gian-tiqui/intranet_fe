@@ -103,6 +103,14 @@ const Aside: React.FC<Props> = ({
               />
               <p className="w-full text-md">Department Bulletin</p>
             </div>
+
+            <div
+              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              onClick={() => router.push("/for-you")}
+            >
+              <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
+              <p className="w-full text-md">For You</p>
+            </div>
           </div>
           <div className="flex flex-col">
             <div
@@ -140,7 +148,7 @@ const Aside: React.FC<Props> = ({
         animate="open"
         exit="collapsed"
         variants={variants}
-        className="flex md:hidden absolute z-50 flex-col w-full bg-white dark:bg-neutral-900 shadow h-full p-1"
+        className="flex md:hidden absolute z-50 flex-col w-full bg-white dark:bg-neutral-900 shadow h-full p-1 rounded-e-3xl"
       >
         <div
           id="buttons"
@@ -168,13 +176,39 @@ const Aside: React.FC<Props> = ({
         {/* THIS CONTAINS YOUR POSTS/MEMOS */}
         <div className="overflow-auto flex-grow mb-3">
           <div id="menu-buttons" className="px-3 mt-2 mb-6">
-            <div className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-              <Icon icon="ph:hospital-fill" className="h-5 w-5" />
+            <div
+              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              onClick={() => router.push("/")}
+            >
+              <Icon icon={"ph:hospital"} className="h-5 w-5" />
               <p className="w-full text-md">Intranet</p>
             </div>
-            <div className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-              <Icon icon="fluent:grid-circles-24-regular" className="h-5 w-5" />
-              <p className="w-full text-md">Explore Intranet</p>
+
+            <div
+              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              onClick={() => router.push("/bulletin")}
+            >
+              <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
+              <p className="w-full text-md">General Bulletin</p>
+            </div>
+
+            <div
+              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              onClick={() => router.push("/departments-memo")}
+            >
+              <Icon
+                icon={"arcticons:emoji-department-store"}
+                className="h-5 w-5"
+              />
+              <p className="w-full text-md">Department Bulletin</p>
+            </div>
+
+            <div
+              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              onClick={() => router.push("/for-you")}
+            >
+              <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
+              <p className="w-full text-md">For You</p>
             </div>
           </div>
           <div className="flex flex-col">

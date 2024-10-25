@@ -1,6 +1,8 @@
 "use client";
 import React, { ReactNode, useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import bg from "../../assets/Hospital Facade Edited 2.png";
 
 const First = () => {
   return (
@@ -16,7 +18,7 @@ const First = () => {
         {"Welcome to Intranet".split("").map((letter, index) => (
           <motion.h1
             key={index}
-            className="text-2xl md:text-4xl font-semibold inline-block dark:text-white"
+            className="text-2xl md:text-3xl font-semibold inline-block dark:text-white"
             initial={{ scale: 0 }}
             animate={{ rotateY: 360, scale: 1 }}
             transition={{
@@ -83,7 +85,7 @@ const First = () => {
         </motion.h1>
 
         <motion.h1
-          className="font-semibold"
+          className="font-semibold mt-10"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{
@@ -187,8 +189,16 @@ const ChangingContainer = () => {
   }, [index]);
 
   return (
-    <div className="mx-auto h-[500px] px-4 md:h-auto md:px-0">
-      {selectedComp}
+    <div className="hidden md:grid place-content-center h-[500px] px-4 md:h-auto md:px-0 w-full bg-white/0">
+      <Image
+        src={bg}
+        alt="Background"
+        fill
+        className="z-[-1] bg-top bg-no-repeat"
+      />
+      <div className="p-10 bg-white/80 rounded-2xl w-full h-full">
+        {selectedComp}
+      </div>
     </div>
   );
 };

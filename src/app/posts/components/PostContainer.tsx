@@ -161,7 +161,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     if (post) {
       if (!post.public && decodeUserData()?.deptId !== post.deptId) {
         toast(
-          "You are trying to view a private post that is not for your department. :)",
+          "You are trying to view a private post that is not for your department.",
           { type: "error", className: toastClass }
         );
         router.push("/bulletin");
