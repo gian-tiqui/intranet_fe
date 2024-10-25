@@ -12,6 +12,8 @@ const Login = () => {
       <SpinningLogo />
       <LoginTemplate>
         <div className="flex">
+          <div className="bg-white hidden md:block bg-opacity-50 p-6 max-w-96 w-96 border-0 relative h-screen border-neutral-300 dark:bg-neutral-900 dark:bg-opacity-50 dark:border-black"></div>
+
           <Image
             src={bg}
             alt="Background"

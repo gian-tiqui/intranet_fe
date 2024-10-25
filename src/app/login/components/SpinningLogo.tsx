@@ -16,7 +16,7 @@ const SpinningLogo = () => {
         repeat: Infinity,
         ease: "linear",
       }}
-      className="absolute top-5 left-5 flex gap-2"
+      className="absolute top-5 z-50 left-5 flex gap-2"
     >
       <Image
         src={wmcLogo}
