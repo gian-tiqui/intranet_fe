@@ -31,6 +31,13 @@ const Welcome = () => {
           >
             View History
           </Link>
+
+          <Link
+            href={"/for-you"}
+            className="px-3 h-10 grid place-content-center bg-white dark:bg-neutral-900 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-neutral-700"
+          >
+            Posts for you
+          </Link>
         </div>
       </div>
     </MotionTemplate>

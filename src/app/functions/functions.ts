@@ -116,7 +116,22 @@ const fetchAllLevels = async () => {
   }
 };
 
+const fetchPostsByLevel = async () => {
+  try {
+    const response = await apiClient.get(
+      `${API_BASE}/post/level/${decodeUserData()?.lid}?deptId=${
+        decodeUserData()?.deptId
+      }`
+    );
+
+    return response.data as Post[];
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export {
+  fetchPostsByLevel,
   fetchAllLevels,
   fetchUserUnreads,
   decodeUserData,

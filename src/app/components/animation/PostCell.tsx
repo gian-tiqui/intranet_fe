@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface PostCellProps {
   post: Post;
@@ -18,12 +19,22 @@ const PostCell: React.FC<PostCellProps> = ({ post, first }) => {
     const fetchImage = async () => {
       const accessToken = localStorage.getItem(INTRANET);
       if (accessToken && post?.imageLocation) {
-        setImageUrl(`${API_BASE}/uploads/${post.imageLocation}`);
+        const imageUri = `${API_BASE}/uploads/${post.imageLocation}`;
+        console.log(imageUri);
+        setImageUrl(imageUri);
       }
     };
 
     fetchImage();
   }, [post]);
+
+  if (!post) {
+    return (
+      <div className="w-full h-full grid place-content-center">
+        <p className="font-bold text-lg">No post to show</p>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -47,6 +58,13 @@ const PostCell: React.FC<PostCellProps> = ({ post, first }) => {
           <p className="font-bold">Latest</p>
         </div>
       )}
+      <Image
+        src={imageUrl}
+        height={1000}
+        width={1000}
+        className="h-full w-full"
+        alt={"title"}
+      />
       <div
         className={`bg-opacity-75 px-4 flex items-center absolute bottom-5 left-0 bg-black w-2/3 ${
           first ? "h-20" : "h-10"

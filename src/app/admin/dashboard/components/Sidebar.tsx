@@ -24,7 +24,7 @@ import DeleteModal from "./DeleteModal";
 import useDeletePostStore from "@/app/store/deletePost";
 import DeletePostModal from "./DeletePostModal";
 import { motion } from "framer-motion";
-import Notifications from "../pages/Notifications";
+// import Notifications from "../pages/Notifications";
 
 const Sidebar = () => {
   const [selectedComp, setSelectedComp] = useState<ReactNode>(<Graphs />);
@@ -94,11 +94,11 @@ const Sidebar = () => {
       component: <Replies />,
       icon: "mingcute:comment-line",
     },
-    {
-      name: "Notifications",
-      component: <Notifications />,
-      icon: "material-symbols:notifications-outline",
-    },
+    // {
+    //   name: "Notifications",
+    //   component: <Notifications />,
+    //   icon: "material-symbols:notifications-outline",
+    // },
   ];
 
   const handleHiderClicked = () => {
