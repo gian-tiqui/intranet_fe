@@ -1,7 +1,7 @@
 "use client";
 import { fetchPosts, fetchPublicPosts } from "@/app/functions/functions";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import LatestPublicMemo from "./LatestPublicMemo";
 import DepartmentMemos from "./DepartmentMemos";
 import PostGridSkeleton from "./PostGridSkeleton";
@@ -12,6 +12,12 @@ import { INTRANET } from "../bindings/binding";
 import EaseString from "../login/components/EaseString";
 
 const Grid = () => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const {
     data: _allPosts,
     isLoading,
@@ -36,10 +42,12 @@ const Grid = () => {
     refetchOnMount: false,
   });
 
+  if (!isMounted) return null;
+
   if (!Cookies.get(INTRANET))
     return (
       <div className="w-full h-screen grid place-content-center">
-        <EaseString size="text-xl" word="Welcome to Intranet" />
+        <EaseString size="text-xl" word="Welcome" />
       </div>
     );
 

@@ -20,7 +20,6 @@ const PostCell: React.FC<PostCellProps> = ({ post, first }) => {
       const accessToken = localStorage.getItem(INTRANET);
       if (accessToken && post?.imageLocation) {
         const imageUri = `${API_BASE}/uploads/${post.imageLocation}`;
-        console.log(imageUri);
         setImageUrl(imageUri);
       }
     };
