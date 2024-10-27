@@ -5,7 +5,7 @@ import NoPosts from "@/app/posts/components/NoPosts";
 import PostContainer from "@/app/posts/components/PostContainer";
 import PostSkeleton from "@/app/posts/components/PostSkeleton";
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const ForYou = () => {
   const { data, isError, isLoading, error } = useQuery({
@@ -15,12 +15,6 @@ const ForYou = () => {
   const [maxNum, setMaxNum] = useState<number>(3);
 
   if (isError) console.error(error);
-
-  useEffect(() => {
-    if (data) {
-      console.log(data);
-    }
-  }, [data]);
 
   return (
     <div>

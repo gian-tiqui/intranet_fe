@@ -5,11 +5,15 @@ import React, { useEffect, useState } from "react";
 import useShowPostStore from "../store/showPostStore";
 import useShowUserModalStore from "../store/showUserModal";
 import UserButton from "./UserButton";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import PostList from "../posts/components/PostList";
 import useTokenStore from "../store/tokenStore";
-import { INTRANET } from "../bindings/binding";
-import { checkDept } from "../functions/functions";
+import { API_BASE, INTRANET } from "../bindings/binding";
+import { checkDept, decodeUserData } from "../functions/functions";
+import usePostIdStore from "../store/postId";
+import apiClient from "../http-common/apiUrl";
+import { toast } from "react-toastify";
+import { toastClass } from "../tailwind-classes/tw_classes";
 
 interface Props {
   variants?: Variants;
@@ -26,10 +30,28 @@ const Aside: React.FC<Props> = ({
 }) => {
   const { setVisible } = useShowPostStore();
   const router = useRouter();
+  const pathname = usePathname();
   const { uVisible, setUVisible } = useShowUserModalStore();
   const { setToken } = useTokenStore();
   const [editVisible, setEditVisible] = useState<boolean>(true);
   const [selectedVis, setSelectedVis] = useState<string>("dept");
+  const { postId } = usePostIdStore();
+  const [read, setRead] = useState<boolean>(false);
+
+  const fetchReadStatus = async () => {
+    try {
+      const response = await apiClient.get(
+        `${API_BASE}/monitoring/read-status?userId=${
+          decodeUserData()?.sub
+        }&postId=${postId}`
+      );
+
+      setRead(response.status === 200);
+    } catch (error) {
+      const { message } = error as { message: string };
+      toast(message, { type: "error", className: toastClass });
+    }
+  };
 
   useEffect(() => {
     setToken(localStorage.getItem(INTRANET) || "");
@@ -40,6 +62,45 @@ const Aside: React.FC<Props> = ({
       setEditVisible(false);
     }
   }, []);
+
+  const handleIntranetClicked = async () => {
+    fetchReadStatus();
+    if (!pathname.includes("/posts/")) return;
+    console.log(read);
+    if (!read) {
+      console.log("You have not read the post yet.");
+      return;
+    }
+
+    // if (confirm("leave page?")) router.push("/");
+  };
+
+  const handleBulletinClicked = async () => {
+    if (!pathname.includes("/posts/")) return;
+    if (!read) {
+      console.log("You have not read the post yet.");
+      return;
+    }
+    if (confirm("leave page?")) router.push("/bulletin");
+  };
+
+  const handleDepartmentBulletinClicked = async () => {
+    if (!pathname.includes("/posts/")) return;
+    if (!read) {
+      console.log("You have not read the post yet.");
+      return;
+    }
+    if (confirm("leave page?")) router.push("/departments-memo");
+  };
+
+  const handleForYouClicked = async () => {
+    if (!pathname.includes("/posts/")) return;
+    if (!read) {
+      console.log("You have not read the post yet.");
+      return;
+    }
+    if (confirm("leave page?")) router.push("/for-you");
+  };
 
   return (
     <>
@@ -79,7 +140,7 @@ const Aside: React.FC<Props> = ({
           <div id="menu-buttons" className="px-3 mt-2 mb-6">
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={() => router.push("/")}
+              onClick={handleIntranetClicked}
             >
               <Icon icon={"ph:hospital"} className="h-5 w-5" />
               <p className="w-full text-md">Intranet</p>
@@ -87,7 +148,7 @@ const Aside: React.FC<Props> = ({
 
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={() => router.push("/bulletin")}
+              onClick={handleBulletinClicked}
             >
               <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
               <p className="w-full text-md">General Bulletin</p>
@@ -95,7 +156,7 @@ const Aside: React.FC<Props> = ({
 
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={() => router.push("/departments-memo")}
+              onClick={handleDepartmentBulletinClicked}
             >
               <Icon
                 icon={"arcticons:emoji-department-store"}
@@ -106,7 +167,7 @@ const Aside: React.FC<Props> = ({
 
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={() => router.push("/for-you")}
+              onClick={handleForYouClicked}
             >
               <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
               <p className="w-full text-md">For You</p>
@@ -178,7 +239,7 @@ const Aside: React.FC<Props> = ({
           <div id="menu-buttons" className="px-3 mt-2 mb-6">
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={() => router.push("/")}
+              onClick={handleIntranetClicked}
             >
               <Icon icon={"ph:hospital"} className="h-5 w-5" />
               <p className="w-full text-md">Intranet</p>
@@ -186,7 +247,7 @@ const Aside: React.FC<Props> = ({
 
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={() => router.push("/bulletin")}
+              onClick={handleBulletinClicked}
             >
               <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
               <p className="w-full text-md">General Bulletin</p>
@@ -194,7 +255,7 @@ const Aside: React.FC<Props> = ({
 
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={() => router.push("/departments-memo")}
+              onClick={handleDepartmentBulletinClicked}
             >
               <Icon
                 icon={"arcticons:emoji-department-store"}
@@ -205,7 +266,7 @@ const Aside: React.FC<Props> = ({
 
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={() => router.push("/for-you")}
+              onClick={handleForYouClicked}
             >
               <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
               <p className="w-full text-md">For You</p>

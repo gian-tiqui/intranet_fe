@@ -43,6 +43,27 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const [message] = useState<string>("");
   const [extracting] = useState<boolean>(false);
   const { setSetComments, setThisComments } = useSetCommentsStore();
+  const [isRead, setIsRead] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchReadStatus = async () => {
+      try {
+        const response = await apiClient.get(
+          `${API_BASE}/monitoring/read-status?userId=${
+            decodeUserData()?.sub
+          }&postId=${post?.pid}`
+        );
+        setIsRead(response.status === 200);
+      } catch (error) {
+        console.log(error);
+        setIsRead(false);
+      }
+    };
+
+    if (post) {
+      fetchReadStatus();
+    }
+  }, [post]);
 
   useEffect(() => {
     if (setComments) {
@@ -50,15 +71,23 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     }
   }, [setComments, setSetComments]);
 
+  useEffect(() => {
+    if (post) setPostId(post?.pid);
+  }, [post, setPostId]);
+
   const handleReadClick = async () => {
     try {
-      await apiClient.post(`${API_BASE}/post-reader`, {
+      const response = await apiClient.post(`${API_BASE}/post-reader`, {
         userId: decodeUserData()?.sub,
         postId: id,
         headers: {
           Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
         },
       });
+
+      if (response.status === 201) {
+        setIsRead(true);
+      }
     } catch (error) {
       console.error(error);
       toast("You have read the post already.", {
@@ -178,29 +207,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     event.stopPropagation();
   };
 
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      const confirmationMessage = "Are you sure you want to leave this page?";
-      e.returnValue = confirmationMessage;
-      return confirmationMessage;
-    };
-
-    const handleLinkClick = (e: MouseEvent) => {
-      if (!confirm("Are you sure you want to leave this page?")) {
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    document.addEventListener("click", handleLinkClick);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      document.removeEventListener("click", handleLinkClick);
-    };
-  }, []);
-
   const handleDownloadImage = async () => {
     if (!imageUrl) return;
 
@@ -253,7 +259,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
 
       <div
         onClick={generalPost ? handleClick : undefined}
-        className={`${generalPost && "cursor-pointer"}`}
+        className={`ignore-click ${generalPost && "cursor-pointer"}`}
       >
         <div className="flex items-start gap-2 mb-4 justify-between">
           <div className="flex gap-3 items-start">
@@ -362,12 +368,12 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
         <div
           className={`flex items-center w-full ${
             imageUrl ? "justify-between" : "justify-end"
-          } gap-1 rounded-lg p-2 mb-2  cursor-pointer `}
+          } gap-1 rounded-lg p-2 mb-2`}
         >
           {imageUrl && (
             <div
               onClick={handleDownloadImage}
-              className="flex hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-2 items-center gap-1 rounded"
+              className="flex hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-2 items-center gap-1 rounded  cursor-pointer "
             >
               <Icon icon={"akar-icons:download"} />
               <span className="text-sm">Download Image as PDF</span>
@@ -376,16 +382,19 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
           {decodeUserData()?.deptId === post?.deptId && (
             <div
               onClick={handleReadClick}
-              className={`hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-3 rounded flex items-center gap-1`}
+              className={`hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-3 rounded flex items-center gap-1  cursor-pointer `}
             >
-              <Icon
-                icon={"material-symbols-light:mark-email-read-outline"}
-                className="h-6 w-6"
-              />
-              <p className="text-sm">Read</p>
+              {isRead === false && (
+                <>
+                  <Icon
+                    icon={"material-symbols-light:mark-email-read-outline"}
+                    className="h-6 w-6"
+                  />
+                  <p className="text-sm">Read</p>
+                </>
+              )}
             </div>
-          )}{" "}
-          {}
+          )}
         </div>
       </div>
       <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-6" />
