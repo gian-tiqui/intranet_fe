@@ -178,6 +178,29 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     event.stopPropagation();
   };
 
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      const confirmationMessage = "Are you sure you want to leave this page?";
+      e.returnValue = confirmationMessage;
+      return confirmationMessage;
+    };
+
+    const handleLinkClick = (e: MouseEvent) => {
+      if (!confirm("Are you sure you want to leave this page?")) {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    document.addEventListener("click", handleLinkClick);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      document.removeEventListener("click", handleLinkClick);
+    };
+  }, []);
+
   const handleDownloadImage = async () => {
     if (!imageUrl) return;
 

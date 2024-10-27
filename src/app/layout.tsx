@@ -19,6 +19,7 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Intranet | WMC",
   description: "WMC | Intranet",
+  icons: ["westlake_logo_horizontal.jpg.png"],
 };
 
 export default function RootLayout({
