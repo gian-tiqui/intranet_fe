@@ -11,6 +11,7 @@ import { decodeUserData, fetchPosts } from "@/app/functions/functions";
 import { useQuery } from "@tanstack/react-query";
 import PostSkeleton from "@/app/posts/components/PostSkeleton";
 import NoPosts from "./NoPosts";
+import Shortcuts from "./Shortcuts";
 
 const GeneralBulletin = () => {
   const { setSearchBarHidden } = useHideSearchBarStore();
@@ -61,6 +62,7 @@ const GeneralBulletin = () => {
 
   return (
     <div>
+      <Shortcuts />
       {isLoading ? (
         <PostSkeleton />
       ) : (
@@ -86,6 +88,7 @@ const GeneralBulletin = () => {
           )}
         </>
       )}
+      <Shortcuts />
     </div>
   );
 };

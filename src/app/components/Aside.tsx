@@ -12,8 +12,7 @@ import { API_BASE, INTRANET } from "../bindings/binding";
 import { checkDept, decodeUserData } from "../functions/functions";
 import usePostIdStore from "../store/postId";
 import apiClient from "../http-common/apiUrl";
-import { toast } from "react-toastify";
-import { toastClass } from "../tailwind-classes/tw_classes";
+import useReadStore from "../store/readStore";
 
 interface Props {
   variants?: Variants;
@@ -36,7 +35,7 @@ const Aside: React.FC<Props> = ({
   const [editVisible, setEditVisible] = useState<boolean>(true);
   const [selectedVis, setSelectedVis] = useState<string>("dept");
   const { postId } = usePostIdStore();
-  const [read, setRead] = useState<boolean>(false);
+  const { isRead, setIsRead } = useReadStore();
 
   const fetchReadStatus = async () => {
     try {
@@ -46,10 +45,9 @@ const Aside: React.FC<Props> = ({
         }&postId=${postId}`
       );
 
-      setRead(response.status === 200);
+      setIsRead(response.data.message === "Read");
     } catch (error) {
-      const { message } = error as { message: string };
-      toast(message, { type: "error", className: toastClass });
+      console.log(error);
     }
   };
 
@@ -63,43 +61,48 @@ const Aside: React.FC<Props> = ({
     }
   }, []);
 
-  const handleIntranetClicked = async () => {
+  const handleIntranetClicked = () => {
     fetchReadStatus();
-    if (!pathname.includes("/posts/")) return;
-    console.log(read);
-    if (!read) {
-      console.log("You have not read the post yet.");
-      return;
-    }
-
-    // if (confirm("leave page?")) router.push("/");
+    if (pathname.includes("/posts/") && !isRead) {
+      if (confirm("You have not read the post yet, Leave?")) {
+        router.push("/");
+      } else {
+        return;
+      }
+    } else router.push("/");
   };
 
   const handleBulletinClicked = async () => {
-    if (!pathname.includes("/posts/")) return;
-    if (!read) {
-      console.log("You have not read the post yet.");
-      return;
-    }
-    if (confirm("leave page?")) router.push("/bulletin");
+    fetchReadStatus();
+    if (pathname.includes("/posts/") && !isRead) {
+      if (confirm("You have not read the post yet, Leave?")) {
+        router.push("/bulletin");
+      } else {
+        return;
+      }
+    } else router.push("/bulletin");
   };
 
   const handleDepartmentBulletinClicked = async () => {
-    if (!pathname.includes("/posts/")) return;
-    if (!read) {
-      console.log("You have not read the post yet.");
-      return;
-    }
-    if (confirm("leave page?")) router.push("/departments-memo");
+    fetchReadStatus();
+    if (pathname.includes("/posts/") && !isRead) {
+      if (confirm("You have not read the post yet, Leave?")) {
+        router.push("/departments-memo");
+      } else {
+        return;
+      }
+    } else router.push("/departments-memo");
   };
 
   const handleForYouClicked = async () => {
-    if (!pathname.includes("/posts/")) return;
-    if (!read) {
-      console.log("You have not read the post yet.");
-      return;
-    }
-    if (confirm("leave page?")) router.push("/for-you");
+    fetchReadStatus();
+    if (pathname.includes("/posts/") && !isRead) {
+      if (confirm("You have not read the post yet, Leave?")) {
+        router.push("/for-you");
+      } else {
+        return;
+      }
+    } else router.push("/for-you");
   };
 
   return (

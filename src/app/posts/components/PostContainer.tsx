@@ -23,6 +23,7 @@ import apiClient from "@/app/http-common/apiUrl";
 import { toast } from "react-toastify";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import useSetCommentsStore from "@/app/store/useCommentsStore";
+import useReadStore from "@/app/store/readStore";
 
 interface Props {
   id: number;
@@ -43,7 +44,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const [message] = useState<string>("");
   const [extracting] = useState<boolean>(false);
   const { setSetComments, setThisComments } = useSetCommentsStore();
-  const [isRead, setIsRead] = useState<boolean>(false);
+  const { isRead, setIsRead } = useReadStore();
 
   useEffect(() => {
     const fetchReadStatus = async () => {
@@ -53,7 +54,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
             decodeUserData()?.sub
           }&postId=${post?.pid}`
         );
-        setIsRead(response.status === 200);
+        setIsRead(response.data.message === "Read");
       } catch (error) {
         console.log(error);
         setIsRead(false);
@@ -63,7 +64,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     if (post) {
       fetchReadStatus();
     }
-  }, [post]);
+  }, [post, setIsRead]);
 
   useEffect(() => {
     if (setComments) {
@@ -72,7 +73,9 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   }, [setComments, setSetComments]);
 
   useEffect(() => {
-    if (post) setPostId(post?.pid);
+    if (post) {
+      setPostId(post?.pid);
+    }
   }, [post, setPostId]);
 
   const handleReadClick = async () => {
