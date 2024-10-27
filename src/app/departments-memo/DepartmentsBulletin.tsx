@@ -11,6 +11,7 @@ import apiClient from "../http-common/apiUrl";
 import { useQuery } from "@tanstack/react-query";
 import PostSkeleton from "../posts/components/PostSkeleton";
 import NoPosts from "../bulletin/components/NoPosts";
+import Shortcuts from "../bulletin/components/Shortcuts";
 
 const DepartmentsBulletin = () => {
   const { setSearchBarHidden } = useHideSearchBarStore();
@@ -63,6 +64,8 @@ const DepartmentsBulletin = () => {
 
   return (
     <div>
+      <Shortcuts />
+
       {isLoading ? (
         <PostSkeleton />
       ) : (
@@ -88,6 +91,7 @@ const DepartmentsBulletin = () => {
           )}
         </>
       )}
+      <Shortcuts />
     </div>
   );
 };
