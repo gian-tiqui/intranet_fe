@@ -20,7 +20,7 @@ const AuthListener = () => {
     const checkAuth = () => {
       if (!localStorage.getItem(INTRANET) && !Cookies.get(INTRANET)) {
         setHidden(false);
-        router.push("/login");
+        router.push("/welcome");
       } else {
         setHidden(true);
       }

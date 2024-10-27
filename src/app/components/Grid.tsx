@@ -6,7 +6,10 @@ import LatestPublicMemo from "./LatestPublicMemo";
 import DepartmentMemos from "./DepartmentMemos";
 import PostGridSkeleton from "./PostGridSkeleton";
 import PostGridSkeleton2 from "./PostGridSkeleton2";
+import Cookies from "js-cookie";
 import Welcome from "./Welcome";
+import { INTRANET } from "../bindings/binding";
+import EaseString from "../login/components/EaseString";
 
 const Grid = () => {
   const {
@@ -32,6 +35,13 @@ const Grid = () => {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
+
+  if (!Cookies.get(INTRANET))
+    return (
+      <div className="w-full h-screen grid place-content-center">
+        <EaseString size="text-xl" word="Welcome to Intranet" />
+      </div>
+    );
 
   if (isError) {
     console.log("There was a problem in fetching the public post");
