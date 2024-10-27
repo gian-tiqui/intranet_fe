@@ -71,6 +71,10 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     }
   }, [setComments, setSetComments]);
 
+  useEffect(() => {
+    if (post) setPostId(post?.pid);
+  }, [post, setPostId]);
+
   const handleReadClick = async () => {
     try {
       const response = await apiClient.post(`${API_BASE}/post-reader`, {

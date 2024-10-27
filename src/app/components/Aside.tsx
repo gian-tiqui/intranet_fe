@@ -12,6 +12,8 @@ import { API_BASE, INTRANET } from "../bindings/binding";
 import { checkDept, decodeUserData } from "../functions/functions";
 import usePostIdStore from "../store/postId";
 import apiClient from "../http-common/apiUrl";
+import { toast } from "react-toastify";
+import { toastClass } from "../tailwind-classes/tw_classes";
 
 interface Props {
   variants?: Variants;
@@ -36,23 +38,20 @@ const Aside: React.FC<Props> = ({
   const { postId } = usePostIdStore();
   const [read, setRead] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchReadStatus = async () => {
-      try {
-        const response = await apiClient.get(
-          `${API_BASE}/monitoring/read-status?userId=${
-            decodeUserData()?.sub
-          }&postId=${postId}`
-        );
+  const fetchReadStatus = async () => {
+    try {
+      const response = await apiClient.get(
+        `${API_BASE}/monitoring/read-status?userId=${
+          decodeUserData()?.sub
+        }&postId=${postId}`
+      );
 
-        setRead(response.status === 200);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchReadStatus();
-  }, [postId]);
+      setRead(response.status === 200);
+    } catch (error) {
+      const { message } = error as { message: string };
+      toast(message, { type: "error", className: toastClass });
+    }
+  };
 
   useEffect(() => {
     setToken(localStorage.getItem(INTRANET) || "");
@@ -65,14 +64,15 @@ const Aside: React.FC<Props> = ({
   }, []);
 
   const handleIntranetClicked = async () => {
-    console.log(read);
+    fetchReadStatus();
     if (!pathname.includes("/posts/")) return;
+    console.log(read);
     if (!read) {
       console.log("You have not read the post yet.");
       return;
     }
 
-    if (confirm("leave page?")) router.push("/");
+    // if (confirm("leave page?")) router.push("/");
   };
 
   const handleBulletinClicked = async () => {
