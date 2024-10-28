@@ -49,13 +49,13 @@ const Users = () => {
 
   const departments: { field: string; deptName: string }[] = [
     { deptName: "ALL", field: "" },
-    { deptName: "IT", field: "it" },
-    { deptName: "HR", field: "hr" },
-    { deptName: "QM", field: "qm" },
-    { deptName: "ACNT", field: "accounting" },
-    { deptName: "ADM", field: "admitting" },
-    { deptName: "MRKTG", field: "marketing" },
-    { deptName: "PRCHS", field: "purchasing" },
+    { deptName: "IT", field: "Information Technology" },
+    { deptName: "HR", field: "Human Resource" },
+    { deptName: "QM", field: "Quality Management" },
+    { deptName: "ACNT", field: "Accounting" },
+    { deptName: "ADM", field: "Admitting" },
+    { deptName: "MRKTG", field: "Marketing" },
+    { deptName: "PRCHS", field: "Purchasing" },
   ];
 
   const handleNextClicked = () => {
@@ -208,7 +208,7 @@ const Users = () => {
 
       <div className="p-10">
         <div
-          className="flex justify-between border border-b-gray-300 border-x-gray-300 dark:border-neutral-900
+          className="flex justify-between border bg-white dark:bg-neutral-900 border-b-gray-300 border-x-gray-300 dark:border-neutral-800
          rounded-t-xl p-5"
         >
           <button
@@ -220,7 +220,7 @@ const Users = () => {
           </button>
           <select
             onChange={handleSelectChange}
-            className="bg-gray-300 dark:bg-neutral-700 border outline-none rounded-full border-gray-400 dark:border-neutral-900 text-center w-24 cursor-pointer h-8"
+            className="bg-gray-300 dark:bg-neutral-700 border outline-none rounded-full border-gray-400 dark:border-neutral-800 text-center w-24 cursor-pointer h-8"
           >
             {departments.map((dept, index) => (
               <option
@@ -234,11 +234,11 @@ const Users = () => {
           </select>
         </div>
         <div
-          className="border border-gray-300 dark:border-neutral-900
+          className="border bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-800
          pb-5 rounded-b-xl shadow"
         >
           <table className="min-w-full bg-inherit  min-h-96">
-            <thead className="bg-inherit dark:text-white border-b border-gray-300 dark:border-neutral-900 uppercase text-sm">
+            <thead className="bg-inherit dark:text-white border-b border-gray-300 dark:border-neutral-800 uppercase text-sm">
               <tr>
                 {heads.map((head, index) => (
                   <th className="py-3 px-4" key={index}>

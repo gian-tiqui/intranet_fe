@@ -69,7 +69,9 @@ const fetchPublicPosts = async () => {
 
 const fetchPosts = async () => {
   try {
-    const apiUri = `${API_BASE}/post?lid=${decodeUserData()?.lid}`;
+    const apiUri = `${API_BASE}/post?lid=${decodeUserData()?.lid}&deptId=${
+      decodeUserData()?.deptId
+    }`;
 
     const response = await apiClient.get(apiUri, {
       headers: {

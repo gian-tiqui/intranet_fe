@@ -57,13 +57,16 @@ const PostCell: React.FC<PostCellProps> = ({ post, first }) => {
           <p className="font-bold">Latest</p>
         </div>
       )}
-      <Image
-        src={imageUrl}
-        height={1000}
-        width={1000}
-        className="h-full w-full"
-        alt={"title"}
-      />
+      {imageUrl && (
+        <Image
+          src={imageUrl}
+          height={1000}
+          width={1000}
+          className="h-full w-full"
+          alt={"title"}
+          priority
+        />
+      )}
       <div
         className={`bg-opacity-75 px-4 flex items-center absolute bottom-5 left-0 bg-black w-2/3 ${
           first ? "h-20" : "h-10"

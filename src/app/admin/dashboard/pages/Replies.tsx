@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import Searchbar from "@/app/components/Searchbar";
 import { PostComment } from "@/app/types/types";
 import useReplies from "@/app/custom-hooks/replies";
+import ModeToggler from "@/app/components/ModeToggler";
 
 const Comments = () => {
   const comments = useReplies();
@@ -127,11 +128,14 @@ const Comments = () => {
     <div className="comments-component">
       <div className="w-full bg-inherit py-5 px-10 shadow flex items-center justify-between">
         <h1 className="text-2xl font-extrabold">Comments</h1>
-        <Searchbar
-          loading={loadingSearch}
-          handleSearchChange={handleSearchChange}
-          searchText={searchText}
-        />
+        <div className="flex items-center gap-3">
+          <Searchbar
+            loading={loadingSearch}
+            handleSearchChange={handleSearchChange}
+            searchText={searchText}
+          />
+          <ModeToggler />
+        </div>
       </div>
 
       <div className="p-10">
