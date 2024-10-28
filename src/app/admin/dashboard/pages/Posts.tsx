@@ -171,7 +171,7 @@ const Posts = () => {
 
   return (
     <div className="posts-component">
-      <div className="w-full bg-inherit py-5 px-10 shadow flex items-center justify-between">
+      <div className="w-full py-5 px-10 shadow flex items-center justify-between">
         <h1 className="text-2xl font-extrabold">Posts</h1>
 
         <div className="flex gap-3 items-center">
@@ -185,7 +185,7 @@ const Posts = () => {
       </div>
 
       <div className="p-10">
-        <div className="flex items-center justify-between border border-b-gray-300 border-x-gray-300 px-4 dark:border-neutral-900 rounded-t-xl py-5">
+        <div className="flex items-center justify-between bg-white dark:bg-neutral-900 border border-b-gray-300 border-x-gray-300 px-4 dark:border-black rounded-t-xl py-5">
           <button
             onClick={() => setVisible(true)}
             className="flex items-center justify-between py-1 gap-2 px-5 bg-gray-300 hover:shadow rounded-full dark:bg-neutral-700"
@@ -204,9 +204,9 @@ const Posts = () => {
             ))}
           </select>
         </div>
-        <div className="border border-gray-300 dark:border-neutral-900 pb-5 rounded-b-xl shadow">
-          <table className="min-w-full border-b bg-inherit min-h-96 overflow-x-auto">
-            <thead className="bg-inherit dark:text-white border-b border-gray-300 dark:border-neutral-900 uppercase text-sm">
+        <div className="border border-gray-300 bg-white dark:bg-neutral-900 dark:border-neutral-900 pb-5 rounded-b-xl shadow">
+          <table className="min-w-full border-b bg-white dark:bg-neutral-900 min-h-96 overflow-x-auto">
+            <thead className="bg-white dark:bg-neutral-900 dark:text-white border-b border-gray-300 dark:border-neutral-900 uppercase text-sm">
               <tr>
                 {heads.map((head, index) => (
                   <th className="py-3 px-4" key={index}>

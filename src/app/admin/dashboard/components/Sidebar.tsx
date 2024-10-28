@@ -4,7 +4,6 @@ import React, { ReactNode, useState } from "react";
 import Graphs from "../pages/Graphs";
 import Users from "../pages/Users";
 import Posts from "../pages/Posts";
-import Departments from "../pages/Departments";
 import Comments from "../pages/Comments";
 import Replies from "../pages/Replies";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -79,11 +78,7 @@ const Sidebar = () => {
       component: <Posts />,
       icon: "material-symbols:post-outline",
     },
-    {
-      name: "Departments",
-      component: <Departments />,
-      icon: "arcticons:emoji-department-store",
-    },
+
     {
       name: "Comments",
       component: <Comments />,

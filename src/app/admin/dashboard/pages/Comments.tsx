@@ -4,6 +4,7 @@ import { useState, useEffect, ChangeEvent } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Searchbar from "@/app/components/Searchbar";
 import { PostComment } from "@/app/types/types";
+import ModeToggler from "@/app/components/ModeToggler";
 
 const Comments = () => {
   const comments = useComments();
@@ -127,17 +128,21 @@ const Comments = () => {
     <div className="comments-component">
       <div className="w-full bg-inherit py-5 px-10 shadow flex items-center justify-between">
         <h1 className="text-2xl font-extrabold">Comments</h1>
-        <Searchbar
-          loading={loadingSearch}
-          handleSearchChange={handleSearchChange}
-          searchText={searchText}
-        />
+
+        <div className="flex items-center gap-3">
+          <Searchbar
+            loading={loadingSearch}
+            handleSearchChange={handleSearchChange}
+            searchText={searchText}
+          />
+          <ModeToggler />
+        </div>
       </div>
 
       <div className="p-10">
         <div className="border border-gray-300 dark:border-neutral-900 pb-5 rounded-xl shadow">
           <table className="min-w-full border-b bg-inherit min-h-96 overflow-x-auto">
-            <thead className="bg-inherit dark:text-white border-b border-gray-300 dark:border-neutral-900 uppercase text-sm">
+            <thead className="dark:text-white border-b border-gray-300 dark:border-neutral-900 uppercase text-sm">
               <tr>
                 {heads.map((head, index) => (
                   <th className="py-3 px-4" key={index}>

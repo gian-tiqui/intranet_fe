@@ -95,7 +95,7 @@ const Form = () => {
   return (
     <form
       onSubmit={handleSubmit(handleLogin)}
-      className="bg-white bg-opacity-50 p-6 max-w-96 w-96 border-0 flex flex-col justify-center relative h-screen border-neutral-300 dark:bg-neutral-900 dark:bg-opacity-50 dark:border-black"
+      className="bg-white bg-opacity-50 p-6 max-w-96 w-96 border-0 text-black flex flex-col justify-center relative h-screen"
     >
       <div className="flex flex-col items-center">
         <div className="flex gap-1 mb-3">
@@ -116,13 +116,13 @@ const Form = () => {
         transition={{ duration: 1, delay: 0.7 }}
         className="mb-3 h-14"
       >
-        <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl mb-1">
+        <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100  border rounded-2xl mb-1">
           <Icon
             className="h-6 w-6 text-neutral-400"
             icon={"teenyicons:id-outline"}
           />
           <input
-            className="bg-neutral-100 dark:bg-neutral-800 outline-none w-full"
+            className="bg-neutral-100  outline-none w-full"
             {...register("employeeId", { required: true })}
             placeholder="Enter your ID"
           />
@@ -140,13 +140,13 @@ const Form = () => {
         transition={{ duration: 1, delay: 0.7 }}
         className="h-14 mb-14"
       >
-        <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl mb-1">
+        <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100  border rounded-2xl mb-1">
           <Icon
             className="h-6 w-6 text-neutral-400"
             icon={"mdi:password-outline"}
           />
           <input
-            className="bg-neutral-100 dark:bg-neutral-800 outline-none w-full"
+            className="bg-neutral-100  outline-none w-full"
             {...register("password", { required: true })}
             placeholder="Password"
             type="password"
@@ -167,7 +167,7 @@ const Form = () => {
           transition={{ duration: 1, delay: 0.7 }}
           className={`${
             loading && "opacity-80"
-          } mb-2 rounded-2xl justify-center flex gap-2 items-center h-10 text-neutral-200 border border-neutral-900 dark:border-neutral-300 font-bold bg-neutral-800 dark:bg-neutral-200 dark:text-neutral-800 hover:bg-neutral-900`}
+          } mb-2 rounded-2xl justify-center flex gap-2 items-center h-10 font-bold bg-neutral-900 text-white hover:bg-neutral-900`}
         >
           {loading && (
             <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
