@@ -6,8 +6,8 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 
 const WelcomeNavbar = () => {
   return (
-    <nav className="w-full h-20 py-3 px-10 flex justify-between items-center">
-      <div className="flex gap-2 items-center">
+    <nav className="w-[50%] h-16 p-4 flex justify-between items-center bg-white text-black shadow-lg rounded-xl absolute left-1/2 top-4 transform -translate-x-1/2">
+      <div className="flex gap-2 items-center cursor-default">
         <Image
           src={wmcLogo}
           width={1000}
@@ -16,13 +16,24 @@ const WelcomeNavbar = () => {
           alt="Westlake Med"
         />
         <div>
-          <p className="font-extrabold">Intranet</p>
+          <p className="font-extrabold text-lg">Intranet</p>
           <p className="text-xs">Westlake Medical Center</p>
         </div>
       </div>
+      <div className="flex gap-6  text-sm font-semibold">
+        <Link href={""} className="hover:underline">
+          About
+        </Link>
+        <Link href={""} className="hover:underline">
+          Kiosk
+        </Link>
+        <Link href={""} className="hover:underline">
+          Company
+        </Link>
+      </div>
       <Link
         href={"/login"}
-        className="flex justify-center items-center gap-1 rounded-full px-4 py-1 border-2 border-black"
+        className="flex justify-center items-center gap-1 rounded-lg h-9 w-32 px-4 py-1 bg-black text-white hover:bg-neutral-700"
       >
         <Icon icon={"mdi:user"} className="h-5 w-5" />
         <p className="font-semibold text-sm">Login</p>

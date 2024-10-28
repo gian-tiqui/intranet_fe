@@ -1,10 +1,19 @@
 import React from "react";
 import WelcomeNavbar from "./components/WelcomeNavbar";
+import Hero from "./components/Hero";
+import Preview from "./components/Preview";
+import Footer from "./components/Footer";
+import HrFeatures from "./components/HrFeatures";
 
 const WelcomePage = () => {
   return (
-    <div className="h-screen w-screen">
+    <div className="bg-neutral-50 pt-4">
       <WelcomeNavbar />
+      <Hero />
+      <HrFeatures />
+
+      <Preview />
+      <Footer />
     </div>
   );
 };
