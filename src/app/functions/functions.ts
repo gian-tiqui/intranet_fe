@@ -61,6 +61,8 @@ const fetchPublicPosts = async () => {
       `${API_BASE}/post?lid=${decodeUserData()?.lid}&public=true`
     );
 
+    console.log(response.data);
+
     return response.data as Post[];
   } catch (error) {
     console.error(error);
@@ -71,7 +73,7 @@ const fetchPosts = async () => {
   try {
     const apiUri = `${API_BASE}/post?lid=${decodeUserData()?.lid}&deptId=${
       decodeUserData()?.deptId
-    }`;
+    }&lid=${decodeUserData()?.lid}`;
 
     const response = await apiClient.get(apiUri, {
       headers: {
