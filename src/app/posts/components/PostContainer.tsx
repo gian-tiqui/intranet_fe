@@ -359,12 +359,11 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
         )}
         {imageUrl && (
           <Image
-            className="h-96 w-full bg-neutral-100 mb-6"
+            className="w-full bg-neutral-100 mb-6 h-full"
             src={imageUrl}
             alt="Post image"
-            width={600}
-            height={400}
-            layout="responsive"
+            width={1000}
+            height={1000}
             priority
           />
         )}

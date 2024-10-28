@@ -13,6 +13,7 @@ import { checkDept, decodeUserData } from "../functions/functions";
 import usePostIdStore from "../store/postId";
 import apiClient from "../http-common/apiUrl";
 import useReadStore from "../store/readStore";
+import ConfirmModal from "./ConfirmModal";
 
 interface Props {
   variants?: Variants;
@@ -36,6 +37,9 @@ const Aside: React.FC<Props> = ({
   const [selectedVis, setSelectedVis] = useState<string>("dept");
   const { postId } = usePostIdStore();
   const { isRead, setIsRead } = useReadStore();
+  const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+  const [confirmed, setConfirmed] = useState<boolean>(false);
+  const [_dest, setDest] = useState<string>("");
 
   const fetchReadStatus = async () => {
     try {
@@ -61,52 +65,39 @@ const Aside: React.FC<Props> = ({
     }
   }, []);
 
-  const handleIntranetClicked = () => {
+  const handleClick = (dest: string) => {
     fetchReadStatus();
+
     if (pathname.includes("/posts/") && !isRead) {
-      if (confirm("You have not read the post yet, Leave?")) {
-        router.push("/");
-      } else {
-        return;
-      }
-    } else router.push("/");
+      setDest(dest);
+      setShowConfirmModal(true);
+      setConfirmed(false);
+    } else {
+      router.push(dest);
+    }
   };
 
-  const handleBulletinClicked = async () => {
-    fetchReadStatus();
-    if (pathname.includes("/posts/") && !isRead) {
-      if (confirm("You have not read the post yet, Leave?")) {
-        router.push("/bulletin");
-      } else {
-        return;
-      }
-    } else router.push("/bulletin");
-  };
-
-  const handleDepartmentBulletinClicked = async () => {
-    fetchReadStatus();
-    if (pathname.includes("/posts/") && !isRead) {
-      if (confirm("You have not read the post yet, Leave?")) {
-        router.push("/departments-memo");
-      } else {
-        return;
-      }
-    } else router.push("/departments-memo");
-  };
-
-  const handleForYouClicked = async () => {
-    fetchReadStatus();
-    if (pathname.includes("/posts/") && !isRead) {
-      if (confirm("You have not read the post yet, Leave?")) {
-        router.push("/for-you");
-      } else {
-        return;
-      }
-    } else router.push("/for-you");
-  };
+  useEffect(() => {
+    if (confirmed) {
+      router.push(_dest);
+      setShowConfirmModal(false);
+      setConfirmed(false);
+    }
+  }, [confirmed, router, _dest]);
 
   return (
     <>
+      {showConfirmModal && (
+        <div
+          onClick={() => setShowConfirmModal(!showConfirmModal)}
+          className="bg-black/80 w-full h-full absolute z-50 grid place-content-center"
+        >
+          <ConfirmModal
+            setShowConfirmModal={setShowConfirmModal}
+            setConfirmed={setConfirmed}
+          />
+        </div>
+      )}
       {/* THIS IS FOR DESKTOP VIEW */}
       <motion.aside
         initial="collapsed"
@@ -143,7 +134,7 @@ const Aside: React.FC<Props> = ({
           <div id="menu-buttons" className="px-3 mt-2 mb-6">
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={handleIntranetClicked}
+              onClick={() => handleClick("/")}
             >
               <Icon icon={"ph:hospital"} className="h-5 w-5" />
               <p className="w-full text-md">Intranet</p>
@@ -151,7 +142,7 @@ const Aside: React.FC<Props> = ({
 
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={handleBulletinClicked}
+              onClick={() => handleClick("/bulletin")}
             >
               <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
               <p className="w-full text-md">General Bulletin</p>
@@ -159,7 +150,7 @@ const Aside: React.FC<Props> = ({
 
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={handleDepartmentBulletinClicked}
+              onClick={() => handleClick("/departments-memo")}
             >
               <Icon
                 icon={"arcticons:emoji-department-store"}
@@ -170,7 +161,7 @@ const Aside: React.FC<Props> = ({
 
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={handleForYouClicked}
+              onClick={() => handleClick("/for-you")}
             >
               <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
               <p className="w-full text-md">For You</p>
@@ -200,7 +191,11 @@ const Aside: React.FC<Props> = ({
                 Dept
               </div>
             </div>
-            <PostList selectedVis={selectedVis} isMobile={isMobile} />
+            <PostList
+              selectedVis={selectedVis}
+              isMobile={isMobile}
+              onClick={handleClick}
+            />
           </div>
         </div>
         <UserButton uVisible={uVisible} setUVisible={setUVisible} />
@@ -242,7 +237,7 @@ const Aside: React.FC<Props> = ({
           <div id="menu-buttons" className="px-3 mt-2 mb-6">
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={handleIntranetClicked}
+              onClick={() => handleClick("/")}
             >
               <Icon icon={"ph:hospital"} className="h-5 w-5" />
               <p className="w-full text-md">Intranet</p>
@@ -250,7 +245,7 @@ const Aside: React.FC<Props> = ({
 
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={handleBulletinClicked}
+              onClick={() => handleClick("/bulletin")}
             >
               <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
               <p className="w-full text-md">General Bulletin</p>
@@ -258,7 +253,7 @@ const Aside: React.FC<Props> = ({
 
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={handleDepartmentBulletinClicked}
+              onClick={() => handleClick("/departments-memo")}
             >
               <Icon
                 icon={"arcticons:emoji-department-store"}
@@ -269,7 +264,7 @@ const Aside: React.FC<Props> = ({
 
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={handleForYouClicked}
+              onClick={() => handleClick("/for-you")}
             >
               <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
               <p className="w-full text-md">For You</p>
@@ -300,7 +295,11 @@ const Aside: React.FC<Props> = ({
                   Dept
                 </div>
               </div>
-              <PostList selectedVis={selectedVis} isMobile={isMobile} />
+              <PostList
+                selectedVis={selectedVis}
+                isMobile={isMobile}
+                onClick={handleClick}
+              />
             </div>
           </div>
         </div>
