@@ -3,12 +3,12 @@ import { format } from "date-fns";
 import { GroupedPosts, Post } from "@/app/types/types";
 import MotionTemplate from "@/app/components/animation/MotionTemplate";
 import HoverBox from "@/app/components/HoverBox";
-import Link from "next/link";
 import PostListSkeleton from "./PostListSkeleton";
 import NoPosts from "./NoPosts";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPosts, fetchPublicPosts } from "@/app/functions/functions";
+import usePostIdStore from "@/app/store/postId";
 
 const groupPostsByDate = (posts: Post[]) => {
   return posts.reduce((groups: GroupedPosts, post: Post) => {
@@ -24,6 +24,7 @@ const groupPostsByDate = (posts: Post[]) => {
 interface Props {
   selectedVis: string;
   isMobile: boolean;
+  onClick: (dest: string) => void;
 }
 
 const Skeleton = () => {
@@ -39,7 +40,7 @@ const Skeleton = () => {
     ));
 };
 
-const PostList: React.FC<Props> = ({ selectedVis, isMobile }) => {
+const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
   const { data: _posts, isLoading } = useQuery({
     queryKey: ["private_posts"],
     queryFn: fetchPosts,
@@ -58,6 +59,7 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile }) => {
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [allPosts, setAllPosts] = useState<Post[]>([]);
+  const { postId } = usePostIdStore();
 
   useEffect(() => {
     if (_posts) setPosts(_posts);
@@ -92,6 +94,12 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile }) => {
     return <NoPosts />;
   }
 
+  const handleItemClicked = (pid: number) => {
+    if (isMobile) setIsCollapsed(!isCollapsed);
+    if (pid === postId) return;
+    onClick(`/posts/${pid}`);
+  };
+
   return (
     <>
       <div>
@@ -99,23 +107,21 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile }) => {
           .slice(0, maxNum)
           .map((date) => (
             <MotionTemplate key={date}>
-              <div
-                onClick={
-                  isMobile ? () => setIsCollapsed(!isCollapsed) : undefined
-                }
-                className="px-3 mb-8"
-              >
+              <div className="px-3 mb-8">
                 <div key={date}>
                   <h2 className="text-xs font-semibold ms-2 mb-2">
                     {format(new Date(date), "MMMM dd, yyyy")}
                   </h2>
                   <div className="flex flex-col">
                     {groupedPosts[date].map((post, index) => (
-                      <Link href={`/posts/${post.pid}`} key={index}>
+                      <div
+                        key={index}
+                        onClick={() => handleItemClicked(post.pid)}
+                      >
                         <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 py-1 px-2 cursor-pointer rounded">
                           <p>{post.title || "Untitled"}</p>
                         </HoverBox>
-                      </Link>
+                      </div>
                     ))}
                   </div>
                 </div>
