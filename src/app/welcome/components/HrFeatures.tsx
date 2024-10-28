@@ -3,7 +3,7 @@ import React from "react";
 
 const HrFeatures = () => {
   return (
-    <div className="bg-gradient-to-b from-neutral-50 via-neutral-100 to-neutral-50 p-10 flex justify-center">
+    <div className="bg-gradient-to-b from-neutral-50 via-neutral-100 to-neutral-50 dark:from-neutral-950 dark:via-neutral-800 dark:to-neutral-950 p-10 flex justify-center">
       <div className="w-[50%]">
         <p className="font-bold text-lg">Features that are only limited to</p>
         <p className="font-bold text-lg mb-12">

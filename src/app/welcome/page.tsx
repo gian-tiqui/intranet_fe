@@ -7,7 +7,7 @@ import HrFeatures from "./components/HrFeatures";
 
 const WelcomePage = () => {
   return (
-    <div className="bg-neutral-50 pt-4">
+    <div className="bg-neutral-50 pt-4 dark:bg-neutral-950">
       <WelcomeNavbar />
       <Hero />
       <HrFeatures />

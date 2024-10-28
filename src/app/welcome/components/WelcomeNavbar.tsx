@@ -7,7 +7,7 @@ import ModeToggler from "@/app/components/ModeToggler";
 
 const WelcomeNavbar = () => {
   return (
-    <nav className="w-[50%] h-16 p-4 flex justify-between items-center bg-white text-black shadow-lg rounded-xl absolute left-1/2 top-4 transform -translate-x-1/2">
+    <nav className="w-[50%] h-16 p-4 flex justify-between items-center bg-white dark:bg-neutral-800 dark:text-white text-black shadow-lg rounded-xl absolute left-1/2 top-4 transform -translate-x-1/2">
       <div className="flex gap-2 items-center cursor-default">
         <Image
           src={wmcLogo}
@@ -35,7 +35,7 @@ const WelcomeNavbar = () => {
       <div className="flex gap-2 items-center">
         <Link
           href={"/login"}
-          className="flex justify-center items-center gap-1 rounded-lg h-9 w-32 px-4 py-1 bg-black text-white hover:bg-neutral-700"
+          className="flex justify-center items-center gap-1 rounded-lg h-9 w-32 px-4 py-1 bg-black text-white hover:bg-neutral-700 dark:bg-white dark:hover:bg-gray-100 dark:text-black"
         >
           <Icon icon={"mdi:user"} className="h-5 w-5" />
           <p className="font-semibold text-sm">Login</p>
