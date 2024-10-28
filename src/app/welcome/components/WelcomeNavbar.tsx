@@ -3,6 +3,7 @@ import React from "react";
 import wmcLogo from "../../assets/westlake_logo_horizontal.jpg.png";
 import Image from "next/image";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import ModeToggler from "@/app/components/ModeToggler";
 
 const WelcomeNavbar = () => {
   return (
@@ -31,13 +32,16 @@ const WelcomeNavbar = () => {
           Company
         </Link>
       </div>
-      <Link
-        href={"/login"}
-        className="flex justify-center items-center gap-1 rounded-lg h-9 w-32 px-4 py-1 bg-black text-white hover:bg-neutral-700"
-      >
-        <Icon icon={"mdi:user"} className="h-5 w-5" />
-        <p className="font-semibold text-sm">Login</p>
-      </Link>
+      <div className="flex gap-2 items-center">
+        <Link
+          href={"/login"}
+          className="flex justify-center items-center gap-1 rounded-lg h-9 w-32 px-4 py-1 bg-black text-white hover:bg-neutral-700"
+        >
+          <Icon icon={"mdi:user"} className="h-5 w-5" />
+          <p className="font-semibold text-sm">Login</p>
+        </Link>
+        <ModeToggler size={6} />
+      </div>
     </nav>
   );
 };

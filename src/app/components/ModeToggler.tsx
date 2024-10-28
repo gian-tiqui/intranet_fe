@@ -3,7 +3,11 @@ import { Icon } from "@iconify/react";
 import React, { useEffect } from "react";
 import useDarkModeStore from "../store/darkModeStore";
 
-const ModeToggler = () => {
+interface Props {
+  size?: number;
+}
+
+const ModeToggler: React.FC<Props> = ({ size }) => {
   const { isDarkMode, setIsDarkMode } = useDarkModeStore();
 
   useEffect(() => {
@@ -34,13 +38,21 @@ const ModeToggler = () => {
 
   return (
     <div
-      className="cursor-pointer rounded-full grid place-content-center h-10 w-10 bg-white dark:bg-neutral-900 hover:bg-neutral-400 dark:hover:bg-neutral-700"
+      className={`cursor-pointer rounded-full grid place-content-center ${
+        size ? `h-${size + 3} w-${size + 3}` : "h-10 w-10"
+      } bg-white dark:bg-neutral-900 hover:bg-neutral-400 dark:hover:bg-neutral-700`}
       onClick={toggleDarkMode}
     >
       {isDarkMode ? (
-        <Icon icon={"line-md:sunny-loop"} className="h-7 w-7" />
+        <Icon
+          icon={"line-md:sunny-loop"}
+          className={`${size ? `h-${size} w-${size}` : "h-7 w-7"}`}
+        />
       ) : (
-        <Icon icon={"line-md:moon-rising-alt-loop"} className="h-7 w-7" />
+        <Icon
+          icon={"line-md:moon-rising-alt-loop"}
+          className={`${size ? `h-${size} w-${size}` : "h-7 w-7"}`}
+        />
       )}
     </div>
   );

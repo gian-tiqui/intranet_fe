@@ -112,9 +112,8 @@ const GlobalSearch = () => {
                   onClick={() => router.push(`/posts/${post.pid}`)}
                   className="w-full border dark:border-neutral-800 hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-700 py-4 rounded flex items-center px-4"
                 >
-                  <p>
-                    {post.title} -{" "}
-                    <span className="truncate">{post.message}</span>
+                  <p className="truncate">
+                    {post.title} - <span>{post.message}</span>
                   </p>
                 </div>
               ))

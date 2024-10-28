@@ -61,8 +61,6 @@ const fetchPublicPosts = async () => {
       `${API_BASE}/post?lid=${decodeUserData()?.lid}&public=true`
     );
 
-    console.log(response.data);
-
     return response.data as Post[];
   } catch (error) {
     console.error(error);
