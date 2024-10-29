@@ -5,7 +5,7 @@ import {
   Decoder,
   Level,
   NotificationType,
-  Post,
+  RetPost,
   UnreadPost,
 } from "../types/types";
 
@@ -61,7 +61,7 @@ const fetchPublicPosts = async () => {
       `${API_BASE}/post?lid=${decodeUserData()?.lid}&public=true`
     );
 
-    return response.data as Post[];
+    return response.data as RetPost;
   } catch (error) {
     console.error(error);
   }
@@ -79,7 +79,7 @@ const fetchPosts = async () => {
       },
     });
 
-    return response.data as Post[];
+    return response.data as RetPost;
   } catch (error) {
     console.error(error);
   }
@@ -124,7 +124,7 @@ const fetchPostsByLevel = async () => {
       }`
     );
 
-    return response.data as Post[];
+    return response.data as RetPost;
   } catch (error) {
     console.error(error);
   }
