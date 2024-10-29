@@ -1,48 +1,63 @@
+"use client";
 import Link from "next/link";
 import React from "react";
 import wmcLogo from "../../assets/westlake_logo_horizontal.jpg.png";
 import Image from "next/image";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import ModeToggler from "@/app/components/ModeToggler";
+import Burger from "./Burger";
+import useSidebarStore from "@/app/store/sidebarStore";
 
 const WelcomeNavbar = () => {
+  const { setSidebarShown } = useSidebarStore();
+
   return (
-    <nav className="w-[50%] h-16 p-4 flex justify-between items-center bg-white dark:bg-neutral-800 dark:text-white text-black shadow-lg rounded-xl absolute left-1/2 top-4 transform -translate-x-1/2">
-      <div className="flex gap-2 items-center cursor-default">
-        <Image
-          src={wmcLogo}
-          width={1000}
-          height={1000}
-          className="h-9 w-auto"
-          alt="Westlake Med"
-        />
-        <div>
-          <p className="font-extrabold text-lg">Intranet</p>
-          <p className="text-xs">Westlake Medical Center</p>
+    <>
+      <nav className="w-[90%] md:w-[50%] h-16 p-4 flex justify-between items-center bg-white dark:bg-neutral-800 dark:text-white text-black shadow-lg rounded-xl absolute left-1/2 top-4 transform -translate-x-1/2">
+        <div className="flex gap-2 items-center cursor-default">
+          <Image
+            src={wmcLogo}
+            width={1000}
+            height={1000}
+            className="h-7 md:h-9 w-auto"
+            alt="Westlake Med"
+          />
+          <div>
+            <p className="font-extrabold sm:text-lg">Intranet</p>
+            <p className="text-[10px] sm:text-xs">Westlake Medical Center</p>
+          </div>
         </div>
-      </div>
-      <div className="flex gap-6  text-sm font-semibold">
-        <Link href={""} className="hover:underline">
-          About
-        </Link>
-        <Link href={""} className="hover:underline">
-          Kiosk
-        </Link>
-        <Link href={""} className="hover:underline">
-          Company
-        </Link>
-      </div>
-      <div className="flex gap-2 items-center">
-        <Link
-          href={"/login"}
-          className="flex justify-center items-center gap-1 rounded-lg h-9 w-32 px-4 py-1 bg-black text-white hover:bg-neutral-700 dark:bg-white dark:hover:bg-gray-100 dark:text-black"
-        >
-          <Icon icon={"mdi:user"} className="h-5 w-5" />
-          <p className="font-semibold text-sm">Login</p>
-        </Link>
-        <ModeToggler size={6} />
-      </div>
-    </nav>
+        <div className="sm:flex gap-6  text-sm font-semibold hidden">
+          <Link href={""} className="hover:underline">
+            About
+          </Link>
+          <Link href={""} className="hover:underline">
+            Kiosk
+          </Link>
+          <Link href={""} className="hover:underline">
+            Company
+          </Link>
+        </div>
+        <div className="flex gap-2 items-center">
+          <Link
+            href={"/login"}
+            className="hidden md:flex justify-center items-center gap-1 rounded-lg h-9 w-32 px-4 py-1 bg-black text-white hover:bg-neutral-700 dark:bg-white dark:hover:bg-gray-100 dark:text-black"
+          >
+            <Icon icon={"mdi:user"} className="h-5 w-5" />
+            <p className="font-semibold text-sm">Login</p>
+          </Link>
+          <div className="hidden md:flex">
+            <ModeToggler />
+          </div>
+          <div
+            className="block md:hidden"
+            onClick={() => setSidebarShown(true)}
+          >
+            <Burger size={8} />
+          </div>
+        </div>
+      </nav>
+    </>
   );
 };
 

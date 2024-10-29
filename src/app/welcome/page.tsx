@@ -11,7 +11,6 @@ const WelcomePage = () => {
       <WelcomeNavbar />
       <Hero />
       <HrFeatures />
-
       <Preview />
       <Footer />
     </div>
