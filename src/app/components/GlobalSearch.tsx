@@ -66,7 +66,7 @@ const GlobalSearch = () => {
   }, [debouncedSearch]);
 
   useEffect(() => {
-    if (_publicPosts) setPublicPosts(_publicPosts);
+    if (_publicPosts) setPublicPosts(_publicPosts.posts);
   }, [_publicPosts]);
 
   if (isError) {
