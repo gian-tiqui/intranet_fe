@@ -6,7 +6,8 @@ const Login = () => {
   return (
     <div className="relative">
       <LoginTemplate>
-        <div className="flex justify-end">
+        <div className="grid md:grid-cols-2">
+          <div></div>
           <Form />
         </div>
       </LoginTemplate>
