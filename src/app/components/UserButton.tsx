@@ -94,7 +94,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
 
   useEffect(() => {
     const dept = decodeUserData()?.departmentCode.toLowerCase();
-    if (dept && ["hr", "qm"].includes(dept)) setShowMyPosts(true);
+    if (dept && ["hr", "qm", "admin"].includes(dept)) setShowMyPosts(true);
   }, []);
 
   const handleShowSettings = (event: React.MouseEvent) => {

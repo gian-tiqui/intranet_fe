@@ -24,10 +24,10 @@ const MonitoringMain = () => {
   });
 
   useEffect(() => {
-    const deptName = decodeUserData()?.departmentName;
+    const deptName = decodeUserData()?.departmentCode;
 
     if (deptName) {
-      if (!["hr", "qm"].includes(deptName.toLowerCase())) {
+      if (!["hr", "qm", "admin"].includes(deptName.toLowerCase())) {
         toast("You are trying to access a restricted page.", {
           type: "error",
           className: toastClass,
