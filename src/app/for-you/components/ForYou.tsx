@@ -22,12 +22,12 @@ const ForYou = () => {
         <PostSkeleton />
       ) : (
         <>
-          {data && data.length > 0 ? (
+          {data?.posts && data.posts.length > 0 ? (
             <>
-              {data.slice(0, maxNum).map((post) => (
+              {data.posts.slice(0, maxNum).map((post) => (
                 <PostContainer id={post.pid} key={post.pid} generalPost />
               ))}
-              {data.length > 3 && (
+              {data.posts.length > 3 && (
                 <HoverBox className=" py-1 px-2 cursor-pointer rounded grid place-content-center">
                   <button
                     onClick={() => setMaxNum((prevMax) => prevMax + 3)}
