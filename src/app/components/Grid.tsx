@@ -47,7 +47,7 @@ const Grid = () => {
   if (!Cookies.get(INTRANET))
     return (
       <div className="w-full h-screen grid place-content-center">
-        <EaseString size="text-xl" word="Welcome" />
+        <EaseString size="text-xl" word="Hello" />
       </div>
     );
 
