@@ -14,6 +14,7 @@ import usePostIdStore from "../store/postId";
 import apiClient from "../http-common/apiUrl";
 import useReadStore from "../store/readStore";
 import ConfirmModal from "./ConfirmModal";
+import useDeptIdStore from "../store/deptIdStore";
 
 interface Props {
   variants?: Variants;
@@ -40,6 +41,7 @@ const Aside: React.FC<Props> = ({
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
   const [confirmed, setConfirmed] = useState<boolean>(false);
   const [_dest, setDest] = useState<string>("");
+  const { deptId } = useDeptIdStore();
 
   const fetchReadStatus = async () => {
     try {
@@ -68,7 +70,9 @@ const Aside: React.FC<Props> = ({
   const handleClick = (dest: string) => {
     fetchReadStatus();
 
-    if (pathname.includes("/posts/") && !isRead) {
+    const userDeptId = decodeUserData()?.deptId;
+
+    if (pathname.includes("/posts/") && !isRead && deptId === userDeptId) {
       setDest(dest);
       setShowConfirmModal(true);
       setConfirmed(false);

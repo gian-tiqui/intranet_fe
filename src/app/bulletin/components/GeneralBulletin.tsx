@@ -62,13 +62,14 @@ const GeneralBulletin = () => {
 
   return (
     <div>
-      <Shortcuts />
       {isLoading ? (
         <PostSkeleton />
       ) : (
         <>
           {bulletinPosts.length > 0 ? (
             <>
+              <Shortcuts />
+
               {bulletinPosts.slice(0, maxNum).map((post) => (
                 <PostContainer id={post.pid} key={post.pid} generalPost />
               ))}
@@ -82,13 +83,13 @@ const GeneralBulletin = () => {
                   </button>
                 </HoverBox>
               )}
+              <Shortcuts />
             </>
           ) : (
             <NoPosts />
           )}
         </>
       )}
-      <Shortcuts />
     </div>
   );
 };

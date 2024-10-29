@@ -64,14 +64,14 @@ const DepartmentsBulletin = () => {
 
   return (
     <div>
-      <Shortcuts />
-
       {isLoading ? (
         <PostSkeleton />
       ) : (
         <>
           {departmentsPost.length > 0 ? (
             <>
+              <Shortcuts />
+
               {departmentsPost.slice(0, maxNum).map((post) => (
                 <PostContainer id={post.pid} key={post.pid} generalPost />
               ))}
@@ -85,6 +85,7 @@ const DepartmentsBulletin = () => {
                   </button>
                 </HoverBox>
               )}
+              <Shortcuts />
             </>
           ) : (
             <NoPosts />
