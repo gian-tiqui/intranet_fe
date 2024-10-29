@@ -38,6 +38,11 @@ type Post = {
   lid: number;
 };
 
+type RetPost = {
+  posts: Post[];
+  count: number;
+};
+
 type GroupedPosts = {
   [date: string]: Post[];
 };
@@ -159,6 +164,7 @@ type Level = {
 };
 
 export type {
+  RetPost,
   Level,
   Decoder,
   UnreadPost,

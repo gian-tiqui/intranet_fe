@@ -62,11 +62,11 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
   const { postId } = usePostIdStore();
 
   useEffect(() => {
-    if (_posts) setPosts(_posts);
+    if (_posts) setPosts(_posts.posts);
   }, [_posts]);
 
   useEffect(() => {
-    if (_allPosts) setAllPosts(_allPosts);
+    if (_allPosts) setAllPosts(_allPosts.posts);
   }, [_allPosts]);
 
   const { isCollapsed, setIsCollapsed } = useToggleStore();
