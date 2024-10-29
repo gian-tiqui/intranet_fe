@@ -141,7 +141,6 @@ type UnreadPost = {
 };
 
 type Decoder = {
-  departmentName: string;
   firstName: string;
   lastName: string;
   sub: number;
@@ -149,6 +148,7 @@ type Decoder = {
   deptId: number;
   departmentCode: string;
   lid: number;
+  departmentName: string;
 };
 
 type Level = {

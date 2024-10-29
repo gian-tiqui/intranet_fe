@@ -24,6 +24,7 @@ import { toast } from "react-toastify";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import useSetCommentsStore from "@/app/store/useCommentsStore";
 import useReadStore from "@/app/store/readStore";
+import useDeptIdStore from "@/app/store/deptIdStore";
 
 interface Props {
   id: number;
@@ -45,6 +46,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const [extracting] = useState<boolean>(false);
   const { setSetComments, setThisComments } = useSetCommentsStore();
   const { isRead, setIsRead } = useReadStore();
+  const { setDeptId } = useDeptIdStore();
 
   useEffect(() => {
     const fetchReadStatus = async () => {
@@ -153,10 +155,13 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
 
   useEffect(() => {
     const userId = decodeUserData()?.sub;
-    if (userId === post?.userId) {
+    const deptCode = decodeUserData()?.departmentCode.toLowerCase();
+    if (post) setDeptId(post?.deptId);
+
+    if (userId === post?.userId || deptCode === "admin") {
       setEditable(true);
     }
-  }, [post]);
+  }, [post, setDeptId]);
 
   useEffect(() => {
     if (post) {
