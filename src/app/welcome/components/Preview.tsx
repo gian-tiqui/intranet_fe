@@ -6,7 +6,7 @@ import Image from "next/image";
 
 const Preview = () => {
   return (
-    <div className="bg-gradient-to-b from-neutral-50 via-neutral-200 to-neutral-300 dark:from-neutral-950 dark:via-neutral-800 dark:to-neutral-700 p-10 flex justify-center">
+    <div className="bg-gradient-to-b from-neutral-50 via-neutral-200 to-neutral-300 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-700 p-10 flex justify-center">
       <div className="md:w-[50%]">
         <p className="font-semibold text-xl mb-6">Search posts</p>
         <Image
