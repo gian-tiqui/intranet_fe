@@ -2,7 +2,7 @@ import React from "react";
 
 const Description = () => {
   return (
-    <div className="bg-gradient-to-t from-neutral-50 via-neutral-200 to-neutral-300 dark:from-neutral-950 dark:via-neutral-800 dark:to-neutral-700 p-10 flex justify-center">
+    <div className="bg-gradient-to-t from-neutral-50 via-neutral-200 to-neutral-300 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-700 p-10 flex justify-center">
       <div className="md:w-[50%]">
         <p className="mb-6 font-semibold">
           The intranet platform is an all-in-one communication and self-service

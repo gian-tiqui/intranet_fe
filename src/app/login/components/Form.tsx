@@ -95,85 +95,87 @@ const Form = () => {
   return (
     <form
       onSubmit={handleSubmit(handleLogin)}
-      className="bg-white p-6 border-0 text-black flex flex-col justify-center ice relative h-screen"
+      className="p-6 border-0 text-black dark:text-white flex flex-col justify-center items-center relative h-screen"
     >
-      <div className="flex flex-col items-center">
-        <div className="flex gap-1 mb-3">
-          {"Welcome back!".split(" ").map((word, index) => (
-            <EaseString size="" word={word} key={index} />
-          ))}
+      <div className="w-96 shadow p-7 rounded-2xl bg-white dark:bg-neutral-900">
+        <div className="flex flex-col items-center">
+          <div className="flex gap-1 mb-3">
+            {"Welcome back!".split(" ").map((word, index) => (
+              <EaseString size="" word={word} key={index} />
+            ))}
+          </div>
+          <div className="flex gap-1 mb-16">
+            {"Sign in to your account".split(" ").map((word, index) => (
+              <EaseString size="" word={word} key={index} />
+            ))}
+          </div>
         </div>
-        <div className="flex gap-1 mb-16">
-          {"Sign in to your account".split(" ").map((word, index) => (
-            <EaseString size="" word={word} key={index} />
-          ))}
-        </div>
-      </div>
 
-      <motion.div
-        initial={{ width: 0 }}
-        animate={{ width: "100%" }}
-        transition={{ duration: 1, delay: 0.7 }}
-        className="mb-3 h-14"
-      >
-        <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100  border rounded-2xl mb-1">
-          <Icon
-            className="h-6 w-6 text-neutral-400"
-            icon={"teenyicons:id-outline"}
-          />
-          <input
-            className="bg-neutral-100  outline-none w-full"
-            {...register("employeeId", { required: true })}
-            placeholder="Enter your ID"
-          />
-        </div>
-        {errors.employeeId && (
-          <MotionP className="text-red-500 text-xs ms-4 font-bold">
-            {errors.employeeId?.message}
-          </MotionP>
-        )}
-      </motion.div>
-
-      <motion.div
-        initial={{ width: 0 }}
-        animate={{ width: "100%" }}
-        transition={{ duration: 1, delay: 0.7 }}
-        className="h-14 mb-14"
-      >
-        <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100  border rounded-2xl mb-1">
-          <Icon
-            className="h-6 w-6 text-neutral-400"
-            icon={"mdi:password-outline"}
-          />
-          <input
-            className="bg-neutral-100  outline-none w-full"
-            {...register("password", { required: true })}
-            placeholder="Password"
-            type="password"
-          />
-        </div>
-        {errors.password && (
-          <MotionP className="text-red-500 ms-4 font-bold text-xs">
-            Password required
-          </MotionP>
-        )}
-      </motion.div>
-
-      <div className="flex flex-col items-center">
-        <motion.button
+        <motion.div
           initial={{ width: 0 }}
           animate={{ width: "100%" }}
-          disabled={loading}
           transition={{ duration: 1, delay: 0.7 }}
-          className={`${
-            loading && "opacity-80"
-          } mb-2 rounded-2xl justify-center flex gap-2 items-center h-10 font-bold bg-neutral-900 text-white hover:bg-neutral-900`}
+          className="mb-3 h-14"
         >
-          {loading && (
-            <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
+          <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-800 border dark:border-black rounded-lg mb-1">
+            <Icon
+              className="h-6 w-6 text-neutral-400"
+              icon={"teenyicons:id-outline"}
+            />
+            <input
+              className="bg-inherit outline-none w-full"
+              {...register("employeeId", { required: true })}
+              placeholder="Enter your ID"
+            />
+          </div>
+          {errors.employeeId && (
+            <MotionP className="text-red-500 text-xs ms-4 font-bold">
+              {errors.employeeId?.message}
+            </MotionP>
           )}
-          Login
-        </motion.button>
+        </motion.div>
+
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 1, delay: 0.7 }}
+          className="h-14 mb-14"
+        >
+          <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-800 border dark:border-black rounded-lg mb-1">
+            <Icon
+              className="h-6 w-6 text-neutral-400"
+              icon={"mdi:password-outline"}
+            />
+            <input
+              className="bg-inherit outline-none w-full"
+              {...register("password", { required: true })}
+              placeholder="Password"
+              type="password"
+            />
+          </div>
+          {errors.password && (
+            <MotionP className="text-red-500 ms-4 font-bold text-xs">
+              Password required
+            </MotionP>
+          )}
+        </motion.div>
+
+        <div className="flex flex-col items-center">
+          <motion.button
+            initial={{ width: 0 }}
+            animate={{ width: "100%" }}
+            disabled={loading}
+            transition={{ duration: 1, delay: 0.7 }}
+            className={`${
+              loading && "opacity-80"
+            } mb-2 rounded-lg justify-center flex gap-2 items-center h-10 font-bold bg-neutral-900 dark:bg-neutral-200 dark:text-black text-white hover:bg-neutral-900`}
+          >
+            {loading && (
+              <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
+            )}
+            Login
+          </motion.button>
+        </div>
       </div>
     </form>
   );
