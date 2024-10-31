@@ -8,6 +8,7 @@ import usePostIdStore from "@/app/store/postId";
 import useEditModalStore from "@/app/store/editModal";
 import useDeletePostStore from "@/app/store/deletePost";
 import useAdminHiderStore from "@/app/store/adminOpacitor";
+import { useRouter } from "next/navigation";
 
 const PostTr: React.FC<Post> = (post) => {
   const [showOptions, setShowOptions] = useState<boolean>(false);
@@ -15,6 +16,7 @@ const PostTr: React.FC<Post> = (post) => {
   const { setShowEditModal } = useEditModalStore();
   const { setDeletePostModalShown } = useDeletePostStore();
   const { setAShown } = useAdminHiderStore();
+  const router = useRouter();
 
   const handleOptionClicked = () => {
     setPostId(post.pid);
@@ -79,7 +81,10 @@ const PostTr: React.FC<Post> = (post) => {
                 }}
                 className="flex flex-col w-32 right-0 items-start p-2 absolute bg-neutral-200 border border-gray-300 rounded-lg dark:bg-neutral-800 dark:border-gray-900"
               >
-                <button className="hover:bg-gray-300 px-2 dark:hover:bg-gray-900 rounded w-full py-2 flex items-center gap-1">
+                <button
+                  onClick={() => router.push(`/posts/${post.pid}`)}
+                  className="hover:bg-gray-300 px-2 dark:hover:bg-gray-900 rounded w-full py-2 flex items-center gap-1"
+                >
                   <Icon icon={"hugeicons:view"} className="h-5 w-5" />
                   View
                 </button>
