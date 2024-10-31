@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import { pdfjs } from "react-pdf";
 import { Level } from "@/app/types/types";
 import { useQuery } from "@tanstack/react-query";
+import { createWorker } from "tesseract.js";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -27,6 +28,7 @@ interface FormFields {
   title?: string;
   public: string;
   lid: number;
+  extractedText: string;
 }
 
 interface Props {
@@ -37,7 +39,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const { setVisible } = useShowPostStore();
   const { setIsCollapsed } = useToggleStore();
   const departments = useDepartments();
-  const { register, handleSubmit } = useForm<FormFields>();
+  const { register, handleSubmit, setValue } = useForm<FormFields>();
   const [fileName, setFileName] = useState<string>("");
   const [convertedFile, setConvertedFile] = useState<File | null>(null);
   const [isConverting, setIsConverting] = useState<boolean>(false);
@@ -50,6 +52,22 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     queryKey: ["level"],
     queryFn: fetchAllLevels,
   });
+
+  const scanImage = async (imageUrl: string) => {
+    const worker = await createWorker("eng");
+    try {
+      setIsConverting(true);
+      const {
+        data: { text },
+      } = await worker.recognize(imageUrl);
+      setValue("extractedText", text.toLowerCase());
+    } catch (error) {
+      console.error("Error scanning image:", error);
+    } finally {
+      await worker.terminate();
+      setIsConverting(false);
+    }
+  };
 
   useEffect(() => {
     if (data) setLevels(data);
@@ -129,6 +147,8 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             type: "success",
             className: toastClass,
           });
+
+          await scanImage(URL.createObjectURL(convertedImage));
         } catch (error) {
           console.error("File conversion error:", error);
           toast("Error converting PDF to image", {
@@ -138,6 +158,9 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
           setFileName("");
           setConvertedFile(null);
         }
+      } else if (file.type.startsWith("image/")) {
+        const imageUrl = URL.createObjectURL(file);
+        await scanImage(imageUrl);
       } else {
         setConvertedFile(null);
       }
@@ -165,6 +188,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       formData.append("deptId", String(data.deptId));
       formData.append("public", data.public);
       formData.append("lid", String(data.lid));
+      formData.append("extractedText", data.extractedText);
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
 
