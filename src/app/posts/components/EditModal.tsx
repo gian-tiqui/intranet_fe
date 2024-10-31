@@ -14,6 +14,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { pdfjs } from "react-pdf";
 import { toast } from "react-toastify";
+import { createWorker } from "tesseract.js";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -28,6 +29,7 @@ interface FormFields {
   title?: string;
   public?: string;
   lid: number;
+  extractedText: string;
 }
 
 interface EditPostModalProps {
@@ -51,6 +53,23 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
     queryFn: fetchAllLevels,
   });
 
+  const scanImage = async (imageUrl: string) => {
+    const worker = await createWorker("eng");
+    try {
+      setLoading(true);
+      const {
+        data: { text },
+      } = await worker.recognize(imageUrl);
+
+      setValue("extractedText", text.toLowerCase());
+    } catch (error) {
+      console.error("Error scanning image:", error);
+    } finally {
+      await worker.terminate();
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (data) setLevels(data);
   }, [data]);
@@ -71,6 +90,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
         setValue("message", post.message);
         setValue("deptId", post.deptId);
         setValue("lid", post.lid);
+
         setFileName(post?.imageLocation?.split("post/")[1]);
       } catch (error) {
         const err = error as { response: { data: { message: string } } };
@@ -158,6 +178,8 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
             type: "success",
             className: toastClass,
           });
+
+          await scanImage(URL.createObjectURL(convertedImage));
         } catch (error) {
           console.error("File conversion error:", error);
           toast("Error converting PDF to image", {
@@ -167,6 +189,9 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
           setFileName("");
           setConvertedFile(null);
         }
+      } else if (file.type.startsWith("image/")) {
+        const imageUrl = URL.createObjectURL(file);
+        await scanImage(imageUrl);
       } else {
         setConvertedFile(null);
       }
@@ -186,6 +211,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
       formData.append("userId", String(data.userId));
       formData.append("deptId", String(data.deptId));
       formData.append("lid", String(data.lid));
+      formData.append("extractedText", data.extractedText?.toLowerCase());
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
       formData.append(
@@ -209,7 +235,6 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
           },
         })
         .then((response) => {
-          console.log(response.data.post.imageLocation);
           toast(response.data.message, {
             type: "success",
             className: toastClass,

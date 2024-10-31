@@ -2,9 +2,12 @@ import { jwtDecode } from "jwt-decode";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import apiClient from "../http-common/apiUrl";
 import {
+  CommentsProp,
   Decoder,
+  DepartmentWithIncompleteReads,
   Level,
   NotificationType,
+  Post,
   RetPost,
   UnreadPost,
 } from "../types/types";
@@ -130,8 +133,87 @@ const fetchPostsByLevel = async () => {
   }
 };
 
+const aggregateCommentsPerPost = (comments: CommentsProp["comments"]) => {
+  const countByPost: Record<number, number> = {};
+  comments.forEach((comment) => {
+    countByPost[comment.postId] = (countByPost[comment.postId] || 0) + 1;
+  });
+  return Object.entries(countByPost).map(([postId, count]) => ({
+    postId: Number(postId),
+    count,
+  }));
+};
+
+const aggregateReadersPerPost = (posts: Post[]) => {
+  return posts.map((post) => ({
+    postId: post.pid,
+    readers: post.readers.length,
+  }));
+};
+
+const aggregatePostsByDay = (posts: Post[]) => {
+  const countByDay: Record<string, number> = {};
+
+  posts.forEach((post) => {
+    const day = new Date(post.createdAt).toLocaleDateString();
+    countByDay[day] = (countByDay[day] || 0) + 1;
+  });
+
+  return Object.entries(countByDay).map(([day, count]) => ({
+    date: day,
+    count,
+  }));
+};
+
+const aggregatePostsByMonth = (posts: Post[]) => {
+  const countByMonth: Record<string, number> = {};
+
+  posts.forEach((post) => {
+    const month = new Date(post.createdAt).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+    });
+    countByMonth[month] = (countByMonth[month] || 0) + 1;
+  });
+
+  return Object.entries(countByMonth).map(([month, count]) => ({
+    date: month,
+    count,
+  }));
+};
+
+const aggregatePostsByYear = (posts: Post[]) => {
+  const countByYear: Record<string, number> = {};
+
+  posts.forEach((post) => {
+    const year = new Date(post.createdAt).getFullYear().toString();
+    countByYear[year] = (countByYear[year] || 0) + 1;
+  });
+
+  return Object.entries(countByYear).map(([year, count]) => ({
+    date: year,
+    count,
+  }));
+};
+
+export const fetchUsersWithIncompleteReads = async () => {
+  const response = await apiClient.get<DepartmentWithIncompleteReads[]>(
+    "/monitoring/users"
+  );
+
+  return response.data.map((dept) => ({
+    departmentName: dept.departmentName,
+    userCount: dept.users.length,
+  }));
+};
+
 export {
+  aggregatePostsByMonth,
+  aggregatePostsByDay,
+  aggregatePostsByYear,
   fetchPostsByLevel,
+  aggregateCommentsPerPost,
+  aggregateReadersPerPost,
   fetchAllLevels,
   fetchUserUnreads,
   decodeUserData,
