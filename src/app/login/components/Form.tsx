@@ -15,6 +15,7 @@ import apiClient from "@/app/http-common/apiUrl";
 import { motion } from "framer-motion";
 import EaseString from "./EaseString";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
+import Link from "next/link";
 
 type FormFields = {
   employeeId: number;
@@ -177,6 +178,11 @@ const Form = () => {
           </motion.button>
         </div>
       </div>
+      <Link href={"/welcome"} className="w-full">
+        <p className="text-end text-white text-sm mt-3 ms-auto me-3 hover:underline">
+          Go back
+        </p>
+      </Link>
     </form>
   );
 };
