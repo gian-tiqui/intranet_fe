@@ -226,8 +226,8 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
           apiClient
             .post(`${API_BASE}/notification/new-post`, null, {
               params: {
-                deptId: data.deptIds,
-                postId: response.data.post.post.pid,
+                deptId: 1,
+                postId: response.data.post.pid,
               },
               headers: {
                 Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
@@ -239,13 +239,13 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 className: toastClass,
               });
             })
-
             .catch((error) => {
               console.error("Failed to send notification:", error);
             })
             .finally(() => setPosting(false));
         })
         .catch((error) => {
+          console.error(error);
           toast(error, { type: "error", className: toastClass });
         });
     }
