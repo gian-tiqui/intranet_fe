@@ -22,7 +22,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 interface FormFields {
   userId: number;
-  deptId: number;
+  deptIds: string;
   message?: string;
   memo?: FileList;
   title?: string;
@@ -46,12 +46,27 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const toastClass =
     "bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white";
   const [posting, setPosting] = useState<boolean>(false);
+  const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
 
   const [levels, setLevels] = useState<Level[]>([]);
   const { data, isError, error } = useQuery({
     queryKey: ["level"],
     queryFn: fetchAllLevels,
   });
+
+  const handleCheckboxChange = (deptId: string) => {
+    setSelectedDepartments((prevSelected) => {
+      if (prevSelected.includes(deptId)) {
+        return prevSelected.filter((id) => id !== deptId); // Remove department if already selected
+      } else {
+        return [...prevSelected, deptId]; // Add department to selected list
+      }
+    });
+  };
+
+  useEffect(() => {
+    setValue("deptIds", selectedDepartments.join(","));
+  }, [selectedDepartments, setValue]);
 
   const scanImage = async (imageUrl: string) => {
     const worker = await createWorker("eng");
@@ -185,7 +200,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
 
       const formData = new FormData();
       formData.append("userId", String(data.userId));
-      formData.append("deptId", String(data.deptId));
+      formData.append("deptIds", String(data.deptIds));
       formData.append("public", data.public);
       formData.append("lid", String(data.lid));
       formData.append("extractedText", data.extractedText);
@@ -211,7 +226,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
           apiClient
             .post(`${API_BASE}/notification/new-post`, null, {
               params: {
-                deptId: data.deptId,
+                deptId: data.deptIds,
                 postId: response.data.post.post.pid,
               },
               headers: {
@@ -334,22 +349,27 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 </div>
               </div>
             </div>
-            <select
-              {...register("deptId", { required: true })}
-              className="w-full bg-inherit border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none"
-            >
-              <option value={""}>Select a department</option>
+            <div className="mb-4">
+              <p>Select departments:</p>
               {departments.map((department) => (
-                <option
-                  value={department.deptId}
-                  className="w-full border rounded-xl h-10 bg-white dark:bg-neutral-900"
-                  key={department.deptId}
-                >
-                  {department.departmentName[0].toUpperCase() +
-                    department.departmentName.substring(1).toLowerCase()}
-                </option>
+                <div key={department.deptId} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={`dept-${department.deptId}`}
+                    value={department.deptId}
+                    onChange={() =>
+                      handleCheckboxChange(department.deptId.toString())
+                    }
+                    checked={selectedDepartments.includes(
+                      department.deptId.toString()
+                    )}
+                  />
+                  <label htmlFor={`dept-${department.deptId}`} className="ml-2">
+                    {department.departmentName}
+                  </label>
+                </div>
               ))}
-            </select>
+            </div>
 
             <select
               {...register("lid", { required: true })}
