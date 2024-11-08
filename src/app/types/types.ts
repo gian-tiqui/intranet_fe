@@ -34,7 +34,6 @@ type PostReader = {
 type Post = {
   pid: number;
   userId: number;
-  deptId: number;
   title?: string;
   message?: string;
   imageLocation?: string;
@@ -47,6 +46,12 @@ type Post = {
   public: boolean;
   lid: number;
   readers: PostReader[];
+};
+
+type PostDepartment = {
+  id: number;
+  postId: number;
+  deptId: number;
 };
 
 type RetPost = {
@@ -232,4 +237,5 @@ export type {
   MinMax,
   ThType,
   NavLinksType,
+  PostDepartment,
 };
