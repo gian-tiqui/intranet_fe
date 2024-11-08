@@ -48,12 +48,24 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     "bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white";
   const [posting, setPosting] = useState<boolean>(false);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
-
+  const [showDepartments, setShowDepartments] = useState<boolean>(false);
   const [levels, setLevels] = useState<Level[]>([]);
   const { data, isError, error } = useQuery({
     queryKey: ["level"],
     queryFn: fetchAllLevels,
   });
+
+  useEffect(() => {
+    const closeDepts = () => {
+      if (showDepartments) {
+        setShowDepartments(false);
+      }
+    };
+
+    document.addEventListener("click", closeDepts);
+
+    return () => document.removeEventListener("click", closeDepts);
+  }, [showDepartments]);
 
   const handleCheckboxChange = (deptId: string) => {
     setSelectedDepartments((prevSelected) => {
@@ -277,7 +289,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
         className="w-80 rounded-2xl bg-neutral-200 dark:bg-neutral-900"
         onClick={handleFormClick}
       >
-        <div className="h-10 flex justify-between items-center rounded-t-2xl bg-white dark:bg-neutral-900 w-full p-4 border-b mb-3">
+        <div className="h-10 flex justify-between items-center rounded-t-2xl bg-white dark:bg-neutral-950 w-full p-4 border-b dark:border-black mb-3">
           <div className="w-full">
             <Icon
               icon={"akar-icons:cross"}
@@ -397,7 +409,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             </div>
           </div>
         </div>
-        <div className="rounded-2xl border-t bg-white relative pb-2">
+        <div className="rounded-2xl border-t bg-white dark:bg-neutral-950 dark:border-black relative pb-2">
           <div className="h-7 flex w-full justify-center items-center">
             <Icon icon={"octicon:dash-16"} className="w-7 h-7" />
           </div>
@@ -423,14 +435,17 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             </select>
           </div>
 
-          <div className="h-8 cursor-default gap-1 px-5 flex items-center">
+          <div
+            onClick={() => setShowDepartments(!showDepartments)}
+            className="h-8 gap-1 cursor-pointer px-5 flex items-center relative"
+          >
             <Icon
               icon={"arcticons:emoji-department-store"}
               className="h-4 w-4"
             />
             <p className="text-sm">Select department/s</p>
           </div>
-          {false && (
+          {showDepartments && (
             <DepartmentsList
               departments={departments}
               handleCheckboxChange={handleCheckboxChange}

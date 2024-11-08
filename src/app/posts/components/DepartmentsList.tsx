@@ -13,7 +13,7 @@ const DepartmentsList: React.FC<Props> = ({
   handleCheckboxChange,
 }) => {
   return (
-    <div className="mb-4 absolute bg-white w-full p-2 border rounded">
+    <div className="mb-4 absolute bottom-5 left-9 bg-white dark:bg-neutral-950 w-64 p-2 border dark:border-black rounded-lg">
       {departments.map((department) => (
         <div key={department.deptId} className="flex items-center">
           <input
@@ -23,7 +23,7 @@ const DepartmentsList: React.FC<Props> = ({
             onChange={() => handleCheckboxChange(department.deptId.toString())}
             checked={selectedDepartments.includes(department.deptId.toString())}
           />
-          <label htmlFor={`dept-${department.deptId}`} className="ml-2">
+          <label htmlFor={`dept-${department.deptId}`} className="ml-2 text-sm">
             {department.departmentName}
           </label>
         </div>
