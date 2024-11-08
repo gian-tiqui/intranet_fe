@@ -9,7 +9,7 @@ import Comments from "./Comments";
 import { PostComment } from "@/app/types/types";
 import CommentBar from "./CommentBar";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
-import { decodeUserData } from "@/app/functions/functions";
+import { decodeUserData, fetchPostDeptIds } from "@/app/functions/functions";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import DeleteModal from "./DeleteModal";
 import { AnimatePresence } from "framer-motion";
@@ -46,6 +46,13 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const { setSetComments, setThisComments } = useSetCommentsStore();
   const { isRead, setIsRead } = useReadStore();
   const { setDeptId } = useDeptIdStore();
+  const [deptIds, setDeptIds] = useState<string[]>([]);
+  const [userDeptId, setUserDeptId] = useState<number>(-1);
+
+  useEffect(() => {
+    const _deptId = decodeUserData()?.deptId;
+    if (_deptId) setUserDeptId(_deptId);
+  }, []);
 
   useEffect(() => {
     const fetchReadStatus = async () => {
@@ -130,13 +137,23 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   }, [openOptions]);
 
   useEffect(() => {
-    const userId = decodeUserData()?.sub;
-    const deptCode = decodeUserData()?.departmentCode.toLowerCase();
-    if (post) setDeptId(post?.deptId);
+    const populateDeptIds = async () => {
+      if (!post?.pid) return;
 
-    if (userId === post?.userId || deptCode === "admin") {
-      setEditable(true);
-    }
+      const userId = decodeUserData()?.sub;
+      const deptCode = decodeUserData()?.departmentCode.toLowerCase();
+      const deptId = decodeUserData()?.deptId;
+      const deptIds = await fetchPostDeptIds(post.pid);
+
+      if (post)
+        setDeptId(Number(deptIds.find((did) => did === deptId?.toString())));
+
+      if (userId === post?.userId || deptCode === "admin") {
+        setEditable(true);
+      }
+    };
+
+    populateDeptIds();
   }, [post, setDeptId]);
 
   useEffect(() => {
@@ -171,16 +188,26 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   };
 
   useEffect(() => {
-    if (post) {
-      if (!post.public && decodeUserData()?.deptId !== post.deptId) {
-        toast(
-          "You are trying to view a private post that is not for your department.",
-          { type: "error", className: toastClass }
-        );
-        router.push("/bulletin");
+    const populateDeptIds = async () => {
+      if (!post?.pid) return;
+      const deptIds = await fetchPostDeptIds(post?.pid);
+      const deptId = decodeUserData()?.deptId;
+
+      setDeptIds(deptIds);
+
+      if (post && deptId) {
+        if (!post.public && deptIds.includes(deptId.toString())) {
+          toast(
+            "You are trying to view a private post that is not for your department.",
+            { type: "error", className: toastClass }
+          );
+          router.push("/bulletin");
+        }
+        setLoading(false);
       }
-      setLoading(false);
-    }
+    };
+
+    if (post?.pid) populateDeptIds();
   }, [post, router]);
 
   const handleClick = () => {
@@ -362,10 +389,10 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
               <span className="text-sm">Download Image as PDF</span>
             </div>
           )}
-          {decodeUserData()?.deptId === post?.deptId && (
+          {deptIds.includes(userDeptId.toString()) && (
             <div
               onClick={handleReadClick}
-              className={`hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-3 rounded flex items-center gap-1  cursor-pointer `}
+              className={`hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-3 rounded flex items-center gap-1 cursor-pointer `}
             >
               {isRead === false && (
                 <>

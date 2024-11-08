@@ -207,7 +207,23 @@ export const fetchUsersWithIncompleteReads = async () => {
   }));
 };
 
+const fetchPostDeptIds = async (pid: number): Promise<string[]> => {
+  try {
+    const response = await apiClient.get(
+      `${API_BASE}/post-department/deptIds?postId=${pid}`
+    );
+
+    const deptIds: string[] = response.data.deptIds.split(",");
+
+    return deptIds;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
 export {
+  fetchPostDeptIds,
   aggregatePostsByMonth,
   aggregatePostsByDay,
   aggregatePostsByYear,
