@@ -13,6 +13,8 @@ import { toast } from "react-toastify";
 import { pdfjs } from "react-pdf";
 import { Level } from "@/app/types/types";
 import { useQuery } from "@tanstack/react-query";
+import { createWorker } from "tesseract.js";
+import DepartmentsList from "./DepartmentsList";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -21,12 +23,13 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 interface FormFields {
   userId: number;
-  deptId: number;
+  deptIds: string;
   message?: string;
   memo?: FileList;
   title?: string;
   public: string;
   lid: number;
+  extractedText: string;
 }
 
 interface Props {
@@ -37,19 +40,62 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const { setVisible } = useShowPostStore();
   const { setIsCollapsed } = useToggleStore();
   const departments = useDepartments();
-  const { register, handleSubmit } = useForm<FormFields>();
+  const { register, handleSubmit, setValue } = useForm<FormFields>();
   const [fileName, setFileName] = useState<string>("");
   const [convertedFile, setConvertedFile] = useState<File | null>(null);
   const [isConverting, setIsConverting] = useState<boolean>(false);
   const toastClass =
     "bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white";
   const [posting, setPosting] = useState<boolean>(false);
-
+  const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
+  const [showDepartments, setShowDepartments] = useState<boolean>(false);
   const [levels, setLevels] = useState<Level[]>([]);
   const { data, isError, error } = useQuery({
     queryKey: ["level"],
     queryFn: fetchAllLevels,
   });
+
+  useEffect(() => {
+    const closeDepts = () => {
+      if (showDepartments) {
+        setShowDepartments(false);
+      }
+    };
+
+    document.addEventListener("click", closeDepts);
+
+    return () => document.removeEventListener("click", closeDepts);
+  }, [showDepartments]);
+
+  const handleCheckboxChange = (deptId: string) => {
+    setSelectedDepartments((prevSelected) => {
+      if (prevSelected.includes(deptId)) {
+        return prevSelected.filter((id) => id !== deptId);
+      } else {
+        return [...prevSelected, deptId];
+      }
+    });
+  };
+
+  useEffect(() => {
+    setValue("deptIds", selectedDepartments.join(","));
+  }, [selectedDepartments, setValue]);
+
+  const scanImage = async (imageUrl: string) => {
+    const worker = await createWorker("eng");
+    try {
+      setIsConverting(true);
+      const {
+        data: { text },
+      } = await worker.recognize(imageUrl);
+      setValue("extractedText", text.toLowerCase());
+    } catch (error) {
+      console.error("Error scanning image:", error);
+    } finally {
+      await worker.terminate();
+      setIsConverting(false);
+    }
+  };
 
   useEffect(() => {
     if (data) setLevels(data);
@@ -129,6 +175,8 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             type: "success",
             className: toastClass,
           });
+
+          await scanImage(URL.createObjectURL(convertedImage));
         } catch (error) {
           console.error("File conversion error:", error);
           toast("Error converting PDF to image", {
@@ -138,6 +186,9 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
           setFileName("");
           setConvertedFile(null);
         }
+      } else if (file.type.startsWith("image/")) {
+        const imageUrl = URL.createObjectURL(file);
+        await scanImage(imageUrl);
       } else {
         setConvertedFile(null);
       }
@@ -162,9 +213,10 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
 
       const formData = new FormData();
       formData.append("userId", String(data.userId));
-      formData.append("deptId", String(data.deptId));
+      formData.append("deptIds", String(data.deptIds));
       formData.append("public", data.public);
       formData.append("lid", String(data.lid));
+      formData.append("extractedText", data.extractedText);
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
 
@@ -184,29 +236,34 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
         .then((response) => {
           setVisible(false);
 
-          apiClient
-            .post(`${API_BASE}/notification/new-post`, null, {
-              params: {
-                deptId: data.deptId,
-                postId: response.data.post.post.pid,
-              },
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-              },
-            })
+          const deptIdsArray = data.deptIds.split(",").map(Number);
+
+          Promise.all(
+            deptIdsArray.map((deptId) =>
+              apiClient.post(`${API_BASE}/notification/new-post`, null, {
+                params: {
+                  deptId: deptId,
+                  postId: response.data.post.pid,
+                },
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+                },
+              })
+            )
+          )
             .then(() => {
-              toast("Notification sent to the department!", {
+              toast("Notification sent to all selected departments!", {
                 type: "success",
                 className: toastClass,
               });
             })
-
             .catch((error) => {
               console.error("Failed to send notification:", error);
             })
             .finally(() => setPosting(false));
         })
         .catch((error) => {
+          console.error(error);
           toast(error, { type: "error", className: toastClass });
         });
     }
@@ -227,11 +284,51 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       onClick={() => setVisible(false)}
       className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-50 grid place-content-center"
     >
-      <div
-        className="p-4 w-80 rounded-2xl bg-white dark:bg-neutral-900"
+      <form
+        onSubmit={handleSubmit(handlePost)}
+        className="w-80 rounded-2xl bg-neutral-200 dark:bg-neutral-900"
         onClick={handleFormClick}
       >
-        <div className="flex items-start gap-3 mb-2">
+        <div className="h-10 flex justify-between items-center rounded-t-2xl bg-white dark:bg-neutral-950 w-full p-4 border-b dark:border-black mb-3">
+          <div className="w-full">
+            <Icon
+              icon={"akar-icons:cross"}
+              className="h-4 w-4 cursor-pointer"
+              onClick={() => setVisible(false)}
+            />
+          </div>
+          <p className="w-full text-center text-sm font-semibold">
+            Create Post
+          </p>
+          <div className="w-full flex justify-end">
+            <button
+              type="submit"
+              className={`${
+                posting && "opacity-80"
+              }  bg-inherit text-sm flex justify-end gap-1 items-center`}
+              disabled={isConverting || posting}
+            >
+              {posting ? (
+                <>
+                  {" "}
+                  <Icon
+                    icon={"material-symbols:post-add"}
+                    className="h-5 w-5 animate-spin"
+                  />
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <Icon
+                    icon={"material-symbols:post-add"}
+                    className="h-5 w-5"
+                  />
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+        <div className="flex items-start gap-3 mb-2 mx-4">
           <div className="rounded-full w-10 h-10 bg-gray-400"></div>
           <div className="w-full">
             <div className="flex justify-between">
@@ -240,7 +337,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
               </p>
             </div>
 
-            <div className="bg-white dark:bg-neutral-900 text-sm">
+            <div className="bg-inherit text-sm">
               <select
                 {...register("public", { required: true })}
                 className="bg-inherit outline-none text-xs"
@@ -256,22 +353,22 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit(handlePost)}>
+        <div className="relative mx-4">
           <div>
             <input
-              className="w-full outline-none p-2 dark:bg-neutral-900"
+              className="w-full outline-none p-2 bg-inherit placeholder-neutral-600"
               placeholder="Memo title"
               {...register("title")}
             />
-            <hr className="w-full border-b border dark:border-neutral-800" />
+            <hr className="w-full border-b border border-neutral-300 dark:border-neutral-800" />
             <textarea
-              className="w-full h-40 outline-none p-2 dark:bg-neutral-900"
+              className="w-full h-40 outline-none p-2 bg-inherit placeholder-neutral-600"
               placeholder="Is there something you want to write for the memo?"
               {...register("message")}
             />
 
             <div className="w-full p-4 mb-4 dark:bg-neutral-900 rounded-md">
-              <div className="relative w-full border border-dashed border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-all duration-200">
+              <div className="relative w-full border border-dashed border-neutral-400 dark:border-neutral-800 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-all duration-200">
                 <input
                   type="file"
                   accept=".pdf,.jpg,.jpeg,.png"
@@ -310,26 +407,20 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 </div>
               </div>
             </div>
-            <select
-              {...register("deptId", { required: true })}
-              className="w-full bg-inherit border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none"
-            >
-              <option value={""}>Select a department</option>
-              {departments.map((department) => (
-                <option
-                  value={department.deptId}
-                  className="w-full border rounded-xl h-10 bg-white dark:bg-neutral-900"
-                  key={department.deptId}
-                >
-                  {department.departmentName[0].toUpperCase() +
-                    department.departmentName.substring(1).toLowerCase()}
-                </option>
-              ))}
-            </select>
-
+          </div>
+        </div>
+        <div className="rounded-2xl border-t bg-white dark:bg-neutral-950 dark:border-black relative pb-2">
+          <div className="h-7 flex w-full justify-center items-center">
+            <Icon icon={"octicon:dash-16"} className="w-7 h-7" />
+          </div>
+          <div className="flex items-center px-5">
+            <Icon
+              icon={"arcticons:emoji-department-store"}
+              className="h-4 w-4"
+            />
             <select
               {...register("lid", { required: true })}
-              className="w-full bg-inherit border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none"
+              className="w-full bg-inherit rounded-t-xl h-9  text-sm gap-1 outline-none"
             >
               <option value={""}>Select employee level</option>
               {levels.map((level) => (
@@ -342,37 +433,27 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 </option>
               ))}
             </select>
-
-            <button
-              type="submit"
-              className={`${
-                posting && "opacity-80"
-              } w-full border rounded-xl h-10 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-700 flex justify-center gap-2 items-center`}
-              disabled={isConverting || posting}
-            >
-              {posting ? (
-                <>
-                  {" "}
-                  <Icon
-                    icon={"material-symbols:post-add"}
-                    className="h-5 w-5 animate-spin"
-                  />
-                  <p>Posting...</p>
-                </>
-              ) : (
-                <>
-                  {" "}
-                  <Icon
-                    icon={"material-symbols:post-add"}
-                    className="h-5 w-5"
-                  />
-                  <p>Post</p>
-                </>
-              )}
-            </button>
           </div>
-        </form>
-      </div>
+
+          <div
+            onClick={() => setShowDepartments(!showDepartments)}
+            className="h-8 gap-1 cursor-pointer px-5 flex items-center relative"
+          >
+            <Icon
+              icon={"arcticons:emoji-department-store"}
+              className="h-4 w-4"
+            />
+            <p className="text-sm">Select department/s</p>
+          </div>
+          {showDepartments && (
+            <DepartmentsList
+              departments={departments}
+              handleCheckboxChange={handleCheckboxChange}
+              selectedDepartments={selectedDepartments}
+            />
+          )}
+        </div>
+      </form>
     </div>
   );
 };

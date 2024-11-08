@@ -21,6 +21,16 @@ type User = {
   department: Department;
 };
 
+type PostReader = {
+  id: number;
+  postId: number;
+  userId: number;
+  readAt: Date;
+
+  post: Post;
+  user: User;
+};
+
 type Post = {
   pid: number;
   userId: number;
@@ -36,6 +46,18 @@ type Post = {
   department: Department;
   public: boolean;
   lid: number;
+  readers: PostReader[];
+};
+
+type PostDepartment = {
+  id: number;
+  postId: number;
+  deptId: number;
+};
+
+type RetPost = {
+  posts: Post[];
+  count: number;
 };
 
 type GroupedPosts = {
@@ -148,6 +170,7 @@ type Decoder = {
   deptId: number;
   departmentCode: string;
   lid: number;
+  departmentName: string;
 };
 
 type Level = {
@@ -157,7 +180,47 @@ type Level = {
   users?: User[];
 };
 
+type CommentsProp = {
+  comments: {
+    cid: number;
+    userId: number;
+    postId: number;
+    parentId: number;
+    message?: string;
+    imageLocation?: string;
+    createdAt: Date;
+    updatedAt: Date;
+    user: User;
+    post: Post;
+    replies?: PostComment[];
+  }[];
+};
+
+type UserWithIncompleteRead = {
+  userId: number;
+  firstName: string;
+  lastName: string;
+  unreadCount: number;
+};
+
+type DepartmentWithIncompleteReads = {
+  departmentId: number;
+  departmentName: string;
+  postCount: number;
+  users: UserWithIncompleteRead[];
+};
+
+type DepartmentUserCount = {
+  departmentName: string;
+  userCount: number;
+};
+
 export type {
+  DepartmentUserCount,
+  UserWithIncompleteRead,
+  DepartmentWithIncompleteReads,
+  CommentsProp,
+  RetPost,
   Level,
   Decoder,
   UnreadPost,
@@ -175,4 +238,5 @@ export type {
   MinMax,
   ThType,
   NavLinksType,
+  PostDepartment,
 };

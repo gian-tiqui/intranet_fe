@@ -17,7 +17,6 @@ import MotionTemplate from "@/app/components/animation/MotionTemplate";
 import SmallToLarge from "@/app/components/animation/SmallToLarge";
 import useEditModalStore from "@/app/store/editModal";
 import usePostIdStore from "@/app/store/postId";
-// import { createWorker } from "tesseract.js";
 import { jsPDF } from "jspdf";
 import apiClient from "@/app/http-common/apiUrl";
 import { toast } from "react-toastify";
@@ -101,29 +100,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
       });
     }
   };
-
-  // const scanImage = async (imageUrl: string) => {
-  //   const worker = await createWorker("eng");
-  //   try {
-  //     setExtracting(true);
-  //     const {
-  //       data: { text },
-  //     } = await worker.recognize(imageUrl);
-  //     setMessage(text);
-  //   } catch (error) {
-  //     console.error("Error scanning image:", error);
-  //   } finally {
-  //     await worker.terminate();
-  //     setExtracting(false);
-  //   }
-  // };
-
-  // const handleExtractImageClicked = () => {
-  //   if (message) return;
-  //   if (imageUrl) {
-  //     scanImage(imageUrl);
-  //   }
-  // };
 
   useEffect(() => {
     const handleClick = () => {

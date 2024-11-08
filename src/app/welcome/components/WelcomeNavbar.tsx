@@ -4,7 +4,6 @@ import React from "react";
 import wmcLogo from "../../assets/westlake_logo_horizontal.jpg.png";
 import Image from "next/image";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import ModeToggler from "@/app/components/ModeToggler";
 import Burger from "./Burger";
 import useSidebarStore from "@/app/store/sidebarStore";
 
@@ -31,10 +30,10 @@ const WelcomeNavbar = () => {
           <Link href={""} className="hover:underline">
             About
           </Link>
-          <Link href={""} className="hover:underline">
-            Kiosk
+          <Link href={"#hr-features"} className="hover:underline">
+            Usage
           </Link>
-          <Link href={""} className="hover:underline">
+          <Link href={"#description"} className="hover:underline">
             Company
           </Link>
         </div>
@@ -46,9 +45,7 @@ const WelcomeNavbar = () => {
             <Icon icon={"mdi:user"} className="h-5 w-5" />
             <p className="font-semibold text-sm">Login</p>
           </Link>
-          <div className="hidden md:flex">
-            <ModeToggler />
-          </div>
+
           <div
             className="block md:hidden"
             onClick={() => setSidebarShown(true)}

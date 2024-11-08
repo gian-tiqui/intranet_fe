@@ -65,13 +65,13 @@ const Grid = () => {
       {isLoading ? (
         <PostGridSkeleton />
       ) : (
-        _allPosts && <LatestPublicMemo posts={_allPosts} />
+        _allPosts && <LatestPublicMemo posts={_allPosts.posts} />
       )}
 
       {pLoading ? (
         <PostGridSkeleton2 />
       ) : (
-        _posts && <DepartmentMemos posts={_posts} />
+        _posts && <DepartmentMemos posts={_posts.posts} />
       )}
     </div>
   );
