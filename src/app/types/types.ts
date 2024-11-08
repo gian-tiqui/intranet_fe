@@ -34,6 +34,7 @@ type PostReader = {
 type Post = {
   pid: number;
   userId: number;
+  deptId: number;
   title?: string;
   message?: string;
   imageLocation?: string;
