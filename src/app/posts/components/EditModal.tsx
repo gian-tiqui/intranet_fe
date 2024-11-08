@@ -88,7 +88,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
 
         setValue("title", post.title);
         setValue("message", post.message);
-        setValue("deptId", post.deptId);
+        // setValue("deptId", post.deptId); besik
         setValue("lid", post.lid);
 
         setFileName(post?.imageLocation?.split("post/")[1]);
