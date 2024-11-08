@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 import { pdfjs } from "react-pdf";
 import { toast } from "react-toastify";
 import { createWorker } from "tesseract.js";
-//a
+
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
   import.meta.url
