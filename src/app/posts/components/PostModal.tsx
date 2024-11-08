@@ -14,6 +14,7 @@ import { pdfjs } from "react-pdf";
 import { Level } from "@/app/types/types";
 import { useQuery } from "@tanstack/react-query";
 import { createWorker } from "tesseract.js";
+import DepartmentsList from "./DepartmentsList";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -57,9 +58,9 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const handleCheckboxChange = (deptId: string) => {
     setSelectedDepartments((prevSelected) => {
       if (prevSelected.includes(deptId)) {
-        return prevSelected.filter((id) => id !== deptId); // Remove department if already selected
+        return prevSelected.filter((id) => id !== deptId);
       } else {
-        return [...prevSelected, deptId]; // Add department to selected list
+        return [...prevSelected, deptId];
       }
     });
   };
@@ -223,18 +224,23 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
         .then((response) => {
           setVisible(false);
 
-          apiClient
-            .post(`${API_BASE}/notification/new-post`, null, {
-              params: {
-                deptId: 1,
-                postId: response.data.post.pid,
-              },
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-              },
-            })
+          const deptIdsArray = data.deptIds.split(",").map(Number);
+
+          Promise.all(
+            deptIdsArray.map((deptId) =>
+              apiClient.post(`${API_BASE}/notification/new-post`, null, {
+                params: {
+                  deptId: deptId,
+                  postId: response.data.post.pid,
+                },
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+                },
+              })
+            )
+          )
             .then(() => {
-              toast("Notification sent to the department!", {
+              toast("Notification sent to all selected departments!", {
                 type: "success",
                 className: toastClass,
               });
@@ -266,11 +272,51 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       onClick={() => setVisible(false)}
       className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-50 grid place-content-center"
     >
-      <div
-        className="p-4 w-80 rounded-2xl bg-white dark:bg-neutral-900"
+      <form
+        onSubmit={handleSubmit(handlePost)}
+        className="w-80 rounded-2xl bg-neutral-200 dark:bg-neutral-900"
         onClick={handleFormClick}
       >
-        <div className="flex items-start gap-3 mb-2">
+        <div className="h-10 flex justify-between items-center rounded-t-2xl bg-white dark:bg-neutral-900 w-full p-4 border-b mb-3">
+          <div className="w-full">
+            <Icon
+              icon={"akar-icons:cross"}
+              className="h-4 w-4 cursor-pointer"
+              onClick={() => setVisible(false)}
+            />
+          </div>
+          <p className="w-full text-center text-sm font-semibold">
+            Create Post
+          </p>
+          <div className="w-full flex justify-end">
+            <button
+              type="submit"
+              className={`${
+                posting && "opacity-80"
+              }  bg-inherit text-sm flex justify-end gap-1 items-center`}
+              disabled={isConverting || posting}
+            >
+              {posting ? (
+                <>
+                  {" "}
+                  <Icon
+                    icon={"material-symbols:post-add"}
+                    className="h-5 w-5 animate-spin"
+                  />
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <Icon
+                    icon={"material-symbols:post-add"}
+                    className="h-5 w-5"
+                  />
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+        <div className="flex items-start gap-3 mb-2 mx-4">
           <div className="rounded-full w-10 h-10 bg-gray-400"></div>
           <div className="w-full">
             <div className="flex justify-between">
@@ -279,7 +325,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
               </p>
             </div>
 
-            <div className="bg-white dark:bg-neutral-900 text-sm">
+            <div className="bg-inherit text-sm">
               <select
                 {...register("public", { required: true })}
                 className="bg-inherit outline-none text-xs"
@@ -295,22 +341,22 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit(handlePost)}>
+        <div className="relative mx-4">
           <div>
             <input
-              className="w-full outline-none p-2 dark:bg-neutral-900"
+              className="w-full outline-none p-2 bg-inherit placeholder-neutral-600"
               placeholder="Memo title"
               {...register("title")}
             />
-            <hr className="w-full border-b border dark:border-neutral-800" />
+            <hr className="w-full border-b border border-neutral-300 dark:border-neutral-800" />
             <textarea
-              className="w-full h-40 outline-none p-2 dark:bg-neutral-900"
+              className="w-full h-40 outline-none p-2 bg-inherit placeholder-neutral-600"
               placeholder="Is there something you want to write for the memo?"
               {...register("message")}
             />
 
             <div className="w-full p-4 mb-4 dark:bg-neutral-900 rounded-md">
-              <div className="relative w-full border border-dashed border-neutral-200 dark:border-neutral-800 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-all duration-200">
+              <div className="relative w-full border border-dashed border-neutral-400 dark:border-neutral-800 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-all duration-200">
                 <input
                   type="file"
                   accept=".pdf,.jpg,.jpeg,.png"
@@ -349,31 +395,20 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 </div>
               </div>
             </div>
-            <div className="mb-4">
-              <p>Select departments:</p>
-              {departments.map((department) => (
-                <div key={department.deptId} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id={`dept-${department.deptId}`}
-                    value={department.deptId}
-                    onChange={() =>
-                      handleCheckboxChange(department.deptId.toString())
-                    }
-                    checked={selectedDepartments.includes(
-                      department.deptId.toString()
-                    )}
-                  />
-                  <label htmlFor={`dept-${department.deptId}`} className="ml-2">
-                    {department.departmentName}
-                  </label>
-                </div>
-              ))}
-            </div>
-
+          </div>
+        </div>
+        <div className="rounded-2xl border-t bg-white relative pb-2">
+          <div className="h-7 flex w-full justify-center items-center">
+            <Icon icon={"octicon:dash-16"} className="w-7 h-7" />
+          </div>
+          <div className="flex items-center px-5">
+            <Icon
+              icon={"arcticons:emoji-department-store"}
+              className="h-4 w-4"
+            />
             <select
               {...register("lid", { required: true })}
-              className="w-full bg-inherit border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none"
+              className="w-full bg-inherit rounded-t-xl h-9  text-sm gap-1 outline-none"
             >
               <option value={""}>Select employee level</option>
               {levels.map((level) => (
@@ -386,37 +421,24 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 </option>
               ))}
             </select>
-
-            <button
-              type="submit"
-              className={`${
-                posting && "opacity-80"
-              } w-full border rounded-xl h-10 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-700 flex justify-center gap-2 items-center`}
-              disabled={isConverting || posting}
-            >
-              {posting ? (
-                <>
-                  {" "}
-                  <Icon
-                    icon={"material-symbols:post-add"}
-                    className="h-5 w-5 animate-spin"
-                  />
-                  <p>Posting...</p>
-                </>
-              ) : (
-                <>
-                  {" "}
-                  <Icon
-                    icon={"material-symbols:post-add"}
-                    className="h-5 w-5"
-                  />
-                  <p>Post</p>
-                </>
-              )}
-            </button>
           </div>
-        </form>
-      </div>
+
+          <div className="h-8 cursor-default gap-1 px-5 flex items-center">
+            <Icon
+              icon={"arcticons:emoji-department-store"}
+              className="h-4 w-4"
+            />
+            <p className="text-sm">Select department/s</p>
+          </div>
+          {false && (
+            <DepartmentsList
+              departments={departments}
+              handleCheckboxChange={handleCheckboxChange}
+              selectedDepartments={selectedDepartments}
+            />
+          )}
+        </div>
+      </form>
     </div>
   );
 };
