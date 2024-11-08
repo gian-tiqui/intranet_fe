@@ -135,10 +135,10 @@ const Posts = () => {
             valueA = a.user?.firstName?.toLowerCase();
             valueB = b.user?.firstName?.toLowerCase();
             break;
-          case "deptId":
-            valueA = a.deptId;
-            valueB = b.deptId;
-            break;
+          // case "deptId":
+          //   valueA = a.deptId;
+          //   valueB = b.deptId;
+          //   break;
           case "createdAt":
             valueA = new Date(a.createdAt).getTime();
             valueB = new Date(b.createdAt).getTime();
