@@ -329,7 +329,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
           </div>
         </div>
         <div className="flex items-start gap-3 mb-2 mx-4">
-          <div className="rounded-full w-10 h-10 bg-gray-400"></div>
+          <div className="rounded-full w-12 h-10 bg-gray-400"></div>
           <div className="w-full">
             <div className="flex justify-between">
               <p className="font-bold">
