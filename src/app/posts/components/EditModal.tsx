@@ -222,6 +222,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
       formData.append("userId", String(data.userId));
       formData.append("lid", String(data.lid));
       formData.append("extractedText", data.extractedText?.toLowerCase());
+      console.log();
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
       formData.append(
