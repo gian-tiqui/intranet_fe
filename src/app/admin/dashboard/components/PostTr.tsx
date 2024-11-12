@@ -55,7 +55,6 @@ const PostTr: React.FC<Post> = (post) => {
       <td className="text-center">
         {post.user?.firstName} {post.user?.lastName}
       </td>
-      <td className="text-center">{post.department.departmentName}</td>
       <td className="text-center">
         {formatDate(post.createdAt, "MMMM dd, yyyy")}
       </td>

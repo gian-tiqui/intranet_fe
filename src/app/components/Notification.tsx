@@ -32,7 +32,7 @@ const Notification: React.FC<Props> = ({ notification }) => {
       className={`border w-full p-2  dark:border-black rounded-lg text-sm  cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 ${
         notification.isRead
           ? "bg-neutral-100 dark:bg-neutral-900"
-          : "bg-white dark:bg-neutral-800"
+          : "bg-white dark:bg-neutral-700"
       }`}
     >
       <Icon icon={`akar-icons:info`} className="h-5 w-5 mb-1" />
