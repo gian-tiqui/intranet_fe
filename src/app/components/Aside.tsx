@@ -44,6 +44,8 @@ const Aside: React.FC<Props> = ({
   const { deptId } = useDeptIdStore();
 
   const fetchReadStatus = async () => {
+    if (!postId) return;
+
     try {
       const response = await apiClient.get(
         `${API_BASE}/monitoring/read-status?userId=${
