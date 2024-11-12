@@ -390,7 +390,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
               <span className="text-sm">Download Image as PDF</span>
             </div>
           )}
-          {deptIds.includes(userDeptId.toString()) && (
+          {deptIds.includes(userDeptId.toString()) && !generalPost && (
             <div
               onClick={handleReadClick}
               className={`hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-3 rounded flex items-center gap-1 cursor-pointer `}

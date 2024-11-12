@@ -60,7 +60,7 @@ const Grid = () => {
   }
 
   return (
-    <div className="grid gap-20 pb-20">
+    <div className="grid relative -z-10 gap-20 pb-20">
       <Welcome />
       {isLoading ? (
         <PostGridSkeleton />
