@@ -1,7 +1,7 @@
 "use client";
+import NoPosts from "@/app/bulletin/components/NoPosts";
 import HoverBox from "@/app/components/HoverBox";
 import { fetchPostsByLevel } from "@/app/functions/functions";
-import NoPosts from "@/app/posts/components/NoPosts";
 import PostContainer from "@/app/posts/components/PostContainer";
 import PostSkeleton from "@/app/posts/components/PostSkeleton";
 import { useQuery } from "@tanstack/react-query";

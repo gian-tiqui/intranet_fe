@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import { pdfjs } from "react-pdf";
 import { toast } from "react-toastify";
 import { createWorker } from "tesseract.js";
+import DepartmentsList from "./DepartmentsList";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -23,7 +24,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 interface FormFields {
   userId: number;
-  deptId: number;
   message?: string;
   memo?: FileList;
   title?: string;
@@ -46,6 +46,18 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const [saving, setSaving] = useState<boolean>(false);
   const [convertedFile, setConvertedFile] = useState<File | null>(null);
   const [isConverting, setIsConverting] = useState<boolean>(false);
+  const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
+  const [showDepartments, setShowDepartments] = useState<boolean>(false);
+
+  const handleCheckboxChange = (deptId: string) => {
+    setSelectedDepartments((prevSelected) => {
+      if (prevSelected.includes(deptId)) {
+        return prevSelected.filter((id) => id !== deptId);
+      } else {
+        return [...prevSelected, deptId];
+      }
+    });
+  };
 
   const [levels, setLevels] = useState<Level[]>([]);
   const { data, isError, error } = useQuery({
@@ -88,7 +100,6 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
 
         setValue("title", post.title);
         setValue("message", post.message);
-        setValue("deptId", post.deptId);
         setValue("lid", post.lid);
 
         setFileName(post?.imageLocation?.split("post/")[1]);
@@ -209,9 +220,9 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
 
       const formData = new FormData();
       formData.append("userId", String(data.userId));
-      formData.append("deptId", String(data.deptId));
       formData.append("lid", String(data.lid));
       formData.append("extractedText", data.extractedText?.toLowerCase());
+      formData.append("deptIds", selectedDepartments.join(","));
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
       formData.append(
@@ -239,6 +250,8 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
             type: "success",
             className: toastClass,
           });
+
+          console.log(response.data.post.deptIds);
 
           setShowEditModal(false);
           window.location.reload();
@@ -270,46 +283,88 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
       onClick={() => setShowEditModal(false)}
       className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-40 grid place-content-center"
     >
-      <div
-        className="p-4 w-80 rounded-2xl bg-white dark:bg-neutral-900"
+      <form
+        className="w-80 rounded-2xl bg-neutral-200 dark:bg-neutral-900 relative"
         onClick={handleFormClick}
+        onSubmit={handleSubmit(handleEditPost)}
       >
-        <div className="flex items-start gap-3 mb-2">
-          <div className="rounded-full w-10 h-10 bg-gray-400"></div>
-
-          <div className="bg-white dark:bg-neutral-900 text-sm">
-            <p className="font-bold">
-              {decodeUserData()?.firstName} {decodeUserData()?.lastName}
+        <div className="gap-3 mb-2">
+          <div className="h-10 flex justify-between items-center rounded-t-2xl bg-white dark:bg-neutral-950 w-full p-4 border-b dark:border-black mb-3">
+            <div className="w-full">
+              <Icon
+                icon={"akar-icons:cross"}
+                className="h-4 w-4 cursor-pointer"
+                // onClick={() => setVisible(false)}
+              />
+            </div>
+            <p className="w-full text-center text-sm font-semibold">
+              Edit Post
             </p>
-            {loading ? (
-              <div className="h-3 w-1/3 rounded bg-gray-300 animate-pulse"></div>
-            ) : (
-              <select
-                {...register("public", { required: true })}
-                className={`bg-inherit outline-none text-xs`}
+            <div className="w-full flex justify-end">
+              <button
+                type="submit"
+                className={`${
+                  saving && "opacity-80"
+                }  bg-inherit text-sm flex justify-end gap-1 items-center`}
+                disabled={isConverting || saving}
               >
-                <option className="" value={"public"}>
-                  Public
-                </option>
-                <option className="bg-inherit" value={"private"}>
-                  Private
-                </option>
-              </select>
-            )}
+                {saving ? (
+                  <>
+                    {" "}
+                    <Icon
+                      icon={"material-symbols:post-add"}
+                      className="h-5 w-5 animate-spin"
+                    />
+                  </>
+                ) : (
+                  <>
+                    {" "}
+                    <Icon
+                      icon={"material-symbols:post-add"}
+                      className="h-5 w-5"
+                    />
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
-        <form onSubmit={handleSubmit(handleEditPost)}>
-          <div>
+        <div>
+          <div className="flex items-start gap-3 mx-4">
+            <div className="rounded-full w-10 h-10 bg-gray-400"></div>
+
+            <div className="bg-inherit text-sm">
+              <p className="font-bold">
+                {decodeUserData()?.firstName} {decodeUserData()?.lastName}
+              </p>
+              {loading ? (
+                <div className="h-3 w-1/3 rounded bg-gray-300 animate-pulse"></div>
+              ) : (
+                <select
+                  {...register("public", { required: true })}
+                  className={`bg-inherit outline-none text-xs`}
+                >
+                  <option className="" value={"public"}>
+                    Public
+                  </option>
+                  <option className="bg-inherit" value={"private"}>
+                    Private
+                  </option>
+                </select>
+              )}
+            </div>
+          </div>
+          <div className="mx-3 pt-4">
             {loading ? (
               <div className="h-4 w-1/3 rounded bg-gray-300 animate-pulse mb-2"></div>
             ) : (
               <input
-                className="w-full outline-none p-2 dark:bg-neutral-900"
+                className="w-full outline-none p-2 bg-inherit"
                 placeholder="Memo title"
                 {...register("title")}
               />
             )}
-            <hr className="w-full border-b border dark:border-neutral-800" />
+            <hr className="w-full border-b border border-gray-300 dark:border-neutral-800" />
             {loading ? (
               <>
                 <div className="h-4 w-full rounded bg-gray-300 animate-pulse mb-2 mt-2"></div>
@@ -319,14 +374,14 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
               </>
             ) : (
               <textarea
-                className="w-full h-40 outline-none p-2 dark:bg-neutral-900"
+                className="w-full h-40 outline-none p-2 bg-inherit"
                 placeholder="Edit your memo content"
                 {...register("message")}
               />
             )}
 
             <div className="w-full p-4 mb-4 dark:bg-neutral-900 rounded-md">
-              <div className="relative w-full border border-dashed border-neutral-200  dark:border-neutral-800 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-all duration-200">
+              <div className="relative w-full border border-dashed border-neutral-400  dark:border-neutral-800 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-all duration-200">
                 <div
                   onClick={removeFile}
                   className="absolute right-0 top-0 h-7 w-7 bg-red-700 hover:bg-red-500 grid place-content-center text-white rounded-tr rounded-bl z-50 cursor-pointer"
@@ -336,7 +391,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
 
                 <input
                   type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  className="absolute inset-0 opacity-0 cursor-pointer border border-black"
                   {...register("memo")}
                   onChange={handleFileChange}
                 />
@@ -364,31 +419,20 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                 </div>
               </div>
             </div>
-
-            <select
-              {...register("deptId", { required: true })}
-              className={`${
-                loading ? "animate-pulse bg-gray-300" : "bg-inherit"
-              } w-full border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none`}
-            >
-              <option value={""}>Select a department</option>
-              {departments.map((department) => (
-                <option
-                  value={department.deptId}
-                  className="w-full border rounded-xl h-10 bg-white dark:bg-neutral-900"
-                  key={department.deptId}
-                >
-                  {department.departmentName[0].toUpperCase() +
-                    department.departmentName.substring(1).toLowerCase()}
-                </option>
-              ))}
-            </select>
-
+          </div>
+        </div>
+        <div className="bg-white dark:bg-neutral-900 rounded-xl pb-3 px-4">
+          <div className="h-7 flex w-full justify-center items-center">
+            <Icon icon={"octicon:dash-16"} className="w-7 h-7" />
+          </div>
+          <div className="flex items-center px-5">
+            <Icon
+              icon={"arcticons:emoji-department-store"}
+              className="h-4 w-4"
+            />
             <select
               {...register("lid", { required: true })}
-              className={`${
-                loading ? "animate-pulse bg-gray-300" : "bg-inherit"
-              } w-full border rounded-xl h-9 text-center mb-4 border-neutral-300 dark:border-neutral-700 text-sm gap-1 outline-none`}
+              className="w-full bg-inherit rounded-t-xl h-9  text-sm gap-1 outline-none"
             >
               <option value={""}>Select employee level</option>
               {levels.map((level) => (
@@ -401,35 +445,27 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                 </option>
               ))}
             </select>
-
-            <button
-              disabled={loading || isConverting || saving}
-              type="submit"
-              className={`w-full border rounded-xl h-10 dark:border-neutral-700 flex justify-center items-center gap-1 ${
-                !loading && "hover:bg-gray-100 dark:hover:bg-neutral-700"
-              }`}
-            >
-              {loading ? (
-                <>
-                  <Icon icon={"line-md:loading-loop"} className="h-5 w-5" />
-
-                  <p>Getting post...</p>
-                </>
-              ) : saving ? (
-                <>
-                  <Icon icon={"line-md:loading-loop"} className="h-5 w-5" />
-                  <p>Saving</p>
-                </>
-              ) : (
-                <>
-                  <Icon icon={"lucide:edit"} className="h-5 w-5" />
-                  <p>Save</p>
-                </>
-              )}
-            </button>
           </div>
-        </form>
-      </div>
+
+          <div
+            onClick={() => setShowDepartments(!showDepartments)}
+            className="h-8 gap-1 cursor-pointer px-5 flex items-center relative"
+          >
+            <Icon
+              icon={"arcticons:emoji-department-store"}
+              className="h-4 w-4"
+            />
+            <p className="text-sm">Select department/s</p>
+          </div>
+          {showDepartments && (
+            <DepartmentsList
+              departments={departments}
+              handleCheckboxChange={handleCheckboxChange}
+              selectedDepartments={selectedDepartments}
+            />
+          )}
+        </div>
+      </form>
     </div>
   );
 };

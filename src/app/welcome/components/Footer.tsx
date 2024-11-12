@@ -3,7 +3,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <div className="bg-neutral-300 dark:bg-neutral-700 p-10 flex justify-center items-center">
+    <div className="bg-neutral-300 dark:bg-neutral-800 p-10 flex justify-center items-center">
       <div className="md:w-[50%] flex justify-between">
         <div>
           <p className="text-sm font-semibold">Mt. Grace Hospitals © 2018</p>

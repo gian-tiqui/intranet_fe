@@ -12,7 +12,7 @@ import useDarkModeStore from "@/app/store/darkModeStore";
 const Preview = () => {
   const { isDarkMode } = useDarkModeStore();
   return (
-    <div className="bg-gradient-to-b from-neutral-50 via-neutral-200 to-neutral-300 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-700 p-10 flex justify-center">
+    <div className="bg-gradient-to-b from-neutral-50 via-neutral-200 to-neutral-300 dark:from-neutral-700 dark:via-neutral-700 dark:to-neutral-800 p-10 flex justify-center">
       <div className="md:w-[50%]">
         <p className="font-semibold text-xl mb-6">Search posts</p>
         <Image

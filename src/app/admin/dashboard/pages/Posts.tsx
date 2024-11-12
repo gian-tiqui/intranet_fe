@@ -27,7 +27,6 @@ const Posts = () => {
     { head: "TITLE", field: "title" },
     { head: "MESSAGE", field: "message" },
     { head: "POSTED BY", field: "user.firstName" },
-    { head: "DEPARTMENT", field: "deptId" },
     { head: "CREATED AT", field: "createdAt" },
     { head: "UPDATED AT", field: "updatedAt" },
   ];
@@ -134,10 +133,6 @@ const Posts = () => {
           case "user.firstName":
             valueA = a.user?.firstName?.toLowerCase();
             valueB = b.user?.firstName?.toLowerCase();
-            break;
-          case "deptId":
-            valueA = a.deptId;
-            valueB = b.deptId;
             break;
           case "createdAt":
             valueA = new Date(a.createdAt).getTime();
