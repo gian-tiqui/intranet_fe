@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import apiClient from "../http-common/apiUrl";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import { decodeUserData } from "../functions/functions";
+import { toastClass } from "../tailwind-classes/tw_classes";
 
 interface FormFields {
   currentPassword: string;
@@ -34,7 +35,10 @@ const Password = () => {
         );
 
         if (response.data.statusCode === 200) {
-          toast(response.data.message);
+          toast(response.data.message, {
+            className: toastClass,
+            type: "success",
+          });
           reset();
         }
       } catch (error) {
