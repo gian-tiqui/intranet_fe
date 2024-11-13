@@ -214,7 +214,27 @@ type DepartmentUserCount = {
   userCount: number;
 };
 
+type UserEditLog = {
+  id: number;
+  log: User;
+  updatedBy: number;
+  editTypeId: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+type PostEditLog = {
+  id: number;
+  log: Post;
+  updatedBy: number;
+  editTypeId: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type {
+  PostEditLog,
+  UserEditLog,
   DepartmentUserCount,
   UserWithIncompleteRead,
   DepartmentWithIncompleteReads,
