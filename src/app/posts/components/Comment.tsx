@@ -74,6 +74,7 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
         `${API_BASE}/comment/${comment.cid}`,
         {
           message: data.message,
+          updatedBy: decodeUserData()?.sub,
           headers: {
             Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
           },
