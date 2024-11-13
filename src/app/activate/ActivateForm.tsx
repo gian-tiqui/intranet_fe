@@ -1,33 +1,25 @@
 "use client";
-import Cookies from "js-cookie";
-import useNavbarVisibilityStore from "@/app/store/navbarVisibilityStore";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import MotionP from "@/app/components/animation/MotionP";
-import useSplashToggler from "@/app/store/useSplashStore";
 import useLogoutArtStore from "@/app/store/useLogoutSplashStore";
 import { toast } from "react-toastify";
-import { INTRANET, API_BASE } from "@/app/bindings/binding";
-import { jwtDecode } from "jwt-decode";
 import apiClient from "@/app/http-common/apiUrl";
 import { motion } from "framer-motion";
-import EaseString from "./EaseString";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import Link from "next/link";
+import EaseString from "../login/components/EaseString";
+import { API_BASE } from "../bindings/binding";
 
 type FormFields = {
   employeeId: number;
   password: string;
 };
 
-const Form = () => {
-  const { setHidden } = useNavbarVisibilityStore();
+const ActivateForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { setShowSplash } = useSplashToggler();
   const { showLogoutArt, setShowLogoutArt } = useLogoutArtStore();
-  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -42,40 +34,19 @@ const Form = () => {
     return () => clearTimeout(timeout);
   }, [showLogoutArt, setShowLogoutArt]);
 
-  useEffect(() => {
-    if (Cookies.get(INTRANET) && localStorage.getItem(INTRANET)) {
-      setHidden(false);
-      router.push("/");
-    }
-  }, [setHidden, router]);
-
-  const handleLogin = async ({ employeeId, password }: FormFields) => {
+  const handleLogin = async ({ employeeId }: FormFields) => {
     try {
       setLoading(true);
-      const response = await apiClient.post(`${API_BASE}/auth/login`, {
-        employeeId,
-        password,
-      });
+      const response = await apiClient.post(
+        `${API_BASE}/auth/verify?employeeId=${employeeId}`,
+        {
+          employeeId,
+        }
+      );
 
       toast.dismiss();
 
-      setHidden(true);
-      const rt = response.data.tokens.refreshToken;
-      const decodedToken = jwtDecode<{ exp?: number }>(rt);
-
-      const expiresInSeconds = decodedToken.exp
-        ? decodedToken.exp - Math.floor(Date.now() / 1000)
-        : 0;
-      const expirationDays = Math.max(
-        Math.floor(expiresInSeconds / (24 * 60 * 60)),
-        1
-      );
-
-      Cookies.set(INTRANET, rt, { expires: expirationDays });
-      localStorage.setItem(INTRANET, response.data.tokens.accessToken);
-      setShowSplash(true);
-
-      router.push("/");
+      console.log(response);
     } catch (error: unknown) {
       console.error(error);
       if (typeof error === "object" && error !== null) {
@@ -98,15 +69,15 @@ const Form = () => {
       onSubmit={handleSubmit(handleLogin)}
       className="p-6 border-0 text-black dark:text-white flex flex-col justify-center items-center relative h-screen"
     >
-      <div className="w-96 shadow p-7 rounded-2xl bg-white dark:bg-neutral-900">
+      <div className="w-96  shadow p-7 rounded-2xl bg-white dark:bg-neutral-900">
         <div className="flex flex-col items-center">
           <div className="flex gap-1 mb-3">
-            {"Welcome back!".split(" ").map((word, index) => (
+            {"Hello there!".split(" ").map((word, index) => (
               <EaseString size="" word={word} key={index} />
             ))}
           </div>
           <div className="flex gap-1 mb-16">
-            {"Sign in to your account".split(" ").map((word, index) => (
+            {"Activate your account here".split(" ").map((word, index) => (
               <EaseString size="" word={word} key={index} />
             ))}
           </div>
@@ -136,31 +107,6 @@ const Form = () => {
           )}
         </motion.div>
 
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 1, delay: 0.7 }}
-          className="h-14 mb-14"
-        >
-          <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-800 border dark:border-black rounded-lg mb-1">
-            <Icon
-              className="h-6 w-6 text-neutral-400"
-              icon={"mdi:password-outline"}
-            />
-            <input
-              className="bg-inherit outline-none w-full"
-              {...register("password", { required: true })}
-              placeholder="Password"
-              type="password"
-            />
-          </div>
-          {errors.password && (
-            <MotionP className="text-red-500 ms-4 font-bold text-xs">
-              Password required
-            </MotionP>
-          )}
-        </motion.div>
-
         <div className="flex flex-col items-center">
           <motion.button
             initial={{ width: 0 }}
@@ -174,27 +120,22 @@ const Form = () => {
             {loading && (
               <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
             )}
-            Login
+            Activate
           </motion.button>{" "}
           <div className="w-full">
             <p className="dark:text-white text-end text-xs">
-              Account not activated yet?{" "}
-              <Link href={"activate"}>
+              Account already activated?{" "}
+              <Link href={"login"}>
                 <span className="hover:underline text-blue-700 dark:text-blue-500 cursor-pointer">
-                  Activate account
+                  Login
                 </span>
               </Link>
             </p>
           </div>
         </div>
       </div>
-      <div className="w-full flex justify-end px-3">
-        <Link href={"/welcome"} className="">
-          <p className="text-white text-sm mt-3  hover:underline">Go back</p>
-        </Link>
-      </div>
     </form>
   );
 };
 
-export default Form;
+export default ActivateForm;
