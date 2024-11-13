@@ -151,7 +151,7 @@ const UserInfo: React.FC<Props> = ({ mode, handleModeChange }) => {
         <div className="flex justify-between">
           <p>Middle name</p>
           <input
-            {...register("middleName", { required: true })}
+            {...register("middleName", { required: false })}
             disabled={mode === "save"}
             className={`${
               loading && "animate-pulse"
