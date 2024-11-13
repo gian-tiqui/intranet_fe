@@ -23,7 +23,10 @@ import DeleteModal from "./DeleteModal";
 import useDeletePostStore from "@/app/store/deletePost";
 import DeletePostModal from "./DeletePostModal";
 import { motion } from "framer-motion";
-// import Notifications from "../pages/Notifications";
+import UserEditLogs from "../pages/UserEditLogs";
+import PostEditLog from "../pages/PostEditLog";
+import CommentEditLog from "../pages/CommentEditLog";
+import ChangePasswordLog from "../pages/ChangePasswordLog";
 
 const Sidebar = () => {
   const [selectedComp, setSelectedComp] = useState<ReactNode>(<Graphs />);
@@ -89,11 +92,26 @@ const Sidebar = () => {
       component: <Replies />,
       icon: "mingcute:comment-line",
     },
-    // {
-    //   name: "Notifications",
-    //   component: <Notifications />,
-    //   icon: "material-symbols:notifications-outline",
-    // },
+    {
+      name: "User Edit Logs",
+      component: <UserEditLogs />,
+      icon: "mingcute:comment-line",
+    },
+    {
+      name: "Post Edit Logs",
+      component: <PostEditLog />,
+      icon: "mingcute:comment-line",
+    },
+    {
+      name: "Comment Edit Logs",
+      component: <CommentEditLog />,
+      icon: "mingcute:comment-line",
+    },
+    {
+      name: "Change Password Logs",
+      component: <ChangePasswordLog />,
+      icon: "mingcute:comment-line",
+    },
   ];
 
   const handleHiderClicked = () => {
@@ -146,7 +164,7 @@ const Sidebar = () => {
               </div>
             </HoverBox>
             <hr className="border-b border-gray-200 dark:border-gray-800 mx-4" />
-            <div className="flex flex-col gap-0 py-2 px-4 w-72">
+            <div className="flex flex-col gap-0 py-2 px-4 w-72 h-72 overflow-auto">
               {components.map((comp, index) => (
                 <div
                   onClick={() => setSelectedComp(comp.component)}

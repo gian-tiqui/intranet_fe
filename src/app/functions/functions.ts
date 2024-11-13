@@ -222,7 +222,21 @@ const fetchPostDeptIds = async (pid: number): Promise<string[]> => {
   }
 };
 
+const fetchLogsByTypeId = async (logType: number): Promise<object[]> => {
+  try {
+    const response = await apiClient.get(
+      `${API_BASE}/edit-logs?editTypeId=${logType}`
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
 export {
+  fetchLogsByTypeId,
   fetchPostDeptIds,
   aggregatePostsByMonth,
   aggregatePostsByDay,
