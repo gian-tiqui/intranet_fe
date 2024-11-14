@@ -11,6 +11,7 @@ import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import Link from "next/link";
 import EaseString from "../login/components/EaseString";
 import { API_BASE } from "../bindings/binding";
+import { useRouter } from "next/navigation";
 
 type FormFields = {
   employeeId: number;
@@ -18,6 +19,7 @@ type FormFields = {
 };
 
 const ActivateForm = () => {
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const { showLogoutArt, setShowLogoutArt } = useLogoutArtStore();
   const {
@@ -34,7 +36,7 @@ const ActivateForm = () => {
     return () => clearTimeout(timeout);
   }, [showLogoutArt, setShowLogoutArt]);
 
-  const handleLogin = async ({ employeeId }: FormFields) => {
+  const handleActivate = async ({ employeeId }: FormFields) => {
     try {
       setLoading(true);
       const response = await apiClient.post(
@@ -44,13 +46,18 @@ const ActivateForm = () => {
         }
       );
 
-      toast.dismiss();
+      if (response.status === 201) {
+        toast(
+          "Your ID was found. Please check your email for the activation link.",
+          { className: toastClass, type: "success" }
+        );
 
-      console.log(response);
+        router.push("/login");
+      }
     } catch (error: unknown) {
       console.error(error);
       if (typeof error === "object" && error !== null) {
-        toast("Theres a problem with your ID or password", {
+        toast("ID not found", {
           type: "error",
           className: toastClass,
         });
@@ -66,7 +73,7 @@ const ActivateForm = () => {
 
   return (
     <form
-      onSubmit={handleSubmit(handleLogin)}
+      onSubmit={handleSubmit(handleActivate)}
       className="p-6 border-0 text-black dark:text-white flex flex-col justify-center items-center relative h-screen"
     >
       <div className="w-96  shadow p-7 rounded-2xl bg-white dark:bg-neutral-900">
