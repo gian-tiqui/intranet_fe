@@ -42,7 +42,6 @@ const RegisterForm: React.FC<Props> = ({ hashedMmployeeId }) => {
           lid: string;
         };
 
-        console.log(userData);
 
         setValue("email", userData.email);
         setValue("firstName", userData.firstName);
