@@ -47,17 +47,23 @@ const ActivateForm = () => {
       );
 
       if (response.status === 201) {
-        toast(
-          "Your ID was found. Please check your email for the activation link.",
-          { className: toastClass, type: "success" }
-        );
+        toast(response.data.message, {
+          className: toastClass,
+          type: "success",
+        });
 
         router.push("/login");
       }
     } catch (error: unknown) {
-      console.error(error);
+      const {
+        response: {
+          data: { message },
+        },
+      } = error as {
+        response: { data: { message: string } };
+      };
       if (typeof error === "object" && error !== null) {
-        toast("ID not found", {
+        toast(message, {
           type: "error",
           className: toastClass,
         });
