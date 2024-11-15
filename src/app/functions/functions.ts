@@ -10,6 +10,7 @@ import {
   Post,
   RetPost,
   UnreadPost,
+  User,
 } from "../types/types";
 
 const decodeUserData = () => {
@@ -235,7 +236,47 @@ const fetchLogsByTypeId = async (logType: number): Promise<object[]> => {
   }
 };
 
+const fetchPendingUsers = async () => {
+  try {
+    const response = await apiClient.get(`${API_BASE}/users?confirm=false`);
+
+    return response.data.users.users as User[];
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+const fetchPost = async (id: number) => {
+  try {
+    let userCommentId;
+    if (
+      decodeUserData()?.departmentCode.toLowerCase() === "hr" ||
+      decodeUserData()?.departmentCode.toLowerCase() === "qm"
+    )
+      userCommentId = "";
+    else userCommentId = decodeUserData()?.sub;
+
+    const response = await apiClient.get(
+      `${API_BASE}/post/${id}?userIdComment=${userCommentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+        },
+      }
+    );
+
+    return response.data.post as Post;
+  } catch (error) {
+    console.error(error);
+
+    return null;
+  }
+};
+
 export {
+  fetchPost,
+  fetchPendingUsers,
   fetchLogsByTypeId,
   fetchPostDeptIds,
   aggregatePostsByMonth,
