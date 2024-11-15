@@ -16,6 +16,7 @@ import { pdfjs } from "react-pdf";
 import { toast } from "react-toastify";
 import { createWorker } from "tesseract.js";
 import DepartmentsList from "./DepartmentsList";
+import useRefetchPostStore from "@/app/store/refetchPostStore";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -48,6 +49,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const [isConverting, setIsConverting] = useState<boolean>(false);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [showDepartments, setShowDepartments] = useState<boolean>(false);
+  const { refetch } = useRefetchPostStore();
 
   const handleCheckboxChange = (deptId: string) => {
     setSelectedDepartments((prevSelected) => {
@@ -255,7 +257,9 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
           console.log(response.data.post.deptIds);
 
           setShowEditModal(false);
-          window.location.reload();
+          // window.location.reload();
+
+          refetch();
         })
         .catch((error) => {
           toast(error.message, { type: "error", className: toastClass });
