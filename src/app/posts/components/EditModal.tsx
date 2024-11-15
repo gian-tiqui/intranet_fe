@@ -254,10 +254,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
             className: toastClass,
           });
 
-          console.log(response.data.post.deptIds);
-
           setShowEditModal(false);
-          // window.location.reload();
 
           refetch();
         })
