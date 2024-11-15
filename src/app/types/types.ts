@@ -214,27 +214,17 @@ type DepartmentUserCount = {
   userCount: number;
 };
 
-type UserEditLog = {
+type LogType = {
   id: number;
-  log: User;
   updatedBy: number;
+  createdAt: Date;
+  updatedAt: Date;
   editTypeId: number;
-  createdAt: string;
-  updatedAt: string;
-};
-
-type PostEditLog = {
-  id: number;
-  log: Post;
-  updatedBy: number;
-  editTypeId: number;
-  createdAt: string;
-  updatedAt: string;
+  log: User | Post | Comment | { password: string; hash: string };
 };
 
 export type {
-  PostEditLog,
-  UserEditLog,
+  LogType,
   DepartmentUserCount,
   UserWithIncompleteRead,
   DepartmentWithIncompleteReads,
