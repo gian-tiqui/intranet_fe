@@ -1,5 +1,4 @@
 "use client";
-import usePost from "@/app/custom-hooks/post";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
@@ -9,7 +8,11 @@ import Comments from "./Comments";
 import { PostComment } from "@/app/types/types";
 import CommentBar from "./CommentBar";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
-import { decodeUserData, fetchPostDeptIds } from "@/app/functions/functions";
+import {
+  decodeUserData,
+  fetchPost,
+  fetchPostDeptIds,
+} from "@/app/functions/functions";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import DeleteModal from "./DeleteModal";
 import { AnimatePresence } from "framer-motion";
@@ -24,6 +27,8 @@ import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import useSetCommentsStore from "@/app/store/useCommentsStore";
 import useReadStore from "@/app/store/readStore";
 import useDeptIdStore from "@/app/store/deptIdStore";
+import { useQuery } from "@tanstack/react-query";
+import useRefetchPostStore from "@/app/store/refetchPostStore";
 
 interface Props {
   id: number;
@@ -32,7 +37,12 @@ interface Props {
 
 const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const router = useRouter();
-  const post = usePost(id);
+  const { setRefetch } = useRefetchPostStore();
+
+  const { data: post, refetch } = useQuery({
+    queryKey: ["single-post"],
+    queryFn: () => fetchPost(id),
+  });
   const [loading, setLoading] = useState<boolean>(true);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [comments, setComments] = useState<PostComment[]>([]);
@@ -48,6 +58,14 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const { setDeptId } = useDeptIdStore();
   const [deptIds, setDeptIds] = useState<string[]>([]);
   const [userDeptId, setUserDeptId] = useState<number>(-1);
+
+  useEffect(() => {
+    const handleRefetch = () => {
+      refetch();
+    };
+
+    setRefetch(handleRefetch);
+  }, [setRefetch, refetch]);
 
   useEffect(() => {
     const _deptId = decodeUserData()?.deptId;

@@ -30,6 +30,8 @@ import showDeleteCommentModalStore from "../store/deleteComment";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import Unseen from "./Unseen";
+import PendingUsers from "./PendingUsers";
+import { jwtDecode } from "jwt-decode";
 
 interface Props {
   children?: ReactNode;
@@ -52,6 +54,23 @@ const Divider: React.FC<Props> = ({ children }) => {
   const [editVisible, setEditVisible] = useState<boolean>(true);
   const { showDeleteComment } = showDeleteCommentModalStore();
   const queryClient = new QueryClient();
+  const [showPendingUsers, setShowPendingUsers] = useState<boolean>(false);
+
+  useEffect(() => {
+    const checkLevel = () => {
+      const at = localStorage.getItem(INTRANET);
+
+      if (at) {
+        const decoded: { confirmed: boolean } = jwtDecode(at);
+
+        if (decoded.confirmed) {
+          setShowPendingUsers(true);
+        }
+      }
+    };
+
+    checkLevel();
+  }, []);
 
   useEffect(() => {
     const fetchReads = async () => {
@@ -204,7 +223,7 @@ const Divider: React.FC<Props> = ({ children }) => {
         >
           {hidden && (
             <div
-              className="sticky w-full flex justify-between pt-3 pb-3 top-0 bg-neutral-200 dark:bg-neutral-800"
+              className="sticky z-10 w-full flex justify-between pt-3 pb-3 top-0 bg-neutral-200 dark:bg-neutral-800"
               id="hi"
             >
               <div id="buttons" className="flex w-full pt-2 mb-2 gap-3">
@@ -279,6 +298,8 @@ const Divider: React.FC<Props> = ({ children }) => {
                     loading={loadingSearch}
                   />
                 )}
+
+                {showPendingUsers && <PendingUsers />}
                 <Unseen />
                 <NotificationBell />
                 <ModeToggler />

@@ -59,6 +59,19 @@ const Form = () => {
 
       toast.dismiss();
 
+      const accessToken: { confirmed: boolean } = jwtDecode(
+        response.data.tokens.accessToken
+      );
+
+      if (accessToken.confirmed === false) {
+        toast("Please wait for your account to be activated", {
+          className: toastClass,
+          type: "info",
+        });
+
+        return;
+      }
+
       setHidden(true);
       const rt = response.data.tokens.refreshToken;
       const decodedToken = jwtDecode<{ exp?: number }>(rt);
