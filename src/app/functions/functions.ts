@@ -6,6 +6,7 @@ import {
   Decoder,
   DepartmentWithIncompleteReads,
   Level,
+  LogType,
   NotificationType,
   Post,
   RetPost,
@@ -223,7 +224,7 @@ const fetchPostDeptIds = async (pid: number): Promise<string[]> => {
   }
 };
 
-const fetchLogsByTypeId = async (logType: number): Promise<object[]> => {
+const fetchLogsByTypeId = async (logType: number): Promise<LogType[]> => {
   try {
     const response = await apiClient.get(
       `${API_BASE}/edit-logs?editTypeId=${logType}`
