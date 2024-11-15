@@ -1,5 +1,6 @@
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
+import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import { User } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React from "react";
@@ -41,6 +42,25 @@ const UserItem: React.FC<Props> = ({ pendingUser, onRefetch }) => {
     }
   };
 
+  const handleDecline = async () => {
+    try {
+      const response = await apiClient.delete(
+        `${API_BASE}/users/${pendingUser.id}`
+      );
+
+      if (response.status === 200) {
+        toast("User activation declined", {
+          type: "success",
+          className: toastClass,
+        });
+
+        onRefetch();
+      }
+    } catch (error) {
+      console.error("There was a problem declining the user activation", error);
+    }
+  };
+
   return (
     <div className="w-full h-10 bg-gray-100 dark:bg-neutral-800 shadow flex items-center px-3 rounded justify-between">
       <div className="w-full flex gap-2">
@@ -57,6 +77,7 @@ const UserItem: React.FC<Props> = ({ pendingUser, onRefetch }) => {
           className="h-6 w-6 cursor-pointer rounded bg-green-500 p-1"
         />
         <Icon
+          onClick={handleDecline}
           icon={"iconoir:cancel"}
           className="h-6 w-6 cursor-pointer  rounded bg-red-500 p-1"
         />
