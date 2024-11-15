@@ -238,7 +238,9 @@ const fetchLogsByTypeId = async (logType: number): Promise<object[]> => {
 
 const fetchPendingUsers = async () => {
   try {
-    const response = await apiClient.get(`${API_BASE}/users?confirm=false`);
+    const response = await apiClient.get(
+      `${API_BASE}/users?confirm=false&deptId=${decodeUserData()?.deptId}`
+    );
 
     return response.data.users.users as User[];
   } catch (error) {
