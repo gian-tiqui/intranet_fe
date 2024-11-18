@@ -23,10 +23,10 @@ import DeleteModal from "./DeleteModal";
 import useDeletePostStore from "@/app/store/deletePost";
 import DeletePostModal from "./DeletePostModal";
 import { motion } from "framer-motion";
-import UserEditLogs from "../pages/UserEditLogs";
-import PostEditLog from "../pages/PostEditLog";
-import CommentEditLog from "../pages/CommentEditLog";
-import ChangePasswordLog from "../pages/ChangePasswordLog";
+// import UserEditLogs from "../pages/UserEditLogs";
+// import PostEditLog from "../pages/PostEditLog";
+// import CommentEditLog from "../pages/CommentEditLog";
+// import ChangePasswordLog from "../pages/ChangePasswordLog";
 
 const Sidebar = () => {
   const [selectedComp, setSelectedComp] = useState<ReactNode>(<Graphs />);
@@ -92,26 +92,26 @@ const Sidebar = () => {
       component: <Replies />,
       icon: "mingcute:comment-line",
     },
-    {
-      name: "User Edit Logs",
-      component: <UserEditLogs />,
-      icon: "mingcute:comment-line",
-    },
-    {
-      name: "Post Edit Logs",
-      component: <PostEditLog />,
-      icon: "mingcute:comment-line",
-    },
-    {
-      name: "Comment Edit Logs",
-      component: <CommentEditLog />,
-      icon: "mingcute:comment-line",
-    },
-    {
-      name: "Change Password Logs",
-      component: <ChangePasswordLog />,
-      icon: "mingcute:comment-line",
-    },
+    // {
+    //   name: "User Edit Logs",
+    //   component: <UserEditLogs />,
+    //   icon: "mingcute:comment-line",
+    // },
+    // {
+    //   name: "Post Edit Logs",
+    //   component: <PostEditLog />,
+    //   icon: "mingcute:comment-line",
+    // },
+    // {
+    //   name: "Comment Edit Logs",
+    //   component: <CommentEditLog />,
+    //   icon: "mingcute:comment-line",
+    // },
+    // {
+    //   name: "Change Password Logs",
+    //   component: <ChangePasswordLog />,
+    //   icon: "mingcute:comment-line",
+    // },
   ];
 
   const handleHiderClicked = () => {
