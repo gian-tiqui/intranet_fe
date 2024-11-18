@@ -166,7 +166,7 @@ const Posts = () => {
 
   return (
     <div className="posts-component">
-      <div className="w-full py-5 px-10 shadow flex items-center justify-between">
+      <div className="w-full bg-white dark:bg-neutral-900 py-5 px-10 shadow flex items-center justify-between">
         <h1 className="text-2xl font-extrabold">Posts</h1>
 
         <div className="flex gap-3 items-center">
