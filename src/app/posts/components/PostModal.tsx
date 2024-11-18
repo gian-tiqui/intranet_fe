@@ -6,7 +6,6 @@ import apiClient from "@/app/http-common/apiUrl";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
 import useShowPostStore from "@/app/store/showPostStore";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -15,6 +14,7 @@ import { Level } from "@/app/types/types";
 import { useQuery } from "@tanstack/react-query";
 import { createWorker } from "tesseract.js";
 import DepartmentsList from "./DepartmentsList";
+import { jwtDecode } from "jwt-decode";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -41,8 +41,8 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const { setIsCollapsed } = useToggleStore();
   const departments = useDepartments();
   const { register, handleSubmit, setValue } = useForm<FormFields>();
-  const [fileName, setFileName] = useState<string>("");
-  const [convertedFile, setConvertedFile] = useState<File | null>(null);
+  const [fileNames, setFileNames] = useState<string[]>([]);
+  const [convertedFiles, setConvertedFiles] = useState<File[]>([]);
   const [isConverting, setIsConverting] = useState<boolean>(false);
   const toastClass =
     "bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white";
@@ -81,19 +81,18 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     setValue("deptIds", selectedDepartments.join(","));
   }, [selectedDepartments, setValue]);
 
-  const scanImage = async (imageUrl: string) => {
+  const scanImage = async (imageUrl: string): Promise<string> => {
     const worker = await createWorker("eng");
     try {
-      setIsConverting(true);
       const {
         data: { text },
       } = await worker.recognize(imageUrl);
-      setValue("extractedText", text.toLowerCase());
+      return text.toLowerCase();
     } catch (error) {
       console.error("Error scanning image:", error);
+      return "";
     } finally {
       await worker.terminate();
-      setIsConverting(false);
     }
   };
 
@@ -104,100 +103,93 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   if (isError) console.error(error);
 
   const convertPdfToImage = async (pdfFile: File): Promise<File> => {
-    try {
-      setIsConverting(true);
+    const arrayBuffer = await pdfFile.arrayBuffer();
+    const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+    const page = await pdf.getPage(1);
+    const viewport = page.getViewport({ scale: 2.0 });
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
 
-      const arrayBuffer = await pdfFile.arrayBuffer();
-
-      const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
-
-      const page = await pdf.getPage(1);
-
-      const viewport = page.getViewport({ scale: 2.0 });
-
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-
-      if (!context) {
-        throw new Error("Could not get canvas context");
-      }
-
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
-
-      // Render PDF page to canvas
-      await page.render({
-        canvasContext: context,
-        viewport: viewport,
-      }).promise;
-
-      const blob = await new Promise<Blob>((resolve) => {
-        canvas.toBlob(
-          (blob) => {
-            resolve(blob!);
-          },
-          "image/jpeg",
-          0.95
-        );
-      });
-
-      const convertedImageFile = new File(
-        [blob],
-        pdfFile.name.replace(".pdf", ".jpg"),
-        { type: "image/jpeg" }
-      );
-
-      setIsConverting(false);
-      return convertedImageFile;
-    } catch (error) {
-      setIsConverting(false);
-      console.error("Error converting PDF to image:", error);
-      throw error;
+    if (!context) {
+      throw new Error("Could not get canvas context");
     }
+
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    await page.render({
+      canvasContext: context,
+      viewport: viewport,
+    }).promise;
+
+    const blob = await new Promise<Blob>((resolve) => {
+      canvas.toBlob(
+        (blob) => {
+          resolve(blob!);
+        },
+        "image/jpeg",
+        0.95
+      );
+    });
+
+    return new File([blob], pdfFile.name.replace(".pdf", ".jpg"), {
+      type: "image/jpeg",
+    });
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      setFileName(file.name);
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      const fileNames: string[] = [];
+      let extractedTexts = "";
+      const convertedFiles: File[] = [];
 
-      if (file.type === "application/pdf") {
+      setIsConverting(true);
+      for (const file of files) {
         try {
-          toast("Converting PDF to image...", {
-            type: "info",
-            className: toastClass,
-          });
+          if (file.type === "application/pdf") {
+            toast(`Converting PDF: ${file.name}`, {
+              type: "info",
+              className: toastClass,
+            });
 
-          const convertedImage = await convertPdfToImage(file);
-          setConvertedFile(convertedImage);
+            const convertedImage = await convertPdfToImage(file);
+            convertedFiles.push(convertedImage);
 
-          toast("PDF converted successfully!", {
-            type: "success",
-            className: toastClass,
-          });
+            const text = await scanImage(URL.createObjectURL(convertedImage));
+            extractedTexts += text + " ";
+          } else if (file.type.startsWith("image/")) {
+            const text = await scanImage(URL.createObjectURL(file));
+            extractedTexts += text + " ";
+            convertedFiles.push(file);
+          } else {
+            toast(`Unsupported file format: ${file.name}`, {
+              type: "error",
+              className: toastClass,
+            });
+          }
 
-          await scanImage(URL.createObjectURL(convertedImage));
+          fileNames.push(file.name);
         } catch (error) {
-          console.error("File conversion error:", error);
-          toast("Error converting PDF to image", {
-            type: "error",
-            className: toastClass,
-          });
-          setFileName("");
-          setConvertedFile(null);
+          console.error("Error processing file:", file.name, error);
         }
-      } else if (file.type.startsWith("image/")) {
-        const imageUrl = URL.createObjectURL(file);
-        await scanImage(imageUrl);
-      } else {
-        setConvertedFile(null);
       }
+
+      setFileNames(fileNames);
+      setConvertedFiles(convertedFiles);
+      setValue("extractedText", extractedTexts.trim());
+      setIsConverting(false);
+
+      toast("Files processed successfully!", {
+        type: "success",
+        className: toastClass,
+      });
     }
   };
 
-  const handlePost = (data: FormFields) => {
+  const handlePost = async (data: FormFields) => {
     if (isConverting) {
-      toast("Please wait for PDF conversion to complete", {
+      toast("Please wait for file processing to complete", {
         type: "info",
         className: toastClass,
       });
@@ -220,52 +212,34 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
 
-      if (convertedFile) {
-        formData.append("memo", convertedFile);
-      } else if (data.memo && data.memo[0]) {
-        formData.append("memo", data.memo[0]);
-      }
+      convertedFiles.forEach((file) => {
+        formData.append("memo", file);
+      });
 
-      apiClient
-        .post(`${API_BASE}/post`, formData, {
+      try {
+        const response = await apiClient.post(`${API_BASE}/post`, formData, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
             "Content-Type": "multipart/form-data",
           },
-        })
-        .then((response) => {
-          setVisible(false);
-
-          const deptIdsArray = data.deptIds.split(",").map(Number);
-
-          Promise.all(
-            deptIdsArray.map((deptId) =>
-              apiClient.post(`${API_BASE}/notification/new-post`, null, {
-                params: {
-                  deptId: deptId,
-                  postId: response.data.post.pid,
-                },
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-                },
-              })
-            )
-          )
-            .then(() => {
-              toast("Notification sent to all selected departments!", {
-                type: "success",
-                className: toastClass,
-              });
-            })
-            .catch((error) => {
-              console.error("Failed to send notification:", error);
-            })
-            .finally(() => setPosting(false));
-        })
-        .catch((error) => {
-          console.error(error);
-          toast(error, { type: "error", className: toastClass });
         });
+
+        if (response.status === 201) {
+          setVisible(false);
+          toast(response.data.message, {
+            type: "success",
+            className: toastClass,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        toast("Error creating post", {
+          type: "error",
+          className: toastClass,
+        });
+      } finally {
+        setPosting(false);
+      }
     }
   };
 
@@ -371,6 +345,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
               <div className="relative w-full border border-dashed border-neutral-400 dark:border-neutral-800 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-all duration-200">
                 <input
                   type="file"
+                  multiple={true}
                   accept=".pdf,.jpg,.jpeg,.png"
                   className="absolute inset-0 opacity-0 cursor-pointer"
                   {...register("memo")}
@@ -385,13 +360,19 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                       />
                       <span className="mt-2 text-sm">Converting PDF...</span>
                     </div>
-                  ) : fileName ? (
+                  ) : fileNames.length > 0 ? (
                     <div className="flex flex-col items-center">
                       <Icon
                         icon={"weui:done2-outlined"}
                         className="h-10 w-10"
                       />
-                      <span className="mt-2 text-sm">{fileName}</span>
+                      <div className="flex flex-wrap">
+                        {fileNames.map((fileName, index) => (
+                          <span className="mt-2 text-sm" key={index}>
+                            {fileName}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center">

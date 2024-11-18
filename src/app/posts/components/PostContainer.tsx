@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import React, { useState, useEffect } from "react";
@@ -29,6 +28,7 @@ import useReadStore from "@/app/store/readStore";
 import useDeptIdStore from "@/app/store/deptIdStore";
 import { useQuery } from "@tanstack/react-query";
 import useRefetchPostStore from "@/app/store/refetchPostStore";
+import ImageSlider from "./ImageSlider";
 
 interface Props {
   id: number;
@@ -37,14 +37,16 @@ interface Props {
 
 const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const router = useRouter();
+
   const { setRefetch } = useRefetchPostStore();
 
   const { data: post, refetch } = useQuery({
     queryKey: ["single-post"],
     queryFn: () => fetchPost(id),
   });
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-  const [imageUrl, setImageUrl] = useState<string>("");
+  // const [imageUrl, setImageUrl] = useState<string>("");
   const [comments, setComments] = useState<PostComment[]>([]);
   const [editable, setEditable] = useState<boolean>(false);
   const [openOptions, setOpenOptions] = useState<boolean>(true);
@@ -181,17 +183,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     }
   }, [post, setThisComments]);
 
-  useEffect(() => {
-    const fetchImage = async () => {
-      const at = localStorage.getItem(INTRANET);
-
-      if (at && post?.imageLocation)
-        setImageUrl(`${API_BASE}/uploads/${post?.imageLocation}`);
-    };
-
-    fetchImage();
-  }, [post]);
-
   const handleEditClicked = () => {
     const postId = post?.pid;
 
@@ -238,10 +229,12 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   };
 
   const handleDownloadImage = async () => {
-    if (!imageUrl) return;
+    if (!post?.imageLocations) return;
 
     try {
-      const response = await fetch(imageUrl);
+      const response = await fetch(
+        `${API_BASE}/uploads/${post.imageLocations[currentIndex].imageLocation}`
+      );
       if (!response.ok) {
         console.error("Failed to fetch image:", response.statusText);
         return;
@@ -384,22 +377,19 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
             {message || post?.message}
           </div>
         )}
-        {imageUrl && (
-          <Image
-            className="w-full bg-neutral-100 mb-6 h-full"
-            src={imageUrl}
-            alt="Post image"
-            width={1000}
-            height={1000}
-            priority
+        {post?.imageLocations && post?.imageLocations?.length > 0 && (
+          <ImageSlider
+            imageLocations={post.imageLocations}
+            currentIndex={currentIndex}
+            setCurrentIndex={setCurrentIndex}
           />
         )}
         <div
           className={`flex items-center w-full ${
-            imageUrl ? "justify-between" : "justify-end"
+            post?.imageLocations ? "justify-between" : "justify-end"
           } gap-1 rounded-lg p-2 mb-2`}
         >
-          {imageUrl && (
+          {post?.imageLocations && (
             <div
               onClick={handleDownloadImage}
               className="flex hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-2 items-center gap-1 rounded  cursor-pointer "
