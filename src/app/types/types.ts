@@ -31,12 +31,18 @@ type PostReader = {
   user: User;
 };
 
+type ImageLocation = {
+  id: number;
+  imageLocation: string;
+  postId: number;
+};
+
 type Post = {
   pid: number;
   userId: number;
   title?: string;
   message?: string;
-  imageLocation?: string;
+  imageLocations?: ImageLocation[];
   createdAt: Date;
   updatedAt: Date;
   user?: User;
@@ -224,6 +230,7 @@ type LogType = {
 };
 
 export type {
+  ImageLocation,
   LogType,
   DepartmentUserCount,
   UserWithIncompleteRead,

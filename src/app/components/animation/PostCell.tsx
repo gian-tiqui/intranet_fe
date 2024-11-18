@@ -18,8 +18,8 @@ const PostCell: React.FC<PostCellProps> = ({ post, first }) => {
   useEffect(() => {
     const fetchImage = async () => {
       const accessToken = localStorage.getItem(INTRANET);
-      if (accessToken && post?.imageLocation) {
-        const imageUri = `${API_BASE}/uploads/${post.imageLocation}`;
+      if (accessToken && post?.imageLocations) {
+        const imageUri = `${API_BASE}/uploads/${post.imageLocations[0]}`;
         setImageUrl(imageUri);
       }
     };

@@ -31,6 +31,7 @@ interface FormFields {
   lid: string;
   employeeId: string;
   deptId: number;
+  confirmPassword: string;
 }
 
 const RegisterForm: React.FC<Props> = ({ hashedMmployeeId }) => {
@@ -82,6 +83,19 @@ const RegisterForm: React.FC<Props> = ({ hashedMmployeeId }) => {
   }, [sub, exp, setValue]);
 
   const handleRegister = async (data: FormFields) => {
+    if (data.password !== data.confirmPassword) {
+      toast("Passwords do not match", { type: "error", className: toastClass });
+      return;
+    }
+
+    if (data.password.length <= 8) {
+      toast("Password must be greater than 8", {
+        type: "error",
+        className: toastClass,
+      });
+      return;
+    }
+
     try {
       const formattedDob =
         typeof data.dob === "string"
@@ -153,6 +167,11 @@ const RegisterForm: React.FC<Props> = ({ hashedMmployeeId }) => {
             { label: "Date of Birth", name: "dob", type: "date" },
             { label: "Gender", name: "gender", type: "text" },
             { label: "Password", name: "password", type: "password" },
+            {
+              label: "Confirm Password",
+              name: "confirmPassword",
+              type: "password",
+            },
           ].map((field) => (
             <div key={field.name} className="relative">
               <input
