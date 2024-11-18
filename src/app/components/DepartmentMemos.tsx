@@ -12,15 +12,14 @@ const DepartmentMemos: React.FC<Props> = ({ posts }) => {
     <div className="w-full">
       <p className="text-lg font-bold mb-6">Memos for your department</p>
       <div className="grid md:grid-cols-3 gap-1 mb-12">
-        <div className="h-40 bg-white dark:bg-neutral-900 shadow">
-          <PostCell post={posts[0]} />
-        </div>
-        <div className="h-40 bg-white dark:bg-neutral-900 shadow">
-          <PostCell post={posts[1]} />
-        </div>
-        <div className="h-40 bg-white dark:bg-neutral-900 shadow">
-          <PostCell post={posts[2]} />
-        </div>
+        {posts.slice(0, 9).map((post, index) => (
+          <div
+            key={post.pid}
+            className="h-40 bg-white dark:bg-neutral-900 shadow"
+          >
+            <PostCell post={posts[index]} />
+          </div>
+        ))}
       </div>
       <div className="flex justify-center">
         <Link
