@@ -192,7 +192,7 @@ const Users = () => {
 
   return (
     <div className="users-component">
-      <div className="w-full  bg-inherit py-5 px-10 shadow flex justify-between items-center">
+      <div className="w-full  bg-white dark:bg-neutral-900 py-5 px-10 shadow flex justify-between items-center">
         <h1 className="">
           <p className="text-2xl font-extrabold">Users</p>
         </h1>
