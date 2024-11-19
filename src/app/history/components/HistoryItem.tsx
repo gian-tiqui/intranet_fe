@@ -10,10 +10,10 @@ interface Props {
 const HistoryItem: React.FC<Props> = ({ post }) => {
   return (
     <div className="w-full bg-white dark:bg-neutral-900 rounded-lg p-4 shadow-md space-y-3">
-      {post.post.imageLocation && (
+      {post.post.imageLocations && (
         <div className="w-full h-64 rounded-md overflow-hidden">
           <Image
-            src={`http://localhost:8080/uploads/${post.post.imageLocation}`}
+            src={`http://localhost:8080/uploads/${post.post.imageLocations[0]}`}
             alt="Post Image"
             layout="responsive"
             width={700}
