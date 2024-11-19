@@ -2,6 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { Post } from "../types/types";
 import PostCell from "./animation/PostCell";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 interface Props {
   posts: Post[];
@@ -40,8 +41,9 @@ const LatestPublicMemo: React.FC<Props> = ({ posts }) => {
       <div className="flex justify-center">
         <Link
           href={"/bulletin"}
-          className="bg-white dark:bg-neutral-900 hover:shadow hover:bg-gray-100 dark:hover:bg-neutral-700 w-32 h-10 rounded font-bold text-sm grid place-content-center"
+          className="bg-white dark:bg-neutral-900 flex justify-center items-center hover:shadow hover:bg-gray-100 dark:hover:bg-neutral-700 w-32 h-10 rounded font-bold text-sm "
         >
+          <Icon icon={""} />
           View more
         </Link>
       </div>

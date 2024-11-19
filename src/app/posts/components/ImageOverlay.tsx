@@ -14,7 +14,7 @@ const ImageOverlay: React.FC<Props> = ({ selectedIndex }) => {
   return (
     <div
       onClick={handleClick}
-      className="absolute w-full h-full bg-none  hover:bg-black/20 cursor-pointer"
+      className="absolute w-full h-full bg-none hover:bg-black/20 cursor-pointer"
     ></div>
   );
 };
