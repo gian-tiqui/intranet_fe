@@ -283,7 +283,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   return (
     <div
       onClick={() => setVisible(false)}
-      className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-50 grid place-content-center"
+      className="min-w-full min-h-full bg-black bg-opacity-85 dark:bg-black/50 absolute z-50 grid place-content-center"
     >
       {showPreview && (
         <PostPreview

@@ -3,6 +3,8 @@ import { API_BASE } from "@/app/bindings/binding";
 import { ImageLocation } from "@/app/types/types";
 import Image from "next/image";
 import React, { Dispatch, SetStateAction } from "react";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import ImageOverlay from "./ImageOverlay";
 
 interface Props {
   imageLocations: ImageLocation[];
@@ -24,6 +26,58 @@ const ImageSlider: React.FC<Props> = ({
       (prev) => (prev - 1 + imageLocations.length) % imageLocations.length
     );
   };
+
+  return (
+    <div>
+      <div className="mb-1 relative">
+        <ImageOverlay selectedIndex={0} />
+
+        <Image
+          src={`${API_BASE}/uploads/${imageLocations[0].imageLocation}`}
+          alt="Post image"
+          width={1000}
+          height={1000}
+          className="w-full h-[500px]"
+          priority
+        />
+      </div>
+      {imageLocations.length > 1 && (
+        <div className="grid grid-cols-2 gap-1">
+          <div className="relative">
+            <ImageOverlay selectedIndex={1} />
+            <Image
+              src={`${API_BASE}/uploads/${imageLocations[1].imageLocation}`}
+              alt="Post image"
+              width={1000}
+              height={1000}
+              className="w-full h-96"
+              priority
+            />
+          </div>
+          <div className="relative">
+            <ImageOverlay selectedIndex={2} />
+
+            {imageLocations.length > 3 ? (
+              <div className="w-full h-full grid bg-white place-content-center cursor-pointer">
+                <p className="text-lg font-bold text-black">
+                  +{imageLocations.length - 3}
+                </p>
+              </div>
+            ) : (
+              <Image
+                src={`${API_BASE}/uploads/${imageLocations[2].imageLocation}`}
+                alt="Post image"
+                width={1000}
+                height={1000}
+                className="w-full h-96 object-cover"
+                priority
+              />
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="relative w-full h-full overflow-hidden">
@@ -52,16 +106,16 @@ const ImageSlider: React.FC<Props> = ({
       </motion.div>
 
       <button
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 z-10"
+        className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 z-10"
         onClick={prevSlide}
       >
-        Prev
+        <Icon icon={"carbon:next-outline"} className="rotate-180 h-7 w-7" />
       </button>
       <button
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black text-white p-2 z-10"
+        className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 z-10"
         onClick={nextSlide}
       >
-        Next
+        <Icon icon={"carbon:next-outline"} className="h-7 w-7" />
       </button>
 
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
