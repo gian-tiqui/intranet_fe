@@ -13,7 +13,7 @@ const HistoryItem: React.FC<Props> = ({ post }) => {
       {post.post.imageLocations && (
         <div className="w-full h-64 rounded-md overflow-hidden">
           <Image
-            src={`http://localhost:8080/uploads/${post.post.imageLocations[0]}`}
+            src={`http://localhost:8080/uploads/${post.post.imageLocations[0].imageLocation}`}
             alt="Post Image"
             layout="responsive"
             width={700}

@@ -29,6 +29,7 @@ import useDeptIdStore from "@/app/store/deptIdStore";
 import { useQuery } from "@tanstack/react-query";
 import useRefetchPostStore from "@/app/store/refetchPostStore";
 import ImageSlider from "./ImageSlider";
+import useImagesStore from "@/app/store/imagesStore";
 
 interface Props {
   id: number;
@@ -46,7 +47,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   });
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-  // const [imageUrl, setImageUrl] = useState<string>("");
   const [comments, setComments] = useState<PostComment[]>([]);
   const [editable, setEditable] = useState<boolean>(false);
   const [openOptions, setOpenOptions] = useState<boolean>(true);
@@ -60,6 +60,21 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const { setDeptId } = useDeptIdStore();
   const [deptIds, setDeptIds] = useState<string[]>([]);
   const [userDeptId, setUserDeptId] = useState<number>(-1);
+  const { setImages } = useImagesStore();
+
+  useEffect(() => {
+    if (post && post.imageLocations) {
+      const imageLocations = [
+        ...post.imageLocations?.map(
+          (imageLocation) => imageLocation.imageLocation
+        ),
+      ];
+
+      if (imageLocations != undefined) {
+        setImages(imageLocations);
+      }
+    }
+  }, [post, setImages]);
 
   useEffect(() => {
     const handleRefetch = () => {
@@ -347,18 +362,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
                 : "Unknown Date"}
             </h4>
           </div>
-          {/* {message === "" && (
-            <button
-              onClick={handleExtractImageClicked}
-              className="hover:bg-gray-300 dark:hover:bg-neutral-700 flex items-center gap-1 px-2 text-sm rounded"
-            >
-              <Icon
-                icon={`fluent:document-text-extract-20-regular`}
-                className="h-5 w-5"
-              />
-              Extract text
-            </button>
-          )} */}
         </div>
 
         <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-2" />

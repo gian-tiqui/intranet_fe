@@ -32,6 +32,8 @@ import Cookies from "js-cookie";
 import Unseen from "./Unseen";
 import PendingUsers from "./PendingUsers";
 import { jwtDecode } from "jwt-decode";
+import useShowImageStore from "../store/imageViewStore";
+import ImagePreview from "./ImagePreview";
 
 interface Props {
   children?: ReactNode;
@@ -55,6 +57,7 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { showDeleteComment } = showDeleteCommentModalStore();
   const queryClient = new QueryClient();
   const [showPendingUsers, setShowPendingUsers] = useState<boolean>(false);
+  const { showImage, setShowImage } = useShowImageStore();
 
   useEffect(() => {
     const checkLevel = () => {
@@ -201,6 +204,7 @@ const Divider: React.FC<Props> = ({ children }) => {
         {showSplash && <LoginSplash />}
         {showEditModal && <EditPostModal postId={postId} />}
         {showDeleteComment && <DeleteCommentPopup />}
+        {showImage.show && <ImagePreview mSetShowImage={setShowImage} />}
 
         <div id="sidebar" onClick={(e) => e.stopPropagation()}>
           <AnimatePresence>
