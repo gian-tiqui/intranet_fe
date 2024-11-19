@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "./components/Divider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.css";
 import WelcomeSidebar from "./welcome/components/WelcomeSidebar";
+import Divider from "./components/Divider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,7 +35,7 @@ export default function RootLayout({
       >
         <ToastContainer />
         <WelcomeSidebar />
-        <Navbar>{children}</Navbar>
+        <Divider>{children}</Divider>
       </body>
     </html>
   );

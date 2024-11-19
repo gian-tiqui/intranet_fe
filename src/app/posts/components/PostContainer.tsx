@@ -29,6 +29,7 @@ import useDeptIdStore from "@/app/store/deptIdStore";
 import { useQuery } from "@tanstack/react-query";
 import useRefetchPostStore from "@/app/store/refetchPostStore";
 import ImageSlider from "./ImageSlider";
+import useImagesStore from "@/app/store/imagesStore";
 
 interface Props {
   id: number;
@@ -46,7 +47,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   });
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-  // const [imageUrl, setImageUrl] = useState<string>("");
   const [comments, setComments] = useState<PostComment[]>([]);
   const [editable, setEditable] = useState<boolean>(false);
   const [openOptions, setOpenOptions] = useState<boolean>(true);
@@ -60,6 +60,21 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const { setDeptId } = useDeptIdStore();
   const [deptIds, setDeptIds] = useState<string[]>([]);
   const [userDeptId, setUserDeptId] = useState<number>(-1);
+  const { setImages } = useImagesStore();
+
+  useEffect(() => {
+    if (post && post.imageLocations) {
+      const imageLocations = [
+        ...post.imageLocations?.map(
+          (imageLocation) => imageLocation.imageLocation
+        ),
+      ];
+
+      if (imageLocations != undefined) {
+        setImages(imageLocations);
+      }
+    }
+  }, [post, setImages]);
 
   useEffect(() => {
     const handleRefetch = () => {
