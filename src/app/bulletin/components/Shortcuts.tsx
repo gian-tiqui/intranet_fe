@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { MinMax } from "@/app/types/types";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 interface Props {
   setDirection: Dispatch<SetStateAction<string>>;
@@ -44,41 +45,47 @@ const Shortcuts: React.FC<Props> = ({
     <div className="flex flex-wrap my-12 gap-2">
       <div
         onClick={() => handleSortByDate("desc")}
-        className="rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900"
+        className="rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center"
       >
+        <Icon icon={"mingcute:time-line"} />
         <p className="text-sm font-bold">Latest</p>
       </div>
       <div
         onClick={() => handleSortByDate("asc")}
-        className="rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900"
+        className="rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center"
       >
+        <Icon icon={"icon-park-outline:time"} />
         <p className="text-sm font-bold">Oldest</p>
       </div>
       <div
         onClick={() => jumpPage("first")}
-        className="rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900"
+        className="rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center"
       >
+        <Icon icon={"ri:forward-end-line"} className="rotate-180" />
         <p className="text-sm font-bold">First Page</p>
       </div>
       <div
         onClick={() => handlePageMove("prev")}
-        className="rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900"
+        className="rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center"
       >
+        <Icon icon={"majesticons:next-circle-line"} className="rotate-180" />
         <p className="text-sm font-bold">Previous Page</p>
       </div>
       <div
         onClick={() => handlePageMove("next")}
-        className={`rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 ${
+        className={`rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center ${
           isLastPage ? "cursor-not-allowed opacity-50" : ""
         }`}
         style={{ pointerEvents: isLastPage ? "none" : "auto" }}
       >
+        <Icon icon={"majesticons:next-circle-line"} />
         <p className="text-sm font-bold">Next Page</p>
       </div>
       <div
         onClick={() => jumpPage("last")}
-        className="rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900"
+        className="rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center"
       >
+        <Icon icon={"ri:forward-end-line"} />
         <p className="text-sm font-bold">Last Page</p>
       </div>
     </div>

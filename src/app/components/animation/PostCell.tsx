@@ -18,9 +18,9 @@ const PostCell: React.FC<PostCellProps> = ({ post, first }) => {
   useEffect(() => {
     const fetchImage = async () => {
       const accessToken = localStorage.getItem(INTRANET);
-      if (accessToken && post?.imageLocations) {
-        const imageUri = `${API_BASE}/uploads/${post.imageLocations[0]}`;
-        setImageUrl(imageUri);
+      if (accessToken && post?.imageLocations?.length) {
+        const imageUri = `${API_BASE}/uploads/${post.imageLocations[0].imageLocation}`;
+        if (imageUri) setImageUrl(imageUri);
       }
     };
 
@@ -57,7 +57,7 @@ const PostCell: React.FC<PostCellProps> = ({ post, first }) => {
           <p className="font-bold">Latest</p>
         </div>
       )}
-      {imageUrl && (
+      {imageUrl ? (
         <Image
           src={imageUrl}
           height={1000}
@@ -66,9 +66,13 @@ const PostCell: React.FC<PostCellProps> = ({ post, first }) => {
           alt={"title"}
           priority
         />
+      ) : (
+        <div className="w-full h-full bg-gray-100 grid place-content-center">
+          <p className="font-bold">No image</p>
+        </div>
       )}
       <div
-        className={`bg-opacity-75 px-4 flex items-center absolute bottom-5 left-0 bg-black w-2/3 ${
+        className={`bg-opacity-75 w-full flex items-center absolute bottom-0 left-0 bg-black px-4 ${
           first ? "h-20" : "h-10"
         }`}
       >
