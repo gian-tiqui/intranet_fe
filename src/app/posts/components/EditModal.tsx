@@ -104,7 +104,9 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
         setValue("message", post.message);
         setValue("lid", post.lid);
 
-        setFileName(post?.imageLocation?.split("post/")[1]);
+        if (post.imageLocations != null) {
+          setFileName(post?.imageLocations[0].imageLocation.split("post/")[1]);
+        }
       } catch (error) {
         const err = error as { response: { data: { message: string } } };
         toast(err.response.data.message, {
