@@ -15,6 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createWorker } from "tesseract.js";
 import DepartmentsList from "./DepartmentsList";
 import { jwtDecode } from "jwt-decode";
+import PostPreview from "./PostPreview";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -40,7 +41,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const { setVisible } = useShowPostStore();
   const { setIsCollapsed } = useToggleStore();
   const departments = useDepartments();
-  const { register, handleSubmit, setValue } = useForm<FormFields>();
+  const { register, handleSubmit, setValue, watch } = useForm<FormFields>();
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [convertedFiles, setConvertedFiles] = useState<File[]>([]);
   const [isConverting, setIsConverting] = useState<boolean>(false);
@@ -50,6 +51,11 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [showDepartments, setShowDepartments] = useState<boolean>(false);
   const [levels, setLevels] = useState<Level[]>([]);
+  const [filePreviews, setFilePreviews] = useState<string[]>([]);
+  const [showPreview, setShowPreview] = useState<boolean>(false);
+  const [title, setTitle] = useState<string | undefined>(undefined);
+  const [message, setMessage] = useState<string | undefined>(undefined);
+
   const { data, isError, error } = useQuery({
     queryKey: ["level"],
     queryFn: fetchAllLevels,
@@ -143,6 +149,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       const fileNames: string[] = [];
       let extractedTexts = "";
       const convertedFiles: File[] = [];
+      const previews: string[] = [];
 
       setIsConverting(true);
       for (const file of files) {
@@ -158,10 +165,12 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
 
             const text = await scanImage(URL.createObjectURL(convertedImage));
             extractedTexts += text + " ";
+            previews.push(URL.createObjectURL(convertedImage));
           } else if (file.type.startsWith("image/")) {
             const text = await scanImage(URL.createObjectURL(file));
             extractedTexts += text + " ";
             convertedFiles.push(file);
+            previews.push(URL.createObjectURL(file));
           } else {
             toast(`Unsupported file format: ${file.name}`, {
               type: "error",
@@ -179,10 +188,28 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       setConvertedFiles(convertedFiles);
       setValue("extractedText", extractedTexts.trim());
       setIsConverting(false);
+      setFilePreviews(previews);
 
       toast("Files processed successfully!", {
         type: "success",
         className: toastClass,
+      });
+    }
+  };
+
+  const handleShowPreview = () => {
+    const _title = watch("title");
+    const _message = watch("message");
+
+    setTitle(_title);
+    setMessage(_message);
+
+    if (_title && _message && filePreviews.length > 0) {
+      setShowPreview(true);
+    } else {
+      toast("Please fill the fields", {
+        className: toastClass,
+        type: "error",
       });
     }
   };
@@ -258,6 +285,14 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       onClick={() => setVisible(false)}
       className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-50 grid place-content-center"
     >
+      {showPreview && (
+        <PostPreview
+          title={title}
+          message={message}
+          filePreviews={filePreviews}
+          setShowPreview={setShowPreview}
+        />
+      )}
       <form
         onSubmit={handleSubmit(handlePost)}
         className="w-80 rounded-2xl bg-neutral-200 dark:bg-neutral-900"
@@ -309,6 +344,12 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
               <p className="font-bold">
                 {decodeUserData()?.firstName} {decodeUserData()?.lastName}
               </p>
+              <div
+                className="p-1 hover:bg-gray-100 dark:hover:bg-neutral-700 me-1 rounded"
+                onClick={handleShowPreview}
+              >
+                <Icon icon={"mdi:eye-outline"} className="h-6 w-6 " />
+              </div>
             </div>
 
             <div className="bg-inherit text-sm">
@@ -366,13 +407,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                         icon={"weui:done2-outlined"}
                         className="h-10 w-10"
                       />
-                      <div className="flex flex-wrap">
-                        {fileNames.map((fileName, index) => (
-                          <span className="mt-2 text-sm" key={index}>
-                            {fileName}
-                          </span>
-                        ))}
-                      </div>
+                      <div className="flex flex-wrap">Files Uploaded</div>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center">

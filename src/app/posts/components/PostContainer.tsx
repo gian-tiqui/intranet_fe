@@ -347,18 +347,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
                 : "Unknown Date"}
             </h4>
           </div>
-          {/* {message === "" && (
-            <button
-              onClick={handleExtractImageClicked}
-              className="hover:bg-gray-300 dark:hover:bg-neutral-700 flex items-center gap-1 px-2 text-sm rounded"
-            >
-              <Icon
-                icon={`fluent:document-text-extract-20-regular`}
-                className="h-5 w-5"
-              />
-              Extract text
-            </button>
-          )} */}
         </div>
 
         <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-2" />
