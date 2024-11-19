@@ -150,7 +150,7 @@ const Aside: React.FC<Props> = ({
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
               onClick={() => handleClick("/bulletin")}
             >
-              <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
+              <Icon icon={"gridicons:posts"} className="h-5 w-5" />
               <p className="w-full text-md">General Bulletin</p>
             </div>
 
@@ -179,21 +179,29 @@ const Aside: React.FC<Props> = ({
               className="w-full flex text-center text-sm rounded mb-6 border dark:border-neutral-900"
             >
               <div
-                className={`w-full py-2 grid place-content-center cursor-pointer ${
+                className={`w-full py-2 flex items-center justify-center gap-1 cursor-pointer ${
                   selectedVis === "all" &&
                   "bg-gray-200 dark:bg-neutral-700 rounded-s"
                 }`}
                 onClick={() => setSelectedVis("all")}
               >
+                <Icon
+                  icon={"material-symbols-light:all-out-outline"}
+                  className="h-5 w-5"
+                />
                 All
               </div>
               <div
-                className={`w-full py-2 grid place-content-center cursor-pointer ${
+                className={`w-full py-2 flex items-center justify-center gap-1 cursor-pointer ${
                   selectedVis === "dept" &&
                   "bg-gray-200 dark:bg-neutral-700 rounded-e"
                 }`}
                 onClick={() => setSelectedVis("dept")}
               >
+                <Icon
+                  icon={"arcticons:emoji-department-store"}
+                  className="h-5 w-5"
+                />
                 Dept
               </div>
             </div>
