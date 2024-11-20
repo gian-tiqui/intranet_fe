@@ -28,7 +28,11 @@ const ImageSlider: React.FC<Props> = ({ imageLocations }) => {
         </div>
       </div>
       {imageLocations.length > 1 && (
-        <div className="grid grid-cols-2 gap-1">
+        <div
+          className={`grid ${
+            imageLocations.length < 3 ? "grid-cols-1" : "grid-cols-2"
+          } gap-1`}
+        >
           <div className="relative">
             <ImageOverlay selectedIndex={1} />
             <Image
@@ -40,26 +44,28 @@ const ImageSlider: React.FC<Props> = ({ imageLocations }) => {
               priority
             />
           </div>
-          <div className="relative">
-            <ImageOverlay selectedIndex={2} />
+          {imageLocations.length > 2 && (
+            <div className="relative">
+              <ImageOverlay selectedIndex={2} />
 
-            {imageLocations.length > 3 ? (
-              <div className="w-full h-full grid bg-neutral-800 place-content-center cursor-pointer">
-                <p className="text-lg font-bold text-white">
-                  +{imageLocations.length - 3}
-                </p>
-              </div>
-            ) : (
-              <Image
-                src={`${API_BASE}/uploads/${imageLocations[2].imageLocation}`}
-                alt="Post image"
-                width={1000}
-                height={1000}
-                className="w-full h-96 object-cover"
-                priority
-              />
-            )}
-          </div>
+              {imageLocations.length > 3 ? (
+                <div className="w-full h-full grid bg-neutral-800 place-content-center cursor-pointer">
+                  <p className="text-lg font-bold text-white">
+                    +{imageLocations.length - 3}
+                  </p>
+                </div>
+              ) : (
+                <Image
+                  src={`${API_BASE}/uploads/${imageLocations[2].imageLocation}`}
+                  alt="Post image"
+                  width={1000}
+                  height={1000}
+                  className="w-full h-96 object-cover"
+                  priority
+                />
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>

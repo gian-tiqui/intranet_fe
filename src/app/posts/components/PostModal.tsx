@@ -316,7 +316,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       )}
       <form
         onSubmit={handleSubmit(handlePost)}
-        className="w-80 rounded-2xl bg-neutral-200 dark:bg-neutral-900"
+        className="w-80 md:w-[400px] rounded-2xl bg-neutral-200 dark:bg-neutral-900"
         onClick={handleFormClick}
       >
         <div className="h-10 flex justify-between items-center rounded-t-2xl bg-white dark:bg-neutral-950 w-full p-4 border-b dark:border-black mb-3">
