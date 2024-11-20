@@ -117,7 +117,7 @@ const CommentBar: React.FC<Props> = ({
       <div className="w-full h-auto rounded-3xl rounded-b-3xl bg-white dark:bg-neutral-700 ps-6 cursor-text flex items-end gap-3 px-3 py-[10px]">
         <textarea
           {...register("message", { required: true })}
-          placeholder="Comment here"
+          placeholder="Write your feedback here."
           className="w-full outline-none px-2 resize-none overflow-hidden min-h-8 max-h-[200px] dark:bg-neutral-700"
           rows={1}
           onInput={handleInput}
