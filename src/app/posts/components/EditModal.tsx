@@ -473,9 +473,9 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
             </div>
           </div>
         </div>
-        <div className="mx-7 flex items-center gap-1 mb-4">
+        <div className="mx-10 flex items-center gap-1 mb-4">
           <input type="checkbox" onChange={handleChangeCheckbox} />
-          <p className="text-sm">Retain previous files?</p>
+          <p className="text-sm">Keep previous files?</p>
         </div>
         <div className="bg-white dark:bg-neutral-900 rounded-xl pb-3 px-4">
           <div className="h-7 flex w-full justify-center items-center">
