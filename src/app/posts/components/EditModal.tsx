@@ -90,17 +90,17 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
     queryFn: fetchAllLevels,
   });
 
-  const scanImage = async (imageUrl: string) => {
+  const scanImage = async (imageUrl: string): Promise<string> => {
     const worker = await createWorker("eng");
     try {
       setLoading(true);
       const {
         data: { text },
       } = await worker.recognize(imageUrl);
-
-      setValue("extractedText", text.toLowerCase());
+      return text.toLowerCase();
     } catch (error) {
       console.error("Error scanning image:", error);
+      return "";
     } finally {
       await worker.terminate();
       setLoading(false);
@@ -227,6 +227,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
 
       setFileNames(fileNames);
       setConvertedFiles(convertedFiles);
+
       setValue("extractedText", extractedTexts.trim());
       setIsConverting(false);
       setFilePreviews(previews);
