@@ -31,6 +31,7 @@ interface FormFields {
   public?: string;
   lid: number;
   extractedText: string;
+  addPhoto: string;
 }
 
 interface EditPostModalProps {
@@ -43,13 +44,18 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const { setIsCollapsed } = useToggleStore();
   const { register, handleSubmit, setValue } = useForm<FormFields>();
   const [loading, setLoading] = useState<boolean>(true);
-  const [fileName, setFileName] = useState<string | undefined>("");
+  const [fileNames, setFileNames] = useState<string[]>([]);
   const [saving, setSaving] = useState<boolean>(false);
-  const [convertedFile, setConvertedFile] = useState<File | null>(null);
+  const [convertedFiles, setConvertedFiles] = useState<File[]>([]);
   const [isConverting, setIsConverting] = useState<boolean>(false);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [showDepartments, setShowDepartments] = useState<boolean>(false);
   const { refetch } = useRefetchPostStore();
+  const [filePreviews, setFilePreviews] = useState<string[]>([]);
+
+  useEffect(() => {
+    console.log(filePreviews);
+  }, [filePreviews]);
 
   const handleCheckboxChange = (deptId: string) => {
     setSelectedDepartments((prevSelected) => {
@@ -105,7 +111,11 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
         setValue("lid", post.lid);
 
         if (post.imageLocations != null) {
-          setFileName(post?.imageLocations[0].imageLocation.split("post/")[1]);
+          setFileNames([
+            ...post?.imageLocations.map(
+              (imageLocation) => imageLocation.imageLocation
+            ),
+          ]);
         }
       } catch (error) {
         const err = error as { response: { data: { message: string } } };
@@ -122,94 +132,92 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   }, [postId, setValue]);
 
   const convertPdfToImage = async (pdfFile: File): Promise<File> => {
-    try {
-      setIsConverting(true);
+    setIsConverting(true);
+    const arrayBuffer = await pdfFile.arrayBuffer();
+    const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+    const page = await pdf.getPage(1);
+    const viewport = page.getViewport({ scale: 2.0 });
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
 
-      const arrayBuffer = await pdfFile.arrayBuffer();
-
-      const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
-
-      const page = await pdf.getPage(1);
-
-      const viewport = page.getViewport({ scale: 2.0 });
-
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-
-      if (!context) {
-        throw new Error("Could not get canvas context");
-      }
-
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
-
-      // Render PDF page to canvas
-      await page.render({
-        canvasContext: context,
-        viewport: viewport,
-      }).promise;
-
-      const blob = await new Promise<Blob>((resolve) => {
-        canvas.toBlob(
-          (blob) => {
-            resolve(blob!);
-          },
-          "image/jpeg",
-          0.95
-        );
-      });
-
-      const convertedImageFile = new File(
-        [blob],
-        pdfFile.name.replace(".pdf", ".jpg"),
-        { type: "image/jpeg" }
-      );
-
-      setIsConverting(false);
-      return convertedImageFile;
-    } catch (error) {
-      setIsConverting(false);
-      console.error("Error converting PDF to image:", error);
-      throw error;
+    if (!context) {
+      throw new Error("Could not get canvas context");
     }
+
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    await page.render({
+      canvasContext: context,
+      viewport: viewport,
+    }).promise;
+
+    const blob = await new Promise<Blob>((resolve) => {
+      canvas.toBlob(
+        (blob) => {
+          resolve(blob!);
+        },
+        "image/jpeg",
+        0.95
+      );
+    });
+
+    return new File([blob], pdfFile.name.replace(".pdf", ".jpg"), {
+      type: "image/jpeg",
+    });
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      setFileName(file.name);
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      const fileNames: string[] = [];
+      let extractedTexts = "";
+      const convertedFiles: File[] = [];
+      const previews: string[] = [];
 
-      if (file.type === "application/pdf") {
+      setIsConverting(true);
+      for (const file of files) {
         try {
-          toast("Converting PDF to image...", {
-            type: "info",
-            className: toastClass,
-          });
+          if (file.type === "application/pdf") {
+            toast(`Converting PDF: ${file.name}`, {
+              type: "info",
+              className: toastClass,
+            });
 
-          const convertedImage = await convertPdfToImage(file);
-          setConvertedFile(convertedImage);
+            const convertedImage = await convertPdfToImage(file);
+            convertedFiles.push(convertedImage);
 
-          toast("PDF converted successfully!", {
-            type: "success",
-            className: toastClass,
-          });
+            const text = await scanImage(URL.createObjectURL(convertedImage));
+            extractedTexts += text + " ";
+            previews.push(URL.createObjectURL(convertedImage));
+          } else if (file.type.startsWith("image/")) {
+            const text = await scanImage(URL.createObjectURL(file));
+            extractedTexts += text + " ";
+            convertedFiles.push(file);
+            previews.push(URL.createObjectURL(file));
+          } else {
+            toast(`Unsupported file format: ${file.name}`, {
+              type: "error",
+              className: toastClass,
+            });
+          }
 
-          await scanImage(URL.createObjectURL(convertedImage));
+          fileNames.push(file.name);
         } catch (error) {
-          console.error("File conversion error:", error);
-          toast("Error converting PDF to image", {
-            type: "error",
-            className: toastClass,
-          });
-          setFileName("");
-          setConvertedFile(null);
+          console.error("Error processing file:", file.name, error);
         }
-      } else if (file.type.startsWith("image/")) {
-        const imageUrl = URL.createObjectURL(file);
-        await scanImage(imageUrl);
-      } else {
-        setConvertedFile(null);
       }
+
+      setFileNames(fileNames);
+      setConvertedFiles(convertedFiles);
+      setValue("extractedText", extractedTexts.trim());
+      setIsConverting(false);
+      setFilePreviews(previews);
+
+      toast("Files processed successfully!", {
+        type: "success",
+        className: toastClass,
+      });
     }
   };
 
@@ -228,6 +236,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
       formData.append("extractedText", data.extractedText?.toLowerCase());
       formData.append("deptIds", selectedDepartments.join(","));
       formData.append("updatedBy", String(data.userId));
+      formData.append("addPhoto", data.addPhoto);
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
       formData.append(
@@ -235,13 +244,9 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
         String(data.public === "public" ? "public" : "private")
       );
 
-      if (!fileName || !data.memo || data.memo.length === 0) {
-        formData.append("newMemo", "");
-      } else if (convertedFile) {
-        formData.append("newMemo", convertedFile);
-      } else if (data.memo[0]) {
-        formData.append("newMemo", data.memo[0]);
-      }
+      convertedFiles.forEach((file) => {
+        formData.append("newMemo", file);
+      });
 
       apiClient
         .put(`${API_BASE}/post/${postId}`, formData, {
@@ -278,8 +283,15 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
 
   const removeFile = () => {
     setValue("memo", undefined);
-    setFileName("");
-    setConvertedFile(null);
+    setFileNames([]);
+    setConvertedFiles([]);
+  };
+
+  const handleChangeCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+
+    if (checked) setValue("addPhoto", "true");
+    else setValue("addPhoto", "false");
   };
 
   return (
@@ -288,7 +300,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
       className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-40 grid place-content-center"
     >
       <form
-        className="w-80 rounded-2xl bg-neutral-200 dark:bg-neutral-900 relative"
+        className="w-80 md:w-[420px] rounded-2xl bg-neutral-200 dark:bg-neutral-900 relative"
         onClick={handleFormClick}
         onSubmit={handleSubmit(handleEditPost)}
       >
@@ -395,6 +407,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
 
                 <input
                   type="file"
+                  multiple={true}
                   className="absolute inset-0 opacity-0 cursor-pointer border border-black"
                   {...register("memo")}
                   onChange={handleFileChange}
@@ -402,7 +415,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                 <div className="flex flex-col items-center justify-center text-gray-500 ">
                   {loading ? (
                     <Icon icon={"line-md:loading-loop"} className="h-8 w-8" />
-                  ) : fileName ? (
+                  ) : fileNames ? (
                     <Icon icon={"weui:done2-outlined"} className="h-10 w-10" />
                   ) : (
                     <Icon
@@ -417,13 +430,17 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                     </>
                   ) : (
                     <span className="mt-2 text-sm">
-                      {fileName || "Click to upload memo"}{" "}
+                      {fileNames ? "File uploaded" : "Click to upload memo"}{" "}
                     </span>
                   )}
                 </div>
               </div>
             </div>
           </div>
+        </div>
+        <div className="mx-7 flex items-center gap-1 mb-4">
+          <input type="checkbox" onChange={handleChangeCheckbox} />
+          <p className="text-sm">Retain previous files?</p>
         </div>
         <div className="bg-white dark:bg-neutral-900 rounded-xl pb-3 px-4">
           <div className="h-7 flex w-full justify-center items-center">
