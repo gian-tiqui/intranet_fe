@@ -22,7 +22,7 @@ const ImageSlider: React.FC<Props> = ({ imageLocations }) => {
             alt="Post image"
             width={1000}
             height={1000}
-            className="w-full h-[500px]"
+            className="w-full h-auto"
             priority
           />
         </div>
@@ -40,7 +40,7 @@ const ImageSlider: React.FC<Props> = ({ imageLocations }) => {
               alt="Post image"
               width={1000}
               height={1000}
-              className="w-full h-96"
+              className="w-full aspect-auto" // Maintain aspect ratio
               priority
             />
           </div>
@@ -60,7 +60,7 @@ const ImageSlider: React.FC<Props> = ({ imageLocations }) => {
                   alt="Post image"
                   width={1000}
                   height={1000}
-                  className="w-full h-96 object-cover"
+                  className="w-full aspect-auto" // Maintain aspect ratio
                   priority
                 />
               )}

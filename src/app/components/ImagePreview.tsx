@@ -91,7 +91,7 @@ const ImagePreview: React.FC<Props> = ({ mSetShowImage }) => {
             alt={images[showImage.selectedIndex]}
             height={1000}
             width={1000}
-            className="object-contain max-w-full max-h-full"
+            className="object-contain md:w-[500px] md:h-[100%]"
           />
         </div>
 
