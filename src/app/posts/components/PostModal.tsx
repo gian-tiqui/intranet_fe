@@ -153,8 +153,6 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       );
     }
 
-    console.log(convertedFiles);
-
     return convertedFiles;
   };
 
@@ -175,14 +173,23 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
               className: toastClass,
             });
 
-            const convertedImage = await convertPdfToImage(file);
-            convertedFiles.push(convertedImage[0]);
+            const convertedImages = await convertPdfToImage(file);
 
-            const text = await scanImage(
-              URL.createObjectURL(convertedImage[0])
-            );
-            extractedTexts += text + " ";
-            previews.push(URL.createObjectURL(convertedImage[0]));
+            // convertedFiles.push(convertedImages[0]);
+
+            // const text = await scanImage(
+            //   URL.createObjectURL(convertedImages[0])
+            // );
+            // extractedTexts += text + " ";
+            // previews.push(URL.createObjectURL(convertedImages[0]));
+
+            convertedImages.map(async (convertedImage) => {
+              convertedFiles.push(convertedImage);
+
+              const text = await scanImage(URL.createObjectURL(convertedImage));
+              extractedTexts += text + " ";
+              previews.push(URL.createObjectURL(convertedImage));
+            });
           } else if (file.type.startsWith("image/")) {
             const text = await scanImage(URL.createObjectURL(file));
             extractedTexts += text + " ";
@@ -201,6 +208,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
         }
       }
 
+      console.log(convertedFiles.length);
       setFileNames(fileNames);
       setConvertedFiles(convertedFiles);
       setValue("extractedText", extractedTexts.trim());
@@ -270,7 +278,6 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
 
         if (response.status === 201) {
           setVisible(false);
-          console.log(response.data);
           toast(response.data.message, {
             type: "success",
             className: toastClass,
