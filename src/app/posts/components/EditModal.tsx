@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { createWorker } from "tesseract.js";
 import DepartmentsList from "./DepartmentsList";
 import useRefetchPostStore from "@/app/store/refetchPostStore";
+import PostPreview from "./PostPreview";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -42,7 +43,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const departments = useDepartments();
   const { setShowEditModal } = useEditModalStore();
   const { setIsCollapsed } = useToggleStore();
-  const { register, handleSubmit, setValue } = useForm<FormFields>();
+  const { register, handleSubmit, setValue, watch } = useForm<FormFields>();
   const [loading, setLoading] = useState<boolean>(true);
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [saving, setSaving] = useState<boolean>(false);
@@ -52,10 +53,26 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const [showDepartments, setShowDepartments] = useState<boolean>(false);
   const { refetch } = useRefetchPostStore();
   const [filePreviews, setFilePreviews] = useState<string[]>([]);
+  const [showPreview, setShowPreview] = useState<boolean>(false);
+  const [title, setTitle] = useState<string | undefined>(undefined);
+  const [message, setMessage] = useState<string | undefined>(undefined);
 
-  useEffect(() => {
-    console.log(filePreviews);
-  }, [filePreviews]);
+  const handleShowPreview = () => {
+    const _title = watch("title");
+    const _message = watch("message");
+
+    setTitle(_title);
+    setMessage(_message);
+
+    if (_title && _message && filePreviews.length > 0) {
+      setShowPreview(true);
+    } else {
+      toast("Please fill the fields", {
+        className: toastClass,
+        type: "error",
+      });
+    }
+  };
 
   const handleCheckboxChange = (deptId: string) => {
     setSelectedDepartments((prevSelected) => {
@@ -299,6 +316,14 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
       onClick={() => setShowEditModal(false)}
       className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-40 grid place-content-center"
     >
+      {showPreview && (
+        <PostPreview
+          title={title}
+          message={message}
+          filePreviews={filePreviews}
+          setShowPreview={setShowPreview}
+        />
+      )}
       <form
         className="w-80 md:w-[420px] rounded-2xl bg-neutral-200 dark:bg-neutral-900 relative"
         onClick={handleFormClick}
@@ -349,10 +374,19 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
           <div className="flex items-start gap-3 mx-4">
             <div className="rounded-full w-10 h-10 bg-gray-400"></div>
 
-            <div className="bg-inherit text-sm">
-              <p className="font-bold">
-                {decodeUserData()?.firstName} {decodeUserData()?.lastName}
-              </p>
+            <div className="bg-inherit text-sm w-full">
+              <div className="flex justify-between items-center">
+                <p className="font-bold">
+                  {decodeUserData()?.firstName} {decodeUserData()?.lastName}
+                </p>
+                <div
+                  className="p-1 hover:bg-gray-100 dark:hover:bg-neutral-700 me-1 rounded"
+                  onClick={handleShowPreview}
+                >
+                  <Icon icon={"mdi:eye-outline"} className="h-6 w-6 " />
+                </div>
+              </div>
+
               {loading ? (
                 <div className="h-3 w-1/3 rounded bg-gray-300 animate-pulse"></div>
               ) : (

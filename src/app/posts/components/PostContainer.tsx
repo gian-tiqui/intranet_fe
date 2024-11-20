@@ -220,7 +220,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
       setDeptIds(deptIds);
 
       if (post && deptId) {
-        // Allow the poster to view the post even if its not for his/her department for the user to see his/her post
         if (!post.public && !deptIds.includes(deptId.toString())) {
           toast(
             "You are trying to view a private post that is not for your department.",
