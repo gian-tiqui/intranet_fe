@@ -220,7 +220,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
       setDeptIds(deptIds);
 
       if (post && deptId) {
-        // Allow the poster to view the post even if its not for his/her department for the user to see his/her post
         if (!post.public && !deptIds.includes(deptId.toString())) {
           toast(
             "You are trying to view a private post that is not for your department.",
@@ -243,13 +242,9 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     event.stopPropagation();
   };
 
-  const handleDownloadImage = async () => {
-    if (!post?.imageLocations) return;
-
+  const downloadSingle = async (imageLocation: string) => {
     try {
-      const response = await fetch(
-        `${API_BASE}/uploads/${post.imageLocations[currentIndex].imageLocation}`
-      );
+      const response = await fetch(`${API_BASE}/uploads/${imageLocation}`);
       if (!response.ok) {
         console.error("Failed to fetch image:", response.statusText);
         return;
@@ -276,6 +271,14 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     } catch (error) {
       console.error("Error in downloading image:", error);
     }
+  };
+
+  const handleDownloadAllImages = async () => {
+    if (!post?.imageLocations) return;
+
+    post.imageLocations.map((imageLocation) =>
+      downloadSingle(imageLocation.imageLocation)
+    );
   };
 
   if (loading) {
@@ -390,15 +393,19 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
         <div
           className={`flex items-center w-full ${
             post?.imageLocations ? "justify-between" : "justify-end"
-          } gap-1 rounded-lg p-2 mb-2`}
+          } gap-1 rounded-lg pt-4 mb-2`}
         >
           {post?.imageLocations && (
             <div
-              onClick={handleDownloadImage}
+              onClick={handleDownloadAllImages}
               className="flex hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-2 items-center gap-1 rounded  cursor-pointer "
             >
               <Icon icon={"akar-icons:download"} />
-              <span className="text-sm">Download Image as PDF</span>
+              <span className="text-sm">
+                {post.imageLocations.length > 1
+                  ? "Download all files"
+                  : "Download file"}
+              </span>
             </div>
           )}
           {deptIds.includes(userDeptId.toString()) && !generalPost && (
