@@ -242,43 +242,69 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     event.stopPropagation();
   };
 
-  const downloadSingle = async (imageLocation: string) => {
-    try {
-      const response = await fetch(`${API_BASE}/uploads/${imageLocation}`);
-      if (!response.ok) {
-        console.error("Failed to fetch image:", response.statusText);
-        return;
-      }
-
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-
-      const img = new window.Image();
-      img.src = url;
-
-      img.onload = () => {
-        const pdf = new jsPDF();
-        pdf.addImage(img, "JPEG", 10, 10, 180, 160);
-        pdf.save(`post-image-${id}.pdf`);
-
-        URL.revokeObjectURL(url);
-      };
-
-      img.onerror = (error) => {
-        console.error("Error loading image:", error);
-        URL.revokeObjectURL(url);
-      };
-    } catch (error) {
-      console.error("Error in downloading image:", error);
-    }
-  };
-
   const handleDownloadAllImages = async () => {
     if (!post?.imageLocations) return;
 
-    post.imageLocations.map((imageLocation) =>
-      downloadSingle(imageLocation.imageLocation)
-    );
+    try {
+      const pdf = new jsPDF();
+      let currentTitle = "";
+      let isFirstImage = true;
+
+      const sortedImages = [...post.imageLocations].sort((a, b) => {
+        const pageA = a.imageLocation.match(/-page(\d+)/)?.[1];
+        const pageB = b.imageLocation.match(/-page(\d+)/)?.[1];
+        return pageA && pageB ? parseInt(pageA, 10) - parseInt(pageB, 10) : 0;
+      });
+
+      for (const image of sortedImages) {
+        const titlePart =
+          image.imageLocation.split("/").pop()?.split("-page")[0] || "";
+
+        if (titlePart !== currentTitle) {
+          if (!isFirstImage) {
+            pdf.addPage();
+          }
+          currentTitle = titlePart;
+          isFirstImage = false;
+        }
+
+        const response = await fetch(
+          `${API_BASE}/uploads/${image.imageLocation}`
+        );
+        if (!response.ok) {
+          console.error(`Failed to fetch image: ${image.imageLocation}`);
+          continue;
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+
+        const img = new Image();
+        img.src = url;
+
+        await new Promise<void>((resolve, reject) => {
+          img.onload = () => {
+            const imgWidth = 180;
+            const imgHeight = (img.height * imgWidth) / img.width;
+
+            pdf.addImage(img, "JPEG", 10, 10, imgWidth, imgHeight);
+            resolve();
+          };
+
+          img.onerror = (error) => {
+            console.error(`Error loading image: ${image.imageLocation}`, error);
+            reject(error);
+          };
+        });
+
+        URL.revokeObjectURL(url);
+      }
+
+      pdf.deletePage(pdf.getNumberOfPages());
+      pdf.save(`post-images-${id}.pdf`);
+    } catch (error) {
+      console.error("Error in downloading images to PDF:", error);
+    }
   };
 
   if (loading) {
