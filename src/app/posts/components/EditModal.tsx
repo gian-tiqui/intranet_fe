@@ -148,40 +148,52 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
     fetchPost();
   }, [postId, setValue]);
 
-  const convertPdfToImage = async (pdfFile: File): Promise<File> => {
-    setIsConverting(true);
+  const convertPdfToImage = async (pdfFile: File) => {
     const arrayBuffer = await pdfFile.arrayBuffer();
     const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
-    const page = await pdf.getPage(1);
-    const viewport = page.getViewport({ scale: 2.0 });
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
+    const pageCount = pdf._pdfInfo.numPages;
+    const convertedFiles = [];
 
-    if (!context) {
-      throw new Error("Could not get canvas context");
+    for (let pageNumber = 1; pageNumber <= pageCount; pageNumber++) {
+      const page = await pdf.getPage(pageNumber);
+      const viewport = page.getViewport({ scale: 2.0 });
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+
+      if (!context) {
+        throw new Error("Could not get canvas context");
+      }
+
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      await page.render({
+        canvasContext: context,
+        viewport: viewport,
+      }).promise;
+
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob(
+          (blob) => {
+            resolve(blob!);
+          },
+          "image/jpeg",
+          0.95
+        );
+      });
+
+      convertedFiles.push(
+        new File(
+          [blob],
+          pdfFile.name.replace(".pdf", `-page${pageNumber}.jpg`),
+          {
+            type: "image/jpeg",
+          }
+        )
+      );
     }
 
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
-
-    await page.render({
-      canvasContext: context,
-      viewport: viewport,
-    }).promise;
-
-    const blob = await new Promise<Blob>((resolve) => {
-      canvas.toBlob(
-        (blob) => {
-          resolve(blob!);
-        },
-        "image/jpeg",
-        0.95
-      );
-    });
-
-    return new File([blob], pdfFile.name.replace(".pdf", ".jpg"), {
-      type: "image/jpeg",
-    });
+    return convertedFiles;
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -201,12 +213,15 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
               className: toastClass,
             });
 
-            const convertedImage = await convertPdfToImage(file);
-            convertedFiles.push(convertedImage);
+            const convertedImages = await convertPdfToImage(file);
 
-            const text = await scanImage(URL.createObjectURL(convertedImage));
-            extractedTexts += text + " ";
-            previews.push(URL.createObjectURL(convertedImage));
+            convertedImages.map(async (convertedImage) => {
+              convertedFiles.push(convertedImage);
+
+              const text = await scanImage(URL.createObjectURL(convertedImage));
+              extractedTexts += text + " ";
+              previews.push(URL.createObjectURL(convertedImage));
+            });
           } else if (file.type.startsWith("image/")) {
             const text = await scanImage(URL.createObjectURL(file));
             extractedTexts += text + " ";
@@ -227,7 +242,6 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
 
       setFileNames(fileNames);
       setConvertedFiles(convertedFiles);
-
       setValue("extractedText", extractedTexts.trim());
       setIsConverting(false);
       setFilePreviews(previews);

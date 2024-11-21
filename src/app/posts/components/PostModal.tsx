@@ -175,14 +175,6 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
 
             const convertedImages = await convertPdfToImage(file);
 
-            // convertedFiles.push(convertedImages[0]);
-
-            // const text = await scanImage(
-            //   URL.createObjectURL(convertedImages[0])
-            // );
-            // extractedTexts += text + " ";
-            // previews.push(URL.createObjectURL(convertedImages[0]));
-
             convertedImages.map(async (convertedImage) => {
               convertedFiles.push(convertedImage);
 
@@ -208,7 +200,6 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
         }
       }
 
-      console.log(convertedFiles.length);
       setFileNames(fileNames);
       setConvertedFiles(convertedFiles);
       setValue("extractedText", extractedTexts.trim());
