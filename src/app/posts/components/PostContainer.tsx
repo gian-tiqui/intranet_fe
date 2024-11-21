@@ -13,9 +13,7 @@ import {
   fetchPostDeptIds,
 } from "@/app/functions/functions";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import DeleteModal from "./DeleteModal";
 import { AnimatePresence } from "framer-motion";
-import MotionTemplate from "@/app/components/animation/MotionTemplate";
 import SmallToLarge from "@/app/components/animation/SmallToLarge";
 import useEditModalStore from "@/app/store/editModal";
 import usePostIdStore from "@/app/store/postId";
@@ -30,6 +28,7 @@ import { useQuery } from "@tanstack/react-query";
 import useRefetchPostStore from "@/app/store/refetchPostStore";
 import ImageSlider from "./ImageSlider";
 import useImagesStore from "@/app/store/imagesStore";
+import useDeleteModalStore from "@/app/store/deleteModalStore";
 
 interface Props {
   id: number;
@@ -50,7 +49,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const [comments, setComments] = useState<PostComment[]>([]);
   const [editable, setEditable] = useState<boolean>(false);
   const [openOptions, setOpenOptions] = useState<boolean>(true);
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const { showDeleteModal, setShowDeleteModal } = useDeleteModalStore();
   const { setShowEditModal } = useEditModalStore();
   const { setPostId } = usePostIdStore();
   const [message] = useState<string>("");
@@ -155,7 +154,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     return () => {
       document.removeEventListener("click", handleClick);
     };
-  }, [showDeleteModal]);
+  }, [showDeleteModal, setShowDeleteModal]);
 
   useEffect(() => {
     const handleClick = () => {
@@ -191,6 +190,47 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     populateDeptIds();
   }, [post, setDeptId]);
 
+  const singleDownload = async () => {
+    if (!post?.imageLocations) return;
+
+    try {
+      const imageLocation = post?.imageLocations[0];
+
+      const response = await fetch(
+        `${API_BASE}/uploads/${imageLocation.imageLocation}`
+      );
+      if (!response.ok) {
+        console.error("Failed to fetch image:", response.statusText);
+        return;
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+
+      const img = new window.Image();
+      img.src = url;
+
+      img.onload = () => {
+        const pdf = new jsPDF();
+
+        const imgWidth = 180;
+        const imgHeight = (img.height * imgWidth) / img.width;
+
+        pdf.addImage(img, "JPEG", 10, 10, imgWidth, imgHeight);
+        pdf.save(`${imageLocation.imageLocation}.pdf`);
+
+        URL.revokeObjectURL(url);
+      };
+
+      img.onerror = (error) => {
+        console.error("Error loading image:", error);
+        URL.revokeObjectURL(url);
+      };
+    } catch (error) {
+      console.error("Error in downloading image:", error);
+    }
+  };
+
   useEffect(() => {
     if (post) {
       setComments(post?.comments as PostComment[]);
@@ -208,6 +248,9 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   };
 
   const handleDeleteClicked = () => {
+    if (!post) return;
+
+    setPostId(post?.pid);
     setShowDeleteModal(true);
   };
 
@@ -313,17 +356,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
 
   return (
     <>
-      <AnimatePresence>
-        {showDeleteModal && (
-          <MotionTemplate>
-            <DeleteModal
-              setShowDeleteModal={setShowDeleteModal}
-              postId={post?.pid}
-            />
-          </MotionTemplate>
-        )}
-      </AnimatePresence>
-
       <div
         onClick={generalPost ? handleClick : undefined}
         className={`ignore-click ${generalPost && "cursor-pointer"}`}
@@ -423,7 +455,11 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
         >
           {post?.imageLocations && (
             <div
-              onClick={handleDownloadAllImages}
+              onClick={
+                post.imageLocations.length > 1
+                  ? handleDownloadAllImages
+                  : singleDownload
+              }
               className="flex hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-2 items-center gap-1 rounded  cursor-pointer "
             >
               <Icon icon={"akar-icons:download"} />

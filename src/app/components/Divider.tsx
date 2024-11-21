@@ -34,6 +34,8 @@ import PendingUsers from "./PendingUsers";
 import { jwtDecode } from "jwt-decode";
 import useShowImageStore from "../store/imageViewStore";
 import ImagePreview from "./ImagePreview";
+import useDeleteModalStore from "../store/deleteModalStore";
+import DeleteModal from "../posts/components/DeleteModal";
 
 interface Props {
   children?: ReactNode;
@@ -58,6 +60,7 @@ const Divider: React.FC<Props> = ({ children }) => {
   const queryClient = new QueryClient();
   const [showPendingUsers, setShowPendingUsers] = useState<boolean>(false);
   const { showImage, setShowImage } = useShowImageStore();
+  const { setShowDeleteModal, showDeleteModal } = useDeleteModalStore();
 
   useEffect(() => {
     const checkLevel = () => {
@@ -205,6 +208,11 @@ const Divider: React.FC<Props> = ({ children }) => {
         {showEditModal && <EditPostModal postId={postId} />}
         {showDeleteComment && <DeleteCommentPopup />}
         {showImage.show && <ImagePreview mSetShowImage={setShowImage} />}
+        {showDeleteModal && (
+          <div className="w-full h-full absolute grid place-content-center bg-black/70 z-50">
+            <DeleteModal setShowDeleteModal={setShowDeleteModal} />
+          </div>
+        )}
 
         <div id="sidebar" onClick={(e) => e.stopPropagation()}>
           <AnimatePresence>
