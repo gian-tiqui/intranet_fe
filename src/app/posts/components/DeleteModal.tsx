@@ -1,17 +1,18 @@
 import { API_BASE } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
+import usePostIdStore from "@/app/store/postId";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import { useRouter } from "next/navigation";
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import { toast } from "react-toastify";
 
 interface Props {
-  postId?: number;
-  setShowDeleteModal: Dispatch<SetStateAction<boolean>>;
+  setShowDeleteModal: (showDeleteModal: boolean) => void;
 }
 
-const DeleteModal: React.FC<Props> = ({ postId, setShowDeleteModal }) => {
+const DeleteModal: React.FC<Props> = ({ setShowDeleteModal }) => {
   const router = useRouter();
+  const { postId } = usePostIdStore();
   const confirmDelete = async () => {
     if (postId) {
       try {
@@ -33,7 +34,7 @@ const DeleteModal: React.FC<Props> = ({ postId, setShowDeleteModal }) => {
   };
 
   return (
-    <div className="w-52 z-50 flex flex-col text-black dark:text-white absolute bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 rounded-2xl p-4 transform translate-x-[30%] md:translate-x-[100%]">
+    <div className="w-52 z-50 flex flex-col text-black dark:text-white bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 rounded-2xl p-4">
       <p className="text-red-600 dark:text-red-500 font-bold mb-10">
         Are you sure that you want to delete this post?
       </p>
