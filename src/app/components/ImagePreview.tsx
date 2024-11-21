@@ -1,6 +1,6 @@
 import React from "react";
 import useImagesStore from "../store/imagesStore";
-import Image from "next/image";
+import Cimage from "next/image";
 import useShowImageStore from "../store/imageViewStore";
 import { API_BASE } from "../bindings/binding";
 import jsPDF from "jspdf";
@@ -15,12 +15,12 @@ const ImagePreview: React.FC<Props> = ({ mSetShowImage }) => {
   const { images } = useImagesStore();
 
   const handleDownloadImage = async () => {
-    if (!images) return;
+    if (!images || !images[showImage.selectedIndex]) return;
 
     try {
-      const response = await fetch(
-        `${API_BASE}/uploads/${images[showImage.selectedIndex]}`
-      );
+      const imageLocation = images[showImage.selectedIndex];
+
+      const response = await fetch(`${API_BASE}/uploads/${imageLocation}`);
       if (!response.ok) {
         console.error("Failed to fetch image:", response.statusText);
         return;
@@ -34,8 +34,12 @@ const ImagePreview: React.FC<Props> = ({ mSetShowImage }) => {
 
       img.onload = () => {
         const pdf = new jsPDF();
-        pdf.addImage(img, "JPEG", 10, 10, 180, 160);
-        pdf.save(`post-image.pdf`);
+
+        const imgWidth = 180;
+        const imgHeight = (img.height * imgWidth) / img.width;
+
+        pdf.addImage(img, "JPEG", 10, 10, imgWidth, imgHeight);
+        pdf.save(`post-image-${imageLocation}.pdf`);
 
         URL.revokeObjectURL(url);
       };
@@ -52,12 +56,16 @@ const ImagePreview: React.FC<Props> = ({ mSetShowImage }) => {
   const handleNextClicked = () => {
     if (showImage.selectedIndex < images.length - 1) {
       setShowImage({ show: true, selectedIndex: showImage.selectedIndex + 1 });
+    } else {
+      setShowImage({ show: true, selectedIndex: 0 });
     }
   };
 
   const handlePrevClicked = () => {
     if (showImage.selectedIndex > 0) {
       setShowImage({ show: true, selectedIndex: showImage.selectedIndex - 1 });
+    } else {
+      setShowImage({ selectedIndex: images.length - 1, show: true });
     }
   };
 
@@ -86,7 +94,7 @@ const ImagePreview: React.FC<Props> = ({ mSetShowImage }) => {
 
         {/* Image Container */}
         <div className="overflow-auto w-full h-full flex justify-center items-center">
-          <Image
+          <Cimage
             src={`${API_BASE}/uploads/${images[showImage.selectedIndex]}`}
             alt={images[showImage.selectedIndex]}
             height={1000}

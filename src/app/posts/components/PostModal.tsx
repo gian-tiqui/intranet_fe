@@ -231,6 +231,13 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   };
 
   const handlePost = async (data: FormFields) => {
+    if (convertedFiles.length >= 25) {
+      toast("You have exceeded the file limit", {
+        className: toastClass,
+        type: "error",
+      });
+      return;
+    }
     if (isConverting) {
       toast("Please wait for file processing to complete", {
         type: "info",
