@@ -257,6 +257,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     const populateDeptIds = async () => {
       if (!post?.pid) return;
       const deptIds = await fetchPostDeptIds(post?.pid);
+      deptIds.push("4"); // let admins view
       const deptId = decodeUserData()?.deptId;
 
       setDeptIds(deptIds);
