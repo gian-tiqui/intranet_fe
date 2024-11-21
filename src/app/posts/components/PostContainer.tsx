@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import React, { useState, useEffect } from "react";
 import PostSkeleton from "./PostSkeleton";
 import Comments from "./Comments";
-import { PostComment } from "@/app/types/types";
+import { GroupedFiles, ImageLocation, PostComment } from "@/app/types/types";
 import CommentBar from "./CommentBar";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import {
@@ -284,66 +284,78 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
     event.stopPropagation();
   };
 
+  const groupFilesByTitle = (imageLocations: ImageLocation[]): GroupedFiles => {
+    const groupedFiles: GroupedFiles = {};
+
+    imageLocations.forEach((image) => {
+      const fileName = image.imageLocation.split("/").pop() || "";
+
+      const middlePart = fileName.match(/-\d+-(.*?) /)?.[1] || "Unknown";
+
+      if (!groupedFiles[middlePart]) {
+        groupedFiles[middlePart] = [];
+      }
+      groupedFiles[middlePart].push(image);
+    });
+
+    return groupedFiles;
+  };
+
   const handleDownloadAllImages = async () => {
     if (!post?.imageLocations) return;
 
     try {
-      const pdf = new jsPDF();
-      let currentTitle = "";
-      let isFirstImage = true;
+      const groupedFiles = groupFilesByTitle(post.imageLocations);
 
-      const sortedImages = [...post.imageLocations].sort((a, b) => {
-        const pageA = a.imageLocation.match(/-page(\d+)/)?.[1];
-        const pageB = b.imageLocation.match(/-page(\d+)/)?.[1];
-        return pageA && pageB ? parseInt(pageA, 10) - parseInt(pageB, 10) : 0;
-      });
+      for (const [title, images] of Object.entries(groupedFiles)) {
+        const pdf = new jsPDF();
 
-      for (const image of sortedImages) {
-        const titlePart =
-          image.imageLocation.split("/").pop()?.split("-page")[0] || "";
-
-        if (titlePart !== currentTitle) {
-          if (!isFirstImage) {
-            pdf.addPage();
-          }
-          currentTitle = titlePart;
-          isFirstImage = false;
-        }
-
-        const response = await fetch(
-          `${API_BASE}/uploads/${image.imageLocation}`
-        );
-        if (!response.ok) {
-          console.error(`Failed to fetch image: ${image.imageLocation}`);
-          continue;
-        }
-
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-
-        const img = new Image();
-        img.src = url;
-
-        await new Promise<void>((resolve, reject) => {
-          img.onload = () => {
-            const imgWidth = 180;
-            const imgHeight = (img.height * imgWidth) / img.width;
-
-            pdf.addImage(img, "JPEG", 10, 10, imgWidth, imgHeight);
-            resolve();
-          };
-
-          img.onerror = (error) => {
-            console.error(`Error loading image: ${image.imageLocation}`, error);
-            reject(error);
-          };
+        const sortedImages = [...images].sort((a, b) => {
+          const pageA = a.imageLocation.match(/-page(\d+)/)?.[1];
+          const pageB = b.imageLocation.match(/-page(\d+)/)?.[1];
+          return pageA && pageB ? parseInt(pageA, 10) - parseInt(pageB, 10) : 0;
         });
 
-        URL.revokeObjectURL(url);
-      }
+        for (const image of sortedImages) {
+          const response = await fetch(
+            `${API_BASE}/uploads/${image.imageLocation}`
+          );
+          if (!response.ok) {
+            console.error(`Failed to fetch image: ${image.imageLocation}`);
+            continue;
+          }
 
-      pdf.deletePage(pdf.getNumberOfPages());
-      pdf.save(`post-images-${id}.pdf`);
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+
+          const img = new Image();
+          img.src = url;
+
+          await new Promise<void>((resolve, reject) => {
+            img.onload = () => {
+              const imgWidth = 180;
+              const imgHeight = (img.height * imgWidth) / img.width;
+
+              pdf.addImage(img, "JPEG", 10, 10, imgWidth, imgHeight);
+              pdf.addPage();
+              resolve();
+            };
+
+            img.onerror = (error) => {
+              console.error(
+                `Error loading image: ${image.imageLocation}`,
+                error
+              );
+              reject(error);
+            };
+          });
+
+          URL.revokeObjectURL(url);
+        }
+
+        pdf.deletePage(pdf.getNumberOfPages());
+        pdf.save(`post-images-${title}.pdf`);
+      }
     } catch (error) {
       console.error("Error in downloading images to PDF:", error);
     }
