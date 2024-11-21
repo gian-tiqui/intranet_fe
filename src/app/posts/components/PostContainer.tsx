@@ -37,7 +37,6 @@ interface Props {
 
 const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
   const router = useRouter();
-
   const { setRefetch } = useRefetchPostStore();
 
   const { data: post, refetch } = useQuery({
