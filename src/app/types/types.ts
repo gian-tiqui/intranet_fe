@@ -229,7 +229,12 @@ type LogType = {
   log: User | Post | Comment | { password: string; hash: string };
 };
 
+interface GroupedFiles {
+  [key: string]: ImageLocation[];
+}
+
 export type {
+  GroupedFiles,
   ImageLocation,
   LogType,
   DepartmentUserCount,
