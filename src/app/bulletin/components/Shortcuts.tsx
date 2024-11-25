@@ -33,11 +33,8 @@ const Shortcuts: React.FC<Props> = ({
     setMinMax((prev) => {
       const newMin =
         selection === "next" ? prev.min + limit : Math.max(prev.min - limit, 0);
-      const newMax =
-        selection === "next"
-          ? prev.max + limit
-          : Math.max(prev.max - limit, limit);
-      return { min: newMin, max: newMax };
+
+      return { min: newMin, max: 2 };
     });
   };
 
