@@ -38,8 +38,6 @@ const DepartmentsBulletin = () => {
           },
         });
 
-        console.log(response.data.posts);
-
         setDepartmentsPost(response.data.posts);
         setTotalPosts(response.data.count);
       } catch (error) {
