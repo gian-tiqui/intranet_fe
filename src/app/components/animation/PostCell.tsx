@@ -68,7 +68,10 @@ const PostCell: React.FC<PostCellProps> = ({ post, first }) => {
         />
       ) : (
         <div className="w-full h-full bg-gray-100 grid place-content-center">
-          <p className="font-bold">No image</p>
+          <Icon
+            icon={"tabler:photo-x"}
+            className={`${first ? "h-20 w-20" : "h-8 w-8"}`}
+          />
         </div>
       )}
       <div
