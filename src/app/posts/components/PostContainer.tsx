@@ -33,14 +33,15 @@ import useDeleteModalStore from "@/app/store/deleteModalStore";
 interface Props {
   id: number;
   generalPost?: boolean;
+  type: string;
 }
 
-const PostContainer: React.FC<Props> = ({ id, generalPost = false }) => {
+const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
   const router = useRouter();
   const { setRefetch } = useRefetchPostStore();
 
   const { data: post, refetch } = useQuery({
-    queryKey: ["single-post"],
+    queryKey: [`single-post-${id}-${type}`],
     queryFn: () => fetchPost(id),
   });
   const [currentIndex, setCurrentIndex] = useState<number>(0);

@@ -5,9 +5,8 @@ import PostContainer from "../posts/components/PostContainer";
 import { Post } from "../types/types";
 import usePostUriStore from "../store/usePostUri";
 import { API_BASE, INTRANET } from "../bindings/binding";
-import { decodeUserData, fetchPosts } from "../functions/functions";
+import { decodeUserData } from "../functions/functions";
 import apiClient from "../http-common/apiUrl";
-import { useQuery } from "@tanstack/react-query";
 import PostSkeleton from "../posts/components/PostSkeleton";
 import NoPosts from "../bulletin/components/NoPosts";
 import Shortcuts from "../bulletin/components/Shortcuts";
@@ -19,20 +18,14 @@ const DepartmentsBulletin = () => {
   const [departmentsPost, setDepartmentsPost] = useState<Post[]>([]);
   const { uriPost } = usePostUriStore();
   const [totalPosts, setTotalPosts] = useState<number>(0);
-
-  const { data: _bulletinPosts, isLoading } = useQuery({
-    queryKey: ["private_posts"],
-    queryFn: fetchPosts,
-    staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const isLastPage = minMax.max >= totalPosts;
 
   useEffect(() => {
     const fetchDepartmentPosts = async () => {
       try {
+        setLoading(true);
         const apiUri = `${API_BASE}/post?deptId=${
           decodeUserData()?.deptId
         }&userIdComment=${decodeUserData()?.sub}&search=${uriPost}&lid=${
@@ -45,22 +38,19 @@ const DepartmentsBulletin = () => {
           },
         });
 
+        console.log(response.data.posts);
+
         setDepartmentsPost(response.data.posts);
         setTotalPosts(response.data.count);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchDepartmentPosts();
   }, [uriPost, direction, minMax]);
-
-  useEffect(() => {
-    if (_bulletinPosts) {
-      setDepartmentsPost(_bulletinPosts.posts);
-      setTotalPosts(_bulletinPosts.count);
-    }
-  }, [_bulletinPosts]);
 
   useEffect(() => {
     setSearchBarHidden(true);
@@ -85,7 +75,12 @@ const DepartmentsBulletin = () => {
               />
 
               {departmentsPost.map((post) => (
-                <PostContainer id={post.pid} key={post.pid} generalPost />
+                <PostContainer
+                  id={post.pid}
+                  key={post.pid}
+                  generalPost
+                  type="department"
+                />
               ))}
 
               <Shortcuts

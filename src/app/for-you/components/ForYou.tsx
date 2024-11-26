@@ -50,7 +50,12 @@ const ForYou = () => {
               />
 
               {data.posts.map((post) => (
-                <PostContainer id={post.pid} key={post.pid} generalPost />
+                <PostContainer
+                  id={post.pid}
+                  key={post.pid}
+                  generalPost
+                  type="for-you"
+                />
               ))}
 
               <Shortcuts

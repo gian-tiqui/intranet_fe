@@ -20,7 +20,7 @@ const UnreadMain = () => {
       {isLoading && <PostSkeleton />}
       {data &&
         data.map((d, index) => (
-          <PostContainer generalPost id={d.pid} key={index} />
+          <PostContainer generalPost id={d.pid} key={index} type="unread" />
         ))}
     </div>
   );

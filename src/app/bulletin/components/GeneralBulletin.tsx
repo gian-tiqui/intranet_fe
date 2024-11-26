@@ -6,8 +6,7 @@ import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
 import usePostUriStore from "@/app/store/usePostUri";
 import { MinMax, Post } from "@/app/types/types";
-import { decodeUserData, fetchPublicPosts } from "@/app/functions/functions";
-import { useQuery } from "@tanstack/react-query";
+import { decodeUserData } from "@/app/functions/functions";
 import PostSkeleton from "@/app/posts/components/PostSkeleton";
 import NoPosts from "./NoPosts";
 import Shortcuts from "./Shortcuts";
@@ -17,14 +16,7 @@ const GeneralBulletin = () => {
   const [direction, setDirection] = useState<string>("desc");
   const [minMax, setMinMax] = useState<MinMax>({ min: 0, max: 2 });
   const [totalPosts, setTotalPosts] = useState<number>(0);
-
-  const { data: _bulletinPosts, isLoading } = useQuery({
-    queryKey: ["public_posts"],
-    queryFn: fetchPublicPosts,
-    staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const [bulletinPosts, setBulletinPosts] = useState<Post[]>([]);
   const { uriPost } = usePostUriStore();
@@ -33,6 +25,7 @@ const GeneralBulletin = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
+      setLoading(true);
       try {
         const apiUri = `${API_BASE}/post?public=true&search=${uriPost}&lid=${
           decodeUserData()?.lid
@@ -48,18 +41,13 @@ const GeneralBulletin = () => {
         setTotalPosts(response.data.count);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchPosts();
   }, [uriPost, direction, minMax]);
-
-  useEffect(() => {
-    if (_bulletinPosts) {
-      setBulletinPosts(_bulletinPosts.posts);
-      setTotalPosts(_bulletinPosts.count);
-    }
-  }, [_bulletinPosts]);
 
   useEffect(() => {
     setSearchBarHidden(true);
@@ -83,14 +71,19 @@ const GeneralBulletin = () => {
               />
 
               {bulletinPosts.map((post) => (
-                <PostContainer id={post.pid} key={post.pid} generalPost />
+                <PostContainer
+                  id={post.pid}
+                  key={post.pid}
+                  generalPost
+                  type="general"
+                />
               ))}
 
               <Shortcuts
                 setDirection={setDirection}
                 setMinMax={setMinMax}
                 limit={2}
-                totalPosts={totalPosts} // Use dynamic totalPosts
+                totalPosts={totalPosts}
                 isLastPage={isLastPage}
               />
             </>
