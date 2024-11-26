@@ -7,7 +7,7 @@ const PostPage = ({ params }: { params: { id: number } }) => {
   return (
     <div className="">
       <AuthListener />
-      <PostContainer id={id} />
+      <PostContainer id={id} type="single-single-post" />
     </div>
   );
 };
