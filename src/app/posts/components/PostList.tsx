@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchPosts, fetchPublicPosts } from "@/app/functions/functions";
 import usePostIdStore from "@/app/store/postId";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import PostListItem from "./PostListItem";
 
 const groupPostsByDate = (posts: Post[]) => {
   return posts.reduce((groups: GroupedPosts, post: Post) => {
@@ -119,19 +120,7 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
                         key={index}
                         onClick={() => handleItemClicked(post.pid)}
                       >
-                        <HoverBox className="hover:bg-neutral-200 flex items-center gap-2 dark:hover:bg-neutral-800 py-1 px-2 cursor-pointer rounded">
-                          <Icon
-                            icon={"iconoir:post"}
-                            className="h-5 w-5 -rotate-[10deg]"
-                          />
-
-                          <p>
-                            {post.title
-                              ? post.title[0].toUpperCase() +
-                                post.title.substring(1)
-                              : "Untitled"}
-                          </p>
-                        </HoverBox>
+                        <PostListItem post={post} />
                       </div>
                     ))}
                   </div>
