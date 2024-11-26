@@ -1,7 +1,6 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
-import { decodeUserData, fetchPublicPosts } from "../functions/functions";
+import { decodeUserData } from "../functions/functions";
 import { Post } from "../types/types";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import apiClient from "../http-common/apiUrl";
@@ -26,16 +25,6 @@ const GlobalSearch = () => {
     };
   }, [search]);
 
-  const {
-    data: _publicPosts,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["public_posts"],
-    queryFn: fetchPublicPosts,
-  });
-
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -43,16 +32,13 @@ const GlobalSearch = () => {
         const apiUri = `${API_BASE}/post?public=true&search=${debouncedSearch}&lid=${
           decodeUserData()?.lid
         }`;
-
         const response = await apiClient.get(apiUri, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
           },
         });
 
-        console.log(response.data);
-
-        setPublicPosts(response.data);
+        setPublicPosts(response.data.posts);
       } catch (error) {
         console.error(error);
       } finally {
@@ -62,16 +48,10 @@ const GlobalSearch = () => {
 
     if (debouncedSearch) {
       fetchPosts();
+    } else {
+      setPublicPosts([]);
     }
   }, [debouncedSearch]);
-
-  useEffect(() => {
-    if (_publicPosts) setPublicPosts(_publicPosts.posts);
-  }, [_publicPosts]);
-
-  if (isError) {
-    console.log(error);
-  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -103,7 +83,7 @@ const GlobalSearch = () => {
         {loading && <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />}
       </div>
       {showSuggestions &&
-        (!isLoading ? (
+        (!loading ? (
           <div className="p-2 bg-white dark:bg-neutral-900 absolute w-[90%] mt-14 rounded-b-xl h-52 overflow-y-auto flex flex-col gap-1">
             {publicPosts && publicPosts.length > 0 ? (
               publicPosts.map((post) => (
