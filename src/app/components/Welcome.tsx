@@ -27,8 +27,10 @@ const Welcome = () => {
   return (
     <MotionTemplate>
       <div className="pt-20 flex flex-col items-center mb-10">
-        <p className="text-2xl font-bold mb-4">Hello there! 👋</p>
-        <p className="text-lg font-semibold mb-32">
+        <p className="text-2xl font-bold mb-4 text-blue-600 dark:text-blue-500">
+          Hello there! 👋
+        </p>
+        <p className="text-lg font-semibold mb-32 ">
           Welcome back to Intranet! What would you like to do?
         </p>
         <GlobalSearch />

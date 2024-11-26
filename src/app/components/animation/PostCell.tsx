@@ -78,7 +78,9 @@ const PostCell: React.FC<PostCellProps> = ({ post, first }) => {
       >
         <h2
           className={`${
-            first ? "text-3xl font-extrabold" : "text-xs truncate font-bold"
+            first
+              ? "text-lg md:text-xl lg:text-3xl font-extrabold"
+              : "text-xs truncate font-bold"
           } text-white`}
         >
           {post?.title}

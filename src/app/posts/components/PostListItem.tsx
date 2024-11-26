@@ -45,7 +45,7 @@ const PostListItem: React.FC<Props> = ({ post }) => {
         </p>
       </div>
       {showLight && (
-        <div className="h-2 w-2 bg-green-500 dark:bg-blue-400 rounded-full"></div>
+        <div className="h-2 w-2 bg-blue-600 dark:bg-blue-400 rounded-full"></div>
       )}
     </HoverBox>
   );
