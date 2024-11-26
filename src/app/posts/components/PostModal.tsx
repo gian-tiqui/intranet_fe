@@ -280,24 +280,35 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             type: "success",
             className: toastClass,
           });
-          apiClient
-            .post(`${API_BASE}/notification/new-post`, null, {
-              params: {
-                deptId: data.deptIds,
-                postId: response.data.post.pid,
-              },
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-              },
-            })
+
+          const notifications = data.deptIds.split(",").map((deptId) =>
+            apiClient
+              .post(`${API_BASE}/notification/new-post`, null, {
+                params: {
+                  deptId: deptId,
+                  postId: response.data.post.pid,
+                },
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+                },
+              })
+              .then(() => {
+                toast("Notification sent to the department!", {
+                  type: "success",
+                  className: toastClass,
+                });
+              })
+              .catch((error) => {
+                console.error("Failed to send notification:", error);
+              })
+          );
+
+          Promise.all(notifications)
             .then(() => {
-              toast("Notification sent to the department!", {
-                type: "success",
-                className: toastClass,
-              });
+              console.log("All notifications sent successfully!");
             })
-            .catch((error) => {
-              console.error("Failed to send notification:", error);
+            .catch(() => {
+              console.error("Some notifications failed.");
             })
             .finally(() => setPosting(false));
         }
