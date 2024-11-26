@@ -42,6 +42,7 @@ const Aside: React.FC<Props> = ({
   const [confirmed, setConfirmed] = useState<boolean>(false);
   const [_dest, setDest] = useState<string>("");
   const { deptId } = useDeptIdStore();
+  const [showCollapseText, setShowCollapseText] = useState<boolean>(false);
 
   const fetchReadStatus = async () => {
     if (!postId) return;
@@ -120,9 +121,16 @@ const Aside: React.FC<Props> = ({
             onClick={
               setIsCollapsed ? () => setIsCollapsed(!isCollapsed) : undefined
             }
-            className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+            onMouseEnter={() => setShowCollapseText(true)}
+            onMouseLeave={() => setShowCollapseText(false)}
+            className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded relative"
           >
             <Icon icon="iconoir:sidebar-collapse" className="h-5 w-5" />
+            {showCollapseText && (
+              <div className="h-9 w-32 top-0 left-10 absolute bg-white border grid place-content-center rounded">
+                <p className="text-sm">Collapse Sidebar</p>
+              </div>
+            )}
           </div>
 
           {editVisible && (
