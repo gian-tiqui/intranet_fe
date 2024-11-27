@@ -10,6 +10,7 @@ import apiClient from "../http-common/apiUrl";
 import PostSkeleton from "../posts/components/PostSkeleton";
 import NoPosts from "../bulletin/components/NoPosts";
 import Shortcuts from "../bulletin/components/Shortcuts";
+import ShortcutSkeleton from "../bulletin/components/ShortcutSkeleton";
 
 const DepartmentsBulletin = () => {
   const { setSearchBarHidden } = useHideSearchBarStore();
@@ -59,12 +60,19 @@ const DepartmentsBulletin = () => {
   return (
     <div>
       {isLoading ? (
-        <PostSkeleton />
+        <>
+          <>
+            <ShortcutSkeleton />
+            <PostSkeleton />
+            <ShortcutSkeleton />
+          </>
+        </>
       ) : (
         <>
           {departmentsPost.length > 0 ? (
             <>
               <Shortcuts
+                min={minMax.min}
                 setDirection={setDirection}
                 setMinMax={setMinMax}
                 limit={3}
@@ -82,6 +90,7 @@ const DepartmentsBulletin = () => {
               ))}
 
               <Shortcuts
+                min={minMax.min}
                 setDirection={setDirection}
                 setMinMax={setMinMax}
                 limit={3}

@@ -42,6 +42,7 @@ const ForYou = () => {
           {data?.posts && data.posts.length > 0 ? (
             <>
               <Shortcuts
+                min={minMax.min}
                 setDirection={setDirection}
                 setMinMax={setMinMax}
                 limit={2}
@@ -59,6 +60,7 @@ const ForYou = () => {
               ))}
 
               <Shortcuts
+                min={minMax.min}
                 setDirection={setDirection}
                 setMinMax={setMinMax}
                 limit={2}
