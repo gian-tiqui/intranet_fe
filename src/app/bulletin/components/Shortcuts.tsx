@@ -8,6 +8,7 @@ interface Props {
   totalPosts: number;
   limit: number;
   isLastPage: boolean;
+  min: number; // Added min prop to check for first page
 }
 
 const Shortcuts: React.FC<Props> = ({
@@ -16,6 +17,7 @@ const Shortcuts: React.FC<Props> = ({
   totalPosts,
   limit,
   isLastPage,
+  min,
 }) => {
   const totalPages = Math.ceil(totalPosts / limit);
 
@@ -63,7 +65,10 @@ const Shortcuts: React.FC<Props> = ({
       </div>
       <div
         onClick={() => handlePageMove("prev")}
-        className="rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center"
+        className={`rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center ${
+          min === 0 ? "cursor-not-allowed opacity-50" : ""
+        }`}
+        style={{ pointerEvents: min === 0 ? "none" : "auto" }}
       >
         <Icon icon={"majesticons:next-circle-line"} className="rotate-180" />
         <p className="text-sm font-bold">Previous Page</p>

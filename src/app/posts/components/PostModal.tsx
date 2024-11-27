@@ -55,6 +55,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [title, setTitle] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<string | undefined>(undefined);
+  const [previewClickable, setPreviewClickable] = useState<boolean>(false);
 
   const { data, isError, error } = useQuery({
     queryKey: ["level"],
@@ -230,7 +231,37 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     }
   };
 
+  useEffect(() => {
+    if (title && message && filePreviews.length > 0) {
+      setPreviewClickable(true);
+    }
+  }, [title, message, filePreviews.length]);
+
   const handlePost = async (data: FormFields) => {
+    if (!data.lid) {
+      toast("Please select an employee level.", {
+        type: "error",
+        className: toastClass,
+      });
+      return;
+    }
+
+    if (selectedDepartments.length == 0) {
+      toast("Please select at least one department.", {
+        type: "error",
+        className: toastClass,
+      });
+      return;
+    }
+
+    if (!data.title && !data.message && convertedFiles.length == 0) {
+      toast("Please upload the documents or write a title or a message.", {
+        type: "error",
+        className: toastClass,
+      });
+      return;
+    }
+
     if (convertedFiles.length >= 25) {
       toast("You have exceeded the file limit", {
         className: toastClass,
@@ -292,12 +323,6 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                   Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
                 },
               })
-              .then(() => {
-                toast("Notification sent to the department!", {
-                  type: "success",
-                  className: toastClass,
-                });
-              })
               .catch((error) => {
                 console.error("Failed to send notification:", error);
               })
@@ -305,7 +330,10 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
 
           Promise.all(notifications)
             .then(() => {
-              console.log("All notifications sent successfully!");
+              toast("Notifications sent to the departments.", {
+                type: "success",
+                className: toastClass,
+              });
             })
             .catch(() => {
               console.error("Some notifications failed.");
@@ -402,7 +430,14 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 className="p-1 hover:bg-gray-100 dark:hover:bg-neutral-700 me-1 rounded"
                 onClick={handleShowPreview}
               >
-                <Icon icon={"mdi:eye-outline"} className="h-6 w-6 " />
+                <Icon
+                  icon={
+                    previewClickable
+                      ? "mdi:eye-outline"
+                      : "weui:eyes-off-outlined"
+                  }
+                  className="h-6 w-6 "
+                />
               </div>
             </div>
 
@@ -489,7 +524,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
               className="h-4 w-4"
             />
             <select
-              {...register("lid", { required: true })}
+              {...register("lid")}
               className="w-full bg-inherit rounded-t-xl h-9  text-sm gap-1 outline-none"
             >
               <option value={""}>Select employee level</option>
