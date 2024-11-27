@@ -11,6 +11,7 @@ import { fetchPosts, fetchPublicPosts } from "@/app/functions/functions";
 import usePostIdStore from "@/app/store/postId";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import PostListItem from "./PostListItem";
+import useDepartments from "@/app/custom-hooks/departments";
 
 const groupPostsByDate = (posts: Post[]) => {
   return posts.reduce((groups: GroupedPosts, post: Post) => {
@@ -62,6 +63,14 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [allPosts, setAllPosts] = useState<Post[]>([]);
   const { postId } = usePostIdStore();
+  const [selectedDeptId, setSelectedDeptId] = useState<number>(-1);
+  const departments = useDepartments();
+
+  const handleDeptClicked = (deptId: number) => {
+    if (selectedVis !== "all") return;
+
+    setSelectedDeptId(deptId);
+  };
 
   useEffect(() => {
     if (_posts) setPosts(_posts.posts);
@@ -105,6 +114,35 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
   return (
     <>
       <div>
+        {" "}
+        {selectedVis === "all" && (
+          <div className="w-full flex gap-3 flex-wrap px-5 mb-5">
+            <div
+              onClick={() => handleDeptClicked(-1)}
+              className={`text-xs border dark:border-neutral-700 rounded ${
+                selectedDeptId === -1 ? "bg-gray-200 dark:bg-neutral-700" : ""
+              } grid place-content-center px-3 py-1 font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-neutral-700`}
+              key={-1}
+            >
+              All
+            </div>
+            {departments
+              .filter((dept) => dept.posts.length > 0)
+              .map((dept) => (
+                <div
+                  onClick={() => handleDeptClicked(dept.deptId)}
+                  className={`text-xs border dark:border-neutral-700 rounded ${
+                    selectedDeptId === dept.deptId
+                      ? "bg-gray-200 dark:bg-neutral-700"
+                      : ""
+                  } grid place-content-center px-3 py-1 font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-neutral-700`}
+                  key={dept.deptId}
+                >
+                  {dept.departmentCode}
+                </div>
+              ))}
+          </div>
+        )}
         {Object.keys(groupedPosts)
           .slice(0, maxNum)
           .map((date) => (
