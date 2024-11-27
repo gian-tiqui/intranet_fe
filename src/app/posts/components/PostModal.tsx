@@ -525,13 +525,13 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             />
             <select
               {...register("lid")}
-              className="w-full bg-inherit rounded-t-xl h-9  text-sm gap-1 outline-none"
+              className="w-[70%] md:w-full bg-inherit rounded-t-xl h-9  text-sm gap-1 outline-none"
             >
               <option value={""}>Select employee level</option>
               {levels.map((level) => (
                 <option
                   value={level.lid}
-                  className="w-full border rounded-xl h-10 bg-white dark:bg-neutral-900"
+                  className="w-[80%] md:w-full border rounded-xl h-10 text-xs bg-white dark:bg-neutral-900"
                   key={level.lid}
                 >
                   {level.level[0].toUpperCase() + level.level.substring(1)}

@@ -29,6 +29,7 @@ import useRefetchPostStore from "@/app/store/refetchPostStore";
 import ImageSlider from "./ImageSlider";
 import useImagesStore from "@/app/store/imagesStore";
 import useDeleteModalStore from "@/app/store/deleteModalStore";
+import useSignalStore from "@/app/store/signalStore";
 
 interface Props {
   id: number;
@@ -60,6 +61,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
   const [deptIds, setDeptIds] = useState<string[]>([]);
   const [userDeptId, setUserDeptId] = useState<number>(-1);
   const { setImages } = useImagesStore();
+  const { setSignal } = useSignalStore();
 
   useEffect(() => {
     if (post && post.imageLocations) {
@@ -132,6 +134,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
 
       if (response.status === 201) {
         setIsRead(true);
+        setSignal(true);
       }
     } catch (error) {
       console.error(error);
@@ -387,13 +390,15 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           </div>
           {editable && (
             <div className="rounded">
-              <div className="hover:bg-gray-300 hover:dark:bg-neutral-700 p-1 mb-1">
-                <Icon
-                  icon={"iwwa:option-horizontal"}
-                  className="h-7 w-7"
-                  onClick={() => setOpenOptions(!openOptions)}
-                />
-              </div>
+              {!generalPost && (
+                <div className="hover:bg-gray-300 hover:dark:bg-neutral-700 p-1 mb-1">
+                  <Icon
+                    icon={"iwwa:option-horizontal"}
+                    className="h-7 w-7"
+                    onClick={() => setOpenOptions(!openOptions)}
+                  />
+                </div>
+              )}
 
               <AnimatePresence>
                 {!openOptions && (
@@ -463,10 +468,12 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
         )}
         <div
           className={`flex items-center w-full ${
-            post?.imageLocations ? "justify-between" : "justify-end"
+            post?.imageLocations && post?.imageLocations?.length > 0
+              ? "justify-between"
+              : "justify-end"
           } gap-1 rounded-lg pt-4 mb-2`}
         >
-          {post?.imageLocations && (
+          {post?.imageLocations && post?.imageLocations?.length > 0 && (
             <div
               onClick={
                 post.imageLocations.length > 1
