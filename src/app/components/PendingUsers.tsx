@@ -2,14 +2,22 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { fetchPendingUsers } from "../functions/functions";
+import useSignalStore from "../store/signalStore";
 
 const PendingUsers = () => {
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["pending-users"],
     queryFn: fetchPendingUsers,
   });
+
+  const { signal, setSignal } = useSignalStore();
+
+  useEffect(() => {
+    refetch();
+    setSignal(false);
+  }, [signal, setSignal, refetch]);
 
   if (isError) console.log(error);
 

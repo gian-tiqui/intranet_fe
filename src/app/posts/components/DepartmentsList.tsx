@@ -13,7 +13,7 @@ const DepartmentsList: React.FC<Props> = ({
   handleCheckboxChange,
 }) => {
   return (
-    <div className="mb-4 absolute bottom-5 left-9 bg-white dark:bg-neutral-950 w-64 p-2 border dark:border-black rounded-lg">
+    <div className="mb-4 absolute bottom-5 left-9 bg-white dark:bg-neutral-950 w-[80%] p-2 border dark:border-black rounded-lg">
       {departments
         .filter((department) => department.users.length > 0)
         .map((department) => (

@@ -1,6 +1,7 @@
 import { API_BASE } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
 import usePostIdStore from "@/app/store/postId";
+import useSignalStore from "@/app/store/signalStore";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -12,6 +13,8 @@ interface Props {
 
 const DeleteModal: React.FC<Props> = ({ setShowDeleteModal }) => {
   const router = useRouter();
+  const { setSignal } = useSignalStore();
+
   const { postId } = usePostIdStore();
   const confirmDelete = async () => {
     if (postId) {
@@ -20,11 +23,12 @@ const DeleteModal: React.FC<Props> = ({ setShowDeleteModal }) => {
 
         const data = response.data;
 
-        console.log(data);
-        toast("Post deleted successfully", {
+        toast(data.message, {
           type: "success",
           className: toastClass,
         });
+
+        setSignal(true);
 
         router.push("/bulletin");
       } catch (error) {

@@ -4,13 +4,24 @@ import NotifcationList from "./NotifcationList";
 import { useQuery } from "@tanstack/react-query";
 import { fetchNotifs } from "../functions/functions";
 import { NotificationType } from "../types/types";
+import useSignalStore from "../store/signalStore";
 
 const NotificationBell = () => {
-  const { data: notifications, isLoading } = useQuery({
+  const {
+    data: notifications,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["notifications"],
     queryFn: fetchNotifs,
   });
   const [openNotifs, setOpenNotifs] = useState<boolean>(false);
+  const { signal, setSignal } = useSignalStore();
+
+  useEffect(() => {
+    refetch();
+    setSignal(false);
+  }, [signal, setSignal, refetch]);
 
   const countUnreadNotifs = (notifs: NotificationType[]) => {
     if (notifs?.length === 0) return 0;

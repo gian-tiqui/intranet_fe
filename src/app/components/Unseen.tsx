@@ -3,12 +3,24 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchUserUnreads } from "../functions/functions";
 import UnseenList from "./UnseenList";
+import useSignalStore from "../store/signalStore";
 
 const Unread = () => {
-  const { data: unreads, isLoading } = useQuery({
+  const {
+    data: unreads,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["unreads"],
     queryFn: fetchUserUnreads,
   });
+
+  const { signal, setSignal } = useSignalStore();
+
+  useEffect(() => {
+    refetch();
+    setSignal(false);
+  }, [refetch, signal, setSignal]);
 
   const [openNotifs, setOpenNotifs] = useState<boolean>(false);
 
