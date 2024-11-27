@@ -4,15 +4,12 @@ import React, { useEffect } from "react";
 import wmcLogo from "../../assets/westlake_logo_horizontal.jpg.png";
 import Image from "next/image";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import Burger from "./Burger";
-import useSidebarStore from "@/app/store/sidebarStore";
 import { INTRANET } from "@/app/bindings/binding";
 import Cookies from "js-cookie";
 import useNavbarVisibilityStore from "@/app/store/navbarVisibilityStore";
 import { useRouter } from "next/navigation";
 
 const WelcomeNavbar = () => {
-  const { setSidebarShown } = useSidebarStore();
   const router = useRouter();
   const { setHidden } = useNavbarVisibilityStore();
 
@@ -59,12 +56,9 @@ const WelcomeNavbar = () => {
             <p className="font-semibold text-sm">Login</p>
           </Link>
 
-          <div
-            className="block md:hidden"
-            onClick={() => setSidebarShown(true)}
-          >
-            <Burger size={8} />
-          </div>
+          <Link href={"/login"} className="block md:hidden">
+            <Icon icon={"mdi:user"} className="h-8 w-8" />
+          </Link>
         </div>
       </nav>
     </>

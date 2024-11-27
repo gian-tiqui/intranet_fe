@@ -1,6 +1,6 @@
 import { API_BASE } from "@/app/bindings/binding";
 import HoverBox from "@/app/components/HoverBox";
-import { decodeUserData } from "@/app/functions/functions";
+import { decodeUserData, fetchPostDeptIds } from "@/app/functions/functions";
 import apiClient from "@/app/http-common/apiUrl";
 import { Post } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -12,6 +12,8 @@ interface Props {
 
 const PostListItem: React.FC<Props> = ({ post }) => {
   const [showLight, setShowLight] = useState<boolean>(false);
+  const [userDeptId, setUserDeptId] = useState<number | null>(null);
+  const [deptIds, setDeptIds] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchReadStatus = async () => {
@@ -33,6 +35,20 @@ const PostListItem: React.FC<Props> = ({ post }) => {
     if (post.pid) fetchReadStatus();
   }, [post]);
 
+  useEffect(() => {
+    const populateDeptIds = async () => {
+      if (!post?.pid) return;
+      const deptIds = await fetchPostDeptIds(post?.pid);
+      deptIds.push("4");
+      const deptId = decodeUserData()?.deptId;
+
+      if (deptId) setUserDeptId(deptId);
+      setDeptIds(deptIds);
+    };
+
+    if (post?.pid) populateDeptIds();
+  }, [post]);
+
   return (
     <HoverBox className="hover:bg-neutral-200 flex items-center justify-between dark:hover:bg-neutral-800 py-1 px-2 cursor-pointer rounded">
       <div className="flex gap-2">
@@ -44,7 +60,7 @@ const PostListItem: React.FC<Props> = ({ post }) => {
             : "Untitled"}
         </p>
       </div>
-      {showLight && (
+      {showLight && deptIds.includes(String(userDeptId)) && (
         <div className="h-2 w-2 bg-blue-600 dark:bg-blue-400 rounded-full"></div>
       )}
     </HoverBox>
