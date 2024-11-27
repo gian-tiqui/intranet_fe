@@ -10,6 +10,7 @@ import { decodeUserData } from "@/app/functions/functions";
 import PostSkeleton from "@/app/posts/components/PostSkeleton";
 import NoPosts from "./NoPosts";
 import Shortcuts from "./Shortcuts";
+import ShortcutSkeleton from "./ShortcutSkeleton";
 
 const GeneralBulletin = () => {
   const { setSearchBarHidden } = useHideSearchBarStore();
@@ -57,12 +58,17 @@ const GeneralBulletin = () => {
   return (
     <div>
       {isLoading ? (
-        <PostSkeleton />
+        <>
+          <ShortcutSkeleton />
+          <PostSkeleton />
+          <ShortcutSkeleton />
+        </>
       ) : (
         <>
           {bulletinPosts.length > 0 ? (
             <>
               <Shortcuts
+                min={minMax.min}
                 setDirection={setDirection}
                 setMinMax={setMinMax}
                 limit={2}
@@ -80,6 +86,7 @@ const GeneralBulletin = () => {
               ))}
 
               <Shortcuts
+                min={minMax.min}
                 setDirection={setDirection}
                 setMinMax={setMinMax}
                 limit={2}
