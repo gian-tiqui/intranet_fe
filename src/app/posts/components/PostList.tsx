@@ -7,11 +7,16 @@ import PostListSkeleton from "./PostListSkeleton";
 import NoPosts from "./NoPosts";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
 import { useQuery } from "@tanstack/react-query";
-import { fetchPosts, fetchPublicPosts } from "@/app/functions/functions";
+import {
+  fetchPostDeptIds,
+  fetchPosts,
+  fetchPublicPosts,
+} from "@/app/functions/functions";
 import usePostIdStore from "@/app/store/postId";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import PostListItem from "./PostListItem";
 import useDepartments from "@/app/custom-hooks/departments";
+import useSignalStore from "@/app/store/signalStore";
 
 const groupPostsByDate = (posts: Post[]) => {
   return posts.reduce((groups: GroupedPosts, post: Post) => {
@@ -44,7 +49,13 @@ const Skeleton = () => {
 };
 
 const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
-  const { data: _posts, isLoading } = useQuery({
+  const { signal, setSignal } = useSignalStore();
+
+  const {
+    data: _posts,
+    isLoading,
+    refetch: refetchPrivate,
+  } = useQuery({
     queryKey: ["private_posts"],
     queryFn: fetchPosts,
     staleTime: 1000 * 60 * 5,
@@ -52,7 +63,7 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
     refetchOnMount: false,
   });
 
-  const { data: _allPosts } = useQuery({
+  const { data: _allPosts, refetch: refetchPublic } = useQuery({
     queryKey: ["public_posts"],
     queryFn: fetchPublicPosts,
     staleTime: 1000 * 60 * 5,
@@ -66,10 +77,22 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
   const [selectedDeptId, setSelectedDeptId] = useState<number>(-1);
   const departments = useDepartments();
 
-  const handleDeptClicked = (deptId: number) => {
+  const handleDeptClicked = async (deptId: number) => {
     if (selectedVis !== "all") return;
 
     setSelectedDeptId(deptId);
+
+    if (deptId === -1) {
+      setPosts(_posts?.posts || []);
+    } else {
+      const filteredPosts = await Promise.all(
+        (_allPosts?.posts || []).map(async (post) => {
+          const deptIds = await fetchPostDeptIds(post.pid);
+          return deptIds.includes(String(deptId)) ? post : null;
+        })
+      );
+      setAllPosts(filteredPosts.filter((post) => post !== null));
+    }
   };
 
   useEffect(() => {
@@ -86,6 +109,18 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
     () => groupPostsByDate(selectedVis === "dept" ? posts : allPosts),
     [selectedVis, posts, allPosts]
   );
+
+  useEffect(() => {
+    refetchPrivate();
+    refetchPublic();
+
+    if (!_posts || !_allPosts) return;
+
+    setPosts(_posts?.posts);
+    setAllPosts(_allPosts.posts);
+
+    setSignal(false);
+  }, [refetchPrivate, refetchPublic, _allPosts, _posts, signal, setSignal]);
 
   const [maxNum, setMaxNum] = useState<number>(2);
 
@@ -116,7 +151,7 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
       <div>
         {" "}
         {selectedVis === "all" && (
-          <div className="w-full flex gap-3 flex-wrap px-5 mb-5">
+          <div className="w-full flex gap-2 flex-wrap px-5 mb-5">
             <div
               onClick={() => handleDeptClicked(-1)}
               className={`text-xs border dark:border-neutral-700 rounded ${

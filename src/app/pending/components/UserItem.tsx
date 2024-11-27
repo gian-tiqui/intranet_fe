@@ -1,5 +1,6 @@
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
+import useSignalStore from "@/app/store/signalStore";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import { User } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -12,6 +13,8 @@ interface Props {
 }
 
 const UserItem: React.FC<Props> = ({ pendingUser, onRefetch }) => {
+  const { setSignal } = useSignalStore();
+
   const handleConfirm = async () => {
     try {
       const response = await apiClient.put(
@@ -30,6 +33,7 @@ const UserItem: React.FC<Props> = ({ pendingUser, onRefetch }) => {
           className: "bg-neutral-200 dark:bg-neutral-900",
         });
 
+        setSignal(true);
         onRefetch();
       }
     } catch (error) {
@@ -55,6 +59,7 @@ const UserItem: React.FC<Props> = ({ pendingUser, onRefetch }) => {
         });
 
         onRefetch();
+        setSignal(true);
       }
     } catch (error) {
       console.error("There was a problem declining the user activation", error);

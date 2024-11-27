@@ -3,7 +3,8 @@ import React from "react";
 const PostGridSkeleton = () => {
   return (
     <div className="w-full grid gap-1">
-      <p className="text-lg font-bold mb-6">Latest public memos</p>
+      <div className="h-8 w-[25%] mb-2 bg-gray-300 animate-pulse"></div>
+
       <div className="grid md:grid-cols-3 gap-1">
         <div className="max-h-82 w-full md:col-span-2 bg-white dark:bg-neutral-900 shadow">
           <div className="h-full w-full bg-gray-300 animate-pulse"></div>
