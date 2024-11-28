@@ -203,15 +203,17 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
           ))}
       </div>
 
-      <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 py-1 px-2 mx-4 cursor-pointer rounded">
-        <button
-          onClick={showMore}
-          className="w-full flex items-center justify-center gap-1"
-        >
-          <Icon icon={"prime:expand"} className="h-5 w-5" />
-          Show more
-        </button>
-      </HoverBox>
+      {Object.keys(groupedPosts).length > 2 && (
+        <HoverBox className="hover:bg-neutral-200 dark:hover:bg-neutral-800 py-1 px-2 mx-4 cursor-pointer rounded">
+          <button
+            onClick={showMore}
+            className="w-full flex items-center justify-center gap-1"
+          >
+            <Icon icon={"prime:expand"} className="h-5 w-5" />
+            Show more
+          </button>
+        </HoverBox>
+      )}
     </>
   );
 };
