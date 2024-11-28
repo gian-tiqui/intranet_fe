@@ -16,6 +16,7 @@ import { createWorker } from "tesseract.js";
 import DepartmentsList from "./DepartmentsList";
 import { jwtDecode } from "jwt-decode";
 import PostPreview from "./PostPreview";
+import useSignalStore from "@/app/store/signalStore";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -32,6 +33,8 @@ interface FormFields {
   lid: number;
   extractedText: string;
 }
+
+const DepartmentsListMemo = React.memo(DepartmentsList);
 
 interface Props {
   isMobile: boolean;
@@ -56,23 +59,12 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const [title, setTitle] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<string | undefined>(undefined);
   const [previewClickable, setPreviewClickable] = useState<boolean>(false);
+  const { setSignal } = useSignalStore();
 
   const { data, isError, error } = useQuery({
     queryKey: ["level"],
     queryFn: fetchAllLevels,
   });
-
-  useEffect(() => {
-    const closeDepts = () => {
-      if (showDepartments) {
-        setShowDepartments(false);
-      }
-    };
-
-    document.addEventListener("click", closeDepts);
-
-    return () => document.removeEventListener("click", closeDepts);
-  }, [showDepartments]);
 
   const handleCheckboxChange = (deptId: string) => {
     setSelectedDepartments((prevSelected) => {
@@ -329,16 +321,28 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
           );
 
           Promise.all(notifications)
-            .then(() => {
+            .then(async () => {
               toast("Notifications sent to the departments.", {
                 type: "success",
                 className: toastClass,
               });
+
+              await apiClient.post(`${API_BASE}/post-reader`, {
+                userId: decodeUserData()?.sub,
+                postId: response.data.post.pid,
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+                },
+              });
             })
+            .then(() => setSignal(true))
             .catch(() => {
               console.error("Some notifications failed.");
             })
-            .finally(() => setPosting(false));
+            .finally(() => {
+              setPosting(false);
+              setSignal(false);
+            });
         }
       } catch (error) {
         console.error(error);
@@ -551,7 +555,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             <p className="text-sm">Select department/s</p>
           </div>
           {showDepartments && (
-            <DepartmentsList
+            <DepartmentsListMemo
               departments={departments}
               handleCheckboxChange={handleCheckboxChange}
               selectedDepartments={selectedDepartments}

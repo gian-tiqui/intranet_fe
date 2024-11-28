@@ -7,6 +7,7 @@ import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
 import { decodeUserData } from "@/app/functions/functions";
 import { useRouter } from "next/navigation";
+import useSignalStore from "@/app/store/signalStore";
 
 interface Props {
   postId?: number;
@@ -29,6 +30,7 @@ const CommentBar: React.FC<Props> = ({
   const { register, handleSubmit, reset } = useForm<FormFields>();
   const router = useRouter();
   const [spamming, setSpamming] = useState<boolean>(false);
+  const { setSignal } = useSignalStore();
 
   const handleInput = () => {
     const textarea = textareaRef.current;
@@ -71,7 +73,16 @@ const CommentBar: React.FC<Props> = ({
 
           router.refresh();
 
+          await apiClient.post(`${API_BASE}/post-reader`, {
+            userId: decodeUserData()?.sub,
+            postId: response.data.postId,
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+            },
+          });
+
           handleCommentAdded(response.data);
+          setSignal(true);
 
           if (response.data.postId == null) {
             await apiClient.post(
