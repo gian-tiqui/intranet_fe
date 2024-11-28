@@ -61,7 +61,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
   const [deptIds, setDeptIds] = useState<string[]>([]);
   const [userDeptId, setUserDeptId] = useState<number>(-1);
   const { setImages } = useImagesStore();
-  const { setSignal } = useSignalStore();
+  const { signal, setSignal } = useSignalStore();
 
   useEffect(() => {
     if (post && post.imageLocations) {
@@ -121,6 +121,11 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
       setPostId(post?.pid);
     }
   }, [post, setPostId]);
+
+  useEffect(() => {
+    setIsRead(true);
+    setSignal(false);
+  }, [signal, setIsRead, setSignal]);
 
   const handleReadClick = async () => {
     try {

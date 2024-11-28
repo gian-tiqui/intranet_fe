@@ -54,7 +54,7 @@ const PostListItem: React.FC<Props> = ({ post }) => {
       <div className="flex gap-2">
         <Icon icon={"iconoir:post"} className="h-5 w-5 -rotate-[10deg]" />
 
-        <p>
+        <p className="truncate w-40">
           {post.title
             ? post.title[0].toUpperCase() + post.title.substring(1)
             : "Untitled"}

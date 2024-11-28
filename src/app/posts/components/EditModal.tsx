@@ -18,6 +18,7 @@ import { createWorker } from "tesseract.js";
 import DepartmentsList from "./DepartmentsList";
 import useRefetchPostStore from "@/app/store/refetchPostStore";
 import PostPreview from "./PostPreview";
+import useSignalStore from "@/app/store/signalStore";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -56,6 +57,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [title, setTitle] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<string | undefined>(undefined);
+  const { setSignal } = useSignalStore();
 
   const handleShowPreview = () => {
     const _title = watch("title");
@@ -294,13 +296,17 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
           });
 
           setShowEditModal(false);
+          setSignal(true);
 
           refetch();
         })
         .catch((error) => {
           toast(error.message, { type: "error", className: toastClass });
         })
-        .finally(() => setSaving(false));
+        .finally(() => {
+          setSaving(false);
+          setSignal(false);
+        });
     }
   };
 
