@@ -36,6 +36,7 @@ import useShowImageStore from "../store/imageViewStore";
 import ImagePreview from "./ImagePreview";
 import useDeleteModalStore from "../store/deleteModalStore";
 import DeleteModal from "../posts/components/DeleteModal";
+import useTokenStore from "../store/tokenStore";
 
 interface Props {
   children?: ReactNode;
@@ -61,22 +62,25 @@ const Divider: React.FC<Props> = ({ children }) => {
   const [showPendingUsers, setShowPendingUsers] = useState<boolean>(false);
   const { showImage, setShowImage } = useShowImageStore();
   const { setShowDeleteModal, showDeleteModal } = useDeleteModalStore();
+  const { token } = useTokenStore();
 
   useEffect(() => {
     const checkLevel = () => {
-      const at = localStorage.getItem(INTRANET);
+      const at = token;
 
       if (at) {
-        const decoded: { confirmed: boolean } = jwtDecode(at);
+        const decoded: { lid: number } = jwtDecode(at);
 
-        if (decoded.confirmed) {
+        if (decoded.lid > 1) {
           setShowPendingUsers(true);
+        } else {
+          setShowPendingUsers(false);
         }
       }
     };
 
     checkLevel();
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     const fetchReads = async () => {
