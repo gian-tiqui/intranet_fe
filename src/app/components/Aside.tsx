@@ -127,7 +127,7 @@ const Aside: React.FC<Props> = ({
           >
             <Icon icon="iconoir:sidebar-collapse" className="h-5 w-5" />
             {showCollapseText && (
-              <div className="h-9 w-32 top-0 left-10 absolute bg-white border grid place-content-center rounded">
+              <div className="h-9 w-32 top-0 left-10 absolute bg-white border dark:bg-neutral-900 dark:border-neutral-700 grid place-content-center rounded">
                 <p className="text-sm">Collapse Sidebar</p>
               </div>
             )}
