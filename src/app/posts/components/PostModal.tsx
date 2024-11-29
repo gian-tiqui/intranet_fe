@@ -552,7 +552,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
               icon={"arcticons:emoji-department-store"}
               className="h-4 w-4"
             />
-            <p className="text-sm">Select department/s</p>
+            <p className="text-sm">Select department recipient/s</p>
           </div>
           {showDepartments && (
             <DepartmentsListMemo
