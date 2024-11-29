@@ -124,6 +124,17 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
 
   const [maxNum, setMaxNum] = useState<number>(2);
 
+  if (selectedVis == "qm") {
+    return (
+      <div className="grid place-content-center mt-8">
+        <div className="flex flex-col items-center gap-4">
+          <Icon icon={"emojione-monotone:stop-sign"} className="h-7 w-7" />
+          <p className="font-semibold">Underdevelopment</p>
+        </div>
+      </div>
+    );
+  }
+
   const showMore = () => {
     setMaxNum((prevMax) => prevMax + 3);
   };
