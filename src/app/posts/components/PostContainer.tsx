@@ -263,31 +263,10 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
   };
 
   useEffect(() => {
-    const deflectRead = async () => {
-      if (!isRead) return;
-      try {
-        await apiClient.post(`${API_BASE}/post-reader`, {
-          userId: decodeUserData()?.sub,
-          postId: id,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-          },
-        });
-
-        setSignal(false);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    deflectRead();
-  }, [signal, setSignal, id, isRead]);
-
-  useEffect(() => {
     const populateDeptIds = async () => {
       if (!post?.pid) return;
       const deptIds = await fetchPostDeptIds(post?.pid);
-      deptIds.push("4"); // let admins view
+      deptIds.push("4");
       const deptId = decodeUserData()?.deptId;
 
       setDeptIds(deptIds);

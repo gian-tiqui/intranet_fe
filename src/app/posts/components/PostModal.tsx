@@ -337,13 +337,15 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 className: toastClass,
               });
 
-              await apiClient.post(`${API_BASE}/post-reader`, {
-                userId: decodeUserData()?.sub,
-                postId: response.data.post.pid,
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-                },
-              });
+              if (response.data.post.lid === decodeUserData()?.lid) {
+                await apiClient.post(`${API_BASE}/post-reader`, {
+                  userId: decodeUserData()?.sub,
+                  postId: response.data.post.pid,
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+                  },
+                });
+              }
             })
             .then(() => setSignal(true))
             .catch(() => {
