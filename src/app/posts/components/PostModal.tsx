@@ -462,10 +462,10 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 {...register("public", { required: true })}
                 className="bg-inherit outline-none text-xs"
               >
-                <option className="" value={"public"}>
+                <option className="dark:bg-neutral-900" value={"public"}>
                   Public
                 </option>
-                <option className="bg-inherit" value={"private"}>
+                <option className="dark:bg-neutral-900" value={"private"}>
                   Private
                 </option>
               </select>
