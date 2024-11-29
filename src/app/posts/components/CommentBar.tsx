@@ -73,14 +73,6 @@ const CommentBar: React.FC<Props> = ({
 
           router.refresh();
 
-          await apiClient.post(`${API_BASE}/post-reader`, {
-            userId: decodeUserData()?.sub,
-            postId: response.data.postId,
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-            },
-          });
-
           handleCommentAdded(response.data);
           setSignal(true);
 

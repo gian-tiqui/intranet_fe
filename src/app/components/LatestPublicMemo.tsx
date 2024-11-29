@@ -38,15 +38,17 @@ const LatestPublicMemo: React.FC<Props> = ({ posts }) => {
           <PostCell post={posts[5]} />
         </div>
       </div>
-      <div className="flex justify-center">
-        <Link
-          href={"/bulletin"}
-          className="bg-white dark:bg-neutral-900 flex justify-center items-center hover:shadow hover:bg-gray-100 dark:hover:bg-neutral-700 w-32 h-10 rounded font-bold text-sm "
-        >
-          <Icon icon={""} />
-          View more
-        </Link>
-      </div>
+      {posts.length > 0 && (
+        <div className="flex justify-center">
+          <Link
+            href={"/bulletin"}
+            className="bg-white dark:bg-neutral-900 flex justify-center items-center hover:shadow hover:bg-gray-100 dark:hover:bg-neutral-700 w-32 h-10 rounded font-bold text-sm "
+          >
+            <Icon icon={""} />
+            View more
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

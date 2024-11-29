@@ -61,6 +61,16 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const [previewClickable, setPreviewClickable] = useState<boolean>(false);
   const { setSignal } = useSignalStore();
 
+  useEffect(() => {
+    const fillDepartments = () => {
+      setSelectedDepartments([
+        ...departments.map((department) => String(department.deptId)),
+      ]);
+    };
+
+    if (watch("lid") === 1) fillDepartments();
+  }, [watch, departments]);
+
   const { data, isError, error } = useQuery({
     queryKey: ["level"],
     queryFn: fetchAllLevels,
