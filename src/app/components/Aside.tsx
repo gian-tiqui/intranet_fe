@@ -178,8 +178,18 @@ const Aside: React.FC<Props> = ({
               onClick={() => handleClick("/for-you")}
             >
               <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
-              <p className="w-full text-md">For You</p>
+              <p className="w-full text-md">Posts for your employee level</p>
             </div>
+
+            {decodeUserData() && decodeUserData()?.lid === 2 && (
+              <div
+                className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+                onClick={() => handleClick("/qm-portal")}
+              >
+                <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
+                <p className="w-full text-md">Quality Management Portal</p>
+              </div>
+            )}
           </div>
           <div className="flex flex-col">
             <div
