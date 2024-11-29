@@ -200,9 +200,8 @@ const Aside: React.FC<Props> = ({
                 All
               </div>
               <div
-                className={`w-full py-2 flex items-center justify-center gap-1 cursor-pointer ${
-                  selectedVis === "dept" &&
-                  "bg-gray-200 dark:bg-neutral-700 rounded-e"
+                className={`w-full py-2 flex items-center justify-center cursor-pointer ${
+                  selectedVis === "dept" && "bg-gray-200 dark:bg-neutral-700"
                 }`}
                 onClick={() => setSelectedVis("dept")}
               >
@@ -211,6 +210,16 @@ const Aside: React.FC<Props> = ({
                   className="h-5 w-5"
                 />
                 Dept
+              </div>
+              <div
+                className={`w-full py-2 flex items-center justify-center gap-1 cursor-pointer ${
+                  selectedVis === "qm" &&
+                  "bg-gray-200 dark:bg-neutral-700 rounded-e"
+                }`}
+                onClick={() => setSelectedVis("qm")}
+              >
+                <Icon icon={"duo-icons:approved"} className="h-5 w-5" />
+                Qm
               </div>
             </div>
             <PostList
@@ -307,6 +316,7 @@ const Aside: React.FC<Props> = ({
                 >
                   All
                 </div>
+
                 <div
                   className={`w-full py-2 grid place-content-center cursor-pointer ${
                     selectedVis === "dept" &&
@@ -317,11 +327,13 @@ const Aside: React.FC<Props> = ({
                   Dept
                 </div>
               </div>
-              <PostList
-                selectedVis={selectedVis}
-                isMobile={isMobile}
-                onClick={handleClick}
-              />
+              {
+                <PostList
+                  selectedVis={selectedVis}
+                  isMobile={isMobile}
+                  onClick={handleClick}
+                />
+              }
             </div>
           </div>
         </div>
