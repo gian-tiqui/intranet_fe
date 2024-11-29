@@ -34,9 +34,12 @@ const Shortcuts: React.FC<Props> = ({
   const handlePageMove = (selection: string) => {
     setMinMax((prev) => {
       const newMin =
-        selection === "next" ? prev.min + limit : Math.max(prev.min - limit, 0);
+        selection === "next"
+          ? Math.min(prev.min + limit, (totalPages - 1) * limit)
+          : Math.max(prev.min - limit, 0);
+      const newMax = newMin + limit;
 
-      return { min: newMin, max: 2 };
+      return { min: newMin, max: newMax };
     });
   };
 
