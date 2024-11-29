@@ -8,6 +8,13 @@ import { toast } from "react-toastify";
 
 const QmPortal = () => {
   const router = useRouter();
+  const dummyData: string[] = [
+    "Document 1",
+    "Document 2",
+    "Document 3",
+    "Document 4",
+    "Document 5",
+  ];
 
   useEffect(() => {
     const checkQm = () => {
@@ -27,10 +34,37 @@ const QmPortal = () => {
   }, [router]);
 
   return (
-    <div className="grid place-content-center h-[90vh]">
-      <div className="flex flex-col items-center gap-4">
-        <Icon icon={"emojione-monotone:stop-sign"} className="h-10 w-10" />
-        <p className="font-semibold text-xl">Underdevelopment</p>
+    <div className="h-[90vh]">
+      <div className="overflow-auto w-full flex flex-col">
+        {dummyData.map((data, index) => (
+          <div
+            key={index}
+            className="flex flex-col w-full px-3 cursor-default "
+          >
+            <div className="flex justify-between items-center hover:bg-gray-300 px-3">
+              <div className="flex items-center gap-3 py-3">
+                <Icon icon={"hugeicons:note"} className="h-7 w-7" />
+                <p className="font-semibold">{data}</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-full hover:bg-neutral-200">
+                  <Icon
+                    icon={"material-symbols:download"}
+                    className="h-6 w-6"
+                  />
+                </div>
+                <div className="p-2 rounded-full hover:bg-neutral-200">
+                  <Icon
+                    icon={"material-symbols:delete-outline"}
+                    className="h-6 w-6"
+                  />{" "}
+                </div>
+              </div>
+            </div>
+
+            <hr className="w-full border-b-0 border-black" />
+          </div>
+        ))}
       </div>
     </div>
   );
