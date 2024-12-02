@@ -26,7 +26,7 @@ const Welcome = () => {
 
   return (
     <MotionTemplate>
-      <div className="pt-20 flex flex-col items-center mb-10">
+      <div className="pt-20 flex flex-col items-center mb-10  sm:mx-7 lg:mx-0">
         <p className="text-2xl font-bold mb-4 text-blue-600 dark:text-blue-500">
           Hello there! 👋
         </p>

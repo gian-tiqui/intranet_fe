@@ -9,6 +9,10 @@ interface Props {
 }
 
 const LatestPublicMemo: React.FC<Props> = ({ posts }) => {
+  if (posts.length === 0) {
+    return null;
+  }
+
   return (
     <div className="w-full grid gap-1">
       <p className="text-lg font-bold mb-6">Latest public memos</p>

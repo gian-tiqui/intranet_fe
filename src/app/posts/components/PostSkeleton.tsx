@@ -17,7 +17,7 @@ const PostSkeleton = () => {
       <div className="w-full h-4 bg-gray-400 animate-pulse mb-1"></div>
       <div className="w-full h-4 bg-gray-400 animate-pulse mb-1"></div>
       <div className="w-full h-4 bg-gray-400 animate-pulse mb-1"></div>
-      <div className="w-96 h-4 bg-gray-400 animate-pulse mb-7"></div>
+      <div className="w-full h-4 bg-gray-400 animate-pulse mb-7"></div>
 
       <div className="h-96 w-full bg-gray-400 animate-pulse mb-6"></div>
     </div>

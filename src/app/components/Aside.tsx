@@ -239,7 +239,11 @@ const Aside: React.FC<Props> = ({
             />
           </div>
         </div>
-        <UserButton uVisible={uVisible} setUVisible={setUVisible} />
+        <UserButton
+          isMobile={isMobile}
+          uVisible={uVisible}
+          setUVisible={setUVisible}
+        />
       </motion.aside>
 
       {/* THIS IS FOR MOBILE VIEW */}
@@ -278,7 +282,10 @@ const Aside: React.FC<Props> = ({
           <div id="menu-buttons" className="px-3 mt-2 mb-6">
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={() => handleClick("/")}
+              onClick={() => {
+                handleClick("/");
+                if (setIsCollapsed) setIsCollapsed(!isCollapsed);
+              }}
             >
               <Icon icon={"ph:hospital"} className="h-5 w-5" />
               <p className="w-full text-md">Intranet</p>
@@ -286,7 +293,10 @@ const Aside: React.FC<Props> = ({
 
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={() => handleClick("/bulletin")}
+              onClick={() => {
+                handleClick("/bulletin");
+                if (setIsCollapsed) setIsCollapsed(!isCollapsed);
+              }}
             >
               <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
               <p className="w-full text-md">General Bulletin</p>
@@ -294,7 +304,10 @@ const Aside: React.FC<Props> = ({
 
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={() => handleClick("/departments-memo")}
+              onClick={() => {
+                handleClick("/departments-memo");
+                if (setIsCollapsed) setIsCollapsed(!isCollapsed);
+              }}
             >
               <Icon
                 icon={"arcticons:emoji-department-store"}
@@ -305,7 +318,10 @@ const Aside: React.FC<Props> = ({
 
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={() => handleClick("/for-you")}
+              onClick={() => {
+                handleClick("/for-you");
+                if (setIsCollapsed) setIsCollapsed(!isCollapsed);
+              }}
             >
               <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
               <p className="w-full text-md">For You</p>
@@ -357,7 +373,11 @@ const Aside: React.FC<Props> = ({
             </div>
           </div>
         </div>
-        <UserButton uVisible={uVisible} setUVisible={setUVisible} />
+        <UserButton
+          isMobile={isMobile}
+          uVisible={uVisible}
+          setUVisible={setUVisible}
+        />
       </motion.aside>
     </>
   );
