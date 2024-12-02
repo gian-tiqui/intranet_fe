@@ -143,7 +143,13 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
                 (saving ? (
                   <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
                 ) : (
-                  <button type="submit">Save</button>
+                  <div className="flex items-center gap-1">
+                    <Icon icon={"material-symbols:save-outline"} />
+
+                    <button type="submit" className="text-sm">
+                      Save
+                    </button>
+                  </div>
                 ))}
             </form>
           </div>
@@ -153,8 +159,10 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
             {isReply && (
               <div
                 onClick={() => setShowReplies(!showReplies)}
-                className="hover:bg-neutral-300 dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center"
+                className="hover:bg-neutral-300 flex gap-1 items-center dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center"
               >
+                <Icon icon={"mdi:message-reply-outline"} />
+
                 <p className="text-sm">Replies</p>
               </div>
             )}
@@ -164,22 +172,26 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
                   <>
                     <div
                       onClick={() => setEditMode(true)}
-                      className="hover:bg-neutral-300 dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center"
+                      className="hover:bg-neutral-300 dark:hover:bg-neutral-700 py-1 px-3 flex items-center gap-2 cursor-pointer rounded mb-5 mt-1 text-center"
                     >
+                      <Icon icon={"lucide:edit"} />
+
                       <p className="text-sm">Edit</p>
                     </div>
                     <div
                       onClick={handleDeleteClicked}
-                      className="hover:bg-neutral-300 dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center"
+                      className="hover:bg-neutral-300 flex items-center gap-1 dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center"
                     >
+                      <Icon icon={"material-symbols:delete-outline"} />
                       <p className="text-sm">Delete</p>
                     </div>
                   </>
                 ) : (
                   <div
                     onClick={() => setEditMode(false)}
-                    className="hover:bg-neutral-300 dark:hover:bg-neutral-700 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center"
+                    className="hover:bg-neutral-300 dark:hover:bg-neutral-700 flex items-center gap-1 py-1 px-3 cursor-pointer rounded mb-5 mt-1 text-center"
                   >
+                    <Icon icon={"material-symbols:cancel-outline"} />
                     <p className="text-sm">Cancel</p>
                   </div>
                 )}
