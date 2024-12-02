@@ -16,7 +16,7 @@ import useToggleStore from "../store/navbarCollapsedStore";
 interface Props {
   uVisible: boolean;
   setUVisible: (visible: boolean) => void;
-  isMobile: boolean;
+  isMobile?: boolean;
 }
 
 const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
