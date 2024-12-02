@@ -334,22 +334,30 @@ const Aside: React.FC<Props> = ({
                 className="w-full flex text-center text-sm rounded mb-6 border dark:border-neutral-900"
               >
                 <div
-                  className={`w-full py-2 grid place-content-center cursor-pointer ${
+                  className={`w-full py-2 flex items-center justify-center gap-1 cursor-pointer ${
                     selectedVis === "all" &&
-                    "bg-gray-200 dark:bg-neutral-700 rounded-s"
+                    "bg-gray-200 dark:bg-neutral-700 rounded-e"
                   }`}
                   onClick={() => setSelectedVis("all")}
                 >
+                  <Icon
+                    icon={"material-symbols-light:all-out-outline"}
+                    className="h-5 w-5"
+                  />
                   All
                 </div>
 
                 <div
-                  className={`w-full py-2 grid place-content-center cursor-pointer ${
+                  className={`w-full py-2 flex items-center justify-center gap-1 cursor-pointer ${
                     selectedVis === "dept" &&
                     "bg-gray-200 dark:bg-neutral-700 rounded-e"
                   }`}
                   onClick={() => setSelectedVis("dept")}
                 >
+                  <Icon
+                    icon={"arcticons:emoji-department-store"}
+                    className="h-5 w-5"
+                  />
                   Dept
                 </div>
                 <div
