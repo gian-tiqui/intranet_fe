@@ -29,9 +29,14 @@ const PostCell: React.FC<PostCellProps> = ({ post, first }) => {
 
   if (!post) {
     return (
-      <div className="w-full h-full grid place-content-center">
+      <div
+        className={`${
+          first ? "h-52 md:h-full" : "h-full"
+        } w-full grid place-content-center`}
+      >
         <div className="flex flex-col items-center gap-2">
           <Icon icon={"mdi:post-it-note-off-outline"} className="h-10 w-10" />
+
           <p className="font-semibold text-lg">No post to show</p>
         </div>
       </div>

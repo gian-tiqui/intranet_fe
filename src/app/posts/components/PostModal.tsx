@@ -61,16 +61,6 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const [previewClickable, setPreviewClickable] = useState<boolean>(false);
   const { setSignal } = useSignalStore();
 
-  useEffect(() => {
-    const fillDepartments = () => {
-      setSelectedDepartments([
-        ...departments.map((department) => String(department.deptId)),
-      ]);
-    };
-
-    if (watch("lid") === 1) fillDepartments();
-  }, [watch, departments]);
-
   const { data, isError, error } = useQuery({
     queryKey: ["level"],
     queryFn: fetchAllLevels,
@@ -337,7 +327,9 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 className: toastClass,
               });
 
-              if (response.data.post.lid === decodeUserData()?.lid) {
+              const userLid = decodeUserData()?.lid;
+
+              if (userLid && response.data.post.lid <= userLid) {
                 await apiClient.post(`${API_BASE}/post-reader`, {
                   userId: decodeUserData()?.sub,
                   postId: response.data.post.pid,
@@ -541,6 +533,17 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             />
             <select
               {...register("lid")}
+              onChange={(e) => {
+                const lid = e.target.value;
+
+                if (lid === "1") {
+                  setSelectedDepartments([
+                    ...departments.map((dept) => String(dept.deptId)),
+                  ]);
+                } else {
+                  setSelectedDepartments([]);
+                }
+              }}
               className="w-[70%] md:w-full bg-inherit rounded-t-xl h-9  text-sm gap-1 outline-none"
             >
               <option value={""}>Select employee level</option>

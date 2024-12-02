@@ -11,17 +11,20 @@ import { decodeUserData } from "../functions/functions";
 import { toast } from "react-toastify";
 import apiClient from "../http-common/apiUrl";
 import { toastClass } from "../tailwind-classes/tw_classes";
+import useToggleStore from "../store/navbarCollapsedStore";
 
 interface Props {
   uVisible: boolean;
   setUVisible: (visible: boolean) => void;
+  isMobile: boolean;
 }
 
-const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
+const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
   const { setShowLogoutArt } = useLogoutArtStore();
   const { setHidden } = useNavbarVisibilityStore();
   const { setShown } = useShowSettingsStore();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const { isCollapsed, setIsCollapsed } = useToggleStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [userData, setUserData] = useState<{
     firstName: string;
@@ -133,7 +136,11 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
           {showMyPosts && (
             <div
               className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-              onClick={() => router.push("/monitoring")}
+              onClick={() => {
+                router.push("/monitoring");
+
+                if (isMobile) setIsCollapsed(!isCollapsed);
+              }}
             >
               <Icon icon={"mdi:list-status"} className="w-6 h-6" />
               <p>Monitoring</p>
@@ -141,7 +148,11 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
           )}
           <div
             className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-            onClick={() => router.push("/history")}
+            onClick={() => {
+              router.push("/history");
+
+              if (isMobile) setIsCollapsed(!isCollapsed);
+            }}
           >
             <Icon icon={"material-symbols:post-outline"} className="w-6 h-6" />
             <p>History</p>
