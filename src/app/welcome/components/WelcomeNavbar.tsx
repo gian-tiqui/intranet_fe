@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 
 const WelcomeNavbar = () => {
   const router = useRouter();
+  // hi
   const { setHidden } = useNavbarVisibilityStore();
 
   useEffect(() => {
