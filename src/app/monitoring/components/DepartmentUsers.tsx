@@ -29,13 +29,13 @@ const DepartmentUsers: React.FC<Props> = ({
         <input
           type="text"
           placeholder="Search"
-          className="rounded-lg h-10 px-5 outline-none border border-gray-300 dark:border-neutral-950 dark:bg-neutral-900"
+          className="rounded-lg w-[30%] h-10 px-5 outline-none border border-gray-300 dark:border-neutral-950 dark:bg-neutral-900"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
 
         <select
-          className="rounded-lg h-10 px-5 outline-none border border-gray-300 dark:border-neutral-950 dark:bg-neutral-900"
+          className="rounded-lg h-10 w-[50%] px-5 outline-none border border-gray-300 dark:border-neutral-950 dark:bg-neutral-900"
           onChange={(e) => {
             const selectedDept = departments?.find(
               (department: DepartmentMonitoring) =>

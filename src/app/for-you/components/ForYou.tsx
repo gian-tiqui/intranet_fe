@@ -31,8 +31,6 @@ const ForYou = () => {
           }&offset=${minMax.min}&limit=${minMax.max}&direction=${direction}`
         );
 
-        console.log(response.data.count);
-
         setTotalPosts(response.data.count);
         setData(response.data.posts);
       } catch (error) {

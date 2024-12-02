@@ -36,7 +36,7 @@ const WelcomeNavbar = () => {
             <p className="text-[10px] sm:text-xs">Westlake Medical Center</p>
           </div>
         </div>
-        <div className="sm:flex gap-6  text-sm font-semibold hidden">
+        <div className="lg:flex gap-6  text-sm font-semibold hidden">
           <Link href={""} className="hover:underline">
             About
           </Link>
