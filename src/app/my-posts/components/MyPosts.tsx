@@ -4,7 +4,6 @@ import PostContainer from "../../posts/components/PostContainer";
 import { API_BASE } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
 import { MinMax, Post } from "@/app/types/types";
-import { decodeUserData } from "@/app/functions/functions";
 import PostSkeleton from "@/app/posts/components/PostSkeleton";
 import Shortcuts from "@/app/bulletin/components/Shortcuts";
 import ShortcutSkeleton from "@/app/bulletin/components/ShortcutSkeleton";
@@ -17,17 +16,16 @@ const MyPosts = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
 
   const [myPosts, setMyPosts] = useState<Post[]>([]);
-  const userId = decodeUserData()?.sub;
 
   const isLastPage = minMax.max >= totalPosts;
 
   useEffect(() => {
     const fetchMyPosts = async () => {
-      if (!userId) return;
-
       setLoading(true);
       try {
-        const apiUri = `${API_BASE}/post/my-posts?userId=${userId}&direction=${direction}&offset=${minMax.min}&limit=${minMax.max}`;
+        const apiUri = `${API_BASE}/post/my-posts?userId=${7}&direction=${direction}&offset=${
+          minMax.min
+        }&limit=${minMax.max}`;
 
         const response = await apiClient.get(apiUri);
 
@@ -41,7 +39,7 @@ const MyPosts = () => {
     };
 
     fetchMyPosts();
-  }, [userId, direction, minMax]);
+  }, [direction, minMax]);
 
   return (
     <div>
