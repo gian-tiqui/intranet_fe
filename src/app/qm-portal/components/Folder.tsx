@@ -1,22 +1,32 @@
 import { isQmType } from "@/app/functions/functions";
 import { QmType, QmTypeItem } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import FolderItem from "./FolderItem";
+import { useRouter } from "next/navigation";
 
 interface Props {
-  setSelectedFolder: Dispatch<SetStateAction<QmType | undefined>>;
+  setSelectedFolder: (selectedFolder: QmType) => void;
   data: QmType | QmTypeItem;
 }
 
 const Folder: React.FC<Props> = ({ setSelectedFolder, data }) => {
+  const router = useRouter();
+
+  const handleDoubleClick = () => {
+    setSelectedFolder(data as QmType);
+
+    if (!isQmType(data as QmType)) console.log("meow");
+    else router.push(`qm-portal/folders`);
+  };
+
   if (!isQmType(data as QmType))
     return <FolderItem item={data as QmTypeItem} />;
 
   return (
-    <div className="flex flex-col w-full px-3 cursor-default ">
+    <div className="flex flex-col w-full px-3 cursor-default">
       <div
-        onDoubleClick={() => setSelectedFolder(data as QmType)}
+        onDoubleClick={handleDoubleClick}
         className="flex justify-between items-center hover:bg-gray-100 dark:hover:bg-neutral-700 px-3"
       >
         <div className="flex items-center gap-3 py-3">
