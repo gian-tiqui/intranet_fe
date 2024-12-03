@@ -4,13 +4,14 @@ import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import { QmType } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import Folder from "./Folder";
+import useFolderStore from "@/app/store/useFolderStore";
 
 const QmPortal = () => {
   const router = useRouter();
-  const [selectedFolder, setSelectedFolder] = useState<QmType | undefined>();
+  const { setSelectedFolder } = useFolderStore();
   const dummyData: QmType[] = [
     {
       folderName: "Human Resource",
@@ -191,29 +192,16 @@ const QmPortal = () => {
             <Icon icon={"hugeicons:folder-add"} className="h-5 w-5" />
           </div>
         </div>
-        {selectedFolder ? (
-          <div className="overflow-auto w-full flex flex-col">
-            {selectedFolder.folderItems.map((subFolder, index) => (
-              <Folder
-                key={index}
-                data={subFolder}
-                setSelectedFolder={setSelectedFolder}
-              />
-            ))}
-          </div>
-        ) : (
-          <>
-            <div className="overflow-auto w-full flex flex-col">
-              {dummyData.map((data, index) => (
-                <Folder
-                  data={data}
-                  setSelectedFolder={setSelectedFolder}
-                  key={index}
-                />
-              ))}
-            </div>
-          </>
-        )}
+
+        <div className="overflow-auto w-full flex flex-col">
+          {dummyData.map((data, index) => (
+            <Folder
+              data={data}
+              setSelectedFolder={setSelectedFolder}
+              key={index}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
