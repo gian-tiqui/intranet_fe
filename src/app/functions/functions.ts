@@ -9,6 +9,7 @@ import {
   LogType,
   NotificationType,
   Post,
+  QmType,
   RetPost,
   UnreadPost,
   User,
@@ -279,7 +280,18 @@ const fetchPost = async (id: number) => {
   }
 };
 
+function isQmType(data: QmType | undefined): data is QmType {
+  return (
+    typeof data === "object" &&
+    data !== null &&
+    typeof data.folderName === "string" &&
+    Array.isArray(data.folderItems) &&
+    typeof data.icon === "string"
+  );
+}
+
 export {
+  isQmType,
   fetchPost,
   fetchPendingUsers,
   fetchLogsByTypeId,
