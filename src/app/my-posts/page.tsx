@@ -1,14 +1,14 @@
 import React from "react";
-import MyPosts from "./components/MyPosts";
-import AuthListener from "../components/AuthListener";
+// import MyPosts from "./components/MyPosts";
+// import AuthListener from "../components/AuthListener";
 
-const MyPostsPage = () => {
+const page = () => {
   return (
     <div>
-      <AuthListener />
-      <MyPosts />
+      {/* <AuthListener />
+      <MyPosts /> */}
     </div>
   );
 };
 
-export default MyPostsPage;
+export default page;
