@@ -9,14 +9,12 @@ import PostSkeleton from "@/app/posts/components/PostSkeleton";
 import Shortcuts from "@/app/bulletin/components/Shortcuts";
 import ShortcutSkeleton from "@/app/bulletin/components/ShortcutSkeleton";
 import NoPosts from "@/app/posts/components/NoPosts";
-import useTokenStore from "@/app/store/tokenStore";
 
 const MyPosts = () => {
   const [direction, setDirection] = useState<string>("desc");
   const [minMax, setMinMax] = useState<MinMax>({ min: 0, max: 2 });
   const [totalPosts, setTotalPosts] = useState<number>(0);
   const [isLoading, setLoading] = useState<boolean>(false);
-  const { token } = useTokenStore();
 
   const [myPosts, setMyPosts] = useState<Post[]>([]);
   const userId = decodeUserData()?.sub;
@@ -31,11 +29,7 @@ const MyPosts = () => {
       try {
         const apiUri = `${API_BASE}/post/my-posts?userId=${userId}&direction=${direction}&offset=${minMax.min}&limit=${minMax.max}`;
 
-        const response = await apiClient.get(apiUri, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await apiClient.get(apiUri);
 
         setMyPosts(response.data);
         setTotalPosts(response.data.length);
@@ -47,7 +41,7 @@ const MyPosts = () => {
     };
 
     fetchMyPosts();
-  }, [userId, direction, minMax, token]);
+  }, [userId, direction, minMax]);
 
   return (
     <div>
