@@ -17,11 +17,13 @@ const DepartmentUsers: React.FC<Props> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredUsers = department?.users.filter(
-    (user) =>
-      user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.lastName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredUsers = department?.users
+    .filter(
+      (user) =>
+        user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.lastName.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => a.lastName.localeCompare(b.lastName));
 
   return (
     <div>
