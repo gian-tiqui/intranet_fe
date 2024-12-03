@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import PostContainer from "../../posts/components/PostContainer";
-import { API_BASE, INTRANET } from "@/app/bindings/binding";
+import { API_BASE } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
 import { MinMax, Post } from "@/app/types/types";
 import { decodeUserData } from "@/app/functions/functions";
@@ -9,12 +9,14 @@ import PostSkeleton from "@/app/posts/components/PostSkeleton";
 import Shortcuts from "@/app/bulletin/components/Shortcuts";
 import ShortcutSkeleton from "@/app/bulletin/components/ShortcutSkeleton";
 import NoPosts from "@/app/posts/components/NoPosts";
+import useTokenStore from "@/app/store/tokenStore";
 
 const MyPosts = () => {
   const [direction, setDirection] = useState<string>("desc");
   const [minMax, setMinMax] = useState<MinMax>({ min: 0, max: 2 });
   const [totalPosts, setTotalPosts] = useState<number>(0);
   const [isLoading, setLoading] = useState<boolean>(false);
+  const { token } = useTokenStore();
 
   const [myPosts, setMyPosts] = useState<Post[]>([]);
   const userId = decodeUserData()?.sub;
@@ -31,7 +33,7 @@ const MyPosts = () => {
 
         const response = await apiClient.get(apiUri, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -45,7 +47,7 @@ const MyPosts = () => {
     };
 
     fetchMyPosts();
-  }, [userId, direction, minMax]);
+  }, [userId, direction, minMax, token]);
 
   return (
     <div>
