@@ -43,6 +43,11 @@ const Aside: React.FC<Props> = ({
   const [_dest, setDest] = useState<string>("");
   const { deptId } = useDeptIdStore();
   const [showCollapseText, setShowCollapseText] = useState<boolean>(false);
+  const [userDeptId, setUserDeptId] = useState<number>();
+
+  useEffect(() => {
+    setUserDeptId(decodeUserData()?.deptId);
+  }, []);
 
   const fetchReadStatus = async () => {
     if (!postId) return;
@@ -180,6 +185,16 @@ const Aside: React.FC<Props> = ({
               <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
               <p className="w-full text-md">Posts for your employee level</p>
             </div>
+
+            {userDeptId && [1, 2].includes(userDeptId) && (
+              <div
+                className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+                onClick={() => handleClick("/my-posts")}
+              >
+                <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
+                <p className="w-full text-md">My posts</p>
+              </div>
+            )}
 
             {decodeUserData() && decodeUserData()?.lid === 2 && (
               <div

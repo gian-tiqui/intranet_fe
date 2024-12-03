@@ -63,7 +63,9 @@ const fetchNotifs = async () => {
 const fetchPublicPosts = async () => {
   try {
     const response = await apiClient.get(
-      `${API_BASE}/post?lid=${decodeUserData()?.lid}&public=true`
+      `${API_BASE}/post?lid=${
+        decodeUserData()?.lid
+      }&public=true&userIdComment=${decodeUserData()?.sub}`
     );
 
     return response.data as RetPost;
@@ -76,7 +78,7 @@ const fetchPosts = async () => {
   try {
     const apiUri = `${API_BASE}/post?lid=${decodeUserData()?.lid}&deptId=${
       decodeUserData()?.deptId
-    }&lid=${decodeUserData()?.lid}`;
+    }&lid=${decodeUserData()?.lid}&userIdComment=${decodeUserData()?.sub}`;
 
     const response = await apiClient.get(apiUri, {
       headers: {
