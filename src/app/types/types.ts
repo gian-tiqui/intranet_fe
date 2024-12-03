@@ -83,6 +83,14 @@ type Comment = {
   post: Post;
 };
 
+type QmTypeItem = { imageLocation: string; name: string };
+
+type QmType = {
+  folderName: string;
+  folderItems: QmTypeItem[] | QmType[];
+  icon: string;
+};
+
 type Department = {
   deptId: number;
   departmentName: string;
@@ -253,6 +261,7 @@ export type {
   User,
   Comment,
   PostComment,
+  QmType,
   CreateComment,
   ABoardSelector,
   Department,
@@ -260,4 +269,5 @@ export type {
   ThType,
   NavLinksType,
   PostDepartment,
+  QmTypeItem,
 };
