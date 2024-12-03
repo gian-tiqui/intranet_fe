@@ -1,12 +1,12 @@
 import React from "react";
+import AuthListener from "../components/AuthListener";
 // import MyPosts from "./components/MyPosts";
-// import AuthListener from "../components/AuthListener";
 
 const page = () => {
   return (
     <div>
-      {/* <AuthListener />
-      <MyPosts /> */}
+      <AuthListener />
+      {/* <MyPosts /> */}
     </div>
   );
 };
