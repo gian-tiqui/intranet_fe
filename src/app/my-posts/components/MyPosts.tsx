@@ -27,6 +27,8 @@ const MyPosts = () => {
   useEffect(() => {
     const fetchMyPosts = async () => {
       setLoading(true);
+      if (!userId) return;
+
       try {
         const apiUri = `${API_BASE}/post/my-posts?userId=${userId}&direction=${direction}&offset=${minMax.min}&limit=${minMax.max}`;
 
