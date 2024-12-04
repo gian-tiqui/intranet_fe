@@ -7,8 +7,8 @@ import { MinMax, Post } from "@/app/types/types";
 import PostSkeleton from "@/app/posts/components/PostSkeleton";
 import Shortcuts from "@/app/bulletin/components/Shortcuts";
 import ShortcutSkeleton from "@/app/bulletin/components/ShortcutSkeleton";
-import NoPosts from "@/app/posts/components/NoPosts";
 import { decodeUserData } from "@/app/functions/functions";
+import NoPosts from "@/app/bulletin/components/NoPosts";
 
 const MyPosts = () => {
   const [direction, setDirection] = useState<string>("desc");

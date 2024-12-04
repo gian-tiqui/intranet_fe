@@ -156,7 +156,7 @@ const Aside: React.FC<Props> = ({
               onClick={() => handleClick("/")}
             >
               <Icon icon={"ph:hospital"} className="h-5 w-5" />
-              <p className="w-full text-md">Intranet</p>
+              <p className="w-full text-sm">Intranet</p>
             </div>
 
             <div
@@ -164,7 +164,7 @@ const Aside: React.FC<Props> = ({
               onClick={() => handleClick("/bulletin")}
             >
               <Icon icon={"gridicons:posts"} className="h-5 w-5" />
-              <p className="w-full text-md">General Bulletin</p>
+              <p className="w-full text-sm">General Bulletin</p>
             </div>
 
             <div
@@ -175,7 +175,7 @@ const Aside: React.FC<Props> = ({
                 icon={"arcticons:emoji-department-store"}
                 className="h-5 w-5"
               />
-              <p className="w-full text-md">Department Bulletin</p>
+              <p className="w-full text-sm">Department Bulletin</p>
             </div>
 
             <div
@@ -183,7 +183,7 @@ const Aside: React.FC<Props> = ({
               onClick={() => handleClick("/for-you")}
             >
               <Icon icon={"icon-park-outline:level"} className="h-5 w-5" />
-              <p className="w-full text-md">Posts for your employee level</p>
+              <p className="w-full text-sm">Posts for your employee level</p>
             </div>
 
             {userDeptId && [1, 2].includes(userDeptId) && (
@@ -192,7 +192,7 @@ const Aside: React.FC<Props> = ({
                 onClick={() => handleClick("/my-posts")}
               >
                 <Icon icon={"ph:folder-user-bold"} className="h-5 w-5" />
-                <p className="w-full text-md">My posts</p>
+                <p className="w-full text-sm">My posts</p>
               </div>
             )}
 
@@ -202,7 +202,7 @@ const Aside: React.FC<Props> = ({
                 onClick={() => handleClick("/qm-portal")}
               >
                 <Icon icon={"mdi:approve"} className="h-5 w-5" />
-                <p className="w-full text-md">Quality Management Portal</p>
+                <p className="w-full text-sm">Quality Management Portal</p>
               </div>
             )}
           </div>
@@ -303,7 +303,7 @@ const Aside: React.FC<Props> = ({
               }}
             >
               <Icon icon={"ph:hospital"} className="h-5 w-5" />
-              <p className="w-full text-md">Intranet</p>
+              <p className="w-full text-sm">Intranet</p>
             </div>
 
             <div
@@ -314,7 +314,7 @@ const Aside: React.FC<Props> = ({
               }}
             >
               <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
-              <p className="w-full text-md">General Bulletin</p>
+              <p className="w-full text-sm">General Bulletin</p>
             </div>
 
             <div
@@ -328,7 +328,7 @@ const Aside: React.FC<Props> = ({
                 icon={"arcticons:emoji-department-store"}
                 className="h-5 w-5"
               />
-              <p className="w-full text-md">Department Bulletin</p>
+              <p className="w-full text-sm">Department Bulletin</p>
             </div>
 
             <div
@@ -339,7 +339,7 @@ const Aside: React.FC<Props> = ({
               }}
             >
               <Icon icon={"icon-park-outline:level"} className="h-5 w-5" />
-              <p className="w-full text-md">Posts for your employee level</p>
+              <p className="w-full text-sm">Posts for your employee level</p>
             </div>
 
             {userDeptId && [1, 2].includes(userDeptId) && (
@@ -351,7 +351,7 @@ const Aside: React.FC<Props> = ({
                 }}
               >
                 <Icon icon={"ph:folder-user-bold"} className="h-5 w-5" />
-                <p className="w-full text-md">My posts</p>
+                <p className="w-full text-sm">My posts</p>
               </div>
             )}
 
@@ -364,7 +364,7 @@ const Aside: React.FC<Props> = ({
                 }}
               >
                 <Icon icon={"mdi:approve"} className="h-5 w-5" />
-                <p className="w-full text-md">Quality Management Portal</p>
+                <p className="w-full text-sm">Quality Management Portal</p>
               </div>
             )}
           </div>

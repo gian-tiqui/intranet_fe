@@ -315,10 +315,13 @@ const Divider: React.FC<Props> = ({ children }) => {
                   />
                 )}
 
-                {showPendingUsers && <PendingUsers />}
-                <Unseen />
-                <NotificationBell />
-                <ModeToggler />
+                <div className="flex gap-8 items-center">
+                  {showPendingUsers && <PendingUsers />}
+
+                  <Unseen />
+                  <NotificationBell />
+                  <ModeToggler size={5} />
+                </div>
               </div>
             </div>
           )}
