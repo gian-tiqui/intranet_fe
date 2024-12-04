@@ -30,8 +30,8 @@ const Folder: React.FC<Props> = ({ setSelectedFolder, data }) => {
         className="flex justify-between items-center hover:bg-gray-100 dark:hover:bg-neutral-700 px-3"
       >
         <div className="flex items-center gap-3 py-3">
-          <Icon icon={data.icon} className="h-7 w-7" />
-          <p className="font-semibold text-sm">{data.folderName}</p>
+          <Icon icon={(data as QmType).icon} className="h-7 w-7" />
+          <p className="font-semibold text-sm">{(data as QmType).folderName}</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-800">
