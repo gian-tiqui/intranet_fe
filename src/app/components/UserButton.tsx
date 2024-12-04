@@ -143,7 +143,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
               }}
             >
               <Icon icon={"mdi:list-status"} className="w-6 h-6" />
-              <p>Monitoring</p>
+              <p className="text-sm">Monitoring</p>
             </div>
           )}
           <div
@@ -155,14 +155,14 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
             }}
           >
             <Icon icon={"material-symbols:post-outline"} className="w-6 h-6" />
-            <p>History</p>
+            <p className="text-sm">History</p>
           </div>
           <div
             className="w-full gap-2 items-center hidden md:flex hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
             onClick={handleShowSettings}
           >
             <Icon icon={"uil:setting"} className="w-6 h-6" />
-            <p>Settings</p>
+            <p className="text-sm">Settings</p>
           </div>
 
           <div
@@ -170,7 +170,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
             onClick={handleShowSettingsMobile}
           >
             <Icon icon={"uil:setting"} className="w-6 h-6" />
-            <p>Settings</p>
+            <p className="text-sm">Settings</p>
           </div>
           <hr className="w-full border border-neutral-200 dark:border-neutral-700" />
           <div
@@ -178,7 +178,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
             onClick={handleLogout}
           >
             <Icon icon={"material-symbols:logout"} className="w-6 h-6" />
-            <p>Logout</p>
+            <p className="text-sm">Logout</p>
           </div>
         </div>
       )}
