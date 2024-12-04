@@ -182,7 +182,7 @@ const Aside: React.FC<Props> = ({
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
               onClick={() => handleClick("/for-you")}
             >
-              <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
+              <Icon icon={"icon-park-outline:level"} className="h-5 w-5" />
               <p className="w-full text-md">Posts for your employee level</p>
             </div>
 
@@ -191,7 +191,7 @@ const Aside: React.FC<Props> = ({
                 className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
                 onClick={() => handleClick("/my-posts")}
               >
-                <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
+                <Icon icon={"ph:folder-user-bold"} className="h-5 w-5" />
                 <p className="w-full text-md">My posts</p>
               </div>
             )}
@@ -201,7 +201,7 @@ const Aside: React.FC<Props> = ({
                 className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
                 onClick={() => handleClick("/qm-portal")}
               >
-                <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
+                <Icon icon={"mdi:approve"} className="h-5 w-5" />
                 <p className="w-full text-md">Quality Management Portal</p>
               </div>
             )}
@@ -338,10 +338,37 @@ const Aside: React.FC<Props> = ({
                 if (setIsCollapsed) setIsCollapsed(!isCollapsed);
               }}
             >
-              <Icon icon={"mdi:bulletin-board"} className="h-5 w-5" />
-              <p className="w-full text-md">For You</p>
+              <Icon icon={"icon-park-outline:level"} className="h-5 w-5" />
+              <p className="w-full text-md">Posts for your employee level</p>
             </div>
+
+            {userDeptId && [1, 2].includes(userDeptId) && (
+              <div
+                className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+                onClick={() => {
+                  handleClick("/my-posts");
+                  if (setIsCollapsed) setIsCollapsed(!isCollapsed);
+                }}
+              >
+                <Icon icon={"ph:folder-user-bold"} className="h-5 w-5" />
+                <p className="w-full text-md">My posts</p>
+              </div>
+            )}
+
+            {decodeUserData() && decodeUserData()?.lid === 2 && (
+              <div
+                className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+                onClick={() => {
+                  handleClick("/qm-portal");
+                  if (setIsCollapsed) setIsCollapsed(!isCollapsed);
+                }}
+              >
+                <Icon icon={"mdi:approve"} className="h-5 w-5" />
+                <p className="w-full text-md">Quality Management Portal</p>
+              </div>
+            )}
           </div>
+
           <div className="flex flex-col">
             <div className="flex flex-col">
               <div
