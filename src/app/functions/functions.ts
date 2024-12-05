@@ -5,11 +5,11 @@ import {
   CommentsProp,
   Decoder,
   DepartmentWithIncompleteReads,
+  Folder,
   Level,
   LogType,
   NotificationType,
   Post,
-  QmType,
   RetPost,
   UnreadPost,
   User,
@@ -280,18 +280,35 @@ const fetchPost = async (id: number) => {
   }
 };
 
-function isQmType(data: QmType | undefined): data is QmType {
-  return (
-    typeof data === "object" &&
-    data !== null &&
-    typeof data.folderName === "string" &&
-    Array.isArray(data.folderItems) &&
-    typeof data.icon === "string"
-  );
-}
+const fetchMainFolders = async (): Promise<Folder[]> => {
+  try {
+    const response = await apiClient.get(`${API_BASE}/folders`);
+
+    const mainFolders = response.data;
+
+    return mainFolders;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+const getPostsFromSubfolderById = async (id: number): Promise<Post[]> => {
+  try {
+    const response = await apiClient.get(`${API_BASE}/folders/${id}/all-posts`);
+
+    const posts = response.data;
+
+    return posts;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
 
 export {
-  isQmType,
+  getPostsFromSubfolderById,
+  fetchMainFolders,
   fetchPost,
   fetchPendingUsers,
   fetchLogsByTypeId,

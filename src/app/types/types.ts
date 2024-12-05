@@ -83,14 +83,6 @@ type Comment = {
   post: Post;
 };
 
-type QmTypeItem = { imageLocation: string; name: string };
-
-type QmType = {
-  folderName: string;
-  folderItems: QmTypeItem[] | QmType[];
-  icon: string;
-};
-
 type Department = {
   deptId: number;
   departmentName: string;
@@ -241,7 +233,17 @@ interface GroupedFiles {
   [key: string]: ImageLocation[];
 }
 
+type Folder = {
+  id: number;
+  name: string;
+  parentId?: number;
+  subfolders: Folder[];
+  posts: Post[];
+  icon: string;
+};
+
 export type {
+  Folder,
   GroupedFiles,
   ImageLocation,
   LogType,
@@ -261,7 +263,6 @@ export type {
   User,
   Comment,
   PostComment,
-  QmType,
   CreateComment,
   ABoardSelector,
   Department,
@@ -269,5 +270,4 @@ export type {
   ThType,
   NavLinksType,
   PostDepartment,
-  QmTypeItem,
 };
