@@ -1,8 +1,8 @@
-import { QmTypeItem } from "@/app/types/types";
+import { Folder } from "@/app/types/types";
 import React from "react";
 
 interface Props {
-  item: QmTypeItem;
+  item: Folder;
 }
 
 const FolderItem: React.FC<Props> = ({ item }) => {
