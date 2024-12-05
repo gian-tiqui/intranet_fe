@@ -1,5 +1,4 @@
 "use client";
-import Folder from "@/app/qm-portal/components/Folder";
 import LocationComp from "@/app/qm-portal/components/LocationComp";
 import useFolderStore from "@/app/store/useFolderStore";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -25,9 +24,9 @@ const FMain = () => {
         <LocationComp name={selectedFolder?.name} />
 
         <div className="overflow-auto w-full flex flex-col">
-          {selectedFolder && selectedFolder.subfolders.length > 0 ? (
-            selectedFolder.subfolders.map((data) => (
-              <Folder data={data} key={data.id} />
+          {selectedFolder && selectedFolder.posts.length > 0 ? (
+            selectedFolder.posts.map((data) => (
+              <p key={data.pid}>{data.title}</p>
             ))
           ) : (
             <div className="grid place-content-center w-full h-[55vh]">
