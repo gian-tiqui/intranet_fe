@@ -8,10 +8,15 @@ import { toast } from "react-toastify";
 import Folder from "./Folder";
 import useFolderStore from "@/app/store/useFolderStore";
 import { useQuery } from "@tanstack/react-query";
+import LocationComp from "./LocationComp";
 
 const QmPortal = () => {
   const router = useRouter();
-  const { setSelectedFolder } = useFolderStore();
+  const { selectedFolder, setSelectedFolder } = useFolderStore();
+
+  useEffect(() => {
+    setSelectedFolder(undefined);
+  }, [setSelectedFolder]);
 
   const {
     data: folders,
@@ -40,10 +45,6 @@ const QmPortal = () => {
     checkQm();
   }, [router]);
 
-  useEffect(() => {
-    console.log(folders);
-  }, [folders]);
-
   if (isLoading)
     return (
       <div>
@@ -62,10 +63,13 @@ const QmPortal = () => {
             <p className="text-sm mb-2 font-semibold">Name</p>
             <Icon icon={"fluent:arrow-down-24-filled"} className="-rotate-45" />
           </div>
+
           <div className="">
             <Icon icon={"hugeicons:folder-add"} className="h-5 w-5" />
           </div>
         </div>
+
+        <LocationComp name={selectedFolder?.name} />
 
         <div className="overflow-auto w-full flex flex-col">
           {folders &&
