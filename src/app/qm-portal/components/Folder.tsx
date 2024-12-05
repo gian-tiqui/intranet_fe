@@ -1,20 +1,30 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
-import React from "react";
+import React, { useEffect } from "react";
 import { Folder as FolderT } from "@/app/types/types";
 import { useRouter } from "next/navigation";
+import useSubfolderStore from "@/app/store/subfolderStore";
 
 interface Props {
-  setSelectedFolder: (selectedFolder: FolderT) => void;
+  setSelectedFolder?: (selectedFolder: FolderT) => void;
   data: FolderT;
 }
 
 const Folder: React.FC<Props> = ({ setSelectedFolder, data }) => {
   const router = useRouter();
+  const { setSubfolder } = useSubfolderStore();
+
+  useEffect(() => {
+    setSubfolder(undefined);
+  }, [setSubfolder]);
 
   const handleDoubleClick = () => {
-    setSelectedFolder(data);
-
-    router.push(`qm-portal/folders/${data.id}`);
+    if (setSelectedFolder) {
+      setSelectedFolder(data);
+      router.push(`qm-portal/folders/${data.id}`);
+    } else {
+      setSubfolder(data);
+      router.push(`/qm-portal/folders/${data.id}/f`);
+    }
   };
 
   return (
