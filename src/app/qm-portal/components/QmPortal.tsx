@@ -1,166 +1,27 @@
 "use client";
-import { decodeUserData } from "@/app/functions/functions";
+import { decodeUserData, fetchMainFolders } from "@/app/functions/functions";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
-import { QmType } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import Folder from "./Folder";
 import useFolderStore from "@/app/store/useFolderStore";
+import { useQuery } from "@tanstack/react-query";
 
 const QmPortal = () => {
   const router = useRouter();
   const { setSelectedFolder } = useFolderStore();
-  const dummyData: QmType[] = [
-    {
-      folderName: "Human Resource",
-      icon: "mynaui:folder-two",
-      folderItems: [
-        {
-          folderName: "Forms",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-        {
-          folderName: "Procedures",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-        {
-          folderName: "Policies",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-      ],
-    },
-    {
-      folderName: "Quality Management",
-      icon: "mynaui:folder-two",
-      folderItems: [
-        {
-          folderName: "Forms",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-        {
-          folderName: "Procedures",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-        {
-          folderName: "Policies",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-      ],
-    },
-    {
-      folderName: "Information Technology",
-      icon: "mynaui:folder-two",
-      folderItems: [
-        {
-          folderName: "Forms",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-        {
-          folderName: "Procedures",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-        {
-          folderName: "Policies",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-      ],
-    },
-    {
-      folderName: "Nursing",
-      icon: "mynaui:folder-two",
-      folderItems: [
-        {
-          folderName: "Forms",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-        {
-          folderName: "Procedures",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-        {
-          folderName: "Policies",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-      ],
-    },
-    {
-      folderName: "Credit and Collection",
-      icon: "mynaui:folder-two",
-      folderItems: [
-        {
-          folderName: "Forms",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-        {
-          folderName: "Procedures",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-        {
-          folderName: "Policies",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-      ],
-    },
-    {
-      folderName: "Accounting",
-      icon: "mynaui:folder-two",
-      folderItems: [
-        {
-          folderName: "Forms",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-        {
-          folderName: "Procedures",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-        {
-          folderName: "Policies",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-      ],
-    },
-    {
-      folderName: "Marketing",
-      icon: "mynaui:folder-two",
-      folderItems: [
-        {
-          folderName: "Forms",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-        {
-          folderName: "Procedures",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-        {
-          folderName: "Policies",
-          folderItems: [{ name: "Subitem", imageLocation: "/abc2" }],
-          icon: "mynaui:folder-two",
-        },
-      ],
-    },
-  ];
+
+  const {
+    data: folders,
+    error,
+    isError,
+    isLoading,
+  } = useQuery({
+    queryKey: ["main-folder"],
+    queryFn: fetchMainFolders,
+  });
 
   useEffect(() => {
     const checkQm = () => {
@@ -179,6 +40,19 @@ const QmPortal = () => {
     checkQm();
   }, [router]);
 
+  useEffect(() => {
+    console.log(folders);
+  }, [folders]);
+
+  if (isLoading)
+    return (
+      <div>
+        <p>Loading folders...</p>
+      </div>
+    );
+
+  if (isError) console.log(error);
+
   return (
     <div className="h-[90vh]">
       <p className="font-bold mb-5 text-xl">Quality Management Portal</p>
@@ -194,13 +68,14 @@ const QmPortal = () => {
         </div>
 
         <div className="overflow-auto w-full flex flex-col">
-          {dummyData.map((data, index) => (
-            <Folder
-              data={data}
-              setSelectedFolder={setSelectedFolder}
-              key={index}
-            />
-          ))}
+          {folders &&
+            folders.map((data, index) => (
+              <Folder
+                data={data}
+                setSelectedFolder={setSelectedFolder}
+                key={index}
+              />
+            ))}
         </div>
       </div>
     </div>
