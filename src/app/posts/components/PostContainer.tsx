@@ -268,10 +268,20 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
       const deptIds = await fetchPostDeptIds(post?.pid);
       deptIds.push("4");
       const deptId = decodeUserData()?.deptId;
+      const lid = decodeUserData()?.lid;
+      const userId = decodeUserData()?.sub;
 
       setDeptIds(deptIds);
 
-      if (post && deptId) {
+      if (userId && post && lid && deptId) {
+        if (userId !== post.userId && lid < post.lid) {
+          toast("You are unauthorized for this post.", {
+            type: "error",
+            className: toastClass,
+          });
+          router.push("/bulletin");
+        }
+
         if (!post.public && !deptIds.includes(deptId.toString())) {
           toast(
             "You are trying to view a private post that is not for your department.",

@@ -1,12 +1,12 @@
 import AuthListener from "@/app/components/AuthListener";
 import React from "react";
-import FolderContent from "../components/FolderContent";
+import FMain from "./components/FMain";
 
 const page = () => {
   return (
     <>
       <AuthListener />
-      <FolderContent />
+      <FMain />
     </>
   );
 };

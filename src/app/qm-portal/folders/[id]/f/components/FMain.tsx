@@ -1,11 +1,11 @@
 "use client";
+import Folder from "@/app/qm-portal/components/Folder";
+import LocationComp from "@/app/qm-portal/components/LocationComp";
+import useFolderStore from "@/app/store/useFolderStore";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React from "react";
-import LocationComp from "../../components/LocationComp";
-import useFolderStore from "@/app/store/useFolderStore";
-import Folder from "../../components/Folder";
 
-const FolderContent = () => {
+const FMain = () => {
   const { selectedFolder } = useFolderStore();
 
   return (
@@ -40,4 +40,4 @@ const FolderContent = () => {
   );
 };
 
-export default FolderContent;
+export default FMain;
