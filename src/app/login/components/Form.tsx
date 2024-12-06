@@ -189,12 +189,29 @@ const Form = () => {
             )}
             Login
           </motion.button>{" "}
+          <hr className="border-b/0 w-[96%] mt-2 mb-4" />
+          <motion.button
+            type="button"
+            onClick={() => router.push("/activate")}
+            initial={{ width: 0 }}
+            animate={{ width: "100%" }}
+            disabled={loading}
+            transition={{ duration: 1, delay: 0.7 }}
+            className={`${
+              loading && "opacity-80"
+            } mb-2 rounded-lg justify-center flex gap-2 items-center h-10 font-bold dark:bg-neutral-900 border dark:border-white border-black bg-white text-black dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800`}
+          >
+            {loading && (
+              <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
+            )}
+            Activate
+          </motion.button>{" "}
           <div className="w-full">
             <p className="dark:text-white text-end text-xs">
-              Account not activated yet?{" "}
-              <Link href={"activate"}>
+              Forgot password?{" "}
+              <Link href={"forgot-password"}>
                 <span className="hover:underline text-blue-700 dark:text-blue-500 cursor-pointer">
-                  Activate account
+                  Click me
                 </span>
               </Link>
             </p>

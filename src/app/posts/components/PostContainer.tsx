@@ -280,6 +280,8 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
             className: toastClass,
           });
           router.push("/bulletin");
+
+          return;
         }
 
         if (!post.public && !deptIds.includes(deptId.toString())) {
@@ -288,6 +290,8 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
             { type: "error", className: toastClass }
           );
           router.push("/bulletin");
+
+          return;
         }
         setLoading(false);
       }
