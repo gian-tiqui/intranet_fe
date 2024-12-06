@@ -18,7 +18,7 @@ type FormFields = {
   password: string;
 };
 
-const ActivateForm = () => {
+const ForgotPasswordForm = () => {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const { showLogoutArt, setShowLogoutArt } = useLogoutArtStore();
@@ -90,7 +90,7 @@ const ActivateForm = () => {
             ))}
           </div>
           <div className="flex gap-1 mb-16">
-            {"Activate your account here".split(" ").map((word, index) => (
+            {"Recover your account here".split(" ").map((word, index) => (
               <EaseString size="" word={word} key={index} />
             ))}
           </div>
@@ -133,14 +133,14 @@ const ActivateForm = () => {
             {loading && (
               <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
             )}
-            Activate
+            Recover
           </motion.button>{" "}
           <div className="w-full">
             <p className="dark:text-white text-end text-xs">
-              Account already activated?{" "}
+              Want to go back?{" "}
               <Link href={"login"}>
                 <span className="hover:underline text-blue-700 dark:text-blue-500 cursor-pointer">
-                  Login
+                  Click me
                 </span>
               </Link>
             </p>
@@ -151,4 +151,4 @@ const ActivateForm = () => {
   );
 };
 
-export default ActivateForm;
+export default ForgotPasswordForm;
