@@ -53,7 +53,7 @@ const DeleteFolderModal = () => {
       >
         <div className="w-full flex text-center flex-col pt-7 h-full justify-between">
           <h1 className="font-bold">Delete this folder?</h1>
-          <div className="flex h-8">
+          <div className="flex h-9">
             <div
               className="cursor-pointer grid place-content-center w-full border dark:border-neutral-700 rounded-es hover:bg-neutral-200 dark:hover:bg-neutral-700"
               onClick={handleDeleteFolder}
