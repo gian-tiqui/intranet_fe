@@ -3,6 +3,7 @@ import apiClient from "@/app/http-common/apiUrl";
 import useSubFolderStore from "@/app/store/createSubFolder";
 import useSignalStore from "@/app/store/signalStore";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import { useParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -67,8 +68,9 @@ const MainFolderModal = () => {
 
         <button
           type="submit"
-          className="w-full rounded h-8 bg-neutral-900 text-white dark:bg-white dark:text-black font-semibold"
+          className="w-full rounded h-8 flex hover:bg-neutral-800 dark:hover:bg-neutral-200 items-center justify-center gap-1 bg-neutral-900 text-white dark:bg-white dark:text-black font-semibold"
         >
+          <Icon icon={"hugeicons:folder-add"} className="h-5 w-5" />
           Create
         </button>
       </form>
