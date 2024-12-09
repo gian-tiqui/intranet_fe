@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import { Folder as FolderT } from "@/app/types/types";
 import { useRouter } from "next/navigation";
 import useSubfolderStore from "@/app/store/subfolderStore";
+import useFolderIdStore from "@/app/store/folderIdStore";
+import deleteFolderStore from "@/app/store/deleteFolder";
 
 interface Props {
   setSelectedFolder?: (selectedFolder: FolderT) => void;
@@ -12,6 +14,8 @@ interface Props {
 const Folder: React.FC<Props> = ({ setSelectedFolder, data }) => {
   const router = useRouter();
   const { setSubfolder } = useSubfolderStore();
+  const { setShowDeleteFolderModal } = deleteFolderStore();
+  const { setFolderId } = useFolderIdStore();
 
   useEffect(() => {
     setSubfolder(undefined);
@@ -25,6 +29,11 @@ const Folder: React.FC<Props> = ({ setSelectedFolder, data }) => {
       setSubfolder(data);
       router.push(`/qm-portal/folders/${data.id}/f`);
     }
+  };
+
+  const handleDeleteClicked = () => {
+    setFolderId(data.id);
+    setShowDeleteFolderModal(true);
   };
 
   return (
@@ -41,7 +50,10 @@ const Folder: React.FC<Props> = ({ setSelectedFolder, data }) => {
           <div className="p-2 rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-800">
             <Icon icon={"material-symbols:download"} className="h-6 w-6" />
           </div>
-          <div className="p-2 rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-800">
+          <div
+            onClick={handleDeleteClicked}
+            className="p-2 rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-800"
+          >
             <Icon
               icon={"material-symbols:delete-outline"}
               className="h-6 w-6"

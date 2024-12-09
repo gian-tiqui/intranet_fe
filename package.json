@@ -35,7 +35,7 @@
     "react-hook-form": "^7.53.0",
     "react-pdf": "8.0.2",
     "react-pdf-to-image": "^1.0.2",
-    "react-toastify": "^10.0.5",
+    "react-toastify": "^10.0.6",
     "recharts": "^2.12.7",
     "tesseract.js": "^5.1.1",
     "three": "^0.169.0",
