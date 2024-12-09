@@ -37,6 +37,10 @@ import ImagePreview from "./ImagePreview";
 import useDeleteModalStore from "../store/deleteModalStore";
 import DeleteModal from "../posts/components/DeleteModal";
 import useTokenStore from "../store/tokenStore";
+import useOpenCreateFolderMainStore from "../store/createMainFolder";
+import MainFolderModal from "../qm-portal/components/MainFolderModal";
+import useSubFolderStore from "../store/createSubFolder";
+import SubFolderModal from "../qm-portal/components/SubFolderModal";
 
 interface Props {
   children?: ReactNode;
@@ -63,6 +67,8 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { showImage, setShowImage } = useShowImageStore();
   const { setShowDeleteModal, showDeleteModal } = useDeleteModalStore();
   const { token } = useTokenStore();
+  const { openCreateFolderModal } = useOpenCreateFolderMainStore();
+  const { openSubFolder } = useSubFolderStore();
 
   useEffect(() => {
     const checkLevel = () => {
@@ -217,6 +223,8 @@ const Divider: React.FC<Props> = ({ children }) => {
             <DeleteModal setShowDeleteModal={setShowDeleteModal} />
           </div>
         )}
+        {openCreateFolderModal && <MainFolderModal />}
+        {openSubFolder && <SubFolderModal />}
 
         <div id="sidebar" onClick={(e) => e.stopPropagation()}>
           <AnimatePresence>

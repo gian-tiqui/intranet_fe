@@ -306,7 +306,23 @@ const getPostsFromSubfolderById = async (id: number): Promise<Post[]> => {
   }
 };
 
+const getFolderById = async (id: number): Promise<Folder | null> => {
+  try {
+    const response = await apiClient.get(`${API_BASE}/folders/${id}`);
+
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+
+  return null;
+};
+
 export {
+  getFolderById,
   getPostsFromSubfolderById,
   fetchMainFolders,
   fetchPost,
