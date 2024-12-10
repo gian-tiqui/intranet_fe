@@ -19,6 +19,7 @@ type User = {
   updatedAt: Date;
   deptId: number;
   department: Department;
+  employeeId: number;
 };
 
 type PostReader = {
