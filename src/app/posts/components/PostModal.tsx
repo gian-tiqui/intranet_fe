@@ -17,6 +17,7 @@ import DepartmentsList from "./DepartmentsList";
 import { jwtDecode } from "jwt-decode";
 import PostPreview from "./PostPreview";
 import useSignalStore from "@/app/store/signalStore";
+import { useParams, usePathname } from "next/navigation";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -60,6 +61,8 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const [message, setMessage] = useState<string | undefined>(undefined);
   const [previewClickable, setPreviewClickable] = useState<boolean>(false);
   const { setSignal } = useSignalStore();
+  const param = useParams();
+  const pathName = usePathname();
 
   const { data, isError, error } = useQuery({
     queryKey: ["level"],
@@ -282,6 +285,8 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       formData.append("public", data.public);
       formData.append("lid", String(data.lid));
       formData.append("extractedText", data.extractedText);
+      if (param.id && pathName.includes("/qm-portal/folders/2/f"))
+        formData.append("subfolderId", String(param.id));
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
 
