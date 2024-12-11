@@ -24,7 +24,7 @@ const FMain = () => {
 
         <LocationComp name={subfolder?.name} />
 
-        <div className="overflow-auto w-full flex flex-col">
+        <div className="overflow-auto w-full flex flex-col gap-2">
           {subfolder && subfolder.posts.length > 0 ? (
             subfolder.posts.map((data) => (
               <FolderItem key={data.pid} post={data} />
