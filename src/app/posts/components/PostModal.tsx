@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { pdfjs } from "react-pdf";
-import { Level, PostType } from "@/app/types/types";
+import { Level } from "@/app/types/types";
 import { useQuery } from "@tanstack/react-query";
 import { createWorker } from "tesseract.js";
 import DepartmentsList from "./DepartmentsList";
@@ -62,31 +62,8 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const [message, setMessage] = useState<string | undefined>(undefined);
   const [previewClickable, setPreviewClickable] = useState<boolean>(false);
   const { setSignal } = useSignalStore();
-  const [showPostTypes, setShowPostTypes] = useState<boolean>(false);
-  const [postTypes, setPostTypes] = useState<PostType[]>([]);
   const param = useParams();
   const pathName = usePathname();
-
-  useEffect(() => {
-    const fetchPostTypes = async () => {
-      try {
-        const response = await apiClient.get(`${API_BASE}/post-type`);
-
-        if (response.status === 200) {
-          setShowPostTypes(true);
-
-          setPostTypes(response.data);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const deptId = decodeUserData()?.deptId;
-
-    if (deptId === 2 && pathName.includes("/qm-portal/folders/2/f"))
-      fetchPostTypes();
-  }, [pathName]);
 
   const { data, isError, error } = useQuery({
     queryKey: ["level"],
@@ -491,25 +468,6 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 </option>
               </select>
             </div>
-
-            {showPostTypes && (
-              <div className="bg-inherit text-sm">
-                <select
-                  {...register("postId", { required: true })}
-                  className="bg-inherit outline-none text-xs"
-                >
-                  {postTypes.map((postType) => (
-                    <option
-                      className="dark:bg-neutral-900"
-                      key={postType.id}
-                      value={postType.id}
-                    >
-                      {postType.type}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
           </div>
         </div>
 
