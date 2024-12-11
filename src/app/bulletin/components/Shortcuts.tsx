@@ -8,7 +8,7 @@ interface Props {
   totalPosts: number;
   limit: number;
   isLastPage: boolean;
-  min: number; // Added min prop to check for first page
+  min: number;
 }
 
 const Shortcuts: React.FC<Props> = ({
@@ -16,19 +16,24 @@ const Shortcuts: React.FC<Props> = ({
   setMinMax,
   totalPosts,
   limit,
-  isLastPage,
   min,
 }) => {
   const totalPages = Math.ceil(totalPosts / limit);
+  const isFirstPage = min === 0;
+  const currentPage = Math.floor(min / limit) + 1; // Calculate current page
+  const calculatedIsLastPage = currentPage === totalPages; // Proper last-page condition
 
   const handleSortByDate = (_direction: string) => {
     setDirection(_direction);
   };
 
   const jumpPage = (selection: string) => {
-    if (selection === "first") setMinMax({ min: 0, max: limit });
+    if (selection === "first") setMinMax({ min: 0, max: Math.min(2, limit) });
     else if (selection === "last")
-      setMinMax({ min: (totalPages - 1) * limit, max: totalPages * limit });
+      setMinMax({
+        min: (totalPages - 1) * limit,
+        max: Math.min(2, totalPages * limit),
+      });
   };
 
   const handlePageMove = (selection: string) => {
@@ -37,8 +42,8 @@ const Shortcuts: React.FC<Props> = ({
         selection === "next"
           ? Math.min(prev.min + limit, (totalPages - 1) * limit)
           : Math.max(prev.min - limit, 0);
-      const newMax = newMin + limit;
 
+      const newMax = Math.min(2, newMin + limit); // Ensure max is capped at 2
       return { min: newMin, max: newMax };
     });
   };
@@ -60,35 +65,41 @@ const Shortcuts: React.FC<Props> = ({
         <p className="text-sm font-bold">Oldest</p>
       </div>
       <div
-        onClick={() => jumpPage("first")}
-        className="rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center"
+        onClick={() => !isFirstPage && jumpPage("first")}
+        className={`rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center ${
+          isFirstPage ? "cursor-not-allowed opacity-50" : ""
+        }`}
+        style={{ pointerEvents: isFirstPage ? "none" : "auto" }}
       >
         <Icon icon={"ri:forward-end-line"} className="rotate-180" />
         <p className="text-sm font-bold">First Page</p>
       </div>
       <div
-        onClick={() => handlePageMove("prev")}
+        onClick={() => !isFirstPage && handlePageMove("prev")}
         className={`rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center ${
-          min === 0 ? "cursor-not-allowed opacity-50" : ""
+          isFirstPage ? "cursor-not-allowed opacity-50" : ""
         }`}
-        style={{ pointerEvents: min === 0 ? "none" : "auto" }}
+        style={{ pointerEvents: isFirstPage ? "none" : "auto" }}
       >
         <Icon icon={"majesticons:next-circle-line"} className="rotate-180" />
         <p className="text-sm font-bold">Previous Page</p>
       </div>
       <div
-        onClick={() => handlePageMove("next")}
+        onClick={() => !calculatedIsLastPage && handlePageMove("next")}
         className={`rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center ${
-          isLastPage ? "cursor-not-allowed opacity-50" : ""
+          calculatedIsLastPage ? "cursor-not-allowed opacity-50" : ""
         }`}
-        style={{ pointerEvents: isLastPage ? "none" : "auto" }}
+        style={{ pointerEvents: calculatedIsLastPage ? "none" : "auto" }}
       >
         <Icon icon={"majesticons:next-circle-line"} />
         <p className="text-sm font-bold">Next Page</p>
       </div>
       <div
-        onClick={() => jumpPage("last")}
-        className="rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center"
+        onClick={() => !calculatedIsLastPage && jumpPage("last")}
+        className={`rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center ${
+          calculatedIsLastPage ? "cursor-not-allowed opacity-50" : ""
+        }`}
+        style={{ pointerEvents: calculatedIsLastPage ? "none" : "auto" }}
       >
         <Icon icon={"ri:forward-end-line"} />
         <p className="text-sm font-bold">Last Page</p>

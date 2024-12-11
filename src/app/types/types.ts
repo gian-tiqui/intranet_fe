@@ -243,7 +243,13 @@ type Folder = {
   icon: string;
 };
 
+type PostType = {
+  id: number;
+  type: string;
+};
+
 export type {
+  PostType,
   Folder,
   GroupedFiles,
   ImageLocation,
