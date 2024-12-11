@@ -6,7 +6,7 @@ import useUserStore from "@/app/store/userStore";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import { User } from "@/app/types/types";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -22,7 +22,6 @@ const Deactivation = () => {
     setValue,
     formState: { errors },
   } = useForm<FormFields>();
-  const [value, setVal] = useState<number>(0);
   const { setUser } = useUserStore();
 
   useEffect(() => {
@@ -46,12 +45,18 @@ const Deactivation = () => {
   const handleFormSubmit = async (data: FormFields) => {
     if (!data.employeeId) return;
     try {
-      const response = await apiClient(
+      const response = await apiClient.get(
         `${API_BASE}/users/employeeId?employeeId=${data.employeeId}`
       );
 
       if (response.status === 200) {
-        console.log(response.data);
+        if (response.data.confirmed == false) {
+          toast("User is not yet activated", {
+            className: toastClass,
+            type: "info",
+          });
+          return;
+        }
         setUser(response.data as User);
       }
     } catch (error) {
@@ -74,9 +79,6 @@ const Deactivation = () => {
       >
         {" "}
         <h1 className="text-xl font-bold text-center">Select employee ID</h1>
-        <div className="w-72 px-3 h-10 rounded grid place-content-center bg-neutral-200 dark:bg-neutral-700">
-          <p className="font-extrabold text-lg truncate">{value}</p>
-        </div>
         <div>
           <input
             className="w-72 rounded h-10 font-extrabold px-3 text-center bg-neutral-200 outline-none"
@@ -84,7 +86,6 @@ const Deactivation = () => {
             placeholder="enter employee id"
             type="number"
             onChange={(e) => {
-              setVal(+e.target.value);
               setValue("employeeId", +e.target.value);
             }}
           />

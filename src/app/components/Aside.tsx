@@ -352,6 +352,19 @@ const Aside: React.FC<Props> = ({
               <p className="w-full text-sm">Posts for your employee level</p>
             </div>
 
+            {userDeptId === 3 && (
+              <div
+                className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+                onClick={() => {
+                  handleClick("/deactivation");
+                  if (setIsCollapsed) setIsCollapsed(!isCollapsed);
+                }}
+              >
+                <Icon icon={"icons8:shutdown"} className="h-5 w-5" />
+                <p className="w-full text-sm">Deactivate accounts</p>
+              </div>
+            )}
+
             {userDeptId && [1, 2].includes(userDeptId) && (
               <div
                 className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
