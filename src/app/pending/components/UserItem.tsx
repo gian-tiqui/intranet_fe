@@ -67,8 +67,9 @@ const UserItem: React.FC<Props> = ({ pendingUser, onRefetch }) => {
   };
 
   return (
-    <div className="w-full h-10 bg-gray-100 dark:bg-neutral-800 shadow flex items-center px-3 rounded justify-between">
-      <div className="w-full flex gap-2">
+    <div className="w-full h-10 bg-gray-100 cursor-default dark:bg-neutral-800 shadow flex items-center px-3 rounded justify-between">
+      <div className="w-full flex items-center gap-2">
+        <Icon icon={"mdi:user-outline"} className="h-7 w-7" />
         <p>{pendingUser.firstName}</p>
         {pendingUser && pendingUser.middleName !== "" && (
           <p>pendingUser.middleName[0]</p>
@@ -79,12 +80,12 @@ const UserItem: React.FC<Props> = ({ pendingUser, onRefetch }) => {
         <Icon
           onClick={handleConfirm}
           icon={"line-md:confirm"}
-          className="h-6 w-6 cursor-pointer rounded bg-green-500 p-1"
+          className="h-6 w-6 cursor-pointer rounded bg-green-500 hover:bg-green-600 p-1"
         />
         <Icon
           onClick={handleDecline}
           icon={"iconoir:cancel"}
-          className="h-6 w-6 cursor-pointer  rounded bg-red-500 p-1"
+          className="h-6 w-6 cursor-pointer  rounded bg-red-500 hover:bg-red-600 p-1"
         />
       </div>
     </div>
