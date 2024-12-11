@@ -45,9 +45,9 @@ const QmPortal = () => {
 
   useEffect(() => {
     const checkQm = () => {
-      const lid = decodeUserData()?.lid;
+      const deptId = decodeUserData()?.deptId;
 
-      if (lid && lid !== 2) {
+      if (deptId && deptId !== 2) {
         toast("You are unauthorized to access this page", {
           className: toastClass,
           type: "error",

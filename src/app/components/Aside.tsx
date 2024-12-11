@@ -206,7 +206,7 @@ const Aside: React.FC<Props> = ({
               </div>
             )}
 
-            {decodeUserData() && decodeUserData()?.lid === 2 && (
+            {decodeUserData() && decodeUserData()?.deptId === 2 && (
               <div
                 className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
                 onClick={() => handleClick("/qm-portal")}
@@ -378,7 +378,7 @@ const Aside: React.FC<Props> = ({
               </div>
             )}
 
-            {decodeUserData() && decodeUserData()?.lid === 2 && (
+            {decodeUserData() && decodeUserData()?.deptId === 2 && (
               <div
                 className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
                 onClick={() => {
