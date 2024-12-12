@@ -8,6 +8,7 @@ import NoPosts from "./NoPosts";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
 import { useQuery } from "@tanstack/react-query";
 import {
+  decodeUserData,
   fetchPostDeptIds,
   fetchPosts,
   fetchPublicPosts,
@@ -174,19 +175,25 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
             </div>
             {departments
               .filter((dept) => dept.posts.length > 0)
-              .map((dept) => (
-                <div
-                  onClick={() => handleDeptClicked(dept.deptId)}
-                  className={`text-xs border dark:border-neutral-700 rounded ${
-                    selectedDeptId === dept.deptId
-                      ? "bg-gray-200 dark:bg-neutral-700"
-                      : ""
-                  } grid place-content-center px-3 py-1 font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-neutral-700`}
-                  key={dept.deptId}
-                >
-                  {dept.departmentCode}
-                </div>
-              ))}
+              .map((dept) => {
+                const deptId = decodeUserData()?.deptId;
+
+                if (dept.deptId === 9 && deptId !== 9) return null;
+
+                return (
+                  <div
+                    onClick={() => handleDeptClicked(dept.deptId)}
+                    className={`text-xs border dark:border-neutral-700 rounded ${
+                      selectedDeptId === dept.deptId
+                        ? "bg-gray-200 dark:bg-neutral-700"
+                        : ""
+                    } grid place-content-center px-3 py-1 font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-neutral-700`}
+                    key={dept.deptId}
+                  >
+                    {dept.departmentCode}
+                  </div>
+                );
+              })}
           </div>
         )}
         {Object.keys(groupedPosts)
