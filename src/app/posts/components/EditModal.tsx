@@ -508,6 +508,19 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
             />
             <select
               {...register("lid", { required: true })}
+              onChange={(e) => {
+                const lid = e.target.value;
+
+                if (lid === "1") {
+                  setSelectedDepartments([
+                    ...departments.map((dept) => String(dept.deptId)),
+                  ]);
+                } else if (["4", "5"].includes(lid)) {
+                  setSelectedDepartments(["9"]);
+                } else {
+                  setSelectedDepartments([]);
+                }
+              }}
               className="w-full bg-inherit rounded-t-xl h-9  text-sm gap-1 outline-none"
             >
               <option value={""}>Select employee level</option>
