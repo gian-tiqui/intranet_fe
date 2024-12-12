@@ -2,11 +2,35 @@
 import LocationComp from "@/app/qm-portal/components/LocationComp";
 import useSubfolderStore from "@/app/store/subfolderStore";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import React from "react";
+import React, { useEffect } from "react";
 import FolderItem from "./FolderItem";
+import { useQuery } from "@tanstack/react-query";
+import { getFolderById } from "@/app/functions/functions";
+import useSignalStore from "@/app/store/signalStore";
 
 const FMain = () => {
   const { subfolder } = useSubfolderStore();
+  const { signal, setSignal } = useSignalStore();
+
+  const { data: subFolder, refetch } = useQuery({
+    queryKey: ["subfolder", subfolder?.id],
+    queryFn: () => {
+      if (!subfolder) {
+        return null;
+      }
+      return getFolderById(subfolder.id);
+    },
+    enabled: !!subfolder,
+  });
+
+  useEffect(() => {
+    const refetchSubFolder = () => {
+      refetch();
+      setSignal(false);
+    };
+
+    refetchSubFolder();
+  }, [refetch, signal, setSignal]);
 
   return (
     <div className="h-[90vh]">
@@ -25,8 +49,8 @@ const FMain = () => {
         <LocationComp name={subfolder?.name} />
 
         <div className="overflow-auto w-full flex flex-col gap-2">
-          {subfolder && subfolder.posts.length > 0 ? (
-            subfolder.posts.map((data) => (
+          {subFolder && subFolder.posts.length > 0 ? (
+            subFolder.posts.map((data) => (
               <FolderItem key={data.pid} post={data} />
             ))
           ) : (

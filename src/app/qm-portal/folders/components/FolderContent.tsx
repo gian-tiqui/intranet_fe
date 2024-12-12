@@ -1,6 +1,6 @@
 "use client";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import LocationComp from "../../components/LocationComp";
 import useFolderStore from "@/app/store/useFolderStore";
 import Folder from "../../components/Folder";
@@ -36,6 +36,16 @@ const FolderContent = () => {
 
     handleRefetchSubFolder();
   }, [signal, setSignal, refetch]);
+
+  const [hasWindow, setHasWindow] = useState(false);
+
+  useEffect(() => {
+    setHasWindow(typeof window !== "undefined");
+  }, []);
+
+  if (!hasWindow) {
+    return <div>Loading...</div>;
+  }
 
   if (isLoading) {
     return <div>Loading...</div>;
