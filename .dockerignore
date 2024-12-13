@@ -1,0 +1,10 @@
+node_modules
+.next
+out
+uploads/
+Dockerfile
+.dockerignore
+.env
+.env.local
+*.log
+*.tmp
