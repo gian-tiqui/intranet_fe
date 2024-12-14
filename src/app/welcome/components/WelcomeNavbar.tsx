@@ -44,9 +44,6 @@ const WelcomeNavbar = () => {
           <Link href={"#hr-features"} className="hover:underline">
             Usage
           </Link>
-          <Link href={"#description"} className="hover:underline">
-            Company
-          </Link>
         </div>
         <div className="flex gap-2 items-center">
           <Link
