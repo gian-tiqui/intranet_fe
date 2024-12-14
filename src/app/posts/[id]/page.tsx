@@ -1,13 +1,16 @@
 import AuthListener from "@/app/components/AuthListener";
 import PostContainer from "../components/PostContainer";
+import { use } from "react";
 
-const PostPage = ({ params }: { params: { id: number } }) => {
-  const { id } = params;
+type Param = Promise<{ id: number }>;
+
+const PostPage = (props: Param) => {
+  const param = use(props);
 
   return (
     <div className="">
       <AuthListener />
-      <PostContainer id={id} type="single-single-post" />
+      <PostContainer id={param.id} type="single-single-post" />
     </div>
   );
 };
