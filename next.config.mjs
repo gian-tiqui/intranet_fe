@@ -14,6 +14,12 @@ const nextConfig = {
         hostname: "intranet-api-4yk4.onrender.com",
         pathname: "/uploads/post/**",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "8081",
+        pathname: "/uploads/post/**",
+      },
     ],
   },
   productionBrowserSourceMaps: false,
