@@ -1,14 +1,15 @@
 import React from "react";
 import RegisterForm from "./components/RegisterForm";
+import { use } from "react";
 
-interface Props {
-  searchParams: {
-    id: number;
-  };
-}
+const RegisterPage = ({
+  searchParams,
+}: {
+  searchParams: Promise<{ id: number }>;
+}) => {
+  const params = use(searchParams);
 
-const RegisterPage: React.FC<Props> = ({ searchParams }) => {
-  return <RegisterForm hashedMmployeeId={searchParams.id} />;
+  return <RegisterForm hashedMmployeeId={params.id} />;
 };
 
 export default RegisterPage;
