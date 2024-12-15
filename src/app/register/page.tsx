@@ -1,10 +1,15 @@
-import React, { use } from "react";
+import React from "react";
 import RegisterForm from "./components/RegisterForm";
+import { use } from "react";
 
-const RegisterPage = ({ params }: { params: Promise<{ id: string }> }) => {
-  const param = use(params);
+const RegisterPage = ({
+  searchParams,
+}: {
+  searchParams: Promise<{ id: number }>;
+}) => {
+  const params = use(searchParams);
 
-  return <RegisterForm hashedMmployeeId={+param.id} />;
+  return <RegisterForm hashedMmployeeId={params.id} />;
 };
 
 export default RegisterPage;
