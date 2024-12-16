@@ -4,7 +4,5 @@ out
 uploads/
 Dockerfile
 .dockerignore
-.env
-.env.local
 *.log
 *.tmp
