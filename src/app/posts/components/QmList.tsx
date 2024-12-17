@@ -39,7 +39,7 @@ const QmList = () => {
 
   if (isError) console.error(error);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p className="text-sm px-5">Loading...</p>;
 
   return (
     <MotionTemplate>
@@ -47,7 +47,10 @@ const QmList = () => {
         <div className="flex gap-2 flex-wrap">
           {folders?.map((folder) => (
             <p
-              className="bg-inherit cursor-pointer py-1 px-3 text-xs font-semibold border rounded"
+              className={`bg-inherit cursor-pointer py-1 px-3 ${
+                selectedSubFolder?.id === folder.id &&
+                "bg-neutral-200 dark:bg-neutral-700"
+              } text-xs hover:bg-neutral-200 dark:hover:bg-neutral-700 font-semibold border rounded`}
               key={folder.id}
               onClick={() => setSelectedSubFolder(folder)}
             >
@@ -59,9 +62,13 @@ const QmList = () => {
           ))}
         </div>
         <div className="px-2 pt-5 flex flex-col gap-2">
-          {selectedSubFolder?.subfolders.map((subFolder) => (
-            <SubfolderItems subfolder={subFolder} key={subFolder.id} />
-          ))}
+          {selectedSubFolder && selectedSubFolder?.subfolders.length > 0 ? (
+            selectedSubFolder?.subfolders.map((subFolder) => (
+              <SubfolderItems subfolder={subFolder} key={subFolder.id} />
+            ))
+          ) : (
+            <p>No folders yet</p>
+          )}
         </div>
       </div>
     </MotionTemplate>
