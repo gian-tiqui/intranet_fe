@@ -19,6 +19,8 @@ import PostListItem from "./PostListItem";
 import useDepartments from "@/app/custom-hooks/departments";
 import useSignalStore from "@/app/store/signalStore";
 import QmList from "./QmList";
+import { INTRANET } from "@/app/bindings/binding";
+import Cookies from "js-cookie";
 
 const groupPostsByDate = (posts: Post[]) => {
   return posts.reduce((groups: GroupedPosts, post: Post) => {
@@ -63,6 +65,7 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    enabled: Boolean(localStorage.getItem(INTRANET) && Cookies.get(INTRANET)),
   });
 
   const { data: _allPosts, refetch: refetchPublic } = useQuery({
@@ -71,6 +74,7 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    enabled: Boolean(localStorage.getItem(INTRANET) && Cookies.get(INTRANET)),
   });
 
   const [posts, setPosts] = useState<Post[]>([]);

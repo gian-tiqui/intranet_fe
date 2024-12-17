@@ -62,35 +62,41 @@ const fetchNotifs = async () => {
 };
 
 const fetchPublicPosts = async () => {
-  try {
-    const response = await apiClient.get(
-      `${API_BASE}/post?lid=${
-        decodeUserData()?.lid
-      }&public=true&userIdComment=${decodeUserData()?.sub}`
-    );
+  if (decodeUserData()) {
+    try {
+      const response = await apiClient.get(
+        `${API_BASE}/post?lid=${
+          decodeUserData()?.lid
+        }&public=true&userIdComment=${decodeUserData()?.sub}`
+      );
 
-    return response.data as RetPost;
-  } catch (error) {
-    console.error(error);
+      return response.data as RetPost;
+    } catch (error) {
+      console.error(error);
+    }
   }
+  return { posts: [] };
 };
 
 const fetchPosts = async () => {
-  try {
-    const apiUri = `${API_BASE}/post?lid=${decodeUserData()?.lid}&deptId=${
-      decodeUserData()?.deptId
-    }&lid=${decodeUserData()?.lid}&userIdComment=${decodeUserData()?.sub}`;
+  if (decodeUserData()) {
+    try {
+      const apiUri = `${API_BASE}/post?lid=${decodeUserData()?.lid}&deptId=${
+        decodeUserData()?.deptId
+      }&lid=${decodeUserData()?.lid}&userIdComment=${decodeUserData()?.sub}`;
 
-    const response = await apiClient.get(apiUri, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-      },
-    });
+      const response = await apiClient.get(apiUri, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
+        },
+      });
 
-    return response.data as RetPost;
-  } catch (error) {
-    console.error(error);
+      return response.data as RetPost;
+    } catch (error) {
+      console.error(error);
+    }
   }
+  return { posts: [] };
 };
 
 const fetchUserUnreads = async () => {
