@@ -13,7 +13,6 @@ import {
   fetchPostDeptIds,
 } from "@/app/functions/functions";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { AnimatePresence } from "framer-motion";
 import SmallToLarge from "@/app/components/animation/SmallToLarge";
 import useEditModalStore from "@/app/store/editModal";
 import usePostIdStore from "@/app/store/postId";
@@ -419,34 +418,32 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
                 </div>
               )}
 
-              <AnimatePresence>
-                {!openOptions && (
-                  <SmallToLarge>
+              {!openOptions && (
+                <SmallToLarge>
+                  <div
+                    className="absolute z-50 w-28 bg-neutral-200 border text-black dark:text-white border-gray-300 rounded-xl dark:bg-neutral-800 dark:border-gray-700 p-2 right-0"
+                    onClick={handleOptionsClicked}
+                  >
                     <div
-                      className="absolute w-28 bg-neutral-200 border text-black dark:text-white border-gray-300 rounded-xl dark:bg-neutral-800 dark:border-gray-700 p-2 right-0"
-                      onClick={handleOptionsClicked}
+                      onClick={handleEditClicked}
+                      className="w-full flex items-center gap-1 rounded-lg p-2 hover:bg-gray-300 cursor-pointer dark:hover:bg-neutral-700"
                     >
-                      <div
-                        onClick={handleEditClicked}
-                        className="w-full flex items-center gap-1 rounded-lg p-2 hover:bg-gray-300 cursor-pointer dark:hover:bg-neutral-700"
-                      >
-                        <Icon icon={"lucide:edit"} className="h-5 w-5" />
-                        <p className="text-sm">Edit</p>
-                      </div>
-                      <div
-                        onClick={handleDeleteClicked}
-                        className="w-full flex items-center gap-1 rounded-lg p-2 hover:bg-gray-300 cursor-pointer dark:hover:bg-neutral-700"
-                      >
-                        <Icon
-                          icon={"material-symbols:delete-outline"}
-                          className="h-5 w-5"
-                        />
-                        <p className="text-sm">Delete</p>
-                      </div>
+                      <Icon icon={"lucide:edit"} className="h-5 w-5" />
+                      <p className="text-sm">Edit</p>
                     </div>
-                  </SmallToLarge>
-                )}
-              </AnimatePresence>
+                    <div
+                      onClick={handleDeleteClicked}
+                      className="w-full flex items-center gap-1 rounded-lg p-2 hover:bg-gray-300 cursor-pointer dark:hover:bg-neutral-700"
+                    >
+                      <Icon
+                        icon={"material-symbols:delete-outline"}
+                        className="h-5 w-5"
+                      />
+                      <p className="text-sm">Delete</p>
+                    </div>
+                  </div>
+                </SmallToLarge>
+              )}
             </div>
           )}
         </div>
