@@ -16,6 +16,7 @@ const SmallToLarge: React.FC<Props> = ({ children, duration = 0.1 }) => {
       animate={{ scale: 1, opacity: 1 }}
       exit={{ scale: 0.8, opacity: 0 }}
       transition={{ ease: "easeInOut", duration: duration }}
+      className="absolute z-50 right-3"
     >
       {children}
     </motion.div>

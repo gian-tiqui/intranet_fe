@@ -6,6 +6,7 @@ import UserInfo from "./UserInfo";
 import Password from "./Password";
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
 import { decodeUserData } from "../functions/functions";
+import SecretQuestion from "./SecretQuestion";
 
 const Settings = () => {
   const { setShown } = useShowSettingsStore();
@@ -77,12 +78,25 @@ const Settings = () => {
                 <p className="">Password</p>
               </div>
             </HoverBox>
+            <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
+              <div
+                className="flex items-center gap-3"
+                onClick={() => setFragment("secret")}
+              >
+                <Icon
+                  icon={"mingcute:user-security-line"}
+                  className="w-6 h-6"
+                />
+                <p className="">Secret Questions</p>
+              </div>
+            </HoverBox>
           </div>
           <div className="md:w-2/3 p-2 overflow-auto">
             {fragment === "userInfo" && (
               <UserInfo mode={mode} handleModeChange={handleModeChange} />
             )}
             {fragment === "password" && <Password />}
+            {fragment === "secret" && <SecretQuestion />}
           </div>
         </div>
       </div>
