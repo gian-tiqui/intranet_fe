@@ -9,7 +9,6 @@ import apiClient from "@/app/http-common/apiUrl";
 import { motion } from "framer-motion";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { API_BASE } from "@/app/bindings/binding";
 import EaseString from "@/app/login/components/EaseString";
 
@@ -19,7 +18,6 @@ type FormFields = {
 };
 
 const ForgotPasswordForm = () => {
-  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const { showLogoutArt, setShowLogoutArt } = useLogoutArtStore();
   const {
@@ -40,19 +38,16 @@ const ForgotPasswordForm = () => {
     try {
       setLoading(true);
       const response = await apiClient.post(
-        `${API_BASE}/auth/verify?employeeId=${employeeId}`,
-        {
-          employeeId,
-        }
+        `${API_BASE}/auth/forgot-password?employeeId=${employeeId}&secretCode=meowmeow&deptId=2`
       );
+
+      console.log(response);
 
       if (response.status === 201) {
         toast(response.data.message, {
           className: toastClass,
           type: "success",
         });
-
-        router.push("/login");
       }
     } catch (error: unknown) {
       const {

@@ -51,39 +51,55 @@ const Password = () => {
 
   return (
     <form
-      className="flex w-72 md:w-auto flex-col gap-3"
+      className="flex w-72 mx-auto md:w-96 flex-col gap-4 p-4 border rounded-md shadow-md bg-white dark:bg-neutral-900 dark:border-black"
       onSubmit={handleSubmit(onPasswordReset)}
     >
-      <h1 className="text-center font-bold mb-3">Change password</h1>
-      <div className="flex justify-between items-center">
-        <p>Current password</p>
+      <h2 className="text-xl font-semibold text-center">Change Password</h2>
+
+      <div className="flex flex-col">
+        <label htmlFor="currentPassword" className="text-sm font-medium">
+          Current Password
+        </label>
         <input
-          className="outline-none dark:bg-neutral-900 border-b border-neutral-700 px-2"
           type="password"
+          id="currentPassword"
+          placeholder="Enter current password"
+          className="mt-1 p-2 border rounded-md bg-inherit outline-none"
           {...register("currentPassword", { required: true })}
         />
       </div>
-      <div className="flex justify-between items-center">
-        <p>New password</p>
+
+      <div className="flex flex-col">
+        <label htmlFor="newPassword" className="text-sm font-medium">
+          New Password
+        </label>
         <input
-          className="outline-none dark:bg-neutral-900 border-b border-neutral-700 px-2"
           type="password"
+          id="newPassword"
+          placeholder="Enter new password"
+          className="mt-1 p-2 border rounded-md bg-inherit outline-none"
           {...register("newPassword", { required: true })}
         />
       </div>
-      <div className="flex justify-between items-center mb-5">
-        <p>Confirm new password</p>
+
+      <div className="flex flex-col">
+        <label htmlFor="confirmNewPassword" className="text-sm font-medium">
+          Confirm New Password
+        </label>
         <input
-          className="outline-none dark:bg-neutral-900 border-b border-neutral-700 px-2"
           type="password"
+          id="confirmNewPassword"
+          placeholder="Re-enter new password"
+          className="mt-1 p-2 border rounded-md bg-inherit outline-none"
           {...register("confirmNewPassword", { required: true })}
         />
       </div>
+
       <button
         type="submit"
-        className="bg-neutral-200 hover:bg-neutral-100 shadow font-semibold dark:bg-neutral-800 dark:hover:bg-neutral-700 rounded-full h-10 w-52 mx-auto"
+        className="p-2 bg-neutral-900 text-white font-medium rounded-md hover:bg-neutral-800 transition dark:bg-white dark:text-black dark:hover:bg-neutral-200"
       >
-        Save password
+        Save Password
       </button>
     </form>
   );

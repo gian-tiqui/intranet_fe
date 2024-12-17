@@ -1,0 +1,56 @@
+"use client";
+
+import React from "react";
+
+const SecretQuestion = () => {
+  return (
+    <form className="flex w-72 mx-auto md:w-96 flex-col gap-4 p-4 border rounded-md shadow-md bg-white dark:bg-neutral-900 dark:border-black">
+      <h2 className="text-xl font-semibold">Set Secret Question</h2>
+
+      <div className="flex flex-col">
+        <label htmlFor="question" className="text-sm font-medium">
+          Secret Question
+        </label>
+        <select
+          id="question"
+          className="mt-1 p-2 border rounded-md bg-inherit outline-none"
+        >
+          <option className="dark:bg-black" value="">
+            Select a question
+          </option>
+          <option className="dark:bg-black" value="pet">
+            What is your first pet&apos;s name?
+          </option>
+          <option className="dark:bg-black" value="school">
+            What is the name of your first school?
+          </option>
+          <option className="dark:bg-black" value="city">
+            In what city were you born?
+          </option>
+        </select>
+      </div>
+
+      {/* Answer Field */}
+      <div className="flex flex-col">
+        <label htmlFor="answer" className="text-sm font-medium">
+          Answer
+        </label>
+        <input
+          type="text"
+          id="answer"
+          placeholder="Enter your answer"
+          className="mt-1 p-2 border rounded-md bg-inherit outline-none"
+        />
+      </div>
+
+      <button
+        type="submit"
+        className="p-2 bg-neutral-900 text-white font-medium rounded-md hover:bg-neutral-800 transition dark:bg-white dark:text-black dark:hover:bg-neutral-200"
+      >
+        Save Secret Question
+      </button>
+    </form>
+  );
+};
+
+export default SecretQuestion;
