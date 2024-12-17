@@ -18,6 +18,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import PostListItem from "./PostListItem";
 import useDepartments from "@/app/custom-hooks/departments";
 import useSignalStore from "@/app/store/signalStore";
+import QmList from "./QmList";
 
 const groupPostsByDate = (posts: Post[]) => {
   return posts.reduce((groups: GroupedPosts, post: Post) => {
@@ -126,14 +127,7 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
   const [maxNum, setMaxNum] = useState<number>(2);
 
   if (selectedVis == "qm") {
-    return (
-      <div className="grid place-content-center mt-8">
-        <div className="flex flex-col items-center gap-4">
-          <Icon icon={"emojione-monotone:stop-sign"} className="h-7 w-7" />
-          <p className="font-semibold">Underdevelopment</p>
-        </div>
-      </div>
-    );
+    return <QmList />;
   }
 
   const showMore = () => {

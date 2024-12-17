@@ -29,6 +29,7 @@ const DeleteModal: React.FC<Props> = ({ setShowDeleteModal }) => {
         });
 
         setSignal(true);
+        setShowDeleteModal(false);
 
         router.push("/bulletin");
       } catch (error) {
