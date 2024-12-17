@@ -47,9 +47,6 @@ const Folder: React.FC<Props> = ({ setSelectedFolder, data }) => {
           <p className="font-semibold text-sm">{data.name}</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-800">
-            <Icon icon={"material-symbols:download"} className="h-6 w-6" />
-          </div>
           <div
             onClick={handleDeleteClicked}
             className="p-2 rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-800"

@@ -7,10 +7,12 @@ import FolderItem from "./FolderItem";
 import { useQuery } from "@tanstack/react-query";
 import { getFolderById } from "@/app/functions/functions";
 import useSignalStore from "@/app/store/signalStore";
+import useShowPostStore from "@/app/store/showPostStore";
 
 const FMain = () => {
   const { subfolder } = useSubfolderStore();
   const { signal, setSignal } = useSignalStore();
+  const { setVisible } = useShowPostStore();
 
   const { data: subFolder, refetch } = useQuery({
     queryKey: ["subfolder", subfolder?.id],
@@ -41,7 +43,7 @@ const FMain = () => {
             <p className="text-sm mb-2 font-semibold">Name</p>
             <Icon icon={"fluent:arrow-down-24-filled"} className="-rotate-45" />
           </div>
-          <div className="">
+          <div className="" onClick={() => setVisible(true)}>
             <Icon icon={"hugeicons:folder-add"} className="h-5 w-5" />
           </div>
         </div>
