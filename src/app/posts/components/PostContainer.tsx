@@ -377,7 +377,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
         }
 
         pdf.deletePage(pdf.getNumberOfPages());
-        pdf.save(`post-images-${title}.pdf`);
+        pdf.save(`${title}.pdf`);
       }
     } catch (error) {
       console.error("Error in downloading images to PDF:", error);
@@ -489,23 +489,24 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
               : "justify-end"
           } gap-1 rounded-lg pt-4 mb-2`}
         >
-          {post?.imageLocations && post?.imageLocations?.length > 0 && (
-            <div
-              onClick={
-                post.imageLocations.length > 1
-                  ? handleDownloadAllImages
-                  : singleDownload
-              }
-              className="flex hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-2 items-center gap-1 rounded  cursor-pointer "
-            >
-              <Icon icon={"akar-icons:download"} />
-              <span className="text-sm">
-                {post.imageLocations.length > 1
-                  ? "Download all files"
-                  : "Download file"}
-              </span>
-            </div>
-          )}
+          {(post?.imageLocations && post?.imageLocations?.length > 0) ||
+            (post?.folderId && (
+              <div
+                onClick={
+                  post.imageLocations && post.imageLocations.length > 1
+                    ? handleDownloadAllImages
+                    : singleDownload
+                }
+                className="flex hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-2 items-center gap-1 rounded  cursor-pointer "
+              >
+                <Icon icon={"akar-icons:download"} />
+                <span className="text-sm">
+                  {post.imageLocations && post.imageLocations.length > 1
+                    ? "Download all files"
+                    : "Download file"}
+                </span>
+              </div>
+            ))}
           {deptIds.includes(userDeptId.toString()) && !generalPost && (
             <div
               onClick={handleReadClick}
