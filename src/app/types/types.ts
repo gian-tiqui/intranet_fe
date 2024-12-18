@@ -53,6 +53,7 @@ type Post = {
   public: boolean;
   lid: number;
   readers: PostReader[];
+  folderId: number;
 };
 
 type PostDepartment = {

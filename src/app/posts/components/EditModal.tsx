@@ -202,13 +202,13 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
       const fileNames: string[] = [];
+      const previews: string[] = [];
       let extractedTexts = "";
       const convertedFiles: File[] = [];
-      const previews: string[] = [];
 
       setIsConverting(true);
-      for (const file of files) {
-        try {
+      try {
+        for (const file of files) {
           if (file.type === "application/pdf") {
             toast(`Converting PDF: ${file.name}`, {
               type: "info",
@@ -217,13 +217,18 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
 
             const convertedImages = await convertPdfToImage(file);
 
-            convertedImages.map(async (convertedImage) => {
-              convertedFiles.push(convertedImage);
+            const texts = await Promise.all(
+              convertedImages.map(async (convertedImage) => {
+                const text = await scanImage(
+                  URL.createObjectURL(convertedImage)
+                );
+                previews.push(URL.createObjectURL(convertedImage));
+                convertedFiles.push(convertedImage);
+                return text;
+              })
+            );
 
-              const text = await scanImage(URL.createObjectURL(convertedImage));
-              extractedTexts += text + " ";
-              previews.push(URL.createObjectURL(convertedImage));
-            });
+            extractedTexts += texts.join(" ") + " ";
           } else if (file.type.startsWith("image/")) {
             const text = await scanImage(URL.createObjectURL(file));
             extractedTexts += text + " ";
@@ -237,21 +242,25 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
           }
 
           fileNames.push(file.name);
-        } catch (error) {
-          console.error("Error processing file:", file.name, error);
         }
+
+        setFileNames(fileNames);
+        setConvertedFiles(convertedFiles);
+        setFilePreviews(previews);
+        setValue("extractedText", extractedTexts.trim());
+        toast("Files processed successfully!", {
+          type: "success",
+          className: toastClass,
+        });
+      } catch (error) {
+        console.error("Error processing files:", error);
+        toast("An error occurred while processing files.", {
+          type: "error",
+          className: toastClass,
+        });
+      } finally {
+        setIsConverting(false);
       }
-
-      setFileNames(fileNames);
-      setConvertedFiles(convertedFiles);
-      setValue("extractedText", extractedTexts.trim());
-      setIsConverting(false);
-      setFilePreviews(previews);
-
-      toast("Files processed successfully!", {
-        type: "success",
-        className: toastClass,
-      });
     }
   };
 
