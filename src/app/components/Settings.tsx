@@ -35,7 +35,7 @@ const Settings = () => {
       onClick={handleOuterChange}
     >
       <div
-        className="w-82 md:w-[700px] rounded-3xl bg-white dark:bg-neutral-900 p-8"
+        className="w-82 md:w-[700px] md:h-96 rounded-3xl bg-white dark:bg-neutral-900 p-8"
         onClick={stopPropa}
       >
         <div className="flex justify-between items-start w-full mb-5">
@@ -91,7 +91,7 @@ const Settings = () => {
               </div>
             </HoverBox>
           </div>
-          <div className="md:w-2/3 p-2 overflow-auto">
+          <div className="md:w-2/3 p-2 h-64 overflow-auto">
             {fragment === "userInfo" && (
               <UserInfo mode={mode} handleModeChange={handleModeChange} />
             )}
