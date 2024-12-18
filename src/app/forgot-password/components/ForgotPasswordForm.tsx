@@ -14,7 +14,8 @@ import EaseString from "@/app/login/components/EaseString";
 
 type FormFields = {
   employeeId: number;
-  password: string;
+  answer: string;
+  newPassword: string;
 };
 
 const ForgotPasswordForm = () => {
@@ -34,17 +35,20 @@ const ForgotPasswordForm = () => {
     return () => clearTimeout(timeout);
   }, [showLogoutArt, setShowLogoutArt]);
 
-  const handleActivate = async ({ employeeId }: FormFields) => {
+  const handleForgotPassword = async ({
+    employeeId,
+    answer,
+    newPassword,
+  }: FormFields) => {
     try {
       setLoading(true);
+
       const response = await apiClient.post(
-        `${API_BASE}/auth/forgot-password?employeeId=${employeeId}&secretCode=meowmeow&deptId=2`
+        `${API_BASE}/auth/forgot-password?employeeId=${employeeId}&answer=${answer}&newPassword=${newPassword}`
       );
 
-      console.log(response);
-
       if (response.status === 201) {
-        toast(response.data.message, {
+        toast("Password reset successfully", {
           className: toastClass,
           type: "success",
         });
@@ -68,13 +72,11 @@ const ForgotPasswordForm = () => {
     } finally {
       setLoading(false);
     }
-
-    return;
   };
 
   return (
     <form
-      onSubmit={handleSubmit(handleActivate)}
+      onSubmit={handleSubmit(handleForgotPassword)}
       className="p-6 border-0 text-black dark:text-white flex flex-col justify-center items-center relative h-screen"
     >
       <div className="lg:w-96 shadow p-7 rounded-2xl bg-white dark:bg-neutral-900">
@@ -91,6 +93,7 @@ const ForgotPasswordForm = () => {
           </div>
         </div>
 
+        {/* Employee ID */}
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: "100%" }}
@@ -104,13 +107,73 @@ const ForgotPasswordForm = () => {
             />
             <input
               className="bg-inherit outline-none w-full"
-              {...register("employeeId", { required: true })}
-              placeholder="Enter your ID"
+              {...register("employeeId", {
+                required: "Employee ID is required",
+              })}
+              placeholder="Enter your Employee ID"
             />
           </div>
           {errors.employeeId && (
             <MotionP className="text-red-500 text-xs ms-4 font-bold">
               {errors.employeeId?.message}
+            </MotionP>
+          )}
+        </motion.div>
+
+        {/* Secret Answer */}
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 1, delay: 0.7 }}
+          className="mb-3 h-14"
+        >
+          <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-800 border dark:border-black rounded-lg mb-1">
+            <Icon
+              className="h-6 w-6 text-neutral-400"
+              icon={"mdi:question-mark-circle-outline"}
+            />
+            <input
+              type="text"
+              className="bg-inherit outline-none w-full"
+              {...register("answer", { required: "Answer is required" })}
+              placeholder="Enter your secret answer"
+            />
+          </div>
+          {errors.answer && (
+            <MotionP className="text-red-500 text-xs ms-4 font-bold">
+              {errors.answer?.message}
+            </MotionP>
+          )}
+        </motion.div>
+
+        {/* New Password */}
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 1, delay: 0.7 }}
+          className="mb-3 h-14"
+        >
+          <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-800 border dark:border-black rounded-lg mb-1">
+            <Icon
+              className="h-6 w-6 text-neutral-400"
+              icon={"mdi:lock-outline"}
+            />
+            <input
+              type="password"
+              className="bg-inherit outline-none w-full"
+              {...register("newPassword", {
+                required: "New password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters",
+                },
+              })}
+              placeholder="Enter your new password"
+            />
+          </div>
+          {errors.newPassword && (
+            <MotionP className="text-red-500 text-xs ms-4 font-bold">
+              {errors.newPassword?.message}
             </MotionP>
           )}
         </motion.div>
@@ -128,7 +191,7 @@ const ForgotPasswordForm = () => {
             {loading && (
               <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
             )}
-            Recover
+            Reset Password
           </motion.button>{" "}
           <div className="w-full">
             <p className="dark:text-white text-end text-xs">
