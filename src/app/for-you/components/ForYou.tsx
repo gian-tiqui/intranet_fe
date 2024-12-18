@@ -26,10 +26,12 @@ const ForYou = () => {
       try {
         setIsLoading(true);
         const response: AxiosResponse<RetPost> = await apiClient.get(
-          `${API_BASE}/post/level/${decodeUserData()?.lid}?deptId=${
-            decodeUserData()?.deptId
-          }&offset=${minMax.min}&limit=${minMax.max}&direction=${direction}`
+          `${API_BASE}/post/level/${decodeUserData()?.lid}?&offset=${
+            minMax.min
+          }&limit=${minMax.max}&direction=${direction}`
         );
+
+        console.log(response.data);
 
         setTotalPosts(response.data.count);
         setData(response.data.posts);

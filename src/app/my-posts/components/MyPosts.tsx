@@ -34,8 +34,8 @@ const MyPosts = () => {
 
         const response = await apiClient.get(apiUri);
 
-        setMyPosts(response.data);
-        setTotalPosts(response.data.length);
+        setMyPosts(response.data.posts);
+        setTotalPosts(response.data.count);
       } catch (error) {
         console.error(error);
       } finally {
