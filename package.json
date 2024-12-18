@@ -37,7 +37,7 @@
     "react-pdf": "8.0.2",
     "react-pdf-to-image": "^1.0.2",
     "react-toastify": "^10.0.6",
-    "recharts": "^2.12.7",
+    "recharts": "^2.15.0",
     "style-loader": "^4.0.0",
     "tesseract.js": "^5.1.1",
     "three": "^0.169.0",
