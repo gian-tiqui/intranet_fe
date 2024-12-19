@@ -43,6 +43,20 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
   };
 
   useEffect(() => {
+    const commentId = "comment-31";
+
+    if (+commentId.split("-")[1] === comment.cid) {
+      const commentElement = document.getElementById(commentId);
+
+      if (commentElement) {
+        commentElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        console.log("element not found");
+      }
+    }
+  }, [comment]);
+
+  useEffect(() => {
     const handleEditMode = (event: MouseEvent) => {
       if (
         inputRef.current &&
@@ -109,7 +123,7 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
 
   return (
     <div>
-      <div className="flex gap-6">
+      <div className="flex gap-6" id={`comment-${comment.cid}`}>
         {/* Avatar Section */}
         <div className="h-10 w-10 bg-white rounded-full flex-shrink-0"></div>
 
