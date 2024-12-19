@@ -18,7 +18,7 @@ const DashboardGuard = () => {
       const deptName = decodeUserData()?.departmentCode;
 
       // Do not allow the user to go to the dashboard if he is not an admin.
-      if (deptName !== "ADMIN") router.push("/");
+      if (deptName !== "IT") router.push("/");
       else setHidden(false);
     }
   }, [router, setHidden]);
