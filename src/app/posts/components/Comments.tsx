@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Comment from "./Comment";
 import CommentSkeleton from "./CommentSkeleton";
 import { MinMax, PostComment } from "@/app/types/types";
+import useNotificationStore from "@/app/store/selectedNotification";
 
 interface Props {
   comments: PostComment[];
@@ -10,8 +11,17 @@ interface Props {
 }
 
 const Comments: React.FC<Props> = ({ comments, postId }) => {
+  const { notification, setNotification } = useNotificationStore();
+
   const [loading, setLoading] = useState<boolean>(true);
-  const [minMax, setMinMax] = useState<MinMax>({ min: 0, max: 5 });
+  const [minMax, setMinMax] = useState<MinMax>({
+    min: 0,
+    max: notification ? comments.length : 5,
+  });
+
+  useEffect(() => {
+    return () => setNotification(undefined);
+  }, [setNotification]);
 
   useEffect(() => {
     setLoading(false);
