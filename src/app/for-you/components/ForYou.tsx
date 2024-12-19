@@ -31,8 +31,6 @@ const ForYou = () => {
           }&limit=${minMax.max}&direction=${direction}`
         );
 
-        console.log(response.data);
-
         setTotalPosts(response.data.count);
         setData(response.data.posts);
       } catch (error) {

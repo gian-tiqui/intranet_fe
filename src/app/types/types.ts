@@ -106,6 +106,7 @@ type PostComment = {
   user: User;
   post: Post;
   replies?: PostComment[];
+  parentComment?: PostComment;
 };
 
 type CreateComment = {
@@ -144,6 +145,7 @@ type NotificationType = {
   deptId: number;
   message: string;
   isRead: boolean;
+  comment?: PostComment;
 };
 
 type DepartmentMonitoring = {
