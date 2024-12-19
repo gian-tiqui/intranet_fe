@@ -52,7 +52,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
     const checkRole = () => {
       const userDept = decodeUserData()?.departmentCode;
 
-      if (userDept?.toLowerCase() === "admin") setIsAdmin(true);
+      if (userDept?.toLowerCase() === "it") setIsAdmin(true);
     };
 
     checkRole();
