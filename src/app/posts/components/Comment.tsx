@@ -47,6 +47,8 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
   useEffect(() => {
     const commentId = `comment-${cid}`;
 
+    console.log(cid);
+
     if (+commentId.split("-")[1] === comment.cid) {
       const commentElement = document.getElementById(commentId);
 
@@ -124,8 +126,8 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
   }, [reply, isReply]);
 
   return (
-    <div>
-      <div className="flex gap-6" id={`comment-${comment.cid}`}>
+    <div id={`comment-${comment.cid}`}>
+      <div className="flex gap-6">
         {/* Avatar Section */}
         <div className="h-10 w-10 bg-white rounded-full flex-shrink-0"></div>
 

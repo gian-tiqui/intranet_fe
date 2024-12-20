@@ -95,6 +95,7 @@ const CommentBar: React.FC<Props> = ({
               params: {
                 userId: response.data.userId,
                 postId: response.data.postId,
+                cid: response.data.cid,
               },
               headers: {
                 Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
