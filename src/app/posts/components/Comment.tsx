@@ -47,8 +47,6 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
   useEffect(() => {
     const commentId = `comment-${cid}`;
 
-    console.log(cid);
-
     if (+commentId.split("-")[1] === comment.cid) {
       const commentElement = document.getElementById(commentId);
 
