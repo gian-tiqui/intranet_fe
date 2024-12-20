@@ -13,6 +13,7 @@ import useSetCommentsStore from "@/app/store/useCommentsStore";
 import apiClient from "@/app/http-common/apiUrl";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import useCommentIdRedirector from "@/app/store/commentRedirectionId";
 
 interface Props {
   isReply?: boolean;
@@ -34,6 +35,7 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
   const { setComments, comments } = useSetCommentsStore();
   const [saving, setSaving] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const { cid } = useCommentIdRedirector();
 
   const reply = useReply(comment.cid);
 
@@ -43,7 +45,7 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
   };
 
   useEffect(() => {
-    const commentId = "comment-31";
+    const commentId = `comment-${cid}`;
 
     if (+commentId.split("-")[1] === comment.cid) {
       const commentElement = document.getElementById(commentId);
@@ -54,7 +56,7 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
         console.log("element not found");
       }
     }
-  }, [comment]);
+  }, [comment, cid]);
 
   useEffect(() => {
     const handleEditMode = (event: MouseEvent) => {
