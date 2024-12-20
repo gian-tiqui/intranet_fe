@@ -4,7 +4,7 @@ import { NotificationType } from "../types/types";
 import apiClient from "../http-common/apiUrl";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import useNotificationStore from "../store/selectedNotification";
+import useCommentIdRedirector from "../store/commentRedirectionId";
 
 interface Props {
   notification: NotificationType;
@@ -12,7 +12,7 @@ interface Props {
 
 const Notification: React.FC<Props> = ({ notification }) => {
   const router = useRouter();
-  const { setNotification } = useNotificationStore();
+  const { setCid } = useCommentIdRedirector();
 
   const handleClick = async () => {
     try {
@@ -22,16 +22,17 @@ const Notification: React.FC<Props> = ({ notification }) => {
         },
       });
 
-      if (notification.postId && !notification.commentId) {
-        console.log("this is a post");
-        router.push(`/posts/${notification.postId}`);
-      } else if (notification.comment?.parentComment) {
-        console.log("this is a comment reply");
-        setNotification(notification);
+      if (notification.comment?.parentComment?.cid) {
+        setCid(notification.comment.parentComment.cid);
         router.push(`/posts/${notification.comment.parentComment.post.pid}`);
+      } else if (
+        !notification.comment?.parentComment &&
+        notification.comment?.post.pid
+      ) {
+        setCid(notification.comment.cid);
+        router.push(`/posts/${notification.comment.post.pid}`);
       } else {
-        console.log("this is a post comment");
-        router.push(`/posts/${notification.comment?.postId}`);
+        router.push(`/posts/${notification.postId}`);
       }
     } catch (error) {
       console.error(error);

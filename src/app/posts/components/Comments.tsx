@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Comment from "./Comment";
 import CommentSkeleton from "./CommentSkeleton";
 import { MinMax, PostComment } from "@/app/types/types";
-import useNotificationStore from "@/app/store/selectedNotification";
+import useCommentIdRedirector from "@/app/store/commentRedirectionId";
 
 interface Props {
   comments: PostComment[];
@@ -11,17 +11,12 @@ interface Props {
 }
 
 const Comments: React.FC<Props> = ({ comments, postId }) => {
-  const { notification, setNotification } = useNotificationStore();
-
+  const { cid } = useCommentIdRedirector();
   const [loading, setLoading] = useState<boolean>(true);
   const [minMax, setMinMax] = useState<MinMax>({
     min: 0,
-    max: notification ? comments.length : 5,
+    max: cid ? comments.length : 5,
   });
-
-  useEffect(() => {
-    return () => setNotification(undefined);
-  }, [setNotification]);
 
   useEffect(() => {
     setLoading(false);
