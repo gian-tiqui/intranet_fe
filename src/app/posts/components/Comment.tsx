@@ -19,13 +19,14 @@ interface Props {
   isReply?: boolean;
   comment: PostComment;
   postId: number;
+  isPreview?: boolean;
 }
 
 interface FormFields {
   message: string;
 }
 
-const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
+const Comment: React.FC<Props> = ({ isReply, comment, postId, isPreview }) => {
   const [showReplies, setShowReplies] = useState<boolean>(false);
   const [mReplies, setMReplies] = useState<PostComment[]>([]);
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -46,8 +47,6 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
 
   useEffect(() => {
     const commentId = `comment-${cid}`;
-
-    console.log(cid);
 
     if (+commentId.split("-")[1] === comment.cid) {
       const commentElement = document.getElementById(commentId);
@@ -125,6 +124,27 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
     setMReplies(reply);
   }, [reply, isReply]);
 
+  if (isPreview)
+    return (
+      <div className="flex items-center gap-2">
+        <div className="h-6 w-6 bg-white rounded-full flex-shrink-0"></div>
+
+        {/* Comment Content Section */}
+        <div className="min-w-0">
+          {comment.userId === decodeUserData()?.sub ? (
+            <p className="font-bold">You</p>
+          ) : (
+            <p className="font-bold">
+              {comment.user
+                ? comment.user.firstName + " " + comment.user.lastName
+                : "You (New)"}
+            </p>
+          )}
+        </div>
+        <p className="text-md">replied: {comment.message}</p>
+      </div>
+    );
+
   return (
     <div id={`comment-${comment.cid}`}>
       <div className="flex gap-6">
@@ -181,7 +201,7 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
               >
                 <Icon icon={"mdi:message-reply-outline"} />
 
-                <p className="text-sm">Replies</p>
+                <p className="text-sm">Reply</p>
               </div>
             )}
             {comment.userId === decodeUserData()?.sub && (
@@ -216,6 +236,16 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId }) => {
               </>
             )}
           </div>
+
+          {!showReplies &&
+            mReplies.at(0) &&
+            typeof mReplies.at(0) !== "undefined" && (
+              <Comment
+                isPreview
+                comment={mReplies.at(0) as PostComment}
+                postId={postId}
+              />
+            )}
 
           {/* Show Replies Animation */}
           <AnimatePresence>

@@ -1,5 +1,4 @@
 "use client";
-import useSubfolderStore from "@/app/store/subfolderStore";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -9,7 +8,6 @@ interface Props {
 
 const LocationComp: React.FC<Props> = ({ name }) => {
   const router = useRouter();
-  const { subfolder } = useSubfolderStore();
 
   const handleNameClick = () => {
     if (name) router.back();
@@ -27,12 +25,6 @@ const LocationComp: React.FC<Props> = ({ name }) => {
         <>
           <p>/</p>
           <p className="hover:underline cursor-pointer">{name}</p>
-        </>
-      )}
-      {subfolder && (
-        <>
-          <p>/</p>
-          <p className="hover:underline cursor-pointer">{subfolder.name}</p>
         </>
       )}
     </div>
