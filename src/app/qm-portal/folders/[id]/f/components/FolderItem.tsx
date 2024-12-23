@@ -28,7 +28,7 @@ const FolderItem: React.FC<State> = ({ post }) => {
   return (
     <div
       onDoubleClick={handleDoubleClick}
-      className="w-full h-12 flex items-center px-2 justify-between rounded border border-black shadow cursor-pointer hover:bg-neutral-50 dark:border-white dark:hover:bg-neutral-950"
+      className="w-full h-12 flex items-center px-2 justify-between border-b border-black shadow cursor-pointer hover:bg-neutral-50 dark:border-white dark:hover:bg-neutral-950"
     >
       <div className="flex gap-1">
         <Icon icon={"mynaui:file"} className="h-6 w-6" />
