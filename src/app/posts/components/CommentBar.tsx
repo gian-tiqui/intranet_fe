@@ -68,8 +68,6 @@ const CommentBar: React.FC<Props> = ({
           },
         });
 
-        console.log(response.data);
-
         if (response.status === 201) {
           reset();
 
