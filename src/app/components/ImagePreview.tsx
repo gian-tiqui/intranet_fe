@@ -75,10 +75,10 @@ const ImagePreview: React.FC<Props> = ({ mSetShowImage }) => {
       onClick={() => mSetShowImage({ show: false, selectedIndex: -1 })}
     >
       <div
-        className="relative bg-neutral-200 dark:bg-neutral-900 rounded-lg max-w-[95%] max-h-[90%] p-4 flex flex-col items-center overflow-hidden"
+        className="relative bg-neutral-200 dark:bg-neutral-900 rounded-lg max-w-[95%] max-h-[95%] p-4 flex flex-col items-center overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <h1 className="font-bold text-lg absolute text-black bottom-6 left-7">
+        <h1 className="font-bold text-lg absolute text-black bottom-6 left-7 z-50">
           Page {showImage.selectedIndex + 1}
         </h1>
         {/* Download Icon */}
@@ -93,13 +93,12 @@ const ImagePreview: React.FC<Props> = ({ mSetShowImage }) => {
         </div>
 
         {/* Image Container */}
-        <div className="overflow-auto w-full h-full flex justify-center items-center">
+        <div className="overflow-auto relative h-96 w-80 md:w-[400px] md:h-[500px] flex justify-center items-center">
           <Cimage
             src={`${API_BASE}/uploads/${images[showImage.selectedIndex]}`}
             alt={images[showImage.selectedIndex]}
-            height={1000}
-            width={1000}
-            className="object-contain md:w-[500px] md:h-[100%]"
+            fill
+            className=""
           />
         </div>
 
