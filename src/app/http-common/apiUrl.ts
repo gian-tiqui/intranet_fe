@@ -32,6 +32,11 @@ apiClient.interceptors.request.use(
       try {
         const refreshToken = Cookies.get(INTRANET);
 
+        if (API_KEY === undefined || API_KEY === null) {
+          console.error("API Key is missing.");
+          return Promise.reject(new Error("API Key is missing."));
+        }
+
         const response = await axios.post(
           `${API_URI}/auth/refresh`,
           { refreshToken },
