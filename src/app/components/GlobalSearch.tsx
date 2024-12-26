@@ -93,7 +93,8 @@ const GlobalSearch = () => {
                   className="w-full border dark:border-neutral-800 hover:cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-700 py-4 rounded flex items-center px-4"
                 >
                   <p className="truncate">
-                    {post.title} - <span>{post.message}</span>
+                    {post.title || "Untitled"} -{" "}
+                    <span>{post.message || "No Description"}</span>
                   </p>
                 </div>
               ))
