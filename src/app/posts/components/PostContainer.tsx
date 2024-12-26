@@ -489,8 +489,9 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
               : "justify-end"
           } gap-1 rounded-lg pt-4 mb-2`}
         >
-          {(post?.imageLocations && post?.imageLocations?.length > 0) ||
-            (post?.folderId && (
+          {post?.imageLocations &&
+            post?.imageLocations?.length > 0 &&
+            !post.folderId && (
               <div
                 onClick={
                   post.imageLocations && post.imageLocations.length > 1
@@ -506,7 +507,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
                     : "Download file"}
                 </span>
               </div>
-            ))}
+            )}
           {deptIds.includes(userDeptId.toString()) && !generalPost && (
             <div
               onClick={handleReadClick}
