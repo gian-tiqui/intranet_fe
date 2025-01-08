@@ -3,14 +3,11 @@ import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
-import { INTRANET } from "../bindings/binding";
+import { API_BASE, INTRANET } from "../bindings/binding";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 import { toastClass } from "../tailwind-classes/tw_classes";
-
-interface DecodedToken {
-  exp: number;
-}
+import apiClient from "../http-common/apiUrl";
 
 /*
  *  This component will be used to check if the user on the initial load is logged in
@@ -47,12 +44,26 @@ const AuthListener = () => {
         }
 
         if (refreshToken) {
-          const decoded: DecodedToken = jwtDecode(refreshToken);
+          const decoded: { exp: number; sub: number } = jwtDecode(refreshToken);
           const currentTime = Math.floor(Date.now() / 1000);
 
           if (decoded.exp < currentTime) {
-            setHidden(false);
-            router.push("/welcome");
+            toast("Your session has expired, Please login again.", {
+              className: toastClass,
+              type: "warning",
+            });
+
+            apiClient
+              .post(`${API_BASE}/auth/logout`, {
+                userId: decoded.sub,
+              })
+              .then(() => {
+                setHidden(false);
+                Cookies.remove(INTRANET);
+                localStorage.removeItem(INTRANET);
+                router.push("/welcome");
+              })
+              .catch((error) => console.error(error));
           } else {
             setHidden(true);
           }
