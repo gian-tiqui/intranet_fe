@@ -161,7 +161,7 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
       <div>
         {" "}
         {selectedVis === "all" && (
-          <div className="w-full flex gap-2 flex-wrap px-5 mb-5">
+          <div className="w-full flex gap-2 px-5 mb-5 overflow-x-auto p-2">
             <div
               onClick={() => handleDeptClicked(-1)}
               className={`text-xs border dark:border-neutral-700 rounded ${

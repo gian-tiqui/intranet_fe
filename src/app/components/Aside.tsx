@@ -219,10 +219,10 @@ const Aside: React.FC<Props> = ({
           <div className="flex flex-col">
             <div
               onClick={(e) => e.stopPropagation()}
-              className="w-full flex text-center text-sm rounded mb-6 border dark:border-neutral-900"
+              className="w-full flex text-center text-xs rounded mb-6 border dark:border-neutral-900"
             >
               <div
-                className={`w-full py-2 flex items-center justify-center gap-1 cursor-pointer ${
+                className={`w-full py-2 flex items-start justify-center gap-1 cursor-pointer px-2 ${
                   selectedVis === "all" &&
                   "bg-gray-200 dark:bg-neutral-700 rounded-s"
                 }`}
@@ -232,10 +232,10 @@ const Aside: React.FC<Props> = ({
                   icon={"material-symbols-light:all-out-outline"}
                   className="h-5 w-5"
                 />
-                All
+                General Posts
               </div>
               <div
-                className={`w-full py-2 flex items-center justify-center cursor-pointer ${
+                className={`w-full py-2 flex items-start justify-center cursor-pointer px-2 ${
                   selectedVis === "dept" && "bg-gray-200 dark:bg-neutral-700"
                 }`}
                 onClick={() => setSelectedVis("dept")}
@@ -244,17 +244,17 @@ const Aside: React.FC<Props> = ({
                   icon={"arcticons:emoji-department-store"}
                   className="h-5 w-5"
                 />
-                Dept
+                Dept Posts
               </div>
               <div
-                className={`w-full py-2 flex items-center justify-center gap-1 cursor-pointer ${
+                className={`w-full py-2 flex items-start justify-center gap-1 cursor-pointer px-2 ${
                   selectedVis === "qm" &&
                   "bg-gray-200 dark:bg-neutral-700 rounded-e"
                 }`}
                 onClick={() => setSelectedVis("qm")}
               >
                 <Icon icon={"duo-icons:approved"} className="h-5 w-5" />
-                Qm
+                QM Posts
               </div>
             </div>
             <PostList
