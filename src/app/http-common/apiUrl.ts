@@ -4,7 +4,6 @@ import { jwtDecode } from "jwt-decode";
 import { INTRANET } from "../bindings/binding";
 
 export const API_URI = process.env.NEXT_PUBLIC_API_URL;
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 const apiClient = axios.create({
   baseURL: API_URI,
@@ -32,27 +31,30 @@ apiClient.interceptors.request.use(
       try {
         const refreshToken = Cookies.get(INTRANET);
 
-        if (API_KEY === undefined || API_KEY === null) {
-          console.error("API Key is missing.");
-          return Promise.reject(new Error("API Key is missing."));
-        }
-
         const response = await axios.post(
           `${API_URI}/auth/refresh`,
           { refreshToken },
           {
             withCredentials: true,
-            headers: {
-              "x-api-key": API_KEY,
-            },
           }
         );
 
         accessToken = response.data.access_token;
 
-        if (!accessToken) throw new Error("No token was generated");
+        if (!accessToken || accessToken === undefined) {
+          Cookies.remove(INTRANET);
+          localStorage.removeItem(INTRANET);
 
-        localStorage.setItem(INTRANET, accessToken);
+          throw new Error("No token was generated");
+        }
+
+        console.log(accessToken);
+
+        try {
+          localStorage.setItem(INTRANET, accessToken);
+        } catch (error) {
+          console.error(error);
+        }
       } catch (refreshError) {
         console.error("Token refresh failed:", refreshError);
         return Promise.reject(refreshError);
@@ -61,10 +63,6 @@ apiClient.interceptors.request.use(
 
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-
-    if (API_KEY) {
-      config.headers["x-api-key"] = API_KEY;
     }
 
     return config;
@@ -87,10 +85,10 @@ apiClient.interceptors.response.use(
           { withCredentials: true }
         );
 
-        const { accessToken } = response.data;
-        localStorage.setItem(INTRANET, accessToken);
+        const { access_token } = response.data;
+        localStorage.setItem(INTRANET, access_token);
 
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        originalRequest.headers.Authorization = `Bearer ${access_token}`;
         return apiClient(originalRequest);
       } catch (refreshError) {
         console.error("Refresh token failed:", refreshError);
