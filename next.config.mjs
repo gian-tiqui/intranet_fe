@@ -4,8 +4,9 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "intranet-api-4yk4.onrender.com",
+        protocol: "http",
+        hostname: "localhost",
+        port: "8081",
         pathname: "/uploads/post/**",
       },
       {
