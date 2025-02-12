@@ -101,10 +101,6 @@ const Divider: React.FC<Props> = ({ children }) => {
         {
           userId: decodeUserData()?.sub,
           deptId: decodeUserData()?.deptId,
-
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-          },
         }
       );
 
