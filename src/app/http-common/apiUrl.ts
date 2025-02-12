@@ -48,8 +48,6 @@ apiClient.interceptors.request.use(
           throw new Error("No token was generated");
         }
 
-        console.log(accessToken);
-
         try {
           localStorage.setItem(INTRANET, accessToken);
         } catch (error) {

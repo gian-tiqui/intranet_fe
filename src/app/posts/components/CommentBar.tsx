@@ -63,9 +63,6 @@ const CommentBar: React.FC<Props> = ({
         setSpamming(true);
         const response = await apiClient.post(`${API_BASE}/comment`, {
           ...createComment,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-          },
         });
 
         if (response.status === 201) {
@@ -76,7 +73,7 @@ const CommentBar: React.FC<Props> = ({
           handleCommentAdded(response.data);
           setSignal(true);
 
-          if (response.data.postId == null) {
+          if (!response.data.postId) {
             await apiClient.post(
               `${API_BASE}/notification/comment-reply`,
               null,
