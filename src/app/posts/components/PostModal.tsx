@@ -306,12 +306,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       });
 
       try {
-        const response = await apiClient.post(`${API_BASE}/post`, formData, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const response = await apiClient.post(`${API_BASE}/post`, formData);
 
         if (response.status === 201) {
           setVisible(false);
@@ -326,9 +321,6 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 params: {
                   deptId: deptId,
                   postId: response.data.post.pid,
-                },
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
                 },
               })
               .catch((error) => {
@@ -353,9 +345,6 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 await apiClient.post(`${API_BASE}/post-reader`, {
                   userId: decodeUserData()?.sub,
                   postId: response.data.post.pid,
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-                  },
                 });
               }
             })
