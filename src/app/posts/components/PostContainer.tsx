@@ -204,7 +204,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
       const imageLocation = post?.imageLocations[0];
 
       const response = await fetch(
-        `${API_BASE}/uploads/post/${imageLocation.imageLocation}`
+        `${API_BASE}/uploads/${imageLocation.imageLocation}`
       );
       if (!response.ok) {
         console.error("Failed to fetch image:", response.statusText);
