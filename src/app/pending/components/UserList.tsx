@@ -9,7 +9,7 @@ interface Props {
 
 const UserList: React.FC<Props> = ({ pendingUsers, onRefetch }) => {
   return (
-    <div className="grid grid-cols-3">
+    <div className="grid grid-cols-2 gap-3 overflow-auto">
       {pendingUsers.map((pendingUser) => (
         <UserItem
           key={pendingUser.id}

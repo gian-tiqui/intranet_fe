@@ -82,9 +82,6 @@ const CommentBar: React.FC<Props> = ({
                   userId: response.data.userId,
                   commentId: response.data.cid,
                 },
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-                },
               }
             );
           } else {
