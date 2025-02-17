@@ -296,6 +296,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       formData.append("lid", String(data.lid));
       formData.append("extractedText", data.extractedText);
       if (param.id && pathName.includes("/qm-portal/folders/")) {
+        console.log(param.id);
         formData.append("subfolderId", String(param.id));
       }
       if (data.title) formData.append("title", data.title);
@@ -315,47 +316,49 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             className: toastClass,
           });
 
-          const notifications = data.deptIds.split(",").map((deptId) =>
-            apiClient
-              .post(`${API_BASE}/notification/new-post`, null, {
-                params: {
-                  deptId: deptId,
-                  postId: response.data.post.pid,
-                },
-              })
-              .catch((error) => {
-                console.error("Failed to send notification:", error);
-              })
-          );
+          if (!param.id) {
+            const notifications = data.deptIds.split(",").map((deptId) =>
+              apiClient
+                .post(`${API_BASE}/notification/new-post`, null, {
+                  params: {
+                    deptId: deptId,
+                    postId: response.data.post.pid,
+                  },
+                })
+                .catch((error) => {
+                  console.error("Failed to send notification:", error);
+                })
+            );
 
-          Promise.all(notifications)
-            .then(async () => {
-              toast("Notifications sent to the departments.", {
-                type: "success",
-                className: toastClass,
-              });
-
-              const userLid = decodeUserData()?.lid;
-
-              if (
-                userLid &&
-                response.data.post.lid <= userLid &&
-                data.deptIds.split(",").includes(String(userLid))
-              ) {
-                await apiClient.post(`${API_BASE}/post-reader`, {
-                  userId: decodeUserData()?.sub,
-                  postId: response.data.post.pid,
+            Promise.all(notifications)
+              .then(async () => {
+                toast("Notifications sent to the departments.", {
+                  type: "success",
+                  className: toastClass,
                 });
-              }
-            })
-            .then(() => setSignal(true))
-            .catch(() => {
-              console.error("Some notifications failed.");
-            })
-            .finally(() => {
-              setPosting(false);
-              setSignal(false);
-            });
+
+                const userLid = decodeUserData()?.lid;
+
+                if (
+                  userLid &&
+                  response.data.post.lid <= userLid &&
+                  data.deptIds.split(",").includes(String(userLid))
+                ) {
+                  await apiClient.post(`${API_BASE}/post-reader`, {
+                    userId: decodeUserData()?.sub,
+                    postId: response.data.post.pid,
+                  });
+                }
+              })
+              .then(() => setSignal(true))
+              .catch(() => {
+                console.error("Some notifications failed.");
+              })
+              .finally(() => {
+                setPosting(false);
+                setSignal(false);
+              });
+          }
         }
       } catch (error) {
         console.error(error);

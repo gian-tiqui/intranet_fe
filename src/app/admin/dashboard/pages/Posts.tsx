@@ -179,7 +179,7 @@ const Posts = () => {
         </div>
       </div>
 
-      <div className="p-10">
+      <div className="p-10 h-[500px] overflow-auto">
         <div className="flex items-center justify-between bg-white dark:bg-neutral-900 border border-b-gray-300 border-x-gray-300 px-4 dark:border-black rounded-t-xl py-5">
           <button
             onClick={() => setVisible(true)}

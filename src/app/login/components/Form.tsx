@@ -53,7 +53,7 @@ const Form = () => {
     try {
       setLoading(true);
       const response = await apiClient.post(`${API_BASE}/auth/login`, {
-        employeeId,
+        employeeId: +employeeId,
         password,
       });
 
