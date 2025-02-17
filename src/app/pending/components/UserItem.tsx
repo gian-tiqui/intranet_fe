@@ -63,7 +63,10 @@ const UserItem: React.FC<Props> = ({ pendingUser, onRefetch }) => {
   return (
     <div className="w-full h-36 bg-gray-100 cursor-default dark:bg-neutral-800 flex flex-col shadow p-3 rounded justify-between">
       <div className="w-full flex items-center gap-2">
-        <div className="rounded-full h-10 w-10 bg-blue-400 "></div>
+        <div className="rounded-full h-10 w-10 bg-blue-500 grid place-content-center font-extrabold text-lg">
+          {pendingUser.firstName[0].toUpperCase() +
+            pendingUser.lastName[0].toLowerCase()}
+        </div>
         <p className="font-medium">{pendingUser.firstName}</p>
         {pendingUser && pendingUser.middleName !== "" && (
           <p className="font-medium">pendingUser.middleName[0]</p>
