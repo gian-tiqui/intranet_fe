@@ -73,6 +73,7 @@ const DeactivateUser: React.FC<Props> = ({ user }) => {
           <input
             {...register("password", { required: true })}
             placeholder="Enter your password"
+            type="password"
             className="bg-inherit outline-none"
           />
         </div>

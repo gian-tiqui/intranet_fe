@@ -143,7 +143,7 @@ const Replies = () => {
         </div>
       </div>
 
-      <div className="p-10">
+      <div className="p-10 h-[500px] overflow-auto">
         <div className="border border-gray-300 bg-white dark:bg-neutral-900 dark:border-neutral-900 pb-5 rounded-b-xl shadow ">
           <table className="min-w-full border-b bg-white dark:bg-neutral-900 min-h-96 overflow-x-auto">
             <thead className="bg-white dark:bg-neutral-900 dark:text-white border-b border-gray-300 dark:border-neutral-900 uppercase text-sm">

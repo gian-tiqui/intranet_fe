@@ -6,7 +6,7 @@ import PostSkeleton from "./PostSkeleton";
 import Comments from "./Comments";
 import { GroupedFiles, ImageLocation, PostComment } from "@/app/types/types";
 import CommentBar from "./CommentBar";
-import { API_BASE, INTRANET } from "@/app/bindings/binding";
+import { API_BASE } from "@/app/bindings/binding";
 import {
   decodeUserData,
   fetchPost,
@@ -131,9 +131,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
       const response = await apiClient.post(`${API_BASE}/post-reader`, {
         userId: decodeUserData()?.sub,
         postId: id,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-        },
       });
 
       if (response.status === 201) {
@@ -508,22 +505,24 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
                 </span>
               </div>
             )}
-          {deptIds.includes(userDeptId.toString()) && !generalPost && (
-            <div
-              onClick={handleReadClick}
-              className={`hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-3 rounded flex items-center gap-1 cursor-pointer `}
-            >
-              {isRead === false && (
-                <>
-                  <Icon
-                    icon={"material-symbols-light:mark-email-read-outline"}
-                    className="h-6 w-6"
-                  />
-                  <p className="text-sm">Read</p>
-                </>
-              )}
-            </div>
-          )}
+          {!post?.folderId &&
+            deptIds.includes(userDeptId.toString()) &&
+            !generalPost && (
+              <div
+                onClick={handleReadClick}
+                className={`hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-3 rounded flex items-center gap-1 cursor-pointer `}
+              >
+                {isRead === false && (
+                  <>
+                    <Icon
+                      icon={"material-symbols-light:mark-email-read-outline"}
+                      className="h-6 w-6"
+                    />
+                    <p className="text-sm">Read</p>
+                  </>
+                )}
+              </div>
+            )}
         </div>
       </div>
       <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-6" />

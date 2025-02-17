@@ -206,7 +206,7 @@ const Users = () => {
         </div>
       </div>
 
-      <div className="p-10">
+      <div className="p-10 h-[500px] overflow-auto">
         <div
           className="flex justify-between border bg-white dark:bg-neutral-900 border-b-gray-300 border-x-gray-300 dark:border-neutral-800
          rounded-t-xl p-5"

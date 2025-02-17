@@ -274,7 +274,6 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
       data.userId = decode.sub;
 
       const formData = new FormData();
-      formData.append("userId", String(data.userId));
       formData.append("lid", String(data.lid));
       formData.append("extractedText", data.extractedText?.toLowerCase());
       formData.append("deptIds", selectedDepartments.join(","));
