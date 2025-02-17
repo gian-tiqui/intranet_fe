@@ -3,7 +3,6 @@ import apiClient from "@/app/http-common/apiUrl";
 import useSignalStore from "@/app/store/signalStore";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import { User } from "@/app/types/types";
-import { Icon } from "@iconify/react/dist/iconify.js";
 import React from "react";
 import { toast } from "react-toastify";
 
