@@ -12,7 +12,7 @@ import useSignalStore from "@/app/store/signalStore";
 interface Props {
   postId?: number;
   parentId?: number;
-  comments?: PostComment[];
+  comments?: PostComment[]; // trig
   setComments?: Dispatch<SetStateAction<PostComment[]>>;
 }
 
