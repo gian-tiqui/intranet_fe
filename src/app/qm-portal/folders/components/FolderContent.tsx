@@ -59,7 +59,7 @@ const FolderContent = () => {
 
   return (
     <div className="h-[90vh]">
-      <p className="font-bold mb-5 text-xl">Quality Management Portal</p>
+      <p className="font-bold mb-5 text-xl">Quality Management Folder</p>
       <div className="p-4 bg-white dark:bg-neutral-900 rounded h-[70vh] overflow-auto">
         <div className="flex items-center justify-between gap-1 mb-4">
           <div className="flex items-center gap-1">
