@@ -212,7 +212,7 @@ const Aside: React.FC<Props> = ({
                 onClick={() => handleClick("/qm-portal")}
               >
                 <Icon icon={"mdi:approve"} className="h-5 w-5" />
-                <p className="w-full text-sm">Quality Management Portal</p>
+                <p className="w-full text-sm">Quality Management Folder</p>
               </div>
             )}
           </div>
@@ -387,7 +387,7 @@ const Aside: React.FC<Props> = ({
                 }}
               >
                 <Icon icon={"mdi:approve"} className="h-5 w-5" />
-                <p className="w-full text-sm">Quality Management Portal</p>
+                <p className="w-full text-sm">Quality Management Folder</p>
               </div>
             )}
           </div>
