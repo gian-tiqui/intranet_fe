@@ -3,7 +3,7 @@ import apiClient from "@/app/http-common/apiUrl";
 import usePostIdStore from "@/app/store/postId";
 import useSignalStore from "@/app/store/signalStore";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "react-toastify";
 
@@ -13,6 +13,8 @@ interface Props {
 
 const DeleteModal: React.FC<Props> = ({ setShowDeleteModal }) => {
   const router = useRouter();
+  const pathName = usePathname();
+
   const { setSignal } = useSignalStore();
 
   const { postId } = usePostIdStore();
@@ -31,7 +33,11 @@ const DeleteModal: React.FC<Props> = ({ setShowDeleteModal }) => {
         setSignal(true);
         setShowDeleteModal(false);
 
-        router.push("/bulletin");
+        if (pathName.includes("/qm-portal/folders/")) {
+          router.back();
+        } else {
+          router.push("/bulletin");
+        }
       } catch (error) {
         console.error(error);
       }
