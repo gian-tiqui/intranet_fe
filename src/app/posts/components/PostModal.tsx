@@ -358,6 +358,8 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 setPosting(false);
                 setSignal(false);
               });
+          } else {
+            setSignal(true);
           }
         }
       } catch (error) {
