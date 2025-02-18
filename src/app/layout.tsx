@@ -38,7 +38,6 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased bg-neutral-200 dark:bg-neutral-800`}
         >
-          nm
           <ToastContainer />
           <WelcomeSidebar />
           <Divider>{children}</Divider>
