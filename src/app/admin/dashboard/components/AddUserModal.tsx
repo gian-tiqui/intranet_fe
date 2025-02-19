@@ -5,6 +5,8 @@ import useDepartments from "@/app/custom-hooks/departments";
 import apiClient from "@/app/http-common/apiUrl";
 import { API_BASE } from "@/app/bindings/binding";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
+import fetchLevels from "@/app/utils/service/levels";
 
 interface FormFields {
   email: string;
@@ -19,8 +21,10 @@ interface FormFields {
   city: string;
   state: string;
   zipCode: number;
+  employeeId: number;
   dob: Date;
   gender: string;
+  lid: number;
   deptId: number;
 }
 
@@ -33,10 +37,19 @@ const AddUserModal = () => {
 
   const departments = useDepartments();
 
+  const { data } = useQuery({
+    queryKey: ["levels-add-modal"],
+    queryFn: () => fetchLevels(),
+  });
+
   const onSubmit = async (data: FormFields) => {
     data.zipCode = Number(data.zipCode);
     data.deptId = Number(data.deptId);
-    data.dob = new Date(new Date(data.dob).toISOString());
+
+    data.employeeId = +data.employeeId;
+    data.lid = +data.lid;
+
+    console.log(data);
 
     try {
       const response = await apiClient.post(`${API_BASE}/auth/register`, {
@@ -59,6 +72,22 @@ const AddUserModal = () => {
       className="p-6 max-w-md bg-white dark:bg-neutral-900 rounded-2xl h-96 w-96 overflow-auto shadow space-y-6"
     >
       <h1 className="text-xl mb-4 text-center font-bold">Add New User</h1>
+
+      {/* EMPLOYEE ID FIELD */}
+
+      <div className="h-14">
+        <input
+          type="number"
+          {...register("employeeId", { required: "Employee id is required" })}
+          placeholder="Employee ID"
+          className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
+        />
+        {errors.employeeId && (
+          <p className="text-red-500 text-xs ms-4">
+            {errors.employeeId.message}
+          </p>
+        )}
+      </div>
 
       {/* EMAIL FIELD */}
 
@@ -261,6 +290,29 @@ const AddUserModal = () => {
         </select>
         {errors.deptId && (
           <p className="text-red-500 text-xs ms-4">Department is required</p>
+        )}
+      </div>
+
+      {/* LEVELS FIELD */}
+
+      <div className="h-14">
+        <select
+          {...register("lid", { required: "Level is required" })}
+          className="w-full h-10 bg-neutral-100 dark:bg-neutral-800 border outline-none border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
+        >
+          {data &&
+            data.map((data: { lid: number; level: string }) => (
+              <option key={data.lid} value={data.lid}>
+                {data.level.toLowerCase() === "all employees"
+                  ? "Staff"
+                  : data.level}
+              </option>
+            ))}
+        </select>
+        {errors.deptId && (
+          <p className="text-red-500 text-xs ms-4">
+            Employee level is required
+          </p>
         )}
       </div>
 
