@@ -99,7 +99,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
         );
         setIsRead(response.data.message === "Read");
       } catch (error) {
-        console.log(error);
+        console.error(error);
         setIsRead(false);
       }
     };

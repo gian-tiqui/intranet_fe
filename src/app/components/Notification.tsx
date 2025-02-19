@@ -22,14 +22,11 @@ const Notification: React.FC<Props> = ({ notification }) => {
         },
       });
 
-      console.log(notification);
-
       if (notification.comment?.parentComment?.cid) {
         setCid(notification.comment.parentComment.cid);
         router.push(`/posts/${notification.comment.parentComment.post.pid}`);
       } else if (!notification.comment?.parentId && notification.comment) {
         setCid(notification.comment.cid);
-        console.log(notification.comment);
         router.push(`/posts/${notification.comment.post.pid}`);
       } else {
         router.push(`/posts/${notification.postId}`);

@@ -67,7 +67,7 @@ const QmPortal = () => {
       </div>
     );
 
-  if (isError) console.log(error);
+  if (isError) console.error(error);
 
   return (
     <div className="h-[90vh]">

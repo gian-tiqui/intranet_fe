@@ -19,7 +19,7 @@ const useComments = () => {
         if (response.status === 200) {
           setComments(response.data);
         } else {
-          console.log("There was a problem in fetching the comments");
+          console.error("There was a problem in fetching the comments");
         }
       } catch (error) {
         console.error(error);
