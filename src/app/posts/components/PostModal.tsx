@@ -296,7 +296,6 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       formData.append("lid", String(data.lid));
       formData.append("extractedText", data.extractedText);
       if (param.id && pathName.includes("/qm-portal/folders/")) {
-        console.log(param.id);
         formData.append("subfolderId", String(param.id));
       }
       if (data.title) formData.append("title", data.title);

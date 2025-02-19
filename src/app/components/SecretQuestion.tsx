@@ -54,7 +54,6 @@ const SecretQuestion = () => {
         </label>
         <select
           onChange={(e) => {
-            console.log(e.target.value);
             setValue("secretQuestion", e.target.value);
           }}
           id="question"

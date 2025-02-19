@@ -54,7 +54,7 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId, isPreview }) => {
       if (commentElement) {
         commentElement.scrollIntoView({ behavior: "smooth", block: "start" });
       } else {
-        console.log("element not found");
+        console.error("element not found");
       }
     }
   }, [comment, cid]);

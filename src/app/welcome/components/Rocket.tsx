@@ -4,7 +4,6 @@ import React from "react";
 
 const Rocket = () => {
   const scrollToTop = () => {
-    console.log("Scroll to top clicked"); // To verify if the function runs
     if (typeof window !== "undefined") {
       window.scrollTo({
         top: 0,

@@ -28,7 +28,7 @@ const PostListItem: React.FC<Props> = ({ post }) => {
 
         setShowLight(response.data.message !== "Read");
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
 

@@ -19,7 +19,7 @@ const PendingUsers = () => {
     setSignal(false);
   }, [signal, setSignal, refetch]);
 
-  if (isError) console.log(error);
+  if (isError) console.error(error);
 
   return (
     <Link

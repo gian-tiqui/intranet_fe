@@ -52,11 +52,11 @@ const Grid = () => {
     );
 
   if (isError) {
-    console.log("There was a problem in fetching the public post");
+    console.error("There was a problem in fetching the public post");
   }
 
   if (pError) {
-    console.log("There was a problem in fetching the private post");
+    console.error("There was a problem in fetching the private post");
   }
 
   return (
