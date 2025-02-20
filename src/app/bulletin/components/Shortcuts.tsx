@@ -11,21 +11,11 @@ interface Props {
   min: number;
 }
 
-const Shortcuts: React.FC<Props> = ({
-  setDirection,
-  setMinMax,
-  totalPosts,
-  limit,
-  min,
-}) => {
+const Shortcuts: React.FC<Props> = ({ setMinMax, totalPosts, limit, min }) => {
   const totalPages = Math.ceil(totalPosts / limit);
   const isFirstPage = min === 0;
   const currentPage = Math.floor(min / limit) + 1; // Calculate current page
   const calculatedIsLastPage = currentPage === totalPages; // Proper last-page condition
-
-  const handleSortByDate = (_direction: string) => {
-    setDirection(_direction);
-  };
 
   const jumpPage = (selection: string) => {
     if (selection === "first") setMinMax({ min: 0, max: Math.min(2, limit) });
@@ -50,20 +40,6 @@ const Shortcuts: React.FC<Props> = ({
 
   return (
     <div className="flex flex-wrap my-12 gap-2">
-      <div
-        onClick={() => handleSortByDate("desc")}
-        className="rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center"
-      >
-        <Icon icon={"mingcute:time-line"} />
-        <p className="text-sm font-bold">Latest</p>
-      </div>
-      <div
-        onClick={() => handleSortByDate("asc")}
-        className="rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center"
-      >
-        <Icon icon={"icon-park-outline:time"} />
-        <p className="text-sm font-bold">Oldest</p>
-      </div>
       <div
         onClick={() => !isFirstPage && jumpPage("first")}
         className={`rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-900 flex gap-1 items-center ${
