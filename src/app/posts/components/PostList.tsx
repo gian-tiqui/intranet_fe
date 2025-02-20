@@ -204,9 +204,9 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
                     {format(new Date(date), "MMMM dd, yyyy")}
                   </h2>
                   <div className="flex flex-col">
-                    {groupedPosts[date].map((post, index) => (
+                    {groupedPosts[date].map((post) => (
                       <div
-                        key={index}
+                        key={post.pid}
                         onClick={() => handleItemClicked(post.pid)}
                       >
                         <PostListItem post={post} />
