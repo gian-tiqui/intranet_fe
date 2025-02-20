@@ -391,6 +391,23 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
         onClick={generalPost ? handleClick : undefined}
         className={`ignore-click ${generalPost && "cursor-pointer"}`}
       >
+        {!post?.folderId &&
+          deptIds.includes(userDeptId.toString()) &&
+          !generalPost &&
+          isRead === false && (
+            <div
+              onClick={handleReadClick}
+              className={`hover:bg-gray-300 fixed z-10 bottom-64 bg-white rounded-full dark:bg-neutral-900 h-12 w-24 font-extrabold shadow-xl right-14 dark:hover:bg-neutral-700 py-1 px-3 flex items-center gap-1 cursor-pointer `}
+            >
+              <>
+                <Icon
+                  icon={"material-symbols-light:mark-email-read-outline"}
+                  className="h-6 w-6"
+                />
+                <p className="text-sm">Read</p>
+              </>
+            </div>
+          )}
         <div className="flex items-start gap-2 mb-4 justify-between">
           <div className="flex gap-3 items-start">
             <div className="h-9 w-9 bg-gray-300 rounded-full"></div>
@@ -503,24 +520,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
                     ? "Download all files"
                     : "Download file"}
                 </span>
-              </div>
-            )}
-          {!post?.folderId &&
-            deptIds.includes(userDeptId.toString()) &&
-            !generalPost && (
-              <div
-                onClick={handleReadClick}
-                className={`hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-3 rounded flex items-center gap-1 cursor-pointer `}
-              >
-                {isRead === false && (
-                  <>
-                    <Icon
-                      icon={"material-symbols-light:mark-email-read-outline"}
-                      className="h-6 w-6"
-                    />
-                    <p className="text-sm">Read</p>
-                  </>
-                )}
               </div>
             )}
         </div>

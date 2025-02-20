@@ -315,7 +315,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             className: toastClass,
           });
 
-          if (!param.id && !pathName.includes("/qm-portal/folders/")) {
+          if (!pathName.includes("/qm-portal/folders/")) {
             const notifications = data.deptIds.split(",").map((deptId) =>
               apiClient
                 .post(`${API_BASE}/notification/new-post`, null, {
