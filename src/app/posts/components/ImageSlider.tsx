@@ -15,6 +15,8 @@ const ImageSlider: React.FC<Props> = ({ imageLocations }) => {
     <div>
       <div className="mb-1">
         <div className="relative">
+          {imageLocations.length > 1 && <ImageOverlay selectedIndex={0} />}
+
           <Image
             src={`${API_BASE}/uploads/${imageLocations[0].imageLocation}`}
             alt="Post image"
