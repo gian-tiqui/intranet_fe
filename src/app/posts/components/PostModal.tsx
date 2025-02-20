@@ -322,6 +322,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                   params: {
                     deptId: deptId,
                     postId: response.data.post.pid,
+                    lid: data.lid,
                   },
                 })
                 .catch((error) => {
