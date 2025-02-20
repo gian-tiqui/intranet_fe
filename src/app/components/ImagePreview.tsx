@@ -1,10 +1,10 @@
 import React from "react";
 import useImagesStore from "../store/imagesStore";
-import Cimage from "next/image";
 import useShowImageStore from "../store/imageViewStore";
 import { API_BASE } from "../bindings/binding";
 import jsPDF from "jspdf";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { Image } from "primereact/image";
 
 interface Props {
   mSetShowImage: (showImage: { show: boolean; selectedIndex: number }) => void;
@@ -94,11 +94,11 @@ const ImagePreview: React.FC<Props> = ({ mSetShowImage }) => {
 
         {/* Image Container */}
         <div className="overflow-auto relative h-96 w-80 md:w-[400px] md:h-[500px] flex justify-center items-center">
-          <Cimage
+          <Image
             src={`${API_BASE}/uploads/${images[showImage.selectedIndex]}`}
             alt={images[showImage.selectedIndex]}
-            fill
             className=""
+            preview
           />
         </div>
 

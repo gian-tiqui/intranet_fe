@@ -523,8 +523,6 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                   setSelectedDepartments([
                     ...departments.map((dept) => String(dept.deptId)),
                   ]);
-                } else if (["4", "5"].includes(lid)) {
-                  setSelectedDepartments(["9"]);
                 } else {
                   setSelectedDepartments([]);
                 }

@@ -31,7 +31,7 @@ const DeleteCommentPopup = () => {
 
         setShowDeleteComment(false);
 
-        const cid = response.data.deletedComment?.cid; // Ensure `cid` exists
+        const cid = response.data.deletedComment?.cid;
 
         if (cid) {
           setComments((prevComments) =>
