@@ -13,7 +13,6 @@ import {
   fetchPosts,
   fetchPublicPosts,
 } from "@/app/functions/functions";
-import usePostIdStore from "@/app/store/postId";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import PostListItem from "./PostListItem";
 import useDepartments from "@/app/custom-hooks/departments";
@@ -79,7 +78,6 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [allPosts, setAllPosts] = useState<Post[]>([]);
-  const { postId } = usePostIdStore();
   const [selectedDeptId, setSelectedDeptId] = useState<number>(-1);
   const departments = useDepartments();
 
@@ -152,7 +150,7 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
 
   const handleItemClicked = (pid: number) => {
     if (isMobile) setIsCollapsed(!isCollapsed);
-    if (pid === postId) return;
+
     onClick(`/posts/${pid}`);
   };
 
