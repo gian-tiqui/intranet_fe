@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { toastClass } from "../tailwind-classes/tw_classes";
 import apiClient from "../http-common/apiUrl";
 import { API_BASE } from "../bindings/binding";
+import { questions } from "../utils/misc/questions";
 
 interface FormFields {
   secretQuestion: string;
@@ -59,18 +60,11 @@ const SecretQuestion = () => {
           id="question"
           className="mt-1 p-2 border rounded-md bg-inherit outline-none"
         >
-          <option className="dark:bg-black" value="">
-            Select a question
-          </option>
-          <option className="dark:bg-black" value="pet">
-            What is your first pet&apos;s name?
-          </option>
-          <option className="dark:bg-black" value="school">
-            What is the name of your first school?
-          </option>
-          <option className="dark:bg-black" value="city">
-            In what city were you born?
-          </option>
+          {questions.map((question: string, index) => (
+            <option className="dark:bg-black" value={question} key={index}>
+              {question}
+            </option>
+          ))}
         </select>
       </div>
 

@@ -11,11 +11,13 @@ import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import Link from "next/link";
 import { API_BASE } from "@/app/bindings/binding";
 import EaseString from "@/app/login/components/EaseString";
+import { questions } from "@/app/utils/misc/questions";
 
 type FormFields = {
   employeeId: number;
   answer: string;
   newPassword: string;
+  secretQuestion1: string;
 };
 
 const ForgotPasswordForm = () => {
@@ -25,6 +27,7 @@ const ForgotPasswordForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<FormFields>();
 
   useEffect(() => {
@@ -39,12 +42,13 @@ const ForgotPasswordForm = () => {
     employeeId,
     answer,
     newPassword,
+    secretQuestion1,
   }: FormFields) => {
     try {
       setLoading(true);
 
       const response = await apiClient.post(
-        `${API_BASE}/auth/forgot-password?employeeId=${employeeId}&answer=${answer}&newPassword=${newPassword}`
+        `${API_BASE}/auth/forgot-password?employeeId=${employeeId}&answer=${answer}&newPassword=${newPassword}&secretQuestion1=${secretQuestion1}`
       );
 
       if (response.status === 201) {
@@ -113,12 +117,27 @@ const ForgotPasswordForm = () => {
               placeholder="Enter your Employee ID"
             />
           </div>
+
           {errors.employeeId && (
             <MotionP className="text-red-500 text-xs ms-4 font-bold">
               {errors.employeeId?.message}
             </MotionP>
           )}
         </motion.div>
+
+        <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-800 border dark:border-black rounded-lg mb-6">
+          <select
+            onChange={(e) => setValue("secretQuestion1", e.target.value)}
+            id="question"
+            className="mt-1 p-2 rounded-md bg-inherit w-72 outline-none"
+          >
+            {questions.map((question: string, index) => (
+              <option className="dark:bg-black" value={question} key={index}>
+                {question}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* Secret Answer */}
         <motion.div
