@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useForm } from "react-hook-form";
 import { CreateComment, PostComment } from "@/app/types/types";
-import { API_BASE, INTRANET } from "@/app/bindings/binding";
+import { API_BASE } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
 import { decodeUserData } from "@/app/functions/functions";
 import { useRouter } from "next/navigation";

@@ -11,7 +11,7 @@ import commentIdStore from "@/app/store/commentId";
 import { useForm } from "react-hook-form";
 import useSetCommentsStore from "@/app/store/useCommentsStore";
 import apiClient from "@/app/http-common/apiUrl";
-import { API_BASE, INTRANET } from "@/app/bindings/binding";
+import { API_BASE } from "@/app/bindings/binding";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import useCommentIdRedirector from "@/app/store/commentRedirectionId";
 
@@ -92,9 +92,6 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId, isPreview }) => {
         {
           message: data.message,
           updatedBy: decodeUserData()?.sub,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-          },
         }
       );
 
@@ -171,9 +168,9 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId, isPreview }) => {
                   : "bg-inherit"
               }`}
             >
-              <input
+              <textarea
                 {...register("message", { required: true })}
-                className={`break-words overflow-wrap break-word outline-none px-2 bg-inherit w-full`}
+                className={`break-words overflow-wrap  break-word outline-none px-2 bg-inherit w-full`}
                 disabled={!editMode}
               />
 
@@ -236,16 +233,6 @@ const Comment: React.FC<Props> = ({ isReply, comment, postId, isPreview }) => {
               </>
             )}
           </div>
-
-          {!showReplies &&
-            mReplies.at(0) &&
-            typeof mReplies.at(0) !== "undefined" && (
-              <Comment
-                isPreview
-                comment={mReplies.at(0) as PostComment}
-                postId={postId}
-              />
-            )}
 
           {/* Show Replies Animation */}
           <AnimatePresence>
