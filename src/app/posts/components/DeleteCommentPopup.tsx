@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 const DeleteCommentPopup = () => {
   const { setShowDeleteComment } = showDeleteCommentModalStore();
   const { commentId } = commentIdStore();
-  const { setComments, comments } = useSetCommentsStore();
+  const { setComments } = useSetCommentsStore();
 
   const handleCommentDelete = async () => {
     try {
@@ -31,13 +31,13 @@ const DeleteCommentPopup = () => {
 
         setShowDeleteComment(false);
 
-        const cid = response.data.deletedComment.cid;
+        const cid = response.data.deletedComment?.cid; // Ensure `cid` exists
 
-        const updatedComments = comments.filter(
-          (comment) => comment.cid !== cid
-        );
-
-        setComments(updatedComments);
+        if (cid) {
+          setComments((prevComments) =>
+            prevComments.filter((comment) => comment.cid !== cid)
+          );
+        }
       }
     } catch (error) {
       console.error(error);
