@@ -1,6 +1,5 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React from "react";
-import Description from "./Description";
 import Link from "next/link";
 
 const Hero = () => {
@@ -19,7 +18,6 @@ const Hero = () => {
           </button>
         </Link>
       </div>
-      <Description />
     </>
   );
 };
