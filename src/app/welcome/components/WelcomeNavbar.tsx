@@ -22,32 +22,25 @@ const WelcomeNavbar = () => {
 
   return (
     <>
-      <nav className="w-[90%] md:w-[50%] h-16 p-4 flex justify-between items-center bg-white dark:bg-neutral-800 dark:text-white text-black shadow-lg rounded-xl absolute left-1/2 top-4 transform -translate-x-1/2">
+      <nav className="w-full flex bg-white/70 backdrop-blur-3xl justify-between border-b shadow  p-4 fixed top-0">
         <div className="flex gap-2 items-center cursor-default">
           <Image
             src={wmcLogo}
             width={1000}
             height={1000}
             className="h-7 md:h-9 w-auto"
-            alt="Westlake Med"
+            alt="Westlake Medical Center"
           />
           <div>
-            <p className="font-extrabold sm:text-lg">Intranet</p>
+            <p className="font-extrabold sm:text-lg">WMC Employee Portal</p>
             <p className="text-[10px] sm:text-xs">Westlake Medical Center</p>
           </div>
         </div>
-        <div className="lg:flex gap-6  text-sm font-semibold hidden">
-          <Link href={""} className="hover:underline">
-            About
-          </Link>
-          <Link href={"#hr-features"} className="hover:underline">
-            Usage
-          </Link>
-        </div>
+
         <div className="flex gap-2 items-center">
           <Link
             href={"/login"}
-            className="hidden md:flex justify-center items-center gap-1 rounded-lg h-9 w-32 px-4 py-1 bg-black text-white hover:bg-neutral-700 dark:bg-white dark:hover:bg-gray-100 dark:text-black"
+            className="hidden md:flex justify-center items-center gap-1 rounded h-11 w-32 px-4 py-1 bg-black text-white hover:bg-neutral-700 dark:bg-white dark:hover:bg-gray-100 dark:text-black"
           >
             <Icon icon={"mdi:user"} className="h-5 w-5" />
             <p className="font-semibold text-sm">Login</p>
