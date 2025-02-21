@@ -554,6 +554,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
           </div>
           {showDepartments && (
             <DepartmentsList
+              setSelectedDepartments={setSelectedDepartments}
               departments={departments}
               handleCheckboxChange={handleCheckboxChange}
               selectedDepartments={selectedDepartments}
