@@ -624,6 +624,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
           </div>
           {showDepartments && (
             <DepartmentsListMemo
+              setSelectedDepartments={setSelectedDepartments}
               departments={departments}
               handleCheckboxChange={handleCheckboxChange}
               selectedDepartments={selectedDepartments}
