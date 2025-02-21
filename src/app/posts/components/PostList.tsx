@@ -10,7 +10,6 @@ import { useQuery } from "@tanstack/react-query";
 import {
   decodeUserData,
   fetchPostDeptIds,
-  fetchPosts,
   fetchPublicPosts,
 } from "@/app/functions/functions";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -20,6 +19,7 @@ import useSignalStore from "@/app/store/signalStore";
 import QmList from "./QmList";
 import { INTRANET } from "@/app/bindings/binding";
 import Cookies from "js-cookie";
+import { fetchDeptPostsByLid } from "@/app/utils/service/post";
 
 const groupPostsByDate = (posts: Post[]) => {
   return posts.reduce((groups: GroupedPosts, post: Post) => {
@@ -54,13 +54,17 @@ const Skeleton = () => {
 const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
   const { signal, setSignal } = useSignalStore();
 
+  useEffect(() => {
+    fetchDeptPostsByLid();
+  }, []);
+
   const {
     data: _posts,
     isLoading,
     refetch: refetchPrivate,
   } = useQuery({
-    queryKey: ["private_posts"],
-    queryFn: fetchPosts,
+    queryKey: ["private_dept_posts_by_lid"],
+    queryFn: fetchDeptPostsByLid,
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
