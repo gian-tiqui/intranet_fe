@@ -6,7 +6,7 @@ interface State {
 }
 
 const useUpdateDialogStore = create<State>((set) => ({
-  updatedDialogShown: true,
+  updatedDialogShown: false,
   setUpdateDialogShown: (updatedDialogShown: boolean) =>
     set({ updatedDialogShown }),
 }));
