@@ -17,11 +17,12 @@ const DepartmentsList: React.FC<Props> = ({
 }) => {
   return (
     <div className="mb-4 absolute bottom-5 left-9 bg-white  dark:bg-neutral-950 w-[80%] p-2 border dark:border-black rounded-lg">
-      <div className="w-full flex justify-center gap-2">
+      <div className="w-full flex justify-between gap-2">
         <Button
           severity="info"
           type="button"
           className="mb-2"
+          icon={`pi pi-expand me-2`}
           onClick={() => {
             if (selectedDepartments.length === 0)
               setSelectedDepartments([
@@ -32,6 +33,7 @@ const DepartmentsList: React.FC<Props> = ({
           Select all
         </Button>
         <Button
+          icon={`pi pi-times me-2`}
           severity="info"
           type="button"
           className="mb-2"
