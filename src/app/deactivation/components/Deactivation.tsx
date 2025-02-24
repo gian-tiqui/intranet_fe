@@ -5,6 +5,7 @@ import apiClient from "@/app/http-common/apiUrl";
 import useUserStore from "@/app/store/userStore";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import { User } from "@/app/types/types";
+import { Department } from "@/app/utils/enums/enum";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -28,7 +29,7 @@ const Deactivation = () => {
     const validateRole = () => {
       const deptId = decodeUserData()?.deptId;
 
-      if (deptId && deptId !== 3) {
+      if (deptId && deptId !== Department.INFORMATION_TECHNOLOGY) {
         toast("You are not authorized to view this page.", {
           className: toastClass,
           type: "error",

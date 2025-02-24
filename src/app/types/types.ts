@@ -246,7 +246,12 @@ type Folder = {
   icon: string;
 };
 
+type UpdateStatus = {
+  isUpdated: boolean;
+};
+
 export type {
+  UpdateStatus,
   Folder,
   GroupedFiles,
   ImageLocation,

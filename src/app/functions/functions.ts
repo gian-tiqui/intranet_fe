@@ -27,7 +27,7 @@ const checkDept = () => {
   const userDeptCode = decodeUserData()?.departmentCode.toLowerCase();
 
   if (userDeptCode) {
-    const depts: string[] = ["hr", "qm", "admin"];
+    const depts: string[] = ["hr", "qm"];
 
     if (!depts.includes(userDeptCode)) {
       return false;

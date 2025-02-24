@@ -15,6 +15,7 @@ import apiClient from "../http-common/apiUrl";
 import useReadStore from "../store/readStore";
 import ConfirmModal from "./ConfirmModal";
 import useDeptIdStore from "../store/deptIdStore";
+import { Department } from "../utils/enums/enum";
 
 interface Props {
   variants?: Variants;
@@ -186,7 +187,7 @@ const Aside: React.FC<Props> = ({
               <p className="w-full text-sm">Posts for your employee level</p>
             </div>
 
-            {userDeptId === 3 && (
+            {userDeptId === Department.INFORMATION_TECHNOLOGY && (
               <div
                 className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
                 onClick={() => handleClick("/deactivation")}
@@ -196,15 +197,19 @@ const Aside: React.FC<Props> = ({
               </div>
             )}
 
-            {userDeptId && [1, 2].includes(userDeptId) && (
-              <div
-                className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-                onClick={() => handleClick("/my-posts")}
-              >
-                <Icon icon={"ph:folder-user-bold"} className="h-5 w-5" />
-                <p className="w-full text-sm">My posts</p>
-              </div>
-            )}
+            {userDeptId &&
+              [
+                Department.HUMAN_RESOURCE,
+                Department.QUALITY_MANAGEMENT,
+              ].includes(userDeptId) && (
+                <div
+                  className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+                  onClick={() => handleClick("/my-posts")}
+                >
+                  <Icon icon={"ph:folder-user-bold"} className="h-5 w-5" />
+                  <p className="w-full text-sm">My posts</p>
+                </div>
+              )}
 
             {decodeUserData() && decodeUserData()?.deptId === 2 && (
               <div
@@ -352,7 +357,7 @@ const Aside: React.FC<Props> = ({
               <p className="w-full text-sm">Posts for your employee level</p>
             </div>
 
-            {userDeptId === 3 && (
+            {userDeptId === Department.INFORMATION_TECHNOLOGY && (
               <div
                 className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
                 onClick={() => {
@@ -365,18 +370,22 @@ const Aside: React.FC<Props> = ({
               </div>
             )}
 
-            {userDeptId && [1, 2].includes(userDeptId) && (
-              <div
-                className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-                onClick={() => {
-                  handleClick("/my-posts");
-                  if (setIsCollapsed) setIsCollapsed(!isCollapsed);
-                }}
-              >
-                <Icon icon={"ph:folder-user-bold"} className="h-5 w-5" />
-                <p className="w-full text-sm">My posts</p>
-              </div>
-            )}
+            {userDeptId &&
+              [
+                Department.HUMAN_RESOURCE,
+                Department.QUALITY_MANAGEMENT,
+              ].includes(userDeptId) && (
+                <div
+                  className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+                  onClick={() => {
+                    handleClick("/my-posts");
+                    if (setIsCollapsed) setIsCollapsed(!isCollapsed);
+                  }}
+                >
+                  <Icon icon={"ph:folder-user-bold"} className="h-5 w-5" />
+                  <p className="w-full text-sm">My posts</p>
+                </div>
+              )}
 
             {decodeUserData() && decodeUserData()?.deptId === 2 && (
               <div
