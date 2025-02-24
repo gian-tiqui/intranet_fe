@@ -18,7 +18,7 @@ import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import Link from "next/link";
 
 type FormFields = {
-  employeeId: number;
+  employeeId: string;
   password: string;
 };
 
@@ -53,7 +53,7 @@ const Form = () => {
     try {
       setLoading(true);
       const response = await apiClient.post(`${API_BASE}/auth/login`, {
-        employeeId: +employeeId,
+        employeeId,
         password,
       });
 

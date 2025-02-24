@@ -341,10 +341,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   };
 
   return (
-    <div
-      onClick={() => setShowEditModal(false)}
-      className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-40 grid place-content-center"
-    >
+    <div className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-40 grid place-content-center">
       {showPreview && (
         <PostPreview
           title={title}

@@ -45,6 +45,8 @@ import deleteFolderStore from "../store/deleteFolder";
 import DeleteFolderModal from "../qm-portal/components/DeleteFolderModal";
 import useUserStore from "../store/userStore";
 import DeactivateUser from "../deactivation/components/DeactivateUser";
+import { Dialog } from "primereact/dialog";
+import useUpdateDialogStore from "../store/updateDialogStore";
 
 interface Props {
   children?: ReactNode;
@@ -75,6 +77,7 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { openSubFolder } = useSubFolderStore();
   const { showDeleteFolderModal } = deleteFolderStore();
   const { user } = useUserStore();
+  const { updatedDialogShown, setUpdateDialogShown } = useUpdateDialogStore();
 
   useEffect(() => {
     const checkLevel = () => {
@@ -109,7 +112,7 @@ const Divider: React.FC<Props> = ({ children }) => {
       }
     };
 
-    if (Cookies.get(INTRANET)) fetchReads();
+    if (INTRANET && Cookies.get(INTRANET)) fetchReads();
   }, []);
 
   useEffect(() => {
@@ -213,6 +216,19 @@ const Divider: React.FC<Props> = ({ children }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <Dialog
+        visible={updatedDialogShown}
+        onHide={() => {
+          if (updatedDialogShown === true) setUpdateDialogShown(false);
+        }}
+        pt={{
+          header: { className: "bg-neutral-100" },
+          content: { className: "bg-neutral-100" },
+        }}
+        header="WMC Employee is updated"
+      >
+        hi
+      </Dialog>
       <div className="flex h-screen text-neutral-800 dark:text-neutral-100">
         {visible && <PostModal isMobile={isMobile} />}
         {shown && <Settings />}

@@ -14,7 +14,7 @@ const Welcome = () => {
     },
     {
       title: "Your Department's posts",
-      path: "/department-memo",
+      path: "/departments-memo",
       icon: "arcticons:emoji-department-store",
     },
     {
