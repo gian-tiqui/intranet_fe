@@ -19,7 +19,10 @@ const fetchDeptPostsByLid = async () => {
     } catch (error) {
       console.error(error);
 
-      return [];
+      return {
+        posts: [],
+        count: 0,
+      };
     }
   }
 };
