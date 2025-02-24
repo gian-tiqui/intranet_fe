@@ -47,6 +47,7 @@ import useUserStore from "../store/userStore";
 import DeactivateUser from "../deactivation/components/DeactivateUser";
 import { Dialog } from "primereact/dialog";
 import useUpdateDialogStore from "../store/updateDialogStore";
+import { PrimeIcons } from "primereact/api";
 
 interface Props {
   children?: ReactNode;
@@ -225,9 +226,33 @@ const Divider: React.FC<Props> = ({ children }) => {
           header: { className: "bg-neutral-100" },
           content: { className: "bg-neutral-100" },
         }}
-        header="WMC Employee is updated"
+        header="WMC Employee Portal Updates"
+        className="h-[70vh] w-[50%]"
       >
-        hi
+        <div className="w-full h-full bg-neutral-200 rounded p-4">
+          <p className="font-semibold">
+            {" "}
+            <i className={`pi pi-wrench me-2`}></i>Bug Fixes
+          </p>
+          <ul className="mb-4">
+            <li className="list-item">
+              - PDF Page Structure fixed upon uploading
+            </li>
+          </ul>
+          <p className="font-semibold">
+            <i className={`pi pi-sparkles me-2`}></i>Changes
+          </p>
+          <ul className="mb-4">
+            <li className="list-item">- Masks does not close post/edit form</li>
+            <li className="list-item">
+              - Added select and remove all button in department selection
+              dropdown
+            </li>
+            <li className="list-item">
+              - Employee id in login can now start at 0 (eg. 00001234)
+            </li>
+          </ul>
+        </div>
       </Dialog>
       <div className="flex h-screen text-neutral-800 dark:text-neutral-100">
         {visible && <PostModal isMobile={isMobile} />}
