@@ -47,7 +47,6 @@ import useUserStore from "../store/userStore";
 import DeactivateUser from "../deactivation/components/DeactivateUser";
 import { Dialog } from "primereact/dialog";
 import useUpdateDialogStore from "../store/updateDialogStore";
-import { PrimeIcons } from "primereact/api";
 
 interface Props {
   children?: ReactNode;
