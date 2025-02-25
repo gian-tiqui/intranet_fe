@@ -23,6 +23,7 @@ import DeleteModal from "./DeleteModal";
 import useDeletePostStore from "@/app/store/deletePost";
 import DeletePostModal from "./DeletePostModal";
 import { motion } from "framer-motion";
+import Deactivation from "@/app/deactivation/components/Deactivation";
 // import UserEditLogs from "../pages/UserEditLogs";
 // import PostEditLog from "../pages/PostEditLog";
 // import CommentEditLog from "../pages/CommentEditLog";
@@ -91,6 +92,11 @@ const Sidebar = () => {
       name: "Replies",
       component: <Replies />,
       icon: "mingcute:comment-line",
+    },
+    {
+      name: "Deactivate User",
+      component: <Deactivation />,
+      icon: "icons8:shutdown",
     },
     // {
     //   name: "User Edit Logs",
