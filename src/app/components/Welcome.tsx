@@ -31,7 +31,7 @@ const Welcome = () => {
           Hello there! 👋
         </p>
         <p className="text-lg font-semibold mb-32 ">
-          Welcome back to Intranet! What would you like to do?
+          Welcome back to WMC Employee Portal! What would you like to do?
         </p>
         <GlobalSearch />
         <div className="flex justify-center flex-wrap p-4 w-full gap-2">
