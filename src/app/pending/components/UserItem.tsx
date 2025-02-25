@@ -68,8 +68,8 @@ const UserItem: React.FC<Props> = ({ pendingUser, onRefetch }) => {
             pendingUser.lastName[0].toLowerCase()}
         </div>
         <p className="font-medium">{pendingUser.firstName}</p>
-        {pendingUser && pendingUser.middleName !== "" && (
-          <p className="font-medium">pendingUser.middleName[0]</p>
+        {pendingUser.middleName && pendingUser.middleName !== "" && (
+          <p className="font-medium">{pendingUser?.middleName[0]}.</p>
         )}
         <p className="font-medium">{pendingUser.lastName}</p>
       </div>

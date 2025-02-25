@@ -51,7 +51,7 @@ const Tr: React.FC<User> = (user) => {
   }, [showOptions]);
 
   return (
-    <tr key={user.id} className="">
+    <tr key={user.id} className="relative">
       <td
         className="py-4 px-4 border-b border-gray-300 dark:border-neutral-900
                    text-center"

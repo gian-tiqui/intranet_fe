@@ -20,9 +20,10 @@ interface FormFields {
   city: string;
   state: string;
   zipCode: number;
-  dob: Date;
+  dob: string;
   gender: string;
   deptId: number;
+  employeeId?: string;
 }
 
 const UpdateUserModal = () => {
@@ -43,6 +44,9 @@ const UpdateUserModal = () => {
         const response = await apiClient.get(`${API_BASE}/users/${selectedId}`);
         const userData = response.data.user;
 
+        const dobDate = new Date(userData.dob);
+        const formattedDob = dobDate.toISOString().slice(0, 16);
+
         setValue("email", userData.email);
         setValue("firstName", userData.firstName);
         setValue("middleName", userData.middleName);
@@ -54,9 +58,10 @@ const UpdateUserModal = () => {
         setValue("city", userData.city);
         setValue("state", userData.state);
         setValue("zipCode", userData.zipCode);
-        setValue("dob", new Date(userData.dob));
+        setValue("dob", formattedDob);
         setValue("gender", userData.gender);
         setValue("deptId", userData.deptId);
+        setValue("employeeId", userData.employeeId);
 
         setLoading(false);
       } catch (error) {
@@ -99,6 +104,19 @@ const UpdateUserModal = () => {
 
       <div className="h-14">
         <input
+          {...register("employeeId", { required: "Employee id is required" })}
+          placeholder="Employee ID"
+          className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
+        />
+        {errors.employeeId && (
+          <p className="text-red-500 text-xs ms-4">
+            {errors.employeeId.message}
+          </p>
+        )}
+      </div>
+
+      <div className="h-14">
+        <input
           type="email"
           {...register("email", { required: "Email is required" })}
           placeholder="Email"
@@ -112,7 +130,7 @@ const UpdateUserModal = () => {
       <div className="h-14">
         <input
           type="password"
-          {...register("password", { required: "Password is required" })}
+          {...register("password")}
           placeholder="Password"
           className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
@@ -186,7 +204,7 @@ const UpdateUserModal = () => {
       <div className="h-14">
         <input
           type="text"
-          {...register("address", { required: "Address is required" })}
+          {...register("address")}
           placeholder="Address"
           className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
@@ -198,7 +216,7 @@ const UpdateUserModal = () => {
       <div className="h-14">
         <input
           type="text"
-          {...register("city", { required: "City is required" })}
+          {...register("city")}
           placeholder="City"
           className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
@@ -210,7 +228,7 @@ const UpdateUserModal = () => {
       <div className="h-14">
         <input
           type="text"
-          {...register("state", { required: "State is required" })}
+          {...register("state")}
           placeholder="State"
           className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
@@ -222,7 +240,7 @@ const UpdateUserModal = () => {
       <div className="h-14">
         <input
           type="number"
-          {...register("zipCode", { required: "Zip code is required" })}
+          {...register("zipCode")}
           placeholder="Zip Code"
           className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
@@ -239,7 +257,7 @@ const UpdateUserModal = () => {
       <div className="h-14">
         <input
           type="datetime-local"
-          {...register("dob", { required: "Date of birth is required" })}
+          {...register("dob")}
           className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         />
         {errors.dob && (
@@ -249,7 +267,7 @@ const UpdateUserModal = () => {
 
       <div className="h-14">
         <select
-          {...register("gender", { required: "Gender is required" })}
+          {...register("gender")}
           className="w-full h-10 bg-neutral-100 outline-none dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         >
           <option value="Male">Male</option>
@@ -262,7 +280,7 @@ const UpdateUserModal = () => {
 
       <div className="h-14">
         <select
-          {...register("deptId", { required: "Department ID is required" })}
+          {...register("deptId")}
           className="w-full h-10 bg-neutral-100 dark:bg-neutral-800 border outline-none border-neutral-300 dark:border-neutral-700 rounded-2xl px-4"
         >
           {departments.map((department) => (

@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 interface FormFields {
-  employeeId: number;
+  employeeId: string;
 }
 
 const Deactivation = () => {
@@ -85,9 +85,8 @@ const Deactivation = () => {
             className="w-72 rounded h-10 font-extrabold px-3 text-center bg-neutral-200 outline-none"
             {...register("employeeId", { required: true })}
             placeholder="enter employee id"
-            type="number"
             onChange={(e) => {
-              setValue("employeeId", +e.target.value);
+              setValue("employeeId", e.target.value);
             }}
           />
           {errors.employeeId && <p>Employee id is required</p>}

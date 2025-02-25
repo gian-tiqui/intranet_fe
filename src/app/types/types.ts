@@ -54,6 +54,7 @@ type Post = {
   lid: number;
   readers: PostReader[];
   folderId: number;
+  postDepartments: { department: Department }[];
 };
 
 type PostDepartment = {

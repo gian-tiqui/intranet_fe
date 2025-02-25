@@ -46,10 +46,7 @@ const AddUserModal = () => {
     data.zipCode = Number(data.zipCode);
     data.deptId = Number(data.deptId);
 
-    data.employeeId = +data.employeeId;
     data.lid = +data.lid;
-
-    console.log(data);
 
     try {
       const response = await apiClient.post(`${API_BASE}/auth/register`, {

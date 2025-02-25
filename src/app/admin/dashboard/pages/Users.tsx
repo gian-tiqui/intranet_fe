@@ -8,6 +8,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import Tr from "../components/Tr";
 import useUsers from "@/app/custom-hooks/users";
+import useDepartments from "@/app/custom-hooks/departments";
 
 const Users = () => {
   const users = useUsers();
@@ -21,6 +22,24 @@ const Users = () => {
   const [selectedDept, setSelectedDept] = useState<string>("");
   const { setAShown } = useAdminHiderStore();
   const { setAddModalShown } = addModalStore();
+  const [departments, setDepartments] = useState<
+    { deptName: string; field: string }[]
+  >([]);
+
+  const depts = useDepartments();
+
+  useEffect(() => {
+    const fillDepartments = () => {
+      const temp: { deptName: string; field: string }[] = depts.map((dept) => ({
+        deptName: dept.departmentCode,
+        field: dept.departmentName,
+      }));
+
+      setDepartments(temp);
+    };
+
+    fillDepartments();
+  }, [depts]);
 
   const JUMP = 4;
   const [minMax, setMinMax] = useState<MinMax>({ min: 0, max: 4 });
@@ -46,17 +65,6 @@ const Users = () => {
     const { value } = event.target;
     setSearchText(value);
   };
-
-  const departments: { field: string; deptName: string }[] = [
-    { deptName: "ALL", field: "" },
-    { deptName: "IT", field: "Information Technology" },
-    { deptName: "HR", field: "Human Resource" },
-    { deptName: "QM", field: "Quality Management" },
-    { deptName: "ACNT", field: "Accounting" },
-    { deptName: "ADM", field: "Admitting" },
-    { deptName: "MRKTG", field: "Marketing" },
-    { deptName: "PRCHS", field: "Purchasing" },
-  ];
 
   const handleNextClicked = () => {
     if (minMax.max <= users.length - 1) {
@@ -262,7 +270,7 @@ const Users = () => {
               </tr>
             </thead>
 
-            <tbody className="align-top">
+            <tbody className="align-top relative">
               {sortedUsers.length > 0 ? (
                 sortedUsers
                   .slice(minMax.min, minMax.max)
