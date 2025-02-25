@@ -134,7 +134,7 @@ const Sidebar = () => {
       {aShown && (
         <div
           onClick={handleHiderClicked}
-          className="w-full h-full bg-black/85 absolute z-20 grid place-content-center"
+          className="w-full h-screen bg-black/85 absolute z-20 flex justify-center items-center"
         >
           <div onClick={(e) => e.stopPropagation()}>
             {addModalShown && <AddUserModal />}

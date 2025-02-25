@@ -98,7 +98,7 @@ const UpdateUserModal = () => {
   ) : (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="p-6 max-w-md bg-white dark:bg-neutral-900 rounded-2xl h-96 w-96 overflow-auto shadow space-y-6"
+      className="p-6 max-w-md bg-white dark:bg-neutral-900 rounded-2xl h-96 w-[800px] overflow-auto shadow space-y-6"
     >
       <h1 className="text-xl mb-4 text-center font-bold">Update User</h1>
 
