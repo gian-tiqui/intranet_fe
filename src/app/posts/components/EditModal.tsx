@@ -129,6 +129,16 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
         setValue("message", post.message);
         setValue("lid", post.lid);
 
+        console.log(post.postDepartments);
+
+        const selectedDeptIds = [
+          ...post.postDepartments.map((postDept) =>
+            postDept.department.deptId.toString()
+          ),
+        ];
+
+        setSelectedDepartments(selectedDeptIds);
+
         if (post.imageLocations != null) {
           setFileNames([
             ...post?.imageLocations.map(
@@ -361,7 +371,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
               <Icon
                 icon={"akar-icons:cross"}
                 className="h-4 w-4 cursor-pointer"
-                // onClick={() => setVisible(false)}
+                onClick={() => setShowEditModal(false)}
               />
             </div>
             <p className="w-full text-center text-sm font-semibold">
