@@ -11,11 +11,11 @@ import useLogoutArtStore from "@/app/store/useLogoutSplashStore";
 import { toast } from "react-toastify";
 import { INTRANET, API_BASE } from "@/app/bindings/binding";
 import { jwtDecode } from "jwt-decode";
-import apiClient from "@/app/http-common/apiUrl";
 import { motion } from "framer-motion";
 import EaseString from "./EaseString";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import Link from "next/link";
+import axios from "axios";
 
 type FormFields = {
   employeeId: string;
@@ -52,7 +52,7 @@ const Form = () => {
   const handleLogin = async ({ employeeId, password }: FormFields) => {
     try {
       setLoading(true);
-      const response = await apiClient.post(`${API_BASE}/auth/login`, {
+      const response = await axios.post(`${API_BASE}/auth/login`, {
         employeeId,
         password,
       });

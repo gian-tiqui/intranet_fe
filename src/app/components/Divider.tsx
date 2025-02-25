@@ -237,6 +237,10 @@ const Divider: React.FC<Props> = ({ children }) => {
             <li className="list-item">
               - PDF Page Structure fixed upon uploading
             </li>
+            <li className="list-item">
+              - User will now be able to login properly without any errors
+              appearing.
+            </li>
           </ul>
           <p className="font-semibold">
             <i className={`pi pi-sparkles me-2`}></i>Changes
@@ -246,6 +250,9 @@ const Divider: React.FC<Props> = ({ children }) => {
             <li className="list-item">
               - Added select and remove all button in department selection
               dropdown
+            </li>
+            <li className="list-item">
+              - User deactivation has been moved (FOR IT users)
             </li>
             <li className="list-item">
               - Employee id in login can now start at 0 (eg. 00001234)
