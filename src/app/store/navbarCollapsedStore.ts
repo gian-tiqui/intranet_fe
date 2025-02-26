@@ -6,7 +6,7 @@ interface State {
 }
 
 const useToggleStore = create<State>((set) => ({
-  isCollapsed: false,
+  isCollapsed: true,
   setIsCollapsed: (isCollapsed: boolean) => set({ isCollapsed }),
 }));
 

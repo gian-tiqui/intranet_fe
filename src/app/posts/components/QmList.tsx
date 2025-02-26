@@ -8,15 +8,9 @@ import React, { useEffect, useState } from "react";
 import SubfolderItems from "./SubfolderItems";
 
 const QmList = () => {
-  const {
-    data: folders,
-    error,
-    isError,
-    isLoading,
-    refetch,
-  } = useQuery({
+  const { data, error, isError, isLoading, refetch } = useQuery({
     queryKey: ["main-folder"],
-    queryFn: fetchMainFolders,
+    queryFn: () => fetchMainFolders({ search: "", skip: 0, take: 10 }),
   });
 
   const [selectedSubFolder, setSelectedSubFolder] = useState<Folder>();
@@ -34,8 +28,8 @@ const QmList = () => {
   }, [signal, setSignal, refetch]);
 
   useEffect(() => {
-    if (folders) setSelectedSubFolder(folders[0]);
-  }, [folders]);
+    if (data?.folders) setSelectedSubFolder(data.folders[0]);
+  }, [data]);
 
   if (isError) console.error(error);
 
@@ -45,7 +39,7 @@ const QmList = () => {
     <MotionTemplate>
       <div className="mx-6">
         <div className="flex gap-2 flex-wrap">
-          {folders?.map((folder) => (
+          {data?.folders?.map((folder) => (
             <p
               className={`bg-inherit cursor-pointer py-1 px-3 ${
                 selectedSubFolder?.id === folder.id &&

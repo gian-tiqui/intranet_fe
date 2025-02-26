@@ -251,7 +251,14 @@ type UpdateStatus = {
   isUpdated: boolean;
 };
 
+type Query = {
+  search?: string;
+  skip?: number;
+  take?: number;
+};
+
 export type {
+  Query,
   UpdateStatus,
   Folder,
   GroupedFiles,

@@ -16,6 +16,7 @@ import EaseString from "./EaseString";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import Link from "next/link";
 import axios from "axios";
+import useToggleStore from "@/app/store/navbarCollapsedStore";
 
 type FormFields = {
   employeeId: string;
@@ -27,6 +28,7 @@ const Form = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const { setShowSplash } = useSplashToggler();
   const { showLogoutArt, setShowLogoutArt } = useLogoutArtStore();
+  const { setIsCollapsed } = useToggleStore();
   const router = useRouter();
   const {
     register,
@@ -87,6 +89,7 @@ const Form = () => {
       Cookies.set(INTRANET, rt, { expires: expirationDays });
       localStorage.setItem(INTRANET, response.data.tokens.accessToken);
       setShowSplash(true);
+      setIsCollapsed(true);
 
       router.push("/");
     } catch (error: unknown) {

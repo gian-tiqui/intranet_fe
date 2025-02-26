@@ -10,6 +10,7 @@ import {
   LogType,
   NotificationType,
   Post,
+  Query,
   RetPost,
   UnreadPost,
   User,
@@ -286,16 +287,27 @@ const fetchPost = async (id: number) => {
   }
 };
 
-const fetchMainFolders = async (): Promise<Folder[]> => {
+const fetchMainFolders = async (
+  query?: Query
+): Promise<{ folders: Folder[]; count: number }> => {
   try {
-    const response = await apiClient.get(`${API_BASE}/folders`);
+    const response = await apiClient.get(`${API_BASE}/folders`, {
+      params: query,
+    });
 
-    const mainFolders = response.data;
+    const folders = response.data.folders;
+    const count = response.data.count;
 
-    return mainFolders;
+    return {
+      folders,
+      count,
+    };
   } catch (error) {
     console.error(error);
-    return [];
+    return {
+      folders: [],
+      count: 0,
+    };
   }
 };
 
