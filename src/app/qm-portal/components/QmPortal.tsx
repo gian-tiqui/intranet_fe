@@ -22,15 +22,9 @@ const QmPortal = () => {
     setSelectedFolder(undefined);
   }, [setSelectedFolder]);
 
-  const {
-    data: folders,
-    error,
-    isError,
-    isLoading,
-    refetch,
-  } = useQuery({
+  const { data, error, isError, isLoading, refetch } = useQuery({
     queryKey: ["main-folder"],
-    queryFn: fetchMainFolders,
+    queryFn: () => fetchMainFolders({ search: "", skip: 0, take: 100 }),
   });
 
   useEffect(() => {
@@ -90,8 +84,8 @@ const QmPortal = () => {
         <LocationComp name={selectedFolder?.name} />
 
         <div className="overflow-auto w-full flex flex-col h-[52vh]">
-          {folders &&
-            folders.map((data, index) => (
+          {data?.folders &&
+            data?.folders.map((data, index) => (
               <Folder
                 data={data}
                 setSelectedFolder={setSelectedFolder}

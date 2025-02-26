@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
+import "primereact/resources/themes/lara-light-blue/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+import { PrimeReactProvider } from "primereact/api";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/ReactToastify.min.css";
 import WelcomeSidebar from "./welcome/components/WelcomeSidebar";
 import Divider from "./components/Divider";
-import "primereact/resources/themes/lara-light-blue/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
-import { PrimeReactProvider } from "primereact/api";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
