@@ -24,10 +24,6 @@ import useDeletePostStore from "@/app/store/deletePost";
 import DeletePostModal from "./DeletePostModal";
 import { motion } from "framer-motion";
 import Deactivation from "@/app/deactivation/components/Deactivation";
-// import UserEditLogs from "../pages/UserEditLogs";
-// import PostEditLog from "../pages/PostEditLog";
-// import CommentEditLog from "../pages/CommentEditLog";
-// import ChangePasswordLog from "../pages/ChangePasswordLog";
 
 const Sidebar = () => {
   const [selectedComp, setSelectedComp] = useState<ReactNode>(<Graphs />);

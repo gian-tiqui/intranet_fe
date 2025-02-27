@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
-import { fetchMainFolders } from "../functions/functions";
+import { checkDept, fetchMainFolders } from "../functions/functions";
 import { Query } from "../types/types";
 import useSignalStore from "../store/signalStore";
 import { Button } from "primereact/button";
@@ -97,13 +97,13 @@ const FolderGrid = () => {
       />
       <div className="flex justify-end gap-2 mb-10">
         <InputText
-          className="px-2 dark:bg-neutral-900 rounded-lg"
+          className="px-2 dark:bg-neutral-900 rounded-lg h-10"
           placeholder="Search a folder"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
 
-        {
+        {checkDept() && (
           <Button
             severity="info"
             className="h-10 w-32 bg-white rounded-lg dark:bg-neutral-900 justify-center hover:shadow hover:bg-neutral-100 dark:hover:bg-neutral-950"
@@ -112,7 +112,7 @@ const FolderGrid = () => {
           >
             Add folder
           </Button>
-        }
+        )}
       </div>
 
       <div className="flex gap-2 items-center mb-5">
@@ -138,45 +138,47 @@ const FolderGrid = () => {
                   <i className={`${PrimeIcons.FOLDER} text-lg`}></i>
                   <p className="text-sm font-medium">{folder.name}</p>
                 </div>
-                <Button
-                  icon={PrimeIcons.ELLIPSIS_H}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    folderOverlayRef.current?.toggle(e);
-                  }}
-                  className="h-5 w-5 rounded-full grid place-content-center hover:bg-neutral-400 p-4"
-                >
-                  <OverlayPanel
-                    ref={folderOverlayRef}
-                    className="bg-white dark:bg-neutral-900 text-black dark:text-white"
+                {checkDept() && (
+                  <Button
+                    icon={PrimeIcons.ELLIPSIS_H}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      folderOverlayRef.current?.toggle(e);
+                    }}
+                    className="h-5 w-5 rounded-full grid place-content-center hover:bg-neutral-400 p-4"
                   >
-                    <div className="flex flex-col gap-1">
-                      <Button
-                        icon={`${PrimeIcons.USER_EDIT} text-lg`}
-                        className="gap-2"
-                        onClick={() => handleRenameClick(folder.id)}
-                      >
-                        Rename
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          confirmDialog({
-                            message:
-                              "Are you sure you want to delete the folder?",
-                            header: "Delete folder",
-                            icon: "pi pi-exclamation-triangle",
-                            defaultFocus: "accept",
-                            accept: () => handleDeleteFolder(folder.id),
-                          });
-                        }}
-                        icon={`${PrimeIcons.TRASH} text-lg`}
-                        className="gap-2"
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  </OverlayPanel>
-                </Button>
+                    <OverlayPanel
+                      ref={folderOverlayRef}
+                      className="bg-white dark:bg-neutral-900 text-black dark:text-white"
+                    >
+                      <div className="flex flex-col gap-1">
+                        <Button
+                          icon={`${PrimeIcons.USER_EDIT} text-lg`}
+                          className="gap-2"
+                          onClick={() => handleRenameClick(folder.id)}
+                        >
+                          Rename
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            confirmDialog({
+                              message:
+                                "Are you sure you want to delete the folder?",
+                              header: "Delete folder",
+                              icon: "pi pi-exclamation-triangle",
+                              defaultFocus: "accept",
+                              accept: () => handleDeleteFolder(folder.id),
+                            });
+                          }}
+                          icon={`${PrimeIcons.TRASH} text-lg`}
+                          className="gap-2"
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </OverlayPanel>
+                  </Button>
+                )}
               </div>
             );
           })

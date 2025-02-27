@@ -10,14 +10,16 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { pdfjs } from "react-pdf";
-import { Level } from "@/app/types/types";
+import { Folder, Level, Query } from "@/app/types/types";
 import { useQuery } from "@tanstack/react-query";
 import { createWorker } from "tesseract.js";
 import DepartmentsList from "./DepartmentsList";
 import { jwtDecode } from "jwt-decode";
 import PostPreview from "./PostPreview";
 import useSignalStore from "@/app/store/signalStore";
-import { useParams, usePathname } from "next/navigation";
+import { Checkbox } from "primereact/checkbox";
+import { Dropdown, DropdownProps } from "primereact/dropdown";
+import { getFolders } from "@/app/utils/service/folderService";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -43,6 +45,7 @@ interface Props {
 }
 
 const PostModal: React.FC<Props> = ({ isMobile }) => {
+  const [notify, setNotify] = useState<boolean>(false);
   const { setVisible } = useShowPostStore();
   const { setIsCollapsed } = useToggleStore();
   const departments = useDepartments();
@@ -54,35 +57,42 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     "bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white";
   const [posting, setPosting] = useState<boolean>(false);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
-  const [showDepartments, setShowDepartments] = useState<boolean>(false);
   const [levels, setLevels] = useState<Level[]>([]);
   const [filePreviews, setFilePreviews] = useState<string[]>([]);
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [title, setTitle] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<string | undefined>(undefined);
   const [previewClickable, setPreviewClickable] = useState<boolean>(false);
+  const [selectedLevel, setSelectedLevel] = useState<Level | undefined>(
+    undefined
+  );
+  const [selectedFolder, setSelectedFolder] = useState<Folder | undefined>(
+    undefined
+  );
+  const [foldersQuery] = useState<Query>({
+    includeSubfolders: 1,
+    search: "",
+    skip: 0,
+    take: 500,
+  });
   const { setSignal } = useSignalStore();
-  const param = useParams();
-  const pathName = usePathname();
-
   const { data, isError, error } = useQuery({
     queryKey: ["level"],
     queryFn: fetchAllLevels,
   });
 
-  const handleCheckboxChange = (deptId: string) => {
-    setSelectedDepartments((prevSelected) => {
-      if (prevSelected.includes(deptId)) {
-        return prevSelected.filter((id) => id !== deptId);
-      } else {
-        return [...prevSelected, deptId];
-      }
-    });
-  };
+  const { data: foldersData } = useQuery({
+    queryKey: [`folders-${JSON.stringify(foldersQuery)}`],
+    queryFn: () => getFolders(foldersQuery),
+  });
 
   useEffect(() => {
     setValue("deptIds", selectedDepartments.join(","));
   }, [selectedDepartments, setValue]);
+
+  useEffect(() => {
+    if (selectedLevel) setValue("lid", selectedLevel?.lid);
+  }, [selectedLevel, setValue]);
 
   const scanImage = async (imageUrl: string): Promise<string> => {
     const worker = await createWorker("eng");
@@ -295,9 +305,8 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       formData.append("public", data.public);
       formData.append("lid", String(data.lid));
       formData.append("extractedText", data.extractedText);
-      if (param.id && pathName.includes("/qm-portal/folders/")) {
-        formData.append("subfolderId", String(param.id));
-      }
+      if (selectedFolder)
+        formData.append("folderId", selectedFolder.id.toString());
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
 
@@ -354,7 +363,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             className: toastClass,
           });
 
-          if (!pathName.includes("/qm-portal/folders/")) {
+          if (notify) {
             const notifications = data.deptIds.split(",").map((deptId) =>
               apiClient
                 .post(`${API_BASE}/notification/new-post`, null, {
@@ -422,6 +431,29 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       setIsCollapsed(true);
     }
   }, [setIsCollapsed, isMobile]);
+
+  const selectedOptionTemplate = (
+    option: { level: string } | null,
+    props: DropdownProps
+  ) => {
+    if (option) {
+      return (
+        <div className="flex align-items-center">
+          <div>{option.level}</div>
+        </div>
+      );
+    }
+
+    return <span>{props.placeholder || "Select a level"}</span>;
+  };
+
+  const levelOptionTemplate = (option: { level: string }) => {
+    return (
+      <div className="flex align-items-center">
+        <div>{option.level}</div>
+      </div>
+    );
+  };
 
   return (
     <div className="min-w-full min-h-full bg-black bg-opacity-85 dark:bg-black/50 absolute z-50 grid place-content-center">
@@ -524,7 +556,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             />
             <hr className="w-full border-b border border-neutral-300 dark:border-neutral-800" />
             <textarea
-              className="w-full h-40 outline-none p-2 bg-inherit placeholder-neutral-600"
+              className="w-full h-20 outline-none p-2 bg-inherit placeholder-neutral-600"
               placeholder="Is there something you want to write for the memo?"
               {...register("message")}
             />
@@ -572,61 +604,70 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             </div>
           </div>
         </div>
-        <div className="rounded-2xl border-t bg-white dark:bg-neutral-950 dark:border-black relative pb-2">
+        <Checkbox
+          id="notifyCheckbox"
+          className="ms-7 me-2"
+          value={notify}
+          checked={notify}
+          onChange={() => {
+            setNotify((prev) => !prev);
+          }}
+        />
+        <label
+          htmlFor="notifyCheckbox"
+          onClick={() => setNotify((prev) => !prev)}
+          className="hover:cursor-pointer text-sm"
+        >
+          Notify recipients?
+        </label>
+
+        <div className="rounded-2xl border-t mt-2 bg-white dark:bg-neutral-950 dark:border-black relative pb-2">
           <div className="h-7 flex w-full justify-center items-center">
             <Icon icon={"octicon:dash-16"} className="w-7 h-7" />
           </div>
-          <div className="flex items-center px-5">
-            <Icon
-              icon={"arcticons:emoji-department-store"}
-              className="h-4 w-4"
-            />
-            <select
-              {...register("lid")}
+          <div className="flex items-center flex-col px-5">
+            <Dropdown
+              className="w-full mb-2 h-8 items-center"
+              filter
+              placeholder="Select a employee level"
+              value={selectedLevel}
               onChange={(e) => {
-                const lid = e.target.value;
+                const lid = e.target.value.lid;
 
-                if (lid === "1") {
+                if (lid === 1) {
                   setSelectedDepartments([
                     ...departments.map((dept) => String(dept.deptId)),
                   ]);
                 } else {
                   setSelectedDepartments([]);
                 }
-              }}
-              className="w-[70%] md:w-full bg-inherit rounded-t-xl h-9  text-sm gap-1 outline-none"
-            >
-              <option value={""}>Select employee level</option>
-              {levels.map((level) => (
-                <option
-                  value={level.lid}
-                  className="w-[80%] md:w-full border rounded-xl h-10 text-xs bg-white dark:bg-neutral-900"
-                  key={level.lid}
-                >
-                  {level.level[0].toUpperCase() + level.level.substring(1)}
-                </option>
-              ))}
-            </select>
-          </div>
 
-          <div
-            onClick={() => setShowDepartments(!showDepartments)}
-            className="h-8 gap-1 cursor-pointer px-5 flex items-center relative"
-          >
-            <Icon
-              icon={"arcticons:emoji-department-store"}
-              className="h-4 w-4"
+                setSelectedLevel(e.target.value);
+              }}
+              options={levels}
+              valueTemplate={selectedOptionTemplate}
+              itemTemplate={levelOptionTemplate}
+              optionLabel="level"
             />
-            <p className="text-sm">Select department recipient/s</p>
-          </div>
-          {showDepartments && (
             <DepartmentsListMemo
               setSelectedDepartments={setSelectedDepartments}
               departments={departments}
-              handleCheckboxChange={handleCheckboxChange}
               selectedDepartments={selectedDepartments}
             />
-          )}
+            {foldersData && (
+              <Dropdown
+                value={selectedFolder}
+                options={foldersData.data.folders.map((folder: Folder) => ({
+                  label: folder.name,
+                  value: folder,
+                }))}
+                onChange={(e) => setSelectedFolder(e.value)}
+                placeholder="Select a folder"
+                className="w-full mb-2 h-8 items-center"
+                filter
+              />
+            )}
+          </div>
         </div>
       </form>
     </div>

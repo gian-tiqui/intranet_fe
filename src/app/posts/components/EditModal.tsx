@@ -19,6 +19,7 @@ import DepartmentsList from "./DepartmentsList";
 import useRefetchPostStore from "@/app/store/refetchPostStore";
 import PostPreview from "./PostPreview";
 import useSignalStore from "@/app/store/signalStore";
+import { Dropdown, DropdownProps } from "primereact/dropdown";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -51,12 +52,14 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const [convertedFiles, setConvertedFiles] = useState<File[]>([]);
   const [isConverting, setIsConverting] = useState<boolean>(false);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
-  const [showDepartments, setShowDepartments] = useState<boolean>(false);
   const { refetch } = useRefetchPostStore();
   const [filePreviews, setFilePreviews] = useState<string[]>([]);
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [title, setTitle] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<string | undefined>(undefined);
+  const [selectedLevel, setSelectedLevel] = useState<Level | undefined>(
+    undefined
+  );
   const { setSignal } = useSignalStore();
 
   const handleShowPreview = () => {
@@ -74,16 +77,6 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
         type: "error",
       });
     }
-  };
-
-  const handleCheckboxChange = (deptId: string) => {
-    setSelectedDepartments((prevSelected) => {
-      if (prevSelected.includes(deptId)) {
-        return prevSelected.filter((id) => id !== deptId);
-      } else {
-        return [...prevSelected, deptId];
-      }
-    });
   };
 
   const [levels, setLevels] = useState<Level[]>([]);
@@ -350,6 +343,29 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
     else setValue("addPhoto", "false");
   };
 
+  const selectedOptionTemplate = (
+    option: { level: string } | null,
+    props: DropdownProps
+  ) => {
+    if (option) {
+      return (
+        <div className="flex align-items-center">
+          <div>{option.level}</div>
+        </div>
+      );
+    }
+
+    return <span>{props.placeholder || "Select a level"}</span>;
+  };
+
+  const levelOptionTemplate = (option: { level: string }) => {
+    return (
+      <div className="flex align-items-center">
+        <div>{option.level}</div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-40 grid place-content-center">
       {showPreview && (
@@ -460,7 +476,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
               </>
             ) : (
               <textarea
-                className="w-full h-40 outline-none p-2 bg-inherit"
+                className="w-full h-20 outline-none p-2 bg-inherit"
                 placeholder="Edit your memo content"
                 {...register("message")}
               />
@@ -508,7 +524,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
             </div>
           </div>
         </div>
-        <div className="mx-10 flex items-center gap-1 mb-4">
+        <div className="mx-10 flex items-center gap-1 mb-2">
           <input type="checkbox" onChange={handleChangeCheckbox} />
           <p className="text-sm">Keep previous files?</p>
         </div>
@@ -516,57 +532,36 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
           <div className="h-7 flex w-full justify-center items-center">
             <Icon icon={"octicon:dash-16"} className="w-7 h-7" />
           </div>
-          <div className="flex items-center px-5">
-            <Icon
-              icon={"arcticons:emoji-department-store"}
-              className="h-4 w-4"
-            />
-            <select
-              {...register("lid", { required: true })}
-              onChange={(e) => {
-                const lid = e.target.value;
 
-                if (lid === "1") {
-                  setSelectedDepartments([
-                    ...departments.map((dept) => String(dept.deptId)),
-                  ]);
-                } else {
-                  setSelectedDepartments([]);
-                }
-              }}
-              className="w-full bg-inherit rounded-t-xl h-9  text-sm gap-1 outline-none"
-            >
-              <option value={""}>Select employee level</option>
-              {levels.map((level) => (
-                <option
-                  value={level.lid}
-                  className="w-full border rounded-xl h-10 bg-white dark:bg-neutral-900"
-                  key={level.lid}
-                >
-                  {level.level[0].toUpperCase() + level.level.substring(1)}
-                </option>
-              ))}
-            </select>
-          </div>
+          <Dropdown
+            className="w-full mb-2 h-8 items-center"
+            filter
+            placeholder="Select a employee level"
+            value={selectedLevel}
+            onChange={(e) => {
+              const lid = e.target.value.lid;
 
-          <div
-            onClick={() => setShowDepartments(!showDepartments)}
-            className="h-8 gap-1 cursor-pointer px-5 flex items-center relative"
-          >
-            <Icon
-              icon={"arcticons:emoji-department-store"}
-              className="h-4 w-4"
-            />
-            <p className="text-sm">Select department/s</p>
-          </div>
-          {showDepartments && (
-            <DepartmentsList
-              setSelectedDepartments={setSelectedDepartments}
-              departments={departments}
-              handleCheckboxChange={handleCheckboxChange}
-              selectedDepartments={selectedDepartments}
-            />
-          )}
+              if (lid === 1) {
+                setSelectedDepartments([
+                  ...departments.map((dept) => String(dept.deptId)),
+                ]);
+              } else {
+                setSelectedDepartments([]);
+              }
+
+              setSelectedLevel(e.target.value);
+            }}
+            options={levels}
+            valueTemplate={selectedOptionTemplate}
+            itemTemplate={levelOptionTemplate}
+            optionLabel="level"
+          />
+
+          <DepartmentsList
+            setSelectedDepartments={setSelectedDepartments}
+            departments={departments}
+            selectedDepartments={selectedDepartments}
+          />
         </div>
       </form>
     </div>

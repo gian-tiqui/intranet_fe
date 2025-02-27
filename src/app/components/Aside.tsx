@@ -200,16 +200,6 @@ const Aside: React.FC<Props> = ({
                   <p className="w-full text-sm">My posts</p>
                 </div>
               )}
-
-            {decodeUserData() && decodeUserData()?.deptId === 2 && (
-              <div
-                className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-                onClick={() => handleClick("/qm-portal")}
-              >
-                <Icon icon={"mdi:approve"} className="h-5 w-5" />
-                <p className="w-full text-sm">Quality Management Folder</p>
-              </div>
-            )}
           </div>
           <div className="flex flex-col">
             <div
@@ -217,7 +207,7 @@ const Aside: React.FC<Props> = ({
               className="w-full flex text-center text-xs rounded mb-6 border dark:border-neutral-900"
             >
               <div
-                className={`w-full py-2 flex items-start justify-center gap-1 cursor-pointer px-2 ${
+                className={`w-full py-2 flex items-center justify-center gap-1 cursor-pointer px-2 ${
                   selectedVis === "all" &&
                   "bg-gray-200 dark:bg-neutral-700 rounded-s"
                 }`}
@@ -230,7 +220,7 @@ const Aside: React.FC<Props> = ({
                 General Posts
               </div>
               <div
-                className={`w-full py-2 flex items-start justify-center cursor-pointer px-2 ${
+                className={`w-full py-2 flex items-center gap-2 justify-center cursor-pointer px-2 ${
                   selectedVis === "dept" && "bg-gray-200 dark:bg-neutral-700"
                 }`}
                 onClick={() => setSelectedVis("dept")}
@@ -240,16 +230,6 @@ const Aside: React.FC<Props> = ({
                   className="h-5 w-5"
                 />
                 Dept Posts
-              </div>
-              <div
-                className={`w-full py-2 flex items-start justify-center gap-1 cursor-pointer px-2 ${
-                  selectedVis === "qm" &&
-                  "bg-gray-200 dark:bg-neutral-700 rounded-e"
-                }`}
-                onClick={() => setSelectedVis("qm")}
-              >
-                <Icon icon={"duo-icons:approved"} className="h-5 w-5" />
-                QM Posts
               </div>
             </div>
             <PostList
@@ -363,19 +343,6 @@ const Aside: React.FC<Props> = ({
                   <p className="w-full text-sm">My posts</p>
                 </div>
               )}
-
-            {decodeUserData() && decodeUserData()?.deptId === 2 && (
-              <div
-                className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-                onClick={() => {
-                  handleClick("/qm-portal");
-                  if (setIsCollapsed) setIsCollapsed(!isCollapsed);
-                }}
-              >
-                <Icon icon={"mdi:approve"} className="h-5 w-5" />
-                <p className="w-full text-sm">Quality Management Folder</p>
-              </div>
-            )}
           </div>
 
           <div className="flex flex-col">

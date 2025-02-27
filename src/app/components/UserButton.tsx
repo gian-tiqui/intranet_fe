@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import apiClient from "../http-common/apiUrl";
 import { toastClass } from "../tailwind-classes/tw_classes";
 import useToggleStore from "../store/navbarCollapsedStore";
+import { Avatar } from "primereact/avatar";
 
 interface Props {
   uVisible: boolean;
@@ -183,7 +184,14 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
         </div>
       )}
       <div className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-        <div className="rounded-full bg-neutral-200 h-8 w-8"></div>
+        {userData && (
+          <Avatar
+            label={userData?.firstName[0] + userData?.lastName[0]}
+            shape="circle"
+            className="font-medium"
+          />
+        )}
+
         <div>
           {loading ? (
             <p className="text-sm">Loading...</p>
