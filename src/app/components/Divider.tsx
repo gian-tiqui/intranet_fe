@@ -99,6 +99,12 @@ const Divider: React.FC<Props> = ({ children }) => {
   }, [token]);
 
   useEffect(() => {
+    if (!checkDept()) {
+      setEditVisible(false);
+    }
+  }, []);
+
+  useEffect(() => {
     const fetchReads = async () => {
       const response = await apiClient.post(
         `${API_BASE}/notification/user-reads`,
@@ -325,7 +331,7 @@ const Divider: React.FC<Props> = ({ children }) => {
                         />
                       </HoverBox>
 
-                      {editVisible && (
+                      {editVisible && [] && (
                         <HoverBox
                           key="desktop-edit"
                           className="hover:bg-neutral-300 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded"

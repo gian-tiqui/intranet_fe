@@ -1,5 +1,10 @@
 import { API_BASE } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
+import { Query } from "@/app/types/types";
+
+const getFolders = async (params: Query) => {
+  return apiClient.get(`${API_BASE}/folders`, { params });
+};
 
 const getFolderById = async (folderId: number) => {
   return apiClient.get(`${API_BASE}/folders/${folderId}`);
@@ -21,4 +26,4 @@ const deleteFolder = async (folderId: number) => {
   return apiClient.delete(`${API_BASE}/folders/${folderId}`);
 };
 
-export { getFolderById, addMainFolder, updateFolder, deleteFolder };
+export { getFolders, getFolderById, addMainFolder, updateFolder, deleteFolder };

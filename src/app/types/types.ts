@@ -255,6 +255,7 @@ type Query = {
   search?: string;
   skip?: number;
   take?: number;
+  includeSubfolders?: number;
 };
 
 export type {

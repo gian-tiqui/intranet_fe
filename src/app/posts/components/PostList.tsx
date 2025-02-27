@@ -16,7 +16,6 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import PostListItem from "./PostListItem";
 import useDepartments from "@/app/custom-hooks/departments";
 import useSignalStore from "@/app/store/signalStore";
-import QmList from "./QmList";
 import { INTRANET } from "@/app/bindings/binding";
 import Cookies from "js-cookie";
 import { fetchDeptPostsByLid } from "@/app/utils/service/post";
@@ -131,10 +130,6 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
   }, [refetchPrivate, refetchPublic, _allPosts, _posts, signal, setSignal]);
 
   const [maxNum, setMaxNum] = useState<number>(2);
-
-  if (selectedVis == "qm") {
-    return <QmList />;
-  }
 
   const showMore = () => {
     setMaxNum((prevMax) => prevMax + 3);

@@ -54,7 +54,7 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
         header="Create new folder"
         className="w-96"
         pt={{
-          header: { className: "dark:bg-neutral-950 text-white" },
+          header: { className: "dark:bg-neutral-950 dark:text-white" },
           content: { className: "dark:bg-neutral-950" },
         }}
       >

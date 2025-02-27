@@ -74,7 +74,7 @@ const EditFolderDialog: React.FC<Props> = ({
         header="Edit folder"
         className="w-96"
         pt={{
-          header: { className: "dark:bg-neutral-950 text-white" },
+          header: { className: "dark:bg-neutral-950 dark:text-white" },
           content: { className: "dark:bg-neutral-950" },
         }}
       >
