@@ -20,7 +20,7 @@ const FolderGrid = () => {
   const [query, setQuery] = useState<Query>({ search: "", skip: 0, take: 50 });
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { signal, setSignal } = useSignalStore();
-  const [folderId, setFolderId] = useState<number | undefined>(undefined);
+  const [folderId, setFolderId] = useState<number>(-1);
   const [editFolderId, setEditFolderId] = useState<number>(-1);
   const [editFolderDialogVisible, setEditFolderDialogVisible] =
     useState<boolean>(false);
