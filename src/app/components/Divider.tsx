@@ -47,6 +47,7 @@ import useUserStore from "../store/userStore";
 import DeactivateUser from "../deactivation/components/DeactivateUser";
 import { Dialog } from "primereact/dialog";
 import useUpdateDialogStore from "../store/updateDialogStore";
+import { ConfirmDialog } from "primereact/confirmdialog";
 
 interface Props {
   children?: ReactNode;
@@ -216,6 +217,12 @@ const Divider: React.FC<Props> = ({ children }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <ConfirmDialog
+        pt={{
+          acceptButton: { className: "ms-2 w-20 h-8" },
+          rejectButton: { className: "ms-2 w-20 bg-red-400 h-8" },
+        }}
+      />
       <Dialog
         visible={updatedDialogShown}
         onHide={() => {
