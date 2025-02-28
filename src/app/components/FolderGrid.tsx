@@ -36,6 +36,10 @@ const FolderGrid = () => {
   });
 
   useEffect(() => {
+    console.log(data);
+  }, [data]);
+
+  useEffect(() => {
     const handler = setTimeout(() => {
       setQuery((prev) => ({ ...prev, search: searchTerm }));
     }, 700);
@@ -127,16 +131,24 @@ const FolderGrid = () => {
 
             return (
               <div
-                className="h-12 hover:cursor-pointer bg-white px-3 rounded-lg dark:bg-neutral-900 flex items-center gap-2 justify-between hover:shadow hover:bg-neutral-100 dark:hover:bg-neutral-950"
+                className={`h-12 hover:cursor-pointer px-3 rounded-lg flex items-center gap-2 justify-between ${
+                  !folder.folderColor
+                    ? "bg-white hover:shadow dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-950"
+                    : ""
+                }`}
+                style={{
+                  color: folder.textColor,
+                  backgroundColor: folder.folderColor,
+                }}
                 key={folder.id}
                 onClick={() => {
                   setFolderId(folder.id);
                   setFolderDialogVisible(true);
                 }}
               >
-                <div className="flex gap-2">
+                <div className="flex gap-2 truncate">
                   <i className={`${PrimeIcons.FOLDER} text-lg`}></i>
-                  <p className="text-sm font-medium">{folder.name}</p>
+                  <p className="text-sm font-medium trunc">{folder.name}</p>
                 </div>
                 {checkDept() && (
                   <Button
@@ -145,7 +157,7 @@ const FolderGrid = () => {
                       e.stopPropagation();
                       folderOverlayRef.current?.toggle(e);
                     }}
-                    className="h-5 w-5 rounded-full grid place-content-center hover:bg-neutral-400 p-4"
+                    className={`h-5 w-5 rounded-full grid place-content-center hover:bg-neutral-400 dark:hover:bg-neutral-700 p-4`}
                   >
                     <OverlayPanel
                       ref={folderOverlayRef}
@@ -157,7 +169,7 @@ const FolderGrid = () => {
                           className="gap-2"
                           onClick={() => handleRenameClick(folder.id)}
                         >
-                          Rename
+                          Edit
                         </Button>
                         <Button
                           onClick={() => {
