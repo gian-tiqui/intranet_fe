@@ -10,8 +10,8 @@ import { InputText } from "primereact/inputtext";
 interface Props {
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
-  folderId: number;
-  setFolderId: Dispatch<SetStateAction<number>>;
+  folderId: number | undefined;
+  setFolderId: Dispatch<SetStateAction<number | undefined>>;
 }
 
 const FolderContentDialog: React.FC<Props> = ({
@@ -35,7 +35,7 @@ const FolderContentDialog: React.FC<Props> = ({
   const { data: folderPosts, refetch } = useQuery({
     queryKey: [`folder-${folderId}-posts`],
     queryFn: () => getFolderPostsByFolderId(folderId, query),
-    enabled: folderId != -1,
+    enabled: !!folderId,
   });
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const FolderContentDialog: React.FC<Props> = ({
 
         content: { className: "dark:bg-neutral-900 dark:text-white pt-2" },
       }}
-      className="w-[90%] h-[80vh]"
+      className="w-[95%] h-[95vh]"
       header={
         <div className="flex gap-3 items-center">
           <i className={`${PrimeIcons.FOLDER_OPEN} text-2xl`}></i>

@@ -21,8 +21,8 @@ interface Props {
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
   refetch: (options?: RefetchOptions) => Promise<object>;
-  folderId: number;
-  setFolderId: Dispatch<SetStateAction<number>>;
+  folderId: number | undefined;
+  setFolderId: Dispatch<SetStateAction<number | undefined>>;
 }
 
 interface FormFields {
