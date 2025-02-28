@@ -57,6 +57,8 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
           });
           refetch();
           reset();
+          setTextColor("");
+          setFolderCOlor("");
           setVisible(false);
         }
       })
@@ -108,26 +110,43 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
           {addColors && (
             <div className="flex gap-5 mb-5 justify-center">
               <div className="flex flex-col items-center font-medium gap-1">
-                <span>Pick text color</span>
+                <span>
+                  <span className="font-bold">Aa</span> Text Color
+                </span>
 
                 <ColorPicker
                   value={textColor}
                   onChange={(e: ColorPickerChangeEvent) =>
                     setTextColor(String(e.value))
                   }
+                  className="mb-2"
                 />
-                <span>{textColor}</span>
+                <InputText
+                  value={textColor}
+                  className="w-32 text-center bg-neutral-200 h-10"
+                  placeholder="input hex code"
+                  onChange={(e) => setTextColor(e.target.value)}
+                />
               </div>
               <div className="flex flex-col items-center font-medium gap-1">
-                <span>Pick folder color</span>
+                <span>
+                  <i className={`${PrimeIcons.FOLDER} me-2 text-xl`}></i>Folder
+                  Color
+                </span>
 
                 <ColorPicker
                   value={folderColor}
                   onChange={(e: ColorPickerChangeEvent) =>
                     setFolderCOlor(String(e.value))
                   }
+                  className="mb-2"
                 />
-                <span>{folderColor}</span>
+                <InputText
+                  value={folderColor}
+                  className="w-32 text-center bg-neutral-200 h-10"
+                  placeholder="input hex code"
+                  onChange={(e) => setFolderCOlor(e.target.value)}
+                />
               </div>
             </div>
           )}

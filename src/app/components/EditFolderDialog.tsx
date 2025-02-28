@@ -82,6 +82,8 @@ const EditFolderDialog: React.FC<Props> = ({
           });
           refetch();
           reset();
+          setTextColor("");
+          setFolderCOlor("");
           setVisible(false);
         }
       })
