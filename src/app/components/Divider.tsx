@@ -21,6 +21,7 @@ import EditPostModal from "../posts/components/EditModal";
 import usePostIdStore from "../store/postId";
 import { checkDept, decodeUserData } from "../functions/functions";
 import NotificationBell from "./NotificationBell";
+import facade from "../assets/westlake_logo_horizontal.jpg.png";
 import { toast } from "react-toastify";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import apiClient from "../http-common/apiUrl";
@@ -48,6 +49,7 @@ import DeactivateUser from "../deactivation/components/DeactivateUser";
 import { Dialog } from "primereact/dialog";
 import useUpdateDialogStore from "../store/updateDialogStore";
 import { ConfirmDialog } from "primereact/confirmdialog";
+import Image from "next/image";
 
 interface Props {
   children?: ReactNode;
@@ -316,7 +318,6 @@ const Divider: React.FC<Props> = ({ children }) => {
             >
               <div id="buttons" className="flex w-full pt-2 mb-2 gap-3">
                 {/* THIS IS FOR DESKTOP VIEW */}
-
                 <div className="md:flex gap-1 hidden">
                   {isCollapsed && (
                     <>
@@ -347,8 +348,23 @@ const Divider: React.FC<Props> = ({ children }) => {
                   )}
                 </div>
 
-                {/* THIS IS FOR MOBILE VIEW */}
+                <div
+                  className={`flex items-center gap-2 ${
+                    isCollapsed && "ms-48"
+                  }`}
+                >
+                  <Image
+                    src={facade}
+                    alt="Westlake Facade"
+                    className="h-8 w-8"
+                  />
 
+                  <h3 className="text-xl font-bold text-blue-500">
+                    WMC Employee Portal
+                  </h3>
+                </div>
+
+                {/* THIS IS FOR MOBILE VIEW */}
                 <div className="flex gap-1 md:hidden">
                   <>
                     <HoverBox
@@ -377,7 +393,6 @@ const Divider: React.FC<Props> = ({ children }) => {
                   </>
                 </div>
               </div>
-
               <div className="flex items-center gap-3 px-3">
                 {searchBarHidden && (
                   <Searchbar
@@ -397,7 +412,6 @@ const Divider: React.FC<Props> = ({ children }) => {
               </div>
             </div>
           )}
-
           <div
             className={`mx-auto w-full ${
               hidden && "max-w-[750px]"
