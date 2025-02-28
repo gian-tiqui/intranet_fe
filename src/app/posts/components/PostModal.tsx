@@ -20,6 +20,7 @@ import useSignalStore from "@/app/store/signalStore";
 import { Checkbox } from "primereact/checkbox";
 import { Dropdown, DropdownProps } from "primereact/dropdown";
 import { getFolders } from "@/app/utils/service/folderService";
+import { MultiStateCheckbox } from "primereact/multistatecheckbox";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -75,16 +76,28 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     skip: 0,
     take: 500,
   });
+  const [postVisibility, setPostVisibility] = useState<string>("public");
   const { setSignal } = useSignalStore();
   const { data, isError, error } = useQuery({
     queryKey: ["level"],
     queryFn: fetchAllLevels,
   });
+  const options: { value: string; icon: string }[] = [
+    {
+      value: "public",
+      icon: "pi pi-globe",
+    },
+    { value: "private", icon: "pi pi-lock" },
+  ];
 
   const { data: foldersData } = useQuery({
     queryKey: [`folders-${JSON.stringify(foldersQuery)}`],
     queryFn: () => getFolders(foldersQuery),
   });
+
+  useEffect(() => {
+    if (postVisibility) setValue("public", postVisibility);
+  }, [postVisibility, setValue]);
 
   useEffect(() => {
     setValue("deptIds", selectedDepartments.join(","));
@@ -253,6 +266,14 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   }, [title, message, filePreviews.length]);
 
   const handlePost = async (data: FormFields) => {
+    if (!postVisibility || postVisibility == "") {
+      toast("Please select post visibility.", {
+        type: "error",
+        className: toastClass,
+      });
+      return;
+    }
+
     if (!data.lid) {
       toast("Please select an employee level.", {
         type: "error",
@@ -357,6 +378,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
         const response = await apiClient.post(`${API_BASE}/post`, formData);
 
         if (response.status === 201) {
+          console.log(data);
           setVisible(false);
           toast(response.data.message, {
             type: "success",
@@ -531,18 +553,14 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
               </div>
             </div>
 
-            <div className="bg-inherit text-sm">
-              <select
-                {...register("public", { required: true })}
-                className="bg-inherit outline-none text-xs"
-              >
-                <option className="dark:bg-neutral-900" value={"public"}>
-                  Public
-                </option>
-                <option className="dark:bg-neutral-900" value={"private"}>
-                  Private
-                </option>
-              </select>
+            <div className="bg-inherit text-sm items-center flex gap-1">
+              <MultiStateCheckbox
+                value={postVisibility}
+                options={options}
+                onChange={(e) => setPostVisibility(e.value)}
+                optionValue="value"
+              />
+              <span>{postVisibility || "nothing selected"}</span>
             </div>
           </div>
         </div>

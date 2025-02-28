@@ -245,6 +245,8 @@ type Folder = {
   subfolders: Folder[];
   posts: Post[];
   icon: string;
+  textColor?: string;
+  folderColor?: string;
 };
 
 type UpdateStatus = {

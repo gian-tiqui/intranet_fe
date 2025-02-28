@@ -27,6 +27,10 @@ const FolderContentDialog: React.FC<Props> = ({
       onHide={() => {
         if (visible) setVisible(false);
       }}
+      pt={{
+        header: { className: "dark:bg-neutral-900 dark:text-white" },
+        content: { className: "dark:bg-neutral-900 dark:text-white" },
+      }}
       className="w-[90%] h-[80vh]"
       header={data?.name}
     >

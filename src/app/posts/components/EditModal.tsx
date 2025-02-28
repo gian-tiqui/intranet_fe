@@ -20,6 +20,7 @@ import useRefetchPostStore from "@/app/store/refetchPostStore";
 import PostPreview from "./PostPreview";
 import useSignalStore from "@/app/store/signalStore";
 import { Dropdown, DropdownProps } from "primereact/dropdown";
+import { MultiStateCheckbox } from "primereact/multistatecheckbox";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -60,6 +61,14 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const [selectedLevel, setSelectedLevel] = useState<Level | undefined>(
     undefined
   );
+  const [postVisibility, setPostVisibility] = useState<string>("public");
+  const options: { value: string; icon: string }[] = [
+    {
+      value: "public",
+      icon: "pi pi-globe",
+    },
+    { value: "private", icon: "pi pi-lock" },
+  ];
   const { setSignal } = useSignalStore();
 
   const handleShowPreview = () => {
@@ -103,6 +112,10 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   };
 
   useEffect(() => {
+    if (postVisibility) setValue("public", postVisibility);
+  }, [postVisibility, setValue]);
+
+  useEffect(() => {
     if (data) setLevels(data);
   }, [data]);
 
@@ -121,8 +134,6 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
         setValue("title", post.title);
         setValue("message", post.message);
         setValue("lid", post.lid);
-
-        console.log(post.postDepartments);
 
         const selectedDeptIds = [
           ...post.postDepartments.map((postDept) =>
@@ -269,6 +280,14 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
 
   const handleEditPost = (data: FormFields) => {
     const at = localStorage.getItem(INTRANET);
+
+    if (!postVisibility || postVisibility == "") {
+      toast("Please select post visibility.", {
+        type: "error",
+        className: toastClass,
+      });
+      return;
+    }
 
     if (at) {
       setSaving(true);
@@ -442,17 +461,15 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
               {loading ? (
                 <div className="h-3 w-1/3 rounded bg-gray-300 animate-pulse"></div>
               ) : (
-                <select
-                  {...register("public", { required: true })}
-                  className={`bg-inherit outline-none text-xs`}
-                >
-                  <option className="" value={"public"}>
-                    Public
-                  </option>
-                  <option className="bg-inherit" value={"private"}>
-                    Private
-                  </option>
-                </select>
+                <div className="bg-inherit text-sm items-center flex gap-1">
+                  <MultiStateCheckbox
+                    value={postVisibility}
+                    options={options}
+                    onChange={(e) => setPostVisibility(e.value)}
+                    optionValue="value"
+                  />
+                  <span>{postVisibility || "nothing selected"}</span>
+                </div>
               )}
             </div>
           </div>

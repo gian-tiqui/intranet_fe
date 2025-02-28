@@ -10,15 +10,31 @@ const getFolderById = async (folderId: number) => {
   return apiClient.get(`${API_BASE}/folders/${folderId}`);
 };
 
-const addMainFolder = async (name: string) => {
+const addMainFolder = async ({
+  name,
+  textColor,
+  folderColor,
+}: {
+  name: string;
+  textColor?: string;
+  folderColor?: string;
+}) => {
   return apiClient.post(`${API_BASE}/folders`, {
     name,
+    textColor,
+    folderColor,
   });
 };
 
-const updateFolder = async (data: { folderId?: number; name: string }) => {
-  return apiClient.put(`${API_BASE}/folders/${data.folderId}`, {
-    name: data.name,
+const updateFolder = async (data: {
+  folderId?: number;
+  name?: string;
+  textColor?: string;
+  folderColor?: string;
+}) => {
+  const { folderId, ...body } = data;
+  return apiClient.put(`${API_BASE}/folders/${folderId}`, {
+    ...body,
   });
 };
 
