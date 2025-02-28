@@ -10,6 +10,12 @@ const getFolderById = async (folderId: number) => {
   return apiClient.get(`${API_BASE}/folders/${folderId}`);
 };
 
+const getFolderPostsByFolderId = async (folderId: number, params: Query) => {
+  return apiClient.get(`${API_BASE}/folders/${folderId}/post`, {
+    params,
+  });
+};
+
 const addMainFolder = async ({
   name,
   textColor,
@@ -42,4 +48,11 @@ const deleteFolder = async (folderId: number) => {
   return apiClient.delete(`${API_BASE}/folders/${folderId}`);
 };
 
-export { getFolders, getFolderById, addMainFolder, updateFolder, deleteFolder };
+export {
+  getFolders,
+  getFolderById,
+  addMainFolder,
+  updateFolder,
+  deleteFolder,
+  getFolderPostsByFolderId,
+};

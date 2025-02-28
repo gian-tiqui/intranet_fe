@@ -121,10 +121,13 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
                   }
                   className="mb-2"
                 />
+                <label htmlFor="textColorId">Hex code</label>
+
                 <InputText
+                  id="textColorId"
                   value={textColor}
                   className="w-32 text-center bg-neutral-200 h-10"
-                  placeholder="input hex code"
+                  placeholder="B00000"
                   onChange={(e) => setTextColor(e.target.value)}
                 />
               </div>
@@ -141,10 +144,12 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
                   }
                   className="mb-2"
                 />
+                <label htmlFor="folderColorId">Hex code</label>
                 <InputText
+                  id="folderColorId"
                   value={folderColor}
                   className="w-32 text-center bg-neutral-200 h-10"
-                  placeholder="input hex code"
+                  placeholder="FFFFFF"
                   onChange={(e) => setFolderCOlor(e.target.value)}
                 />
               </div>
