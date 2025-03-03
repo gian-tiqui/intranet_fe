@@ -3,6 +3,7 @@ import { ImageLocation } from "@/app/types/types";
 import Image from "next/image";
 import React, { Dispatch, SetStateAction } from "react";
 import ImageOverlay from "./ImageOverlay";
+import { Dialog } from "primereact/dialog";
 
 interface Props {
   imageLocations: ImageLocation[];
@@ -15,6 +16,7 @@ const ImageSlider: React.FC<Props> = ({ imageLocations }) => {
     <div>
       <div className="mb-1">
         <div className="relative">
+          {/* <Dialog visible={true} onHide={() => {}}></Dialog> */}
           {imageLocations.length > 1 && <ImageOverlay selectedIndex={0} />}
 
           <Image
