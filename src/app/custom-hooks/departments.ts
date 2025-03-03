@@ -14,7 +14,7 @@ const useDepartments = () => {
         },
       });
 
-      setDepartments(response.data);
+      setDepartments(response.data.departments);
     };
 
     fetchDepartments();

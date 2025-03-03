@@ -36,10 +36,6 @@ const FolderGrid = () => {
   });
 
   useEffect(() => {
-    console.log(data);
-  }, [data]);
-
-  useEffect(() => {
     const handler = setTimeout(() => {
       setQuery((prev) => ({ ...prev, search: searchTerm }));
     }, 700);

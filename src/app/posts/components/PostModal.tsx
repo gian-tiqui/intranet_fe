@@ -378,7 +378,6 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
         const response = await apiClient.post(`${API_BASE}/post`, formData);
 
         if (response.status === 201) {
-          console.log(data);
           setVisible(false);
           toast(response.data.message, {
             type: "success",

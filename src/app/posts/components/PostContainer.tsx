@@ -389,7 +389,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
     <>
       <div
         onClick={generalPost ? handleClick : undefined}
-        className={`ignore-click ${generalPost && "cursor-pointer"}`}
+        className={`ignore-click ${generalPost && "cursor-pointer"} relative`}
       >
         {!post?.folderId &&
           deptIds.includes(userDeptId.toString()) &&

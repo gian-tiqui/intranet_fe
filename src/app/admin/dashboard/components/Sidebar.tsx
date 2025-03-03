@@ -24,6 +24,7 @@ import useDeletePostStore from "@/app/store/deletePost";
 import DeletePostModal from "./DeletePostModal";
 import { motion } from "framer-motion";
 import Deactivation from "@/app/deactivation/components/Deactivation";
+import Departments from "../pages/Departments";
 
 const Sidebar = () => {
   const [selectedComp, setSelectedComp] = useState<ReactNode>(<Graphs />);
@@ -74,6 +75,16 @@ const Sidebar = () => {
       icon: "clarity:users-line",
     },
     {
+      name: "Deactivate User",
+      component: <Deactivation />,
+      icon: "icons8:shutdown",
+    },
+    {
+      name: "Departments",
+      component: <Departments />,
+      icon: "f7:building",
+    },
+    {
       name: "Posts",
       component: <Posts />,
       icon: "material-symbols:post-outline",
@@ -89,11 +100,7 @@ const Sidebar = () => {
       component: <Replies />,
       icon: "mingcute:comment-line",
     },
-    {
-      name: "Deactivate User",
-      component: <Deactivation />,
-      icon: "icons8:shutdown",
-    },
+
     // {
     //   name: "User Edit Logs",
     //   component: <UserEditLogs />,
