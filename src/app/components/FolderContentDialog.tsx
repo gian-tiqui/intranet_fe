@@ -8,6 +8,8 @@ import { PrimeIcons } from "primereact/api";
 import { InputText } from "primereact/inputtext";
 import useSignalStore from "../store/signalStore";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { API_BASE } from "../bindings/binding";
 
 interface Props {
   visible: boolean;
@@ -94,27 +96,42 @@ const FolderContentDialog: React.FC<Props> = ({
         </div>
       }
     >
-      <div className="mb-4">
+      <div className="my-4">
         <InputText
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search folder contents..."
-          className="w-full bg-neutral-100 py-2 px-4"
+          className="w-full bg-neutral-200 dark:bg-neutral-800 py-2 px-4"
         />
       </div>
       <div>
         {folderPosts ? (
           folderPosts.data.post && folderPosts.data.post.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {folderPosts.data.post.map((post: Post) => (
                 <div
                   onClick={() => {
                     router.push(`/posts/${post.pid}`);
                   }}
                   key={post.pid}
-                  className="w-full h-52 bg-neutral-100 rounded-lg hover:shadow p-4"
+                  className="w-full h-52 bg-neutral-200 flex flex-col justify-between dark:bg-neutral-800 rounded-lg hover:shadow p-4"
                 >
                   <p className="font-medium">{post.title}</p>
+                  <div className="w-full h-[70%] rounded bg-neutral-50 grid relative place-content-center dark:bg-neutral-900">
+                    {post.imageLocations && post.imageLocations.length > 0 ? (
+                      <Image
+                        src={`${API_BASE}/uploads/${post.imageLocations[0].imageLocation}`}
+                        alt={post.imageLocations[0].imageLocation}
+                        className="rounded"
+                        fill
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center gap-2">
+                        <i className={`${PrimeIcons.IMAGE} text-2xl`}></i>
+                        <p className="text-sm">No attachments</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

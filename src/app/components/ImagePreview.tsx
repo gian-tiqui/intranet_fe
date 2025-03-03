@@ -93,11 +93,11 @@ const ImagePreview: React.FC<Props> = ({ mSetShowImage }) => {
         </div>
 
         {/* Image Container */}
-        <div className="overflow-auto relative h-96 w-80 md:w-[400px] md:h-[500px] flex justify-center items-center">
+        <div className="overflow-auto relative w-screen h-screen flex justify-center items-center">
           <Image
             src={`${API_BASE}/uploads/${images[showImage.selectedIndex]}`}
             alt={images[showImage.selectedIndex]}
-            className=""
+            className="max-w-none max-h-none"
             preview
           />
         </div>

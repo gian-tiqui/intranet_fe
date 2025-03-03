@@ -331,7 +331,46 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
         String(data.public === "public" ? "public" : "private")
       );
 
+      convertedFiles.sort((a, b) => {
+        const getPage = (name: string) => {
+          const match = name.match(/-page(\d+)\.jpg/);
+          return match ? parseInt(match[1], 10) : 0;
+        };
+
+        return getPage(a.name) - getPage(b.name);
+      });
+
+      const extractBatchAndPage = (fileName: string) => {
+        const match = fileName.match(/^(.*)-page(\d+)\.jpg$/);
+        if (match) {
+          return { batch: match[1], page: parseInt(match[2], 10) };
+        }
+        return { batch: fileName, page: 0 };
+      };
+
+      const groups: { key: string; files: File[] }[] = [];
+      const batchMap = new Map<string, File[]>();
+
       convertedFiles.forEach((file) => {
+        const { batch } = extractBatchAndPage(file.name);
+        if (!batchMap.has(batch)) {
+          batchMap.set(batch, []);
+          groups.push({ key: batch, files: batchMap.get(batch)! });
+        }
+        batchMap.get(batch)!.push(file);
+      });
+
+      groups.forEach((group) => {
+        group.files.sort((a, b) => {
+          const { page: pageA } = extractBatchAndPage(a.name);
+          const { page: pageB } = extractBatchAndPage(b.name);
+          return pageA - pageB;
+        });
+      });
+
+      const sortedConvertedFiles = groups.flatMap((group) => group.files);
+
+      sortedConvertedFiles.forEach((file) => {
         formData.append("newMemo", file);
       });
 
