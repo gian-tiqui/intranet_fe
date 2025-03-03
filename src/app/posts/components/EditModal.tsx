@@ -6,7 +6,7 @@ import apiClient from "@/app/http-common/apiUrl";
 import useEditModalStore from "@/app/store/editModal";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
-import { Level, Post } from "@/app/types/types";
+import { Folder, Level, Post, Query } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useQuery } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
@@ -21,6 +21,7 @@ import PostPreview from "./PostPreview";
 import useSignalStore from "@/app/store/signalStore";
 import { Dropdown, DropdownProps } from "primereact/dropdown";
 import { MultiStateCheckbox } from "primereact/multistatecheckbox";
+import { getFolders } from "@/app/utils/service/folderService";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -36,6 +37,7 @@ interface FormFields {
   lid: number;
   extractedText: string;
   addPhoto: string;
+  folderId?: number;
 }
 
 interface EditPostModalProps {
@@ -61,6 +63,15 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const [selectedLevel, setSelectedLevel] = useState<Level | undefined>(
     undefined
   );
+  const [selectedFolder, setSelectedFolder] = useState<Folder | undefined>(
+    undefined
+  );
+  const [foldersQuery] = useState<Query>({
+    includeSubfolders: 1,
+    search: "",
+    skip: 0,
+    take: 500,
+  });
   const [postVisibility, setPostVisibility] = useState<string>("public");
   const options: { value: string; icon: string }[] = [
     {
@@ -70,6 +81,11 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
     { value: "private", icon: "pi pi-lock" },
   ];
   const { setSignal } = useSignalStore();
+
+  const { data: foldersData } = useQuery({
+    queryKey: [`folders-${JSON.stringify(foldersQuery)}`],
+    queryFn: () => getFolders(foldersQuery),
+  });
 
   const handleShowPreview = () => {
     const _title = watch("title");
@@ -134,7 +150,8 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
         setValue("title", post.title);
         setValue("message", post.message);
         setValue("lid", post.lid);
-
+        setSelectedFolder(post.folder);
+        setValue("folderId", post.folderId);
         const selectedDeptIds = [
           ...post.postDepartments.map((postDept) =>
             postDept.department.deptId.toString()
@@ -142,6 +159,8 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
         ];
 
         setSelectedDepartments(selectedDeptIds);
+
+        setSelectedLevel(levels.find((level) => level.lid === post.lid));
 
         if (post.imageLocations != null) {
           setFileNames([
@@ -162,7 +181,11 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
     };
 
     fetchPost();
-  }, [postId, setValue]);
+  }, [postId, setValue, levels]);
+
+  useEffect(() => {
+    if (selectedLevel) setValue("lid", selectedLevel?.lid);
+  }, [selectedLevel, setValue]);
 
   const convertPdfToImage = async (pdfFile: File) => {
     const arrayBuffer = await pdfFile.arrayBuffer();
@@ -308,7 +331,46 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
         String(data.public === "public" ? "public" : "private")
       );
 
+      convertedFiles.sort((a, b) => {
+        const getPage = (name: string) => {
+          const match = name.match(/-page(\d+)\.jpg/);
+          return match ? parseInt(match[1], 10) : 0;
+        };
+
+        return getPage(a.name) - getPage(b.name);
+      });
+
+      const extractBatchAndPage = (fileName: string) => {
+        const match = fileName.match(/^(.*)-page(\d+)\.jpg$/);
+        if (match) {
+          return { batch: match[1], page: parseInt(match[2], 10) };
+        }
+        return { batch: fileName, page: 0 };
+      };
+
+      const groups: { key: string; files: File[] }[] = [];
+      const batchMap = new Map<string, File[]>();
+
       convertedFiles.forEach((file) => {
+        const { batch } = extractBatchAndPage(file.name);
+        if (!batchMap.has(batch)) {
+          batchMap.set(batch, []);
+          groups.push({ key: batch, files: batchMap.get(batch)! });
+        }
+        batchMap.get(batch)!.push(file);
+      });
+
+      groups.forEach((group) => {
+        group.files.sort((a, b) => {
+          const { page: pageA } = extractBatchAndPage(a.name);
+          const { page: pageB } = extractBatchAndPage(b.name);
+          return pageA - pageB;
+        });
+      });
+
+      const sortedConvertedFiles = groups.flatMap((group) => group.files);
+
+      sortedConvertedFiles.forEach((file) => {
         formData.append("newMemo", file);
       });
 
@@ -579,6 +641,19 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
             departments={departments}
             selectedDepartments={selectedDepartments}
           />
+          {foldersData && (
+            <Dropdown
+              value={selectedFolder}
+              options={foldersData.data.folders.map((folder: Folder) => ({
+                label: folder.name,
+                value: folder,
+              }))}
+              onChange={(e) => setSelectedFolder(e.value)}
+              placeholder="Select a folder"
+              className="w-full mb-2 h-8 items-center"
+              filter
+            />
+          )}
         </div>
       </form>
     </div>

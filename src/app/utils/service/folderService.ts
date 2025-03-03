@@ -10,7 +10,11 @@ const getFolderById = async (folderId: number) => {
   return apiClient.get(`${API_BASE}/folders/${folderId}`);
 };
 
-const getFolderPostsByFolderId = async (folderId: number, params: Query) => {
+const getFolderPostsByFolderId = async (
+  folderId: number | undefined,
+  params: Query
+) => {
+  if (!folderId) return;
   return apiClient.get(`${API_BASE}/folders/${folderId}/post`, {
     params,
   });

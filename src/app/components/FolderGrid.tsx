@@ -20,8 +20,8 @@ const FolderGrid = () => {
   const [query, setQuery] = useState<Query>({ search: "", skip: 0, take: 50 });
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { signal, setSignal } = useSignalStore();
-  const [folderId, setFolderId] = useState<number>(-1);
-  const [editFolderId, setEditFolderId] = useState<number>(-1);
+  const [folderId, setFolderId] = useState<number>();
+  const [editFolderId, setEditFolderId] = useState<number>();
   const [editFolderDialogVisible, setEditFolderDialogVisible] =
     useState<boolean>(false);
   const [folderDialogVisible, setFolderDialogVisible] =
@@ -34,10 +34,6 @@ const FolderGrid = () => {
     queryKey: [`folders-grid`],
     queryFn: () => fetchMainFolders(query),
   });
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   useEffect(() => {
     const handler = setTimeout(() => {

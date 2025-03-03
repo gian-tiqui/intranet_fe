@@ -324,7 +324,10 @@ const getPostsFromSubfolderById = async (id: number): Promise<Post[]> => {
   }
 };
 
-const getFolderById = async (id: number): Promise<Folder | null> => {
+const getFolderById = async (
+  id: number | undefined
+): Promise<Folder | null> => {
+  if (!id) return null;
   try {
     const response = await apiClient.get(`${API_BASE}/folders/${id}`);
 
