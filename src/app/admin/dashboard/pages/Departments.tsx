@@ -45,22 +45,14 @@ const Departments = () => {
 
   const accept = () => {};
 
-  if (isLoading) {
-    return (
-      <div className="p-6">
-        <p>Loading the departments</p>
-      </div>
-    );
-  }
-
   return (
     <div>
-      <div className="h-20 bg-white border px-6 flex items-center justify-between">
+      <div className="h-20 bg-white border-b dark:bg-neutral-800 dark:border-neutral-700 px-6 flex items-center justify-between">
         <h3 className="font-bold  text-xl">Departments</h3>
         <div className="flex items-center me-4 gap-2">
           <InputText
             placeholder="Search a department"
-            className="bg-neutral-100 px-4 h-10 w-72"
+            className="bg-neutral-100 dark:bg-neutral-700 px-4 h-10 w-72"
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -73,43 +65,105 @@ const Departments = () => {
         </div>
       </div>
       <div className="w-full md:h-[86vh] overflow-auto p-6">
-        <DataTable value={data?.data.departments} size="normal">
-          <Column sortable field="departmentName" header="Name"></Column>
-          <Column sortable field="departmentCode" header="Code"></Column>
-          <Column sortable field="createdAt" header="Created"></Column>
-          <Column sortable field="updatedAt" header="Updated"></Column>
-          <Column
-            header="Action"
-            body={(rowData) => (
-              <>
-                <OverlayPanel ref={overlayPanelRef}>
-                  <div className="flex flex-col gap-2">
-                    <Button icon={`${PrimeIcons.USER_EDIT} me-2`}>Edit</Button>
-                    <Button
-                      icon={`${PrimeIcons.TRASH} me-2`}
-                      onClick={() =>
-                        confirmDialog({
-                          header: "Delete this department?",
-                          accept,
-                        })
-                      }
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </OverlayPanel>
-                <Button
-                  icon={`${PrimeIcons.COG}`}
-                  className="rounded-full"
-                  onClick={(e) => {
-                    setSelectedDeptId(rowData.deptId);
-                    overlayPanelRef.current?.toggle(e);
-                  }}
-                ></Button>
-              </>
-            )}
-          ></Column>
-        </DataTable>
+        {isLoading ? (
+          <p>Loading departments...</p>
+        ) : (
+          <DataTable value={data?.data.departments} size="normal">
+            <Column
+              sortable
+              field="departmentName"
+              header="Name"
+              pt={{
+                headerCell: {
+                  className: "dark:bg-neutral-950 dark:text-white",
+                },
+                bodyCell: {
+                  className: "dark:bg-neutral-800 dark:text-white",
+                },
+              }}
+            ></Column>
+            <Column
+              sortable
+              field="departmentCode"
+              header="Code"
+              pt={{
+                headerCell: {
+                  className: "dark:bg-neutral-950 dark:text-white",
+                },
+                bodyCell: {
+                  className: "dark:bg-neutral-800 dark:text-white",
+                },
+              }}
+            ></Column>
+            <Column
+              sortable
+              field="createdAt"
+              header="Created"
+              pt={{
+                headerCell: {
+                  className: "dark:bg-neutral-950 dark:text-white",
+                },
+                bodyCell: {
+                  className: "dark:bg-neutral-800 dark:text-white",
+                },
+              }}
+            ></Column>
+            <Column
+              sortable
+              field="updatedAt"
+              header="Updated"
+              pt={{
+                headerCell: {
+                  className: "dark:bg-neutral-950 dark:text-white",
+                },
+                bodyCell: {
+                  className: "dark:bg-neutral-800 dark:text-white",
+                },
+              }}
+            ></Column>
+            <Column
+              pt={{
+                headerCell: {
+                  className: "dark:bg-neutral-950 dark:text-white",
+                },
+                bodyCell: {
+                  className: "dark:bg-neutral-800 dark:text-white",
+                },
+              }}
+              header="Action"
+              body={(rowData) => (
+                <>
+                  <OverlayPanel ref={overlayPanelRef}>
+                    <div className="flex flex-col gap-2">
+                      <Button icon={`${PrimeIcons.USER_EDIT} me-2`}>
+                        Edit
+                      </Button>
+                      <Button
+                        icon={`${PrimeIcons.TRASH} me-2`}
+                        onClick={() =>
+                          confirmDialog({
+                            header: "Delete this department?",
+                            accept,
+                          })
+                        }
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </OverlayPanel>
+                  <Button
+                    icon={`${PrimeIcons.COG}`}
+                    className="rounded-full"
+                    onClick={(e) => {
+                      setSelectedDeptId(rowData.deptId);
+                      overlayPanelRef.current?.toggle(e);
+                    }}
+                  ></Button>
+                </>
+              )}
+            ></Column>
+          </DataTable>
+        )}
       </div>
     </div>
   );

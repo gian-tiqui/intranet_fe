@@ -662,6 +662,17 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 setSelectedLevel(e.target.value);
               }}
               options={levels}
+              pt={{
+                root: {
+                  className: "dark:bg-neutral-950 dark:border-neutral-700",
+                },
+
+                panel: {
+                  className: "dark:bg-neutral-950 dark:border-neutral-700",
+                },
+                header: { className: "bg-neutral-950" },
+                filterInput: { className: "bg-neutral-800 dark:text-white" },
+              }}
               valueTemplate={selectedOptionTemplate}
               itemTemplate={levelOptionTemplate}
               optionLabel="level"
@@ -678,6 +689,17 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                   label: folder.name,
                   value: folder,
                 }))}
+                pt={{
+                  root: {
+                    className: "dark:bg-neutral-950 dark:border-neutral-700",
+                  },
+
+                  panel: {
+                    className: "dark:bg-neutral-950 dark:border-neutral-700",
+                  },
+                  header: { className: "bg-neutral-950" },
+                  filterInput: { className: "bg-neutral-800 dark:text-white" },
+                }}
                 onChange={(e) => setSelectedFolder(e.value)}
                 placeholder="Select a folder"
                 className="w-full mb-2 h-8 items-center"

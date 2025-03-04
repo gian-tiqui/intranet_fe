@@ -162,7 +162,7 @@ const Sidebar = () => {
               <Icon icon={"file-icons:dashboard"} />
               <p>DASHBOARD</p>
             </div>
-            <hr className="mt-7 border-b border-gray-200 dark:border-gray-800 mb-2" />
+            <hr className="mt-7 border-b border-gray-200 dark:border-neutral-700 mb-2" />
             <HoverBox className="hover:bg-gray-300 mb-2 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded mx-4">
               <div
                 className="flex items-center gap-3"
@@ -172,7 +172,7 @@ const Sidebar = () => {
                 <p className="w-full text-md">Intranet</p>
               </div>
             </HoverBox>
-            <hr className="border-b border-gray-200 dark:border-gray-800 mx-4" />
+            <hr className="border-b border-gray-200 dark:border-neutral-700 mx-4" />
             <div className="flex flex-col gap-0 py-2 px-4 w-72 h-72 overflow-auto">
               {components.map((comp, index) => (
                 <div
@@ -185,7 +185,7 @@ const Sidebar = () => {
                 </div>
               ))}
             </div>
-            <hr className="border-b border-gray-200 dark:border-gray-800 mx-4" />
+            <hr className="border-b border-gray-200 dark:border-neutral-700 mx-4" />
           </div>
           <UserButton uVisible={uVisible} setUVisible={setUVisible} />
         </motion.div>

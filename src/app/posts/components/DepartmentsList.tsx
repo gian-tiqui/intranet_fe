@@ -15,12 +15,23 @@ const DepartmentsList: React.FC<Props> = ({
 }) => {
   return (
     <MultiSelect
-      pt={{}}
       value={selectedDepartments}
       options={departments.map((dept) => ({
         label: dept.departmentName,
         value: String(dept.deptId),
       }))}
+      pt={{
+        root: {
+          className: "dark:bg-neutral-950 dark:border-neutral-700",
+        },
+
+        panel: {
+          className: "dark:bg-neutral-950 dark:border-neutral-700",
+        },
+        header: { className: "bg-neutral-950" },
+        token: { className: "dark:text-white h-7 dark:bg-neutral-800 text-sm" },
+        filterInput: { className: "bg-neutral-800 dark:text-white" },
+      }}
       onChange={(e) => setSelectedDepartments(e.value)}
       placeholder="Select department recipient/s"
       className="w-full mb-2 h-8 items-center"
