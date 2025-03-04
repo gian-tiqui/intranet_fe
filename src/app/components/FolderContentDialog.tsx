@@ -114,7 +114,7 @@ const FolderContentDialog: React.FC<Props> = ({
                     router.push(`/posts/${post.pid}`);
                   }}
                   key={post.pid}
-                  className="w-full h-52 bg-neutral-200 flex flex-col justify-between dark:bg-neutral-800 rounded-lg hover:shadow p-4"
+                  className="w-full h-52 bg-neutral-200 hover:bg-neutral-300 flex flex-col justify-between dark:bg-neutral-800 dark:hover:bg-neutral-700 rounded-lg hover:shadow p-4"
                 >
                   <p className="font-medium">{post.title}</p>
                   <div className="w-full h-[70%] rounded bg-neutral-50 grid relative place-content-center dark:bg-neutral-900">

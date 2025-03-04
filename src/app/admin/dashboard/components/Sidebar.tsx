@@ -155,7 +155,7 @@ const Sidebar = () => {
           animate="open"
           exit="collapsed"
           variants={variants}
-          className="bg-white dark:bg-neutral-900 flex flex-col justify-between shadow"
+          className="bg-white dark:bg-neutral-800 flex flex-col justify-between shadow"
         >
           <div className="">
             <div className="px-6 pt-5 clear-start mb-6 font-extrabold text-2xl gap-3 flex items-center">
@@ -191,7 +191,7 @@ const Sidebar = () => {
         </motion.div>
       )}
 
-      <div className="w-full bg-neutral-200 dark:bg-neutral-800 h-screen relative">
+      <div className="w-full bg-neutral-200 dark:bg-neutral-900 h-screen relative">
         <div
           onClick={() => setCollapsed(!collapsed)}
           className={`absolute top-0 left-0 h-7 w-8 rounded-ee bg-white grid place-content-center dark:bg-neutral-900`}
