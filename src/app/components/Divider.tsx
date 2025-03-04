@@ -48,6 +48,7 @@ import { Dialog } from "primereact/dialog";
 import useUpdateDialogStore from "../store/updateDialogStore";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import Image from "next/image";
+import { deleteFolder } from "../utils/service/folderService";
 
 interface Props {
   children?: ReactNode;
@@ -192,6 +193,14 @@ const Divider: React.FC<Props> = ({ children }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const removeFolder = (folderId: number) => {
+    deleteFolder(folderId)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => console.error(error));
+  };
+
   useEffect(() => {
     if (!checkDept()) {
       setEditVisible(false);
@@ -224,6 +233,9 @@ const Divider: React.FC<Props> = ({ children }) => {
     <QueryClientProvider client={queryClient}>
       <ConfirmDialog
         pt={{
+          header: { className: "dark:bg-neutral-900 dark:text-white" },
+          content: { className: "dark:bg-neutral-900" },
+          footer: { className: "dark:bg-neutral-900" },
           acceptButton: { className: "ms-2 w-20 h-8" },
           rejectButton: { className: "ms-2 w-20 bg-red-400 h-8" },
         }}

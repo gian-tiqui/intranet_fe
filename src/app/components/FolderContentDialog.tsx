@@ -22,6 +22,7 @@ import { API_BASE } from "../bindings/binding";
 import { Button } from "primereact/button";
 import AddSubfolderDialog from "./AddSubfolderDialog";
 import { OverlayPanel } from "primereact/overlaypanel";
+import { confirmDialog } from "primereact/confirmdialog";
 
 interface Props {
   visible: boolean;
@@ -203,6 +204,15 @@ const FolderContentDialog: React.FC<Props> = ({
                           <Button
                             icon={`${PrimeIcons.TRASH}`}
                             className="gap-2"
+                            onClick={() => {
+                              if (!mSubfolderId) return;
+
+                              confirmDialog({
+                                header: "Delete this folder?",
+
+                                accept: () => {},
+                              });
+                            }}
                           >
                             Delete
                           </Button>
