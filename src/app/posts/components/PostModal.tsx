@@ -670,8 +670,10 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 panel: {
                   className: "dark:bg-neutral-950 dark:border-neutral-700",
                 },
-                header: { className: "bg-neutral-950" },
-                filterInput: { className: "bg-neutral-800 dark:text-white" },
+                header: { className: "dark:bg-neutral-950" },
+                filterInput: {
+                  className: "dark:bg-neutral-800 dark:text-white",
+                },
               }}
               valueTemplate={selectedOptionTemplate}
               itemTemplate={levelOptionTemplate}
@@ -697,8 +699,10 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                   panel: {
                     className: "dark:bg-neutral-950 dark:border-neutral-700",
                   },
-                  header: { className: "bg-neutral-950" },
-                  filterInput: { className: "bg-neutral-800 dark:text-white" },
+                  header: { className: "dark:bg-neutral-950" },
+                  filterInput: {
+                    className: "dark:bg-neutral-800 dark:text-white",
+                  },
                 }}
                 onChange={(e) => setSelectedFolder(e.value)}
                 placeholder="Select a folder"

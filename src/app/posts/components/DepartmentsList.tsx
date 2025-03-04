@@ -28,7 +28,7 @@ const DepartmentsList: React.FC<Props> = ({
         panel: {
           className: "dark:bg-neutral-950 dark:border-neutral-700",
         },
-        header: { className: "bg-neutral-950" },
+        header: { className: "dark:bg-neutral-950" },
         token: { className: "dark:text-white h-7 dark:bg-neutral-800 text-sm" },
         filterInput: { className: "bg-neutral-800 dark:text-white" },
       }}

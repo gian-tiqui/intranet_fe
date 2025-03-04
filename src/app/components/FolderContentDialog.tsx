@@ -1,6 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { Dialog } from "primereact/dialog";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { getFolderById } from "../functions/functions";
 import {
   getFolderPostsByFolderId,
@@ -15,6 +21,7 @@ import Image from "next/image";
 import { API_BASE } from "../bindings/binding";
 import { Button } from "primereact/button";
 import AddSubfolderDialog from "./AddSubfolderDialog";
+import { OverlayPanel } from "primereact/overlaypanel";
 
 interface Props {
   visible: boolean;
@@ -28,6 +35,7 @@ const FolderContentDialog: React.FC<Props> = ({
   setVisible,
   folderId,
 }) => {
+  const overlayPanelRef = useRef<OverlayPanel>(null);
   const [query, setQuery] = useState<Query>({
     search: "",
     skip: 0,
@@ -35,6 +43,7 @@ const FolderContentDialog: React.FC<Props> = ({
   });
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [addSubfolder, setAddSubfolder] = useState<boolean>(false);
+  const [mSubfolderId, setMSubfolderId] = useState<number>();
   const [selectedSubfolder, setSelectedSubfolder] = useState<
     number | undefined
   >(undefined);
@@ -165,10 +174,43 @@ const FolderContentDialog: React.FC<Props> = ({
                     backgroundColor: subfolder.folderColor,
                   }}
                 >
-                  <div className="flex items-center gap-2">
-                    <i className={`${PrimeIcons.FOLDER} text-xl`}></i>
-                    <p className="font-medium">{subfolder.name}</p>
+                  <div className="flex items-center gap-2 w-full justify-between">
+                    <div className="flex gap-2">
+                      <i className={`${PrimeIcons.FOLDER} text-xl`}></i>
+                      <p className="font-medium">{subfolder.name}</p>
+                    </div>
+                    <Button
+                      icon={`${PrimeIcons.COG} text-xl`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+
+                        setMSubfolderId(subfolder.id);
+
+                        overlayPanelRef.current?.toggle(e);
+                      }}
+                    >
+                      <OverlayPanel
+                        ref={overlayPanelRef}
+                        className="dark:bg-neutral-950 dark:text-white"
+                      >
+                        <div className="flex flex-col gap-2">
+                          <Button
+                            icon={`${PrimeIcons.USER_EDIT}`}
+                            className="gap-2"
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            icon={`${PrimeIcons.TRASH}`}
+                            className="gap-2"
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </OverlayPanel>
+                    </Button>
                   </div>
+                  <div></div>
                   <div className="flex justify-end">
                     <i className={`${PrimeIcons.ANGLE_RIGHT} text-lg`}></i>
                   </div>
@@ -185,6 +227,7 @@ const FolderContentDialog: React.FC<Props> = ({
                     className="w-full h-52 bg-neutral-200 hover:bg-neutral-300 flex flex-col justify-between dark:bg-neutral-800 dark:hover:bg-neutral-700 rounded-lg hover:shadow p-4"
                   >
                     <p className="font-medium">{post.title}</p>
+
                     <div className="w-full h-[70%] rounded bg-neutral-50 grid relative place-content-center dark:bg-neutral-900">
                       {post.imageLocations && post.imageLocations.length > 0 ? (
                         <Image
