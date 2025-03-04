@@ -97,7 +97,7 @@ const FolderGrid = () => {
       />
       <div className="flex justify-end gap-2 mb-10">
         <InputText
-          className="px-2 dark:bg-neutral-900 rounded-lg h-10"
+          className="px-2 dark:bg-neutral-800 rounded-lg h-10"
           placeholder="Search a folder"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -106,7 +106,7 @@ const FolderGrid = () => {
         {checkDept() && (
           <Button
             severity="info"
-            className="h-10 w-32 bg-white rounded-lg dark:bg-neutral-900 justify-center hover:shadow hover:bg-neutral-100 dark:hover:bg-neutral-950"
+            className="h-10 w-32 bg-white rounded-lg dark:bg-neutral-800 justify-center hover:shadow hover:bg-neutral-100 dark:hover:bg-neutral-700"
             icon={`${PrimeIcons.PLUS} me-2`}
             onClick={() => setAddFolderDialogVisible(true)}
           >

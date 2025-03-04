@@ -31,13 +31,13 @@ const DepartmentUsers: React.FC<Props> = ({
         <input
           type="text"
           placeholder="Search"
-          className="rounded-lg w-[30%] h-10 px-5 outline-none border border-gray-300 dark:border-neutral-950 dark:bg-neutral-900"
+          className="rounded-lg w-[30%] h-10 px-5 outline-none border border-gray-300 dark:border-neutral-950 dark:bg-neutral-800"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
 
         <select
-          className="rounded-lg h-10 w-[50%] px-5 outline-none border border-gray-300 dark:border-neutral-950 dark:bg-neutral-900"
+          className="rounded-lg h-10 w-[50%] px-5 outline-none border border-gray-300 dark:border-neutral-950 dark:bg-neutral-800"
           onChange={(e) => {
             const selectedDept = departments?.find(
               (department: DepartmentMonitoring) =>
@@ -60,7 +60,7 @@ const DepartmentUsers: React.FC<Props> = ({
           ))}
         </select>
       </div>
-      <section className="flex flex-col gap-2 bg-white dark:bg-neutral-900 h-96 py-3 px-2 rounded-lg overflow-auto">
+      <section className="flex flex-col gap-2 bg-white dark:bg-neutral-800 h-96 py-3 px-2 rounded-lg overflow-auto">
         {filteredUsers && filteredUsers.length > 0 ? (
           <>
             {filteredUsers.map((user) => (

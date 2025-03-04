@@ -107,7 +107,7 @@ const CommentBar: React.FC<Props> = ({
   return (
     <form
       onSubmit={handleSubmit(handleCommentSubmit)}
-      className="sticky bottom-0 pb-8 bg-neutral-200 dark:bg-neutral-800"
+      className="sticky bottom-0 pb-8 bg-neutral-200 dark:bg-neutral-900"
     >
       <div className="w-full h-auto rounded-3xl rounded-b-3xl bg-white dark:bg-neutral-700 ps-6 cursor-text flex items-end gap-3 px-3 py-[10px]">
         <textarea

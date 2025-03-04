@@ -1,14 +1,12 @@
-import useShowImageStore from "@/app/store/imageViewStore";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
 interface Props {
-  selectedIndex: number;
+  setVisible: Dispatch<SetStateAction<boolean>>;
 }
 
-const ImageOverlay: React.FC<Props> = ({ selectedIndex }) => {
-  const { setShowImage } = useShowImageStore();
+const ImageOverlay: React.FC<Props> = ({ setVisible }) => {
   const handleClick = () => {
-    setShowImage({ show: true, selectedIndex });
+    setVisible(true);
   };
 
   return (

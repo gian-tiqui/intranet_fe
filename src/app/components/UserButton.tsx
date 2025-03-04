@@ -121,12 +121,12 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
       {uVisible && (
         <div
           onClick={(e: React.MouseEvent) => e.stopPropagation()}
-          className="absolute z-50 p-3 w-full bg-white dark:bg-neutral-900 border-[1px] flex flex-col gap-3 border-neutral-200 dark:border-neutral-700 bottom-12 rounded-2xl"
+          className="absolute z-50 p-3 w-full bg-white dark:bg-neutral-800 border-[1px] flex flex-col gap-3 border-neutral-200 dark:border-neutral-700 bottom-12 rounded-2xl"
         >
           {isAdmin && (
             <>
               <div
-                className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+                className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg"
                 onClick={() => router.push("/admin/dashboard")}
               >
                 <Icon icon={"file-icons:dashboard"} className="w-6 h-6" />
@@ -136,7 +136,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
           )}
           {showMyPosts && (
             <div
-              className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg"
               onClick={() => {
                 router.push("/monitoring");
 
@@ -148,7 +148,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
             </div>
           )}
           <div
-            className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+            className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg"
             onClick={() => {
               router.push("/history");
 
@@ -159,7 +159,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
             <p className="text-sm">History</p>
           </div>
           <div
-            className="w-full gap-2 items-center hidden md:flex hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+            className="w-full gap-2 items-center hidden md:flex hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg"
             onClick={handleShowSettings}
           >
             <Icon icon={"uil:setting"} className="w-6 h-6" />
@@ -167,7 +167,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
           </div>
 
           <div
-            className="w-full flex gap-2 items-center md:hidden hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+            className="w-full flex gap-2 items-center md:hidden hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg"
             onClick={handleShowSettingsMobile}
           >
             <Icon icon={"uil:setting"} className="w-6 h-6" />
@@ -175,7 +175,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
           </div>
           <hr className="w-full border border-neutral-200 dark:border-neutral-700" />
           <div
-            className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+            className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg"
             onClick={handleLogout}
           >
             <Icon icon={"material-symbols:logout"} className="w-6 h-6" />
@@ -183,12 +183,12 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
           </div>
         </div>
       )}
-      <div className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
+      <div className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg">
         {userData && (
           <Avatar
             label={userData?.firstName[0] + userData?.lastName[0]}
             shape="circle"
-            className="font-medium"
+            className="font-bold bg-blue-500"
           />
         )}
 

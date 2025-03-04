@@ -397,7 +397,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           isRead === false && (
             <div
               onClick={handleReadClick}
-              className={`hover:bg-gray-300 fixed z-10 bottom-64 bg-white rounded-full dark:bg-neutral-900 h-12 w-24 font-extrabold shadow-xl right-14 dark:hover:bg-neutral-700 py-1 px-3 flex items-center gap-1 cursor-pointer `}
+              className={`hover:bg-gray-300 fixed z-10 bottom-64 bg-white rounded-full dark:bg-neutral-800 h-12 w-24 font-extrabold shadow-xl right-14 dark:hover:bg-neutral-700 py-1 px-3 flex items-center gap-1 cursor-pointer `}
             >
               <>
                 <Icon
@@ -491,6 +491,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
         )}
         {post?.imageLocations && post?.imageLocations?.length > 0 && (
           <ImageSlider
+            postName={post.title}
             imageLocations={post.imageLocations}
             currentIndex={currentIndex}
             setCurrentIndex={setCurrentIndex}
