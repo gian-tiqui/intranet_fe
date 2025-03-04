@@ -39,7 +39,7 @@ const Welcome = () => {
             <Link
               key={index}
               href={suggestion.path}
-              className="px-3 h-10 flex items-center gap-1 bg-white dark:bg-neutral-900 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-neutral-700"
+              className="px-3 h-10 flex items-center gap-1 bg-white dark:bg-neutral-800 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-neutral-700"
             >
               {suggestion.icon && (
                 <Icon icon={suggestion.icon} className="h-6 w-6" />

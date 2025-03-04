@@ -71,7 +71,7 @@ const GlobalSearch = () => {
     <div className="w-full flex flex-col items-center" ref={ref}>
       <div
         onClick={() => setShowSuggestions(true)}
-        className="w-full bg-white dark:bg-neutral-900 h-14 shadow px-6 gap-5 rounded-full flex items-center"
+        className="w-full bg-white dark:bg-neutral-800 h-14 shadow px-6 gap-5 rounded-full flex items-center"
       >
         <Icon icon={"line-md:search-twotone"} className="h-6 w-6" />
         <input
@@ -84,7 +84,7 @@ const GlobalSearch = () => {
       </div>
       {showSuggestions &&
         (!loading ? (
-          <div className="p-2 bg-white dark:bg-neutral-900 absolute w-[90%] mt-14 rounded-b-xl h-52 overflow-y-auto flex flex-col gap-1">
+          <div className="p-2 bg-white dark:bg-neutral-800 absolute w-[90%] mt-14 rounded-b-xl h-52 overflow-y-auto flex flex-col gap-1">
             {publicPosts && publicPosts.length > 0 ? (
               publicPosts.map((post) => (
                 <div
@@ -105,7 +105,7 @@ const GlobalSearch = () => {
             )}
           </div>
         ) : (
-          <div className="p-2 bg-white dark:bg-neutral-900 absolute w-[90%] mt-14 rounded-b-xl h-52 overflow-y-auto grid gap-1">
+          <div className="p-2 bg-white dark:bg-neutral-800 absolute w-[90%] mt-14 rounded-b-xl h-52 overflow-y-auto grid gap-1">
             <div className="w-full animate-pulse bg-gray-300 h-10 rounded p-4"></div>
             <div className="w-full animate-pulse bg-gray-300 h-10 rounded p-4"></div>
             <div className="w-full animate-pulse bg-gray-300 h-10 rounded p-4"></div>

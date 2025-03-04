@@ -184,9 +184,7 @@ const Aside: React.FC<Props> = ({
               onClick={() => handleClick("/for-you")}
             >
               <Icon icon={"icon-park-outline:level"} className="h-5 w-5" />
-              <p className="w-full text-sm">
-                Posts for {decodeUserData()?.deptId}
-              </p>
+              <p className="w-full text-sm">Posts for</p>
             </div>
 
             {userDeptId &&

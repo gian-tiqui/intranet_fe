@@ -17,7 +17,12 @@ import CustomToast from "./CustomToast";
 import { Toast } from "primereact/toast";
 
 const FolderGrid = () => {
-  const [query, setQuery] = useState<Query>({ search: "", skip: 0, take: 50 });
+  const [query, setQuery] = useState<Query>({
+    search: "",
+    skip: 0,
+    take: 50,
+    includeSubfolders: 0,
+  });
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { signal, setSignal } = useSignalStore();
   const [folderId, setFolderId] = useState<number>();
@@ -129,7 +134,7 @@ const FolderGrid = () => {
               <div
                 className={`h-12 hover:cursor-pointer px-3 rounded-lg flex items-center gap-2 justify-between ${
                   !folder.folderColor
-                    ? "bg-white hover:shadow dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-950"
+                    ? "bg-white hover:shadow dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700"
                     : ""
                 }`}
                 style={{

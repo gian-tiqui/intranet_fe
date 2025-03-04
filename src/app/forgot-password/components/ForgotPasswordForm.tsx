@@ -83,7 +83,7 @@ const ForgotPasswordForm = () => {
       onSubmit={handleSubmit(handleForgotPassword)}
       className="p-6 border-0 text-black dark:text-white flex flex-col justify-center items-center relative h-screen"
     >
-      <div className="lg:w-96 shadow p-7 rounded-2xl bg-white dark:bg-neutral-900">
+      <div className="lg:w-96 shadow p-7 rounded-2xl bg-white dark:bg-neutral-800">
         <div className="flex flex-col items-center">
           <div className="flex gap-1 mb-3">
             {"Hello there!".split(" ").map((word, index) => (
@@ -104,7 +104,7 @@ const ForgotPasswordForm = () => {
           transition={{ duration: 1, delay: 0.7 }}
           className="mb-3 h-14"
         >
-          <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-800 border dark:border-black rounded-lg mb-1">
+          <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-700 border dark:border-black rounded-lg mb-1">
             <Icon
               className="h-6 w-6 text-neutral-400"
               icon={"teenyicons:id-outline"}
@@ -125,7 +125,7 @@ const ForgotPasswordForm = () => {
           )}
         </motion.div>
 
-        <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-800 border dark:border-black rounded-lg mb-6">
+        <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-700 border dark:border-black rounded-lg mb-6">
           <select
             onChange={(e) => setValue("secretQuestion1", e.target.value)}
             id="question"
@@ -146,7 +146,7 @@ const ForgotPasswordForm = () => {
           transition={{ duration: 1, delay: 0.7 }}
           className="mb-3 h-14"
         >
-          <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-800 border dark:border-black rounded-lg mb-1">
+          <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-700 border dark:border-black rounded-lg mb-1">
             <Icon
               className="h-6 w-6 text-neutral-400"
               icon={"mdi:question-mark-circle-outline"}
@@ -172,7 +172,7 @@ const ForgotPasswordForm = () => {
           transition={{ duration: 1, delay: 0.7 }}
           className="mb-3 h-14"
         >
-          <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-800 border dark:border-black rounded-lg mb-1">
+          <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-700 border dark:border-black rounded-lg mb-1">
             <Icon
               className="h-6 w-6 text-neutral-400"
               icon={"mdi:lock-outline"}

@@ -155,14 +155,14 @@ const Sidebar = () => {
           animate="open"
           exit="collapsed"
           variants={variants}
-          className="bg-white dark:bg-neutral-900 flex flex-col justify-between shadow"
+          className="bg-white dark:bg-neutral-800 flex flex-col justify-between shadow"
         >
           <div className="">
             <div className="px-6 pt-5 clear-start mb-6 font-extrabold text-2xl gap-3 flex items-center">
               <Icon icon={"file-icons:dashboard"} />
               <p>DASHBOARD</p>
             </div>
-            <hr className="mt-7 border-b border-gray-200 dark:border-gray-800 mb-2" />
+            <hr className="mt-7 border-b border-gray-200 dark:border-neutral-700 mb-2" />
             <HoverBox className="hover:bg-gray-300 mb-2 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded mx-4">
               <div
                 className="flex items-center gap-3"
@@ -172,7 +172,7 @@ const Sidebar = () => {
                 <p className="w-full text-md">Intranet</p>
               </div>
             </HoverBox>
-            <hr className="border-b border-gray-200 dark:border-gray-800 mx-4" />
+            <hr className="border-b border-gray-200 dark:border-neutral-700 mx-4" />
             <div className="flex flex-col gap-0 py-2 px-4 w-72 h-72 overflow-auto">
               {components.map((comp, index) => (
                 <div
@@ -185,13 +185,13 @@ const Sidebar = () => {
                 </div>
               ))}
             </div>
-            <hr className="border-b border-gray-200 dark:border-gray-800 mx-4" />
+            <hr className="border-b border-gray-200 dark:border-neutral-700 mx-4" />
           </div>
           <UserButton uVisible={uVisible} setUVisible={setUVisible} />
         </motion.div>
       )}
 
-      <div className="w-full bg-neutral-200 dark:bg-neutral-800 h-screen relative">
+      <div className="w-full bg-neutral-200 dark:bg-neutral-900 h-screen relative">
         <div
           onClick={() => setCollapsed(!collapsed)}
           className={`absolute top-0 left-0 h-7 w-8 rounded-ee bg-white grid place-content-center dark:bg-neutral-900`}
