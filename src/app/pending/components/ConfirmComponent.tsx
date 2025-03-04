@@ -45,7 +45,7 @@ const ConfirmComponent = () => {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <div className="h-[740px] sm:h-[600px] bg-white rounded dark:bg-neutral-900">
+    <div className="h-[740px] sm:h-[600px] bg-white rounded dark:bg-neutral-800">
       <div className="border-b p-5 dark:border-b-black">
         <h1 className="text-2xl font-bold">Pending Users</h1>
       </div>

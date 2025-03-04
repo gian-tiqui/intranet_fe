@@ -8,7 +8,7 @@ interface Props {
 
 const UserCard: React.FC<Props> = ({ user }) => {
   return (
-    <div className="border dark:border-neutral-800 cursor-pointer p-3 transition duration-200 h-14 flex justify-between hover:bg-gray-100 dark:hover:bg-neutral-950">
+    <div className="border dark:border-neutral-700 cursor-pointer p-3 transition duration-200 h-14 flex justify-between hover:bg-gray-100 dark:hover:bg-neutral-700">
       <div className="flex items-center h-full gap-2">
         <Icon icon={"material-symbols:error-outline"} className="h-5 w-5" />
         <p>

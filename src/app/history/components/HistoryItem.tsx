@@ -9,7 +9,7 @@ interface Props {
 
 const HistoryItem: React.FC<Props> = ({ post }) => {
   return (
-    <div className="w-full bg-white dark:bg-neutral-900 rounded-lg p-4 shadow-md space-y-3">
+    <div className="w-full bg-white dark:bg-neutral-800 rounded-lg p-4 shadow-md space-y-3">
       {post.post.imageLocations && (
         <div className="w-full h-64 rounded-md overflow-hidden">
           <Image

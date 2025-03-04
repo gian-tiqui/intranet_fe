@@ -117,7 +117,7 @@ const Aside: React.FC<Props> = ({
         animate="open"
         exit="collapsed"
         variants={variants}
-        className="hidden md:flex flex-col w-full bg-white dark:bg-neutral-900 shadow h-full p-1 rounded-e-3xl"
+        className="hidden md:flex flex-col w-full bg-white dark:bg-neutral-800 shadow h-full p-1 rounded-e-3xl"
       >
         <div
           id="buttons"
@@ -129,11 +129,11 @@ const Aside: React.FC<Props> = ({
             }
             onMouseEnter={() => setShowCollapseText(true)}
             onMouseLeave={() => setShowCollapseText(false)}
-            className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded relative"
+            className="hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded relative"
           >
             <Icon icon="iconoir:sidebar-collapse" className="h-5 w-5" />
             {showCollapseText && (
-              <div className="h-9 w-32 top-0 left-10 absolute bg-white border dark:bg-neutral-900 dark:border-neutral-700 grid place-content-center rounded">
+              <div className="h-9 w-32 top-0 left-10 absolute bg-white border dark:bg-neutral-800 dark:border-neutral-700 grid place-content-center rounded">
                 <p className="text-sm">Collapse Sidebar</p>
               </div>
             )}
@@ -142,7 +142,7 @@ const Aside: React.FC<Props> = ({
           {editVisible && (
             <div
               onClick={() => setVisible(true)}
-              className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              className="hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
             >
               <Icon icon="lucide:edit" className="h-5 w-5" />
             </div>
@@ -153,7 +153,7 @@ const Aside: React.FC<Props> = ({
         <div className="overflow-auto flex-grow mb-3">
           <div id="menu-buttons" className="px-3 mt-2 mb-6">
             <div
-              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
               onClick={() => handleClick("/")}
             >
               <Icon icon={"ph:hospital"} className="h-5 w-5" />
@@ -161,7 +161,7 @@ const Aside: React.FC<Props> = ({
             </div>
 
             <div
-              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
               onClick={() => handleClick("/bulletin")}
             >
               <Icon icon={"gridicons:posts"} className="h-5 w-5" />
@@ -169,7 +169,7 @@ const Aside: React.FC<Props> = ({
             </div>
 
             <div
-              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
               onClick={() => handleClick("/departments-memo")}
             >
               <Icon
@@ -180,11 +180,13 @@ const Aside: React.FC<Props> = ({
             </div>
 
             <div
-              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
               onClick={() => handleClick("/for-you")}
             >
               <Icon icon={"icon-park-outline:level"} className="h-5 w-5" />
-              <p className="w-full text-sm">Posts for your employee level</p>
+              <p className="w-full text-sm">
+                Posts for {decodeUserData()?.deptId}
+              </p>
             </div>
 
             {userDeptId &&
@@ -193,7 +195,7 @@ const Aside: React.FC<Props> = ({
                 Department.QUALITY_MANAGEMENT,
               ].includes(userDeptId) && (
                 <div
-                  className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+                  className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
                   onClick={() => handleClick("/my-posts")}
                 >
                   <Icon icon={"ph:folder-user-bold"} className="h-5 w-5" />
@@ -252,7 +254,7 @@ const Aside: React.FC<Props> = ({
         animate="open"
         exit="collapsed"
         variants={variants}
-        className="flex md:hidden absolute z-50 flex-col w-full bg-white dark:bg-neutral-900 shadow h-full p-1 rounded-e-3xl"
+        className="flex md:hidden absolute z-50 flex-col w-full bg-white dark:bg-neutral-800 shadow h-full p-1 rounded-e-3xl"
       >
         <div
           id="buttons"
@@ -262,7 +264,7 @@ const Aside: React.FC<Props> = ({
             onClick={
               setIsCollapsed ? () => setIsCollapsed(!isCollapsed) : undefined
             }
-            className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+            className="hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
           >
             <Icon icon="iconoir:sidebar-collapse" className="h-5 w-5" />
           </div>
@@ -270,7 +272,7 @@ const Aside: React.FC<Props> = ({
           {editVisible && (
             <div
               onClick={() => setVisible(true)}
-              className="hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              className="hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
             >
               <Icon icon="lucide:edit" className="h-5 w-5" />
             </div>
@@ -281,7 +283,7 @@ const Aside: React.FC<Props> = ({
         <div className="overflow-auto flex-grow mb-3">
           <div id="menu-buttons" className="px-3 mt-2 mb-6">
             <div
-              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
               onClick={() => {
                 handleClick("/");
                 if (setIsCollapsed) setIsCollapsed(!isCollapsed);
@@ -292,7 +294,7 @@ const Aside: React.FC<Props> = ({
             </div>
 
             <div
-              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
               onClick={() => {
                 handleClick("/bulletin");
                 if (setIsCollapsed) setIsCollapsed(!isCollapsed);
@@ -303,7 +305,7 @@ const Aside: React.FC<Props> = ({
             </div>
 
             <div
-              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
               onClick={() => {
                 handleClick("/departments-memo");
                 if (setIsCollapsed) setIsCollapsed(!isCollapsed);
@@ -317,7 +319,7 @@ const Aside: React.FC<Props> = ({
             </div>
 
             <div
-              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+              className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
               onClick={() => {
                 handleClick("/for-you");
                 if (setIsCollapsed) setIsCollapsed(!isCollapsed);
@@ -333,7 +335,7 @@ const Aside: React.FC<Props> = ({
                 Department.QUALITY_MANAGEMENT,
               ].includes(userDeptId) && (
                 <div
-                  className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
+                  className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
                   onClick={() => {
                     handleClick("/my-posts");
                     if (setIsCollapsed) setIsCollapsed(!isCollapsed);

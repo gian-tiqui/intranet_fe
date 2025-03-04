@@ -50,7 +50,7 @@ const PostListItem: React.FC<Props> = ({ post }) => {
   }, [post]);
 
   return (
-    <HoverBox className="hover:bg-neutral-200 flex items-center justify-between dark:hover:bg-neutral-800 py-1 px-2 cursor-pointer rounded">
+    <HoverBox className="hover:bg-neutral-200 flex items-center justify-between dark:hover:bg-neutral-700 py-1 px-2 cursor-pointer rounded">
       <div className="flex gap-2">
         <Icon icon={"iconoir:post"} className="h-5 w-5 -rotate-[10deg]" />
 

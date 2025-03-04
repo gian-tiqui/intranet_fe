@@ -33,8 +33,6 @@ import Cookies from "js-cookie";
 import Unseen from "./Unseen";
 import PendingUsers from "./PendingUsers";
 import { jwtDecode } from "jwt-decode";
-import useShowImageStore from "../store/imageViewStore";
-import ImagePreview from "./ImagePreview";
 import useDeleteModalStore from "../store/deleteModalStore";
 import DeleteModal from "../posts/components/DeleteModal";
 import useTokenStore from "../store/tokenStore";
@@ -73,7 +71,6 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { showDeleteComment } = showDeleteCommentModalStore();
   const queryClient = new QueryClient();
   const [showPendingUsers, setShowPendingUsers] = useState<boolean>(false);
-  const { showImage, setShowImage } = useShowImageStore();
   const { setShowDeleteModal, showDeleteModal } = useDeleteModalStore();
   const { token } = useTokenStore();
   const { openCreateFolderModal } = useOpenCreateFolderMainStore();
@@ -281,7 +278,6 @@ const Divider: React.FC<Props> = ({ children }) => {
         {showSplash && <LoginSplash />}
         {showEditModal && <EditPostModal postId={postId} />}
         {showDeleteComment && <DeleteCommentPopup />}
-        {showImage.show && <ImagePreview mSetShowImage={setShowImage} />}
         {showDeleteModal && (
           <div className="w-full h-full absolute grid place-content-center bg-black/70 z-50">
             <DeleteModal setShowDeleteModal={setShowDeleteModal} />
@@ -313,7 +309,7 @@ const Divider: React.FC<Props> = ({ children }) => {
         >
           {hidden && (
             <div
-              className="sticky z-10 w-full flex justify-between pt-3 pb-3 top-0 bg-neutral-200 dark:bg-neutral-800"
+              className="sticky z-10 w-full flex justify-between pt-3 pb-3 top-0 bg-neutral-200 dark:bg-neutral-900"
               id="hi"
             >
               <div id="buttons" className="flex w-full pt-2 mb-2 gap-3">
@@ -324,7 +320,7 @@ const Divider: React.FC<Props> = ({ children }) => {
                       <HoverBox
                         key="desktop-collapser"
                         collapser={true}
-                        className="hover:bg-neutral-300 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded"
+                        className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
                       >
                         <Icon
                           icon="iconoir:sidebar-collapse"
@@ -335,7 +331,7 @@ const Divider: React.FC<Props> = ({ children }) => {
                       {editVisible && [] && (
                         <HoverBox
                           key="desktop-edit"
-                          className="hover:bg-neutral-300 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded"
+                          className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
                         >
                           <Icon
                             onClick={() => setVisible(true)}
@@ -370,7 +366,7 @@ const Divider: React.FC<Props> = ({ children }) => {
                     <HoverBox
                       key="mobile-collapser"
                       collapser={true}
-                      className="hover:bg-neutral-300 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded"
+                      className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
                     >
                       <Icon
                         icon="iconoir:sidebar-collapse"
@@ -381,7 +377,7 @@ const Divider: React.FC<Props> = ({ children }) => {
                     {editVisible && (
                       <HoverBox
                         key="mobile-edit"
-                        className="hover:bg-neutral-300 dark:hover:bg-neutral-900 p-2 cursor-pointer rounded"
+                        className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
                       >
                         <Icon
                           onClick={() => setVisible(true)}
