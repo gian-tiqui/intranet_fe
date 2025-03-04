@@ -180,7 +180,7 @@ const UsersIncompleteReadsGraph: React.FC = () => {
   }
 
   return (
-    <div className="w-full bg-white dark:bg-neutral-900 p-5 shadow mt-5">
+    <div className="w-full bg-white dark:bg-neutral-800 rounded-lg p-5 shadow">
       <h1 className="text-2xl font-bold mb-5">
         Count of Users with Incomplete Reads Per Department
       </h1>
@@ -204,7 +204,7 @@ const LineGraph: React.FC<{
   data: { date: string; count: number }[];
   title: string;
 }> = ({ data, title }) => (
-  <div className="w-full bg-white dark:bg-neutral-900 p-5 shadow mt-5">
+  <div className="w-full bg-white dark:bg-neutral-800 rounded-lg p-5 shadow mt-5">
     <h1 className="text-2xl font-bold mb-5">{title}</h1>
     <ResponsiveContainer width="100%" height={400}>
       <LineChart data={data}>
@@ -255,7 +255,7 @@ const Graphs = () => {
        *
        */}
 
-      <div className="w-full h-20 border-b border-gray-300 dark:border-neutral-900 flex justify-between px-3 items-center">
+      <div className="w-full h-20 border-b border-gray-300 dark:border-neutral-700 flex justify-between px-3 items-center">
         <div></div>
         <ModeToggler />
       </div>
@@ -266,13 +266,13 @@ const Graphs = () => {
        *
        */}
 
-      <div className="w-full p-3">
+      <div className="w-full p-3 flex flex-col gap-3">
         {/* FIRST ROW */}
 
-        <div className="grid h-28 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-1 mb-1">
+        <div className="grid h-28 grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
           {/* FIRST COLUMN */}
 
-          <div className="w-full font-extrabold h-full p-4 grid place-content-center bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-900 shadow">
+          <div className="w-full font-extrabold h-full p-4 grid place-content-center bg-white border border-gray-300 dark:border-neutral-700 dark:bg-neutral-800 rounded-lg shadow">
             <div className="flex gap-2 items-center">
               <Icon className="h-5 w-5" icon={"clarity:users-line"} />
               <h1 className="text-center">USERS</h1>
@@ -280,7 +280,7 @@ const Graphs = () => {
             <p className="text-center">{users.length}</p>
           </div>
 
-          <div className="w-full font-extrabold h-full p-4 grid place-content-center bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-900 shadow">
+          <div className="w-full font-extrabold h-full p-4 grid place-content-center bg-white border border-gray-300 dark:border-neutral-700 dark:bg-neutral-800 rounded-lg shadow">
             <div className="flex gap-2 items-center">
               <Icon
                 className="h-5 w-5"
@@ -291,7 +291,7 @@ const Graphs = () => {
             <p className="text-center">{posts.length}</p>
           </div>
 
-          <div className="w-full font-extrabold h-full p-4 grid place-content-center bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-900 shadow">
+          <div className="w-full font-extrabold h-full p-4 grid place-content-center bg-white border border-gray-300 dark:border-neutral-700 dark:bg-neutral-800 rounded-lg shadow">
             <div className="flex gap-2 items-center">
               <Icon
                 className="h-5 w-5"
@@ -302,7 +302,7 @@ const Graphs = () => {
             <p className="text-center">{departments.length}</p>
           </div>
 
-          <div className="w-full font-extrabold h-full p-4 grid place-content-center bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-900 shadow">
+          <div className="w-full font-extrabold h-full p-4 grid place-content-center bg-white border border-gray-300 dark:border-neutral-700 dark:bg-neutral-800 rounded-lg shadow">
             <div className="flex gap-2 items-center">
               <Icon className="h-5 w-5" icon={"mdi:comments-outline"} />
               <h1 className="text-center">COMMENTS</h1>
@@ -310,7 +310,7 @@ const Graphs = () => {
             <p className="text-center">{comments.length}</p>
           </div>
 
-          <div className="w-full font-extrabold h-full p-4 grid place-content-center bg-white border border-gray-300 dark:border-neutral-900 dark:bg-neutral-900 shadow">
+          <div className="w-full font-extrabold h-full p-4 grid place-content-center bg-white border border-gray-300 dark:border-neutral-700 dark:bg-neutral-800 rounded-lg shadow">
             <div className="flex gap-2 items-center">
               <Icon className="h-5 w-5" icon={"mingcute:comment-line"} />
               <h1 className="text-center">REPLIES</h1>
@@ -321,12 +321,12 @@ const Graphs = () => {
 
         {/* 2nd row */}
 
-        <div className="grid md:grid-cols-3 mt-1 gap-1">
-          <div className="md:col-span-2 bg-white dark:bg-neutral-900 p-5 shadow">
+        <div className="grid md:grid-cols-3 gap-3">
+          <div className="md:col-span-2 bg-white dark:bg-neutral-800 rounded-lg p-5 shadow">
             <h1 className="text-2xl font-bold mb-10">Posts</h1>
             <PostsBarChart departments={departments} />
           </div>
-          <div className="md:col-span-1 bg-white dark:bg-neutral-900 p-5 shadow">
+          <div className="md:col-span-1 bg-white dark:bg-neutral-800 rounded-lg p-5 shadow">
             <h1 className="text-2xl font-bold mb-10">Users</h1>
 
             <UsersPieChart departments={departments} />
@@ -337,7 +337,7 @@ const Graphs = () => {
 
         <UsersIncompleteReadsGraph />
 
-        <div className="w-full bg-white dark:bg-neutral-900 p-5 shadow mt-1">
+        <div className="w-full bg-white dark:bg-neutral-800 rounded-lg gap-3 p-5 shadow">
           <h1 className="text-2xl font-bold mb-10">Comments over time</h1>
 
           <PostCommentsLineChart comments={comments} />
@@ -345,18 +345,18 @@ const Graphs = () => {
 
         {/* 4th row */}
 
-        <div className="w-full bg-white dark:bg-neutral-900 p-5 shadow mt-1">
+        <div className="w-full bg-white dark:bg-neutral-800 rounded-lg p-5 shadow">
           <h1 className="text-2xl font-bold mb-10">Replies over time</h1>
 
           <PostCommentsLineChart comments={replies} />
         </div>
 
-        <div className="w-full bg-white dark:bg-neutral-900 p-5 shadow mt-1">
+        <div className="w-full bg-white dark:bg-neutral-800 rounded-lg p-5 shadow">
           <h1 className="text-2xl font-bold mb-10">Comments per Post</h1>
           <CommentsPerPostBarChart comments={comments} />
         </div>
 
-        <div className="w-full bg-white dark:bg-neutral-900 p-5 shadow mt-1">
+        <div className="w-full bg-white dark:bg-neutral-800 rounded-lg p-5 shadow">
           <h1 className="text-2xl font-bold mb-10">Readers per Post</h1>
           <ReadersPerPostBarChart posts={posts} />
         </div>
