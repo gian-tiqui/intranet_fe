@@ -1,7 +1,11 @@
 "use client";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import useDepartments from "@/app/custom-hooks/departments";
-import { decodeUserData, fetchAllLevels } from "@/app/functions/functions";
+import {
+  decodeUserData,
+  fetchAllLevels,
+  getFolderById,
+} from "@/app/functions/functions";
 import apiClient from "@/app/http-common/apiUrl";
 import useEditModalStore from "@/app/store/editModal";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
@@ -22,6 +26,8 @@ import useSignalStore from "@/app/store/signalStore";
 import { Dropdown, DropdownProps } from "primereact/dropdown";
 import { MultiStateCheckbox } from "primereact/multistatecheckbox";
 import { getFolders } from "@/app/utils/service/folderService";
+import { TreeSelect, TreeSelectChangeEvent } from "primereact/treeselect";
+import { PrimeIcons } from "primereact/api";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -38,6 +44,7 @@ interface FormFields {
   extractedText: string;
   addPhoto: string;
   folderId?: number;
+  downloadable: string;
 }
 
 interface EditPostModalProps {
@@ -67,7 +74,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
     undefined
   );
   const [foldersQuery] = useState<Query>({
-    includeSubfolders: 1,
+    includeSubfolders: 0,
     search: "",
     skip: 0,
     take: 500,
@@ -182,10 +189,6 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
 
     fetchPost();
   }, [postId, setValue, levels]);
-
-  useEffect(() => {
-    if (selectedLevel) setValue("lid", selectedLevel?.lid);
-  }, [selectedLevel, setValue]);
 
   const convertPdfToImage = async (pdfFile: File) => {
     const arrayBuffer = await pdfFile.arrayBuffer();
@@ -324,6 +327,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
       formData.append("deptIds", selectedDepartments.join(","));
       formData.append("updatedBy", String(data.userId));
       formData.append("addPhoto", data.addPhoto);
+      formData.append("folderId", String(selectedFolder?.id));
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
       formData.append(
@@ -437,6 +441,16 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
     }
 
     return <span>{props.placeholder || "Select a level"}</span>;
+  };
+
+  const buildTree = (folders: Folder[]): object[] => {
+    return folders.map((folder) => ({
+      key: folder.id.toString(),
+      label: folder.name,
+      icon: PrimeIcons.FOLDER,
+      value: folder.id.toString(),
+      children: folder.subfolders ? buildTree(folder.subfolders) : undefined,
+    }));
   };
 
   const levelOptionTemplate = (option: { level: string }) => {
@@ -605,9 +619,9 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
         </div>
         <div className="mx-10 flex items-center gap-1 mb-2">
           <input type="checkbox" onChange={handleChangeCheckbox} />
-          <p className="text-sm">Keep previous files?</p>
+          <p className="text-sm">Keep previous files</p>
         </div>
-        <div className="bg-white dark:bg-neutral-900 rounded-xl pb-3 px-4">
+        <div className="bg-white dark:bg-neutral-950 rounded-xl pb-3 px-4">
           <div className="h-7 flex w-full justify-center items-center">
             <Icon icon={"octicon:dash-16"} className="w-7 h-7" />
           </div>
@@ -630,6 +644,19 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
 
               setSelectedLevel(e.target.value);
             }}
+            pt={{
+              root: {
+                className: "dark:bg-neutral-950 dark:border-neutral-700",
+              },
+
+              panel: {
+                className: "dark:bg-neutral-950 dark:border-neutral-700",
+              },
+              header: { className: "dark:bg-neutral-950" },
+              filterInput: {
+                className: "dark:bg-neutral-800 dark:text-white",
+              },
+            }}
             options={levels}
             valueTemplate={selectedOptionTemplate}
             itemTemplate={levelOptionTemplate}
@@ -641,19 +668,38 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
             departments={departments}
             selectedDepartments={selectedDepartments}
           />
-          {foldersData && (
-            <Dropdown
-              value={selectedFolder}
-              options={foldersData.data.folders.map((folder: Folder) => ({
-                label: folder.name,
-                value: folder,
-              }))}
-              onChange={(e) => setSelectedFolder(e.value)}
-              placeholder="Select a folder"
-              className="w-full mb-2 h-8 items-center"
-              filter
-            />
-          )}
+          <TreeSelect
+            filter
+            pt={{
+              root: {
+                className:
+                  "dark:bg-neutral-950 dark:border-neutral-700 dark:text-neutral-100",
+              },
+              tree: {
+                root: { className: "dark:bg-neutral-950 rounded-none" },
+                content: {
+                  className:
+                    "dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-100",
+                },
+              },
+              header: {
+                className: "dark:bg-neutral-950 dark:text-neutral-100",
+              },
+              filter: {
+                className:
+                  "dark:bg-neutral-700 dark:border-neutral-700 dark:text-neutral-100 dark:placeholder-neutral-400",
+              },
+            }}
+            className="w-full mb-2 h-8 items-center"
+            options={buildTree(foldersData?.data.folders || [])}
+            onChange={async (e: TreeSelectChangeEvent) => {
+              if (!e.value) return;
+              const selected = await getFolderById(+e.value);
+              if (selected) setSelectedFolder(selected);
+            }}
+            value={selectedFolder?.id.toString()}
+            placeholder="Select a folder"
+          />
         </div>
       </form>
     </div>

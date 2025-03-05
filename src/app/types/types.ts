@@ -57,6 +57,7 @@ type Post = {
   postDepartments: { department: Department }[];
   folder: Folder;
   employeeLevel: Level;
+  downloadable: boolean;
 };
 
 type PostDepartment = {
@@ -260,6 +261,7 @@ type Query = {
   skip?: number;
   take?: number;
   includeSubfolders?: number;
+  depth?: number;
 };
 
 export type {

@@ -504,7 +504,8 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
               : "justify-end"
           } gap-1 rounded-lg pt-4 mb-2`}
         >
-          {post?.imageLocations &&
+          {post?.downloadable &&
+            post?.imageLocations &&
             post?.imageLocations?.length > 0 &&
             !post.folderId && (
               <div

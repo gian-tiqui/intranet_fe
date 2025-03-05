@@ -1,7 +1,11 @@
 "use client";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
 import useDepartments from "@/app/custom-hooks/departments";
-import { decodeUserData, fetchAllLevels } from "@/app/functions/functions";
+import {
+  decodeUserData,
+  fetchAllLevels,
+  getFolderById,
+} from "@/app/functions/functions";
 import apiClient from "@/app/http-common/apiUrl";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
 import useShowPostStore from "@/app/store/showPostStore";
@@ -21,6 +25,8 @@ import { Checkbox } from "primereact/checkbox";
 import { Dropdown, DropdownProps } from "primereact/dropdown";
 import { getFolders } from "@/app/utils/service/folderService";
 import { MultiStateCheckbox } from "primereact/multistatecheckbox";
+import { TreeSelect, TreeSelectChangeEvent } from "primereact/treeselect";
+import { PrimeIcons } from "primereact/api";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -37,9 +43,11 @@ interface FormFields {
   lid: number;
   extractedText: string;
   postId?: number;
+  downloadable: string;
 }
 
 const DepartmentsListMemo = React.memo(DepartmentsList);
+const MAX_DEPTH = 10;
 
 interface Props {
   isMobile: boolean;
@@ -47,6 +55,7 @@ interface Props {
 
 const PostModal: React.FC<Props> = ({ isMobile }) => {
   const [notify, setNotify] = useState<boolean>(false);
+  const [downloadable, setDownloadable] = useState<boolean>(false);
   const { setVisible } = useShowPostStore();
   const { setIsCollapsed } = useToggleStore();
   const departments = useDepartments();
@@ -71,11 +80,13 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     undefined
   );
   const [foldersQuery] = useState<Query>({
-    includeSubfolders: 1,
+    includeSubfolders: 0,
     search: "",
     skip: 0,
     take: 500,
+    depth: MAX_DEPTH,
   });
+
   const [postVisibility, setPostVisibility] = useState<string>("public");
   const { setSignal } = useSignalStore();
   const { data, isError, error } = useQuery({
@@ -89,7 +100,6 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     },
     { value: "private", icon: "pi pi-lock" },
   ];
-
   const { data: foldersData } = useQuery({
     queryKey: [`folders-${JSON.stringify(foldersQuery)}`],
     queryFn: () => getFolders(foldersQuery),
@@ -326,8 +336,10 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       formData.append("public", data.public);
       formData.append("lid", String(data.lid));
       formData.append("extractedText", data.extractedText);
+      formData.append("downloadable", data.downloadable);
+
       if (selectedFolder)
-        formData.append("folderId", selectedFolder.id.toString());
+        formData.append("folderId", String(selectedFolder.id));
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
 
@@ -443,6 +455,10 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     }
   };
 
+  useEffect(() => {
+    setValue("downloadable", downloadable ? "1" : "0");
+  }, [setValue, downloadable]);
+
   const handleFormClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
@@ -466,6 +482,16 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     }
 
     return <span>{props.placeholder || "Select a level"}</span>;
+  };
+
+  const buildTree = (folders: Folder[]): object[] => {
+    return folders.map((folder) => ({
+      key: folder.id.toString(),
+      label: folder.name,
+      icon: PrimeIcons.FOLDER,
+      value: folder.id.toString(),
+      children: folder.subfolders ? buildTree(folder.subfolders) : undefined,
+    }));
   };
 
   const levelOptionTemplate = (option: { level: string }) => {
@@ -621,22 +647,42 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             </div>
           </div>
         </div>
-        <Checkbox
-          id="notifyCheckbox"
-          className="ms-7 me-2"
-          value={notify}
-          checked={notify}
-          onChange={() => {
-            setNotify((prev) => !prev);
-          }}
-        />
-        <label
-          htmlFor="notifyCheckbox"
-          onClick={() => setNotify((prev) => !prev)}
-          className="hover:cursor-pointer text-sm"
-        >
-          Notify recipients?
-        </label>
+        <div className="flex justify-between w-96">
+          <div>
+            <Checkbox
+              id="notifyCheckbox"
+              className="ms-7 me-2"
+              value={notify}
+              checked={notify}
+              onChange={() => {
+                setNotify((prev) => !prev);
+              }}
+            />
+            <label
+              htmlFor="notifyCheckbox"
+              onClick={() => setNotify((prev) => !prev)}
+              className="hover:cursor-pointer text-sm"
+            >
+              Notify recipients?
+            </label>
+          </div>
+          <div>
+            <Checkbox
+              id="downloadable"
+              className="ms-7 me-2"
+              onClick={() => setDownloadable((prev) => !prev)}
+              value={downloadable}
+              checked={downloadable}
+            />
+            <label
+              htmlFor="downloadable"
+              className="hover:cursor-pointer text-sm"
+              onClick={() => setDownloadable((prev) => !prev)}
+            >
+              Downloadable
+            </label>
+          </div>
+        </div>
 
         <div className="rounded-2xl border-t mt-2 bg-white dark:bg-neutral-950 dark:border-black relative pb-2">
           <div className="h-7 flex w-full justify-center items-center">
@@ -684,32 +730,38 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
               departments={departments}
               selectedDepartments={selectedDepartments}
             />
-            {foldersData && (
-              <Dropdown
-                value={selectedFolder}
-                options={foldersData.data.folders.map((folder: Folder) => ({
-                  label: folder.name,
-                  value: folder,
-                }))}
-                pt={{
-                  root: {
-                    className: "dark:bg-neutral-950 dark:border-neutral-700",
+            <TreeSelect
+              filter
+              pt={{
+                root: {
+                  className:
+                    "dark:bg-neutral-950 dark:border-neutral-700 dark:text-neutral-100",
+                },
+                tree: {
+                  root: { className: "dark:bg-neutral-950 rounded-none" },
+                  content: {
+                    className:
+                      "dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-100",
                   },
-
-                  panel: {
-                    className: "dark:bg-neutral-950 dark:border-neutral-700",
-                  },
-                  header: { className: "dark:bg-neutral-950" },
-                  filterInput: {
-                    className: "dark:bg-neutral-800 dark:text-white",
-                  },
-                }}
-                onChange={(e) => setSelectedFolder(e.value)}
-                placeholder="Select a folder"
-                className="w-full mb-2 h-8 items-center"
-                filter
-              />
-            )}
+                },
+                header: {
+                  className: "dark:bg-neutral-950 dark:text-neutral-100",
+                },
+                filter: {
+                  className:
+                    "dark:bg-neutral-700 dark:border-neutral-700 dark:text-neutral-100 dark:placeholder-neutral-400",
+                },
+              }}
+              className="w-full mb-2 h-8 items-center"
+              options={buildTree(foldersData?.data.folders || [])}
+              onChange={async (e: TreeSelectChangeEvent) => {
+                if (!e.value) return;
+                const selected = await getFolderById(+e.value);
+                if (selected) setSelectedFolder(selected);
+              }}
+              value={selectedFolder?.id.toString()}
+              placeholder="Select a folder"
+            />
           </div>
         </div>
       </form>

@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { getFolderById } from "../functions/functions";
 import {
+  deleteFolder,
   getFolderPostsByFolderId,
   getFolderSubfolders,
 } from "../utils/service/folderService";
@@ -23,6 +24,9 @@ import { Button } from "primereact/button";
 import AddSubfolderDialog from "./AddSubfolderDialog";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { confirmDialog } from "primereact/confirmdialog";
+import { Toast } from "primereact/toast";
+import CustomToast from "./CustomToast";
+import EditFolderDialog from "./EditFolderDialog";
 
 interface Props {
   visible: boolean;
@@ -37,6 +41,9 @@ const FolderContentDialog: React.FC<Props> = ({
   folderId,
 }) => {
   const overlayPanelRef = useRef<OverlayPanel>(null);
+  const toastRef = useRef<Toast>(null);
+  const [editSubfolderVisible, setEditSubfolderVisible] =
+    useState<boolean>(false);
   const [query, setQuery] = useState<Query>({
     search: "",
     skip: 0,
@@ -71,6 +78,22 @@ const FolderContentDialog: React.FC<Props> = ({
     },
     enabled: !!folderId,
   });
+
+  const removeFolder = (id: number) => {
+    deleteFolder(id)
+      .then((response) => {
+        if (response.status === 200) {
+          toastRef.current?.show({
+            severity: "info",
+            summary: "Success",
+            detail: "Folder deleted successfully.",
+          });
+          refetch();
+          refetchSubfolders();
+        }
+      })
+      .catch((error) => console.error(error));
+  };
 
   const { data: folderPosts, refetch } = useQuery({
     queryKey: [`folder-${folderId}-posts`],
@@ -113,6 +136,7 @@ const FolderContentDialog: React.FC<Props> = ({
 
   return (
     <>
+      <CustomToast ref={toastRef} />
       <Dialog
         visible={visible}
         onHide={() => {
@@ -122,7 +146,7 @@ const FolderContentDialog: React.FC<Props> = ({
           header: {
             className: ` ${
               !folderData?.folderColor ? "dark:bg-neutral-900" : ""
-            }`,
+            } dark:text-white`,
             style: {
               color: folderData?.textColor,
               backgroundColor: folderData?.folderColor,
@@ -144,6 +168,13 @@ const FolderContentDialog: React.FC<Props> = ({
           visible={addSubfolder}
           setVisible={setAddSubfolder}
           refetch={refetch}
+        />
+        <EditFolderDialog
+          folderId={mSubfolderId}
+          setFolderId={setMSubfolderId}
+          refetch={refetchSubfolders}
+          visible={editSubfolderVisible}
+          setVisible={setEditSubfolderVisible}
         />
         <div className="my-4 flex gap-3">
           <InputText
@@ -167,7 +198,7 @@ const FolderContentDialog: React.FC<Props> = ({
                   onClick={() => handleSubfolderClick(subfolder.id)}
                   className={`hover:cursor-pointer h-52 px-3 rounded-lg flex flex-col p-4 gap-2 justify-between ${
                     !subfolder.folderColor
-                      ? "bg-white hover:shadow dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                      ? "bg-neutral-200 hover:shadow dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
                       : ""
                   }`}
                   style={{
@@ -198,6 +229,9 @@ const FolderContentDialog: React.FC<Props> = ({
                           <Button
                             icon={`${PrimeIcons.USER_EDIT}`}
                             className="gap-2"
+                            onClick={() => {
+                              setEditSubfolderVisible(true);
+                            }}
                           >
                             Edit
                           </Button>
@@ -209,8 +243,7 @@ const FolderContentDialog: React.FC<Props> = ({
 
                               confirmDialog({
                                 header: "Delete this folder?",
-
-                                accept: () => {},
+                                accept: () => removeFolder(mSubfolderId),
                               });
                             }}
                           >
@@ -271,7 +304,6 @@ const FolderContentDialog: React.FC<Props> = ({
         </div>
       </Dialog>
 
-      {/* Recursive FolderContentDialog for Subfolders */}
       {selectedSubfolder && (
         <FolderContentDialog
           visible={subfolderDialogVisible}
