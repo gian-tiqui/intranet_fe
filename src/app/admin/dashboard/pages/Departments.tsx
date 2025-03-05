@@ -22,6 +22,10 @@ const Departments = () => {
   });
 
   useEffect(() => {
+    console.log(selectedDeptId);
+  }, [selectedDeptId]);
+
+  useEffect(() => {
     const interval = setTimeout(() => {
       setQuery((prev) => ({
         search: searchTerm,
