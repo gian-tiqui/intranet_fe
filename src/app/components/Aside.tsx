@@ -157,7 +157,7 @@ const Aside: React.FC<Props> = ({
               onClick={() => handleClick("/")}
             >
               <Icon icon={"ph:hospital"} className="h-5 w-5" />
-              <p className="w-full text-sm">Intranet</p>
+              <p className="w-full text-sm">Home</p>
             </div>
 
             <div
@@ -288,7 +288,7 @@ const Aside: React.FC<Props> = ({
               }}
             >
               <Icon icon={"ph:hospital"} className="h-5 w-5" />
-              <p className="w-full text-sm">Intranet</p>
+              <p className="w-full text-sm">Home</p>
             </div>
 
             <div

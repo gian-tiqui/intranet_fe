@@ -23,7 +23,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Employee Portal | WMC",
-  description: "WMC | Intranet",
+  description: "WMC | Employee Portal",
   icons: ["westlake_logo_horizontal.jpg.png"],
 };
 

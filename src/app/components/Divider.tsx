@@ -48,7 +48,6 @@ import { Dialog } from "primereact/dialog";
 import useUpdateDialogStore from "../store/updateDialogStore";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import Image from "next/image";
-import { deleteFolder } from "../utils/service/folderService";
 
 interface Props {
   children?: ReactNode;
@@ -192,14 +191,6 @@ const Divider: React.FC<Props> = ({ children }) => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  const removeFolder = (folderId: number) => {
-    deleteFolder(folderId)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => console.error(error));
-  };
 
   useEffect(() => {
     if (!checkDept()) {

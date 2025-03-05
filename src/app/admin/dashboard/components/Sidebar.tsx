@@ -169,7 +169,7 @@ const Sidebar = () => {
                 onClick={() => router.push("/")}
               >
                 <Icon icon={"ph:hospital"} className="h-7 w-7" />
-                <p className="w-full text-md">Intranet</p>
+                <p className="w-full text-md">Home</p>
               </div>
             </HoverBox>
             <hr className="border-b border-gray-200 dark:border-neutral-700 mx-4" />
