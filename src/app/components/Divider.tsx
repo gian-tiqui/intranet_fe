@@ -269,8 +269,8 @@ const Divider: React.FC<Props> = ({ children }) => {
             <li className="list-item">
               - User deactivation has been moved (FOR IT users)
             </li>
-            <li className="list-item">
-              - Employee id in login can now start at 0 (eg. 00001234)
+            <li>
+              - Landing page after login was renovated to view organized folders
             </li>
           </ul>
         </div>
