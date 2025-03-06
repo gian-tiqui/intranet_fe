@@ -48,7 +48,7 @@ import { Dialog } from "primereact/dialog";
 import useUpdateDialogStore from "../store/updateDialogStore";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import Image from "next/image";
-import bg from "../assets/employeeportalbg.jpg";
+// import bg from "../assets/employeeportalbg.jpg";
 
 interface Props {
   children?: ReactNode;
