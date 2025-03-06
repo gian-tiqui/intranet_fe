@@ -29,6 +29,7 @@ import ImageSlider from "./ImageSlider";
 import useImagesStore from "@/app/store/imagesStore";
 import useDeleteModalStore from "@/app/store/deleteModalStore";
 import useSignalStore from "@/app/store/signalStore";
+import { Avatar } from "primereact/avatar";
 
 interface Props {
   id: number;
@@ -61,6 +62,19 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
   const [userDeptId, setUserDeptId] = useState<number>(-1);
   const { setImages } = useImagesStore();
   const { signal, setSignal } = useSignalStore();
+  const [userData, setUserData] = useState<{
+    firstName: string;
+    lastName: string;
+    departmentName: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const data = decodeUserData();
+    if (data) {
+      setUserData(data);
+    }
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     if (post && post.imageLocations) {
@@ -389,7 +403,9 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
     <>
       <div
         onClick={generalPost ? handleClick : undefined}
-        className={`ignore-click ${generalPost && "cursor-pointer"} relative`}
+        className={`ignore-click ${
+          generalPost && "cursor-pointer"
+        } relative pt-10`}
       >
         {!post?.folderId &&
           deptIds.includes(userDeptId.toString()) &&
@@ -410,7 +426,13 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           )}
         <div className="flex items-start gap-2 mb-4 justify-between">
           <div className="flex gap-3 items-start">
-            <div className="h-9 w-9 bg-gray-300 rounded-full"></div>
+            {userData && (
+              <Avatar
+                label={userData?.firstName[0] + userData?.lastName[0]}
+                shape="circle"
+                className="font-bold bg-blue-500"
+              />
+            )}
             <h1 className="text-lg font-semibold">
               {decodeUserData()?.sub !== post?.userId
                 ? `${post?.user?.firstName} ${post?.user?.lastName}`

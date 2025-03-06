@@ -117,7 +117,7 @@ const Aside: React.FC<Props> = ({
         animate="open"
         exit="collapsed"
         variants={variants}
-        className="hidden md:flex flex-col w-full bg-white dark:bg-neutral-800 shadow h-full p-1 rounded-e-3xl"
+        className="hidden md:flex flex-col w-full bg-white dark:bg-neutral-800 shadow h-full p-1 rounded-ee-3xl"
       >
         <div
           id="buttons"

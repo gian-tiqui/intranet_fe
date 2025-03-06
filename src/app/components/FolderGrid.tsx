@@ -15,6 +15,7 @@ import { confirmDialog } from "primereact/confirmdialog";
 import { deleteFolder } from "../utils/service/folderService";
 import CustomToast from "./CustomToast";
 import { Toast } from "primereact/toast";
+import useDarkModeStore from "../store/darkModeStore";
 
 const FolderGrid = () => {
   const [query, setQuery] = useState<Query>({
@@ -29,6 +30,7 @@ const FolderGrid = () => {
   const [editFolderId, setEditFolderId] = useState<number>();
   const [editFolderDialogVisible, setEditFolderDialogVisible] =
     useState<boolean>(false);
+  const { isDarkMode } = useDarkModeStore();
   const [folderDialogVisible, setFolderDialogVisible] =
     useState<boolean>(false);
   const [addFolderDialogVisible, setAddFolderDialogVisible] =
@@ -122,7 +124,7 @@ const FolderGrid = () => {
 
       <div className="flex gap-2 items-center mb-5">
         <i className={`${PrimeIcons.FOLDER} text-lg`}></i>
-        <p className="text-lg font-medium">Folders</p>
+        <p className="text-lg font-medium">WMC Division/Departments</p>
       </div>
 
       <div className="min-h-96 grid grid-cols-3 gap-2 items-start content-start">
@@ -139,7 +141,11 @@ const FolderGrid = () => {
                 }`}
                 style={{
                   color: folder.textColor,
-                  backgroundColor: folder.folderColor,
+                  backgroundColor: folder.folderColor
+                    ? folder.folderColor
+                    : isDarkMode
+                    ? "black"
+                    : "white",
                 }}
                 key={folder.id}
                 onClick={() => {
