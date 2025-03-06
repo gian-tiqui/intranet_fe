@@ -231,8 +231,8 @@ const FolderContentDialog: React.FC<Props> = ({
                       : "white",
                   }}
                 >
-                  <div className="flex items-center gap-2 w-full justify-between">
-                    <div className="flex gap-2">
+                  <div className="flex items-start gap-2 w-full justify-between">
+                    <div className="flex gap-2 w-48">
                       <i className={`${PrimeIcons.FOLDER} text-xl`}></i>
                       <p className="font-medium">{subfolder.name}</p>
                     </div>
