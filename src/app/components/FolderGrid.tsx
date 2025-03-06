@@ -155,7 +155,7 @@ const FolderGrid = () => {
               >
                 <div className="flex gap-2 truncate">
                   <i className={`${PrimeIcons.FOLDER} text-lg`}></i>
-                  <p className="text-sm font-medium trunc">{folder.name}</p>
+                  <p className="text-sm font-medium ">{folder.name}</p>
                 </div>
                 {checkDept() && (
                   <Button
