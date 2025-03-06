@@ -264,7 +264,24 @@ type Query = {
   depth?: number;
 };
 
+type AddDepartmentFormField = {
+  departmentName: string;
+  departmentCode: string;
+  divisionId: number;
+};
+
+type Division = {
+  id: number;
+  divisionCode: string;
+  divisionName: string;
+  departments: Department[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type {
+  Division,
+  AddDepartmentFormField,
   Query,
   UpdateStatus,
   Folder,
