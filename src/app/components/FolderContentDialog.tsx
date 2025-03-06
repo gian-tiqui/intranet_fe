@@ -27,6 +27,7 @@ import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import CustomToast from "./CustomToast";
 import EditFolderDialog from "./EditFolderDialog";
+import useDarkModeStore from "../store/darkModeStore";
 
 interface Props {
   visible: boolean;
@@ -40,7 +41,6 @@ const FolderContentDialog: React.FC<Props> = ({
   setVisible,
   folderId,
 }) => {
-  const overlayPanelRef = useRef<OverlayPanel>(null);
   const toastRef = useRef<Toast>(null);
   const [editSubfolderVisible, setEditSubfolderVisible] =
     useState<boolean>(false);
@@ -51,7 +51,8 @@ const FolderContentDialog: React.FC<Props> = ({
   });
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [addSubfolder, setAddSubfolder] = useState<boolean>(false);
-  const [mSubfolderId, setMSubfolderId] = useState<number>();
+  const [folderToEdit, setFolderToEdit] = useState<number | undefined>();
+  const { isDarkMode } = useDarkModeStore();
   const [selectedSubfolder, setSelectedSubfolder] = useState<
     number | undefined
   >(undefined);
@@ -59,6 +60,14 @@ const FolderContentDialog: React.FC<Props> = ({
     useState<boolean>(false);
   const { signal } = useSignalStore();
   const router = useRouter();
+
+  // Create refs object to store multiple overlay panels
+  const overlayPanelsRef = useRef<{ [key: number]: OverlayPanel | null }>({});
+
+  // Callback to set the ref for a specific folder ID
+  const setOverlayPanelRef = (id: number) => (el: OverlayPanel | null) => {
+    overlayPanelsRef.current[id] = el;
+  };
 
   const { data: folderData } = useQuery({
     queryKey: [`folder-${folderId}`],
@@ -132,6 +141,18 @@ const FolderContentDialog: React.FC<Props> = ({
     setSubfolderDialogVisible(true);
   };
 
+  const handleEditClick = (folderId: number) => {
+    setFolderToEdit(folderId);
+    setEditSubfolderVisible(true);
+  };
+
+  const handleDeleteClick = (folderId: number) => {
+    confirmDialog({
+      header: "Delete this folder?",
+      accept: () => removeFolder(folderId),
+    });
+  };
+
   if (!folderId) return null;
 
   return (
@@ -170,8 +191,8 @@ const FolderContentDialog: React.FC<Props> = ({
           refetch={refetch}
         />
         <EditFolderDialog
-          folderId={mSubfolderId}
-          setFolderId={setMSubfolderId}
+          folderId={folderToEdit}
+          setFolderId={setFolderToEdit}
           refetch={refetchSubfolders}
           visible={editSubfolderVisible}
           setVisible={setEditSubfolderVisible}
@@ -203,7 +224,11 @@ const FolderContentDialog: React.FC<Props> = ({
                   }`}
                   style={{
                     color: subfolder.textColor,
-                    backgroundColor: subfolder.folderColor,
+                    backgroundColor: subfolder.folderColor
+                      ? subfolder.folderColor
+                      : isDarkMode
+                      ? "black"
+                      : "white",
                   }}
                 >
                   <div className="flex items-center gap-2 w-full justify-between">
@@ -215,37 +240,27 @@ const FolderContentDialog: React.FC<Props> = ({
                       icon={`${PrimeIcons.COG} text-xl`}
                       onClick={(e) => {
                         e.stopPropagation();
-
-                        setMSubfolderId(subfolder.id);
-
-                        overlayPanelRef.current?.toggle(e);
+                        // Toggle this specific subfolder's overlay panel
+                        overlayPanelsRef.current[subfolder.id]?.toggle(e);
                       }}
                     >
+                      {/* Create a unique overlay panel for each subfolder */}
                       <OverlayPanel
-                        ref={overlayPanelRef}
+                        ref={setOverlayPanelRef(subfolder.id)}
                         className="dark:bg-neutral-950 dark:text-white"
                       >
                         <div className="flex flex-col gap-2">
                           <Button
                             icon={`${PrimeIcons.USER_EDIT}`}
                             className="gap-2"
-                            onClick={() => {
-                              setEditSubfolderVisible(true);
-                            }}
+                            onClick={() => handleEditClick(subfolder.id)}
                           >
                             Edit
                           </Button>
                           <Button
                             icon={`${PrimeIcons.TRASH}`}
                             className="gap-2"
-                            onClick={() => {
-                              if (!mSubfolderId) return;
-
-                              confirmDialog({
-                                header: "Delete this folder?",
-                                accept: () => removeFolder(mSubfolderId),
-                              });
-                            }}
+                            onClick={() => handleDeleteClick(subfolder.id)}
                           >
                             Delete
                           </Button>

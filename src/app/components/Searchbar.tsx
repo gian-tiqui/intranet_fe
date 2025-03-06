@@ -14,7 +14,7 @@ const Searchbar: React.FC<Props> = ({
   loading,
 }) => {
   return (
-    <div className="sm:flex items-center w-48 gap-3 relative hidden bg-neutral-300 dark:bg-neutral-700 h-9 rounded-full px-3">
+    <div className="sm:flex items-center w-48 gap-3 relative hidden bg-neutral-100 dark:bg-neutral-700 h-9 rounded-lg px-3 me-3">
       {loading ? (
         <Icon icon={"bx:search-alt"} className="h-5 w-5" />
       ) : (

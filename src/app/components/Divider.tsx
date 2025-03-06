@@ -48,6 +48,7 @@ import { Dialog } from "primereact/dialog";
 import useUpdateDialogStore from "../store/updateDialogStore";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import Image from "next/image";
+import bg from "../assets/employeeportalbg.jpg";
 
 interface Props {
   children?: ReactNode;
@@ -282,7 +283,7 @@ const Divider: React.FC<Props> = ({ children }) => {
         {showEditModal && <EditPostModal postId={postId} />}
         {showDeleteComment && <DeleteCommentPopup />}
         {showDeleteModal && (
-          <div className="w-full h-full absolute grid place-content-center bg-black/70 z-50">
+          <div className="w-full h-full absolute grid place-content-center bg-black/60 z-50">
             <DeleteModal setShowDeleteModal={setShowDeleteModal} />
           </div>
         )}
@@ -305,14 +306,10 @@ const Divider: React.FC<Props> = ({ children }) => {
           </AnimatePresence>
         </div>
 
-        <main
-          className={`max-h-screen overflow-auto relative w-full ${
-            hidden && "px-3"
-          }`}
-        >
+        <main className={`max-h-screen overflow-auto relative w-full`}>
           {hidden && (
             <div
-              className="sticky z-10 w-full flex justify-between pt-3 pb-3 top-0 bg-neutral-200 dark:bg-neutral-900"
+              className="sticky z-10 w-full flex justify-between pt-3 pb-3 top-0 bg-neutral-200/70 dark:bg-neutral-900/60 backdrop-blur"
               id="hi"
             >
               <div id="buttons" className="flex w-full pt-2 mb-2 gap-3">
@@ -411,14 +408,16 @@ const Divider: React.FC<Props> = ({ children }) => {
               </div>
             </div>
           )}
+
           <div
-            className={`mx-auto w-full ${
+            className={`mx-auto w-full relative ${
               hidden && "max-w-[750px]"
             } px-3 md:px-0`}
           >
             {children}
           </div>
         </main>
+        {/* <Image src={bg} alt="main-bg" fill className="-z-10" /> */}
       </div>
     </QueryClientProvider>
   );
