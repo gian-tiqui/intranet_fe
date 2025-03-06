@@ -428,11 +428,16 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           <div className="flex gap-3 items-start">
             {userData && (
               <Avatar
-                label={userData?.firstName[0] + userData?.lastName[0]}
+                label={
+                  decodeUserData()?.sub === post?.userId
+                    ? userData?.firstName[0] + userData?.lastName[0]
+                    : `${post?.user?.firstName[0]}${post?.user?.lastName[0]}`
+                }
                 shape="circle"
                 className="font-bold bg-blue-500"
               />
             )}
+
             <h1 className="text-lg font-semibold">
               {decodeUserData()?.sub !== post?.userId
                 ? `${post?.user?.firstName} ${post?.user?.lastName}`
