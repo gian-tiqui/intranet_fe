@@ -23,7 +23,6 @@ import DeleteModal from "./DeleteModal";
 import useDeletePostStore from "@/app/store/deletePost";
 import DeletePostModal from "./DeletePostModal";
 import { motion } from "framer-motion";
-import Deactivation from "@/app/deactivation/components/Deactivation";
 import Departments from "../pages/Departments";
 
 const Sidebar = () => {
@@ -73,11 +72,6 @@ const Sidebar = () => {
       name: "Users",
       component: <Users />,
       icon: "clarity:users-line",
-    },
-    {
-      name: "Deactivate User",
-      component: <Deactivation />,
-      icon: "icons8:shutdown",
     },
     {
       name: "Departments",

@@ -15,6 +15,7 @@ import React, { useEffect, useRef, useState } from "react";
 import AddDepartmentDialog from "../components/AddDepartmentDialog";
 import useSignalStore from "@/app/store/signalStore";
 import { Toast } from "primereact/toast";
+import EditDepartmentDialog from "../components/EditDepartmentDialog";
 
 const Departments = () => {
   const [query, setQuery] = useState<Query>({ search: "", skip: 0, take: 100 });
@@ -22,6 +23,8 @@ const Departments = () => {
   const overlayPanelRef = useRef<OverlayPanel>(null);
   const [selectedDeptId, setSelectedDeptId] = useState<number>();
   const [addFolderVisible, setAddFolderVisible] = useState<boolean>(false);
+  const [editDepartmentVisible, setEditDepartmentVisible] =
+    useState<boolean>(false);
   const { signal, setSignal } = useSignalStore();
   const toastRef = useRef<Toast>(null);
   const { data, isLoading, isError, error, refetch } = useQuery({
@@ -84,6 +87,11 @@ const Departments = () => {
         setVisible={setAddFolderVisible}
         visible={addFolderVisible}
       />
+      <EditDepartmentDialog
+        setVisible={setEditDepartmentVisible}
+        visible={editDepartmentVisible}
+        deptId={selectedDeptId}
+      />
       <div className="h-20 bg-white border-b dark:bg-neutral-800 dark:border-neutral-700 px-6 flex items-center justify-between">
         <h3 className="font-bold  text-xl">Departments</h3>
         <div className="flex items-center me-4 gap-2">
@@ -108,7 +116,17 @@ const Departments = () => {
         {isLoading ? (
           <p>Loading departments...</p>
         ) : (
-          <DataTable value={data?.data.departments} size="normal">
+          <DataTable
+            value={data?.data.departments}
+            size="normal"
+            paginator
+            rows={6}
+            pt={{
+              paginator: {
+                root: { className: "dark:bg-neutral-800 dark:text-white" },
+              },
+            }}
+          >
             <Column
               sortable
               field="departmentName"
@@ -173,9 +191,17 @@ const Departments = () => {
               header="Action"
               body={(rowData) => (
                 <>
-                  <OverlayPanel ref={overlayPanelRef}>
+                  <OverlayPanel
+                    ref={overlayPanelRef}
+                    className="dark:bg-neutral-900 dark:text-white"
+                  >
                     <div className="flex flex-col gap-2">
-                      <Button icon={`${PrimeIcons.USER_EDIT} me-2`}>
+                      <Button
+                        icon={`${PrimeIcons.USER_EDIT} me-2`}
+                        onClick={() => {
+                          setEditDepartmentVisible(true);
+                        }}
+                      >
                         Edit
                       </Button>
                       <Button

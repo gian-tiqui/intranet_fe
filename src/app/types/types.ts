@@ -13,13 +13,16 @@ type User = {
   city?: string;
   state?: string;
   zipCode?: number;
+  password: string;
   dob: Date;
   gender: string;
   createdAt: Date;
   updatedAt: Date;
   deptId: number;
   department: Department;
-  employeeId: number;
+  divisionId: number;
+  employeeId: string;
+  lid: number;
 };
 
 type PostReader = {

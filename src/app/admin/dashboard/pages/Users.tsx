@@ -1,313 +1,267 @@
-"use client";
-import ModeToggler from "@/app/components/ModeToggler";
-import Searchbar from "@/app/components/Searchbar";
-import addModalStore from "@/app/store/addPostModal";
-import useAdminHiderStore from "@/app/store/adminOpacitor";
-import { MinMax, ThType, User } from "@/app/types/types";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import React, { ChangeEvent, useEffect, useState } from "react";
-import Tr from "../components/Tr";
-import useUsers from "@/app/custom-hooks/users";
-import useDepartments from "@/app/custom-hooks/departments";
+import { Query } from "@/app/types/types";
+import { useQuery } from "@tanstack/react-query";
+import { PrimeIcons } from "primereact/api";
+import { Button } from "primereact/button";
+import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
+import { InputText } from "primereact/inputtext";
+import React, { useEffect, useRef, useState } from "react";
+import useSignalStore from "@/app/store/signalStore";
+import { Toast } from "primereact/toast";
+import { deleteUserById, findUsers } from "@/app/utils/service/userService";
+import AddUserDialog from "../components/AddUserDialog";
+import DeactivateUserDialog from "../components/DeactivateUserDialog";
+import UserOverlay from "../components/UserOverlay";
+import EditUserDialog from "../components/EditUserDialog";
 
-const Users = () => {
-  const users = useUsers();
-  const [sortedUsers, setSortedUsers] = useState<User[]>([]);
-  const [page, setPage] = useState<number>(1);
-  const [direction, setDirection] = useState<string>("asc");
-  const [selectedField, setSelectedField] = useState<string>("");
-  const [loadingSearch, setLoadingSearch] = useState<boolean>(false);
-  const [searchText, setSearchText] = useState<string>("");
-  const [debouncedSearch, setDebouncedSearch] = useState<string>("");
-  const [selectedDept, setSelectedDept] = useState<string>("");
-  const { setAShown } = useAdminHiderStore();
-  const { setAddModalShown } = addModalStore();
-  const [departments, setDepartments] = useState<
-    { deptName: string; field: string }[]
-  >([]);
-
-  const depts = useDepartments();
+const Departments = () => {
+  const [query, setQuery] = useState<Query>({ search: "", skip: 0, take: 10 });
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [selectedUserId, setSelectedUserId] = useState<number>();
+  const [addUserVisible, setAddUserVisible] = useState<boolean>(false);
+  const [editUserVisible, setEditUserVisible] = useState<boolean>(false);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>("");
+  const [deactivateUserVisible, setDeactivateUserVisible] =
+    useState<boolean>(false);
+  const { signal, setSignal } = useSignalStore();
+  const toastRef = useRef<Toast>(null);
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: [`users-${JSON.stringify(query)}`],
+    queryFn: () => findUsers(query),
+  });
 
   useEffect(() => {
-    const fillDepartments = () => {
-      const temp: { deptName: string; field: string }[] = depts.map((dept) => ({
-        deptName: dept.departmentCode,
-        field: dept.departmentName,
+    if (signal) refetch();
+
+    return () => setSignal(false);
+  }, [signal, refetch, setSignal]);
+
+  useEffect(() => {
+    const interval = setTimeout(() => {
+      setQuery((prev) => ({
+        search: searchTerm,
+        skip: prev.skip,
+        take: prev.take,
       }));
+    }, 700);
 
-      setDepartments(temp);
-    };
+    return () => clearTimeout(interval);
+  }, [searchTerm]);
 
-    fillDepartments();
-  }, [depts]);
+  if (isError) {
+    console.error(error);
 
-  const JUMP = 4;
-  const [minMax, setMinMax] = useState<MinMax>({ min: 0, max: 4 });
-  const heads: ThType[] = [
-    { head: "FIRST NAME", field: "firstname" },
-    { head: "MIDDLE NAME", field: "middlename" },
-    { head: "LAST NAME", field: "lastname" },
-    { head: "EMAIL", field: "email" },
-    { head: "DEPARTMENT", field: "department" },
-    { head: "DOB", field: "dob" },
-  ];
+    return (
+      <div className="p-6">
+        <p>There was an error in loading the users</p>
+      </div>
+    );
+  }
 
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      setDebouncedSearch(searchText);
-      setLoadingSearch(true);
-    }, 1000);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchText]);
-
-  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setSearchText(value);
-  };
-
-  const handleNextClicked = () => {
-    if (minMax.max <= users.length - 1) {
-      setMinMax((prevState) => ({
-        min: prevState.min + JUMP,
-        max: prevState.max + JUMP,
-      }));
-      setPage((prevNum) => prevNum + 1);
-    }
-  };
-
-  const handlePrevClicked = () => {
-    if (minMax.min > 0) {
-      setMinMax((prevState) => ({
-        min: prevState.min - JUMP,
-        max: prevState.max - JUMP,
-      }));
-      setPage((prevNum) => prevNum - 1);
-    }
-  };
-
-  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedDept(e.target.value);
-  };
-
-  const handleAddClicked = () => {
-    setAddModalShown(true);
-    setAShown(true);
-  };
-
-  useEffect(() => {
-    if (selectedDept === "") {
-      setSortedUsers(users);
-    } else {
-      const usersByDept = users.filter(
-        (user) =>
-          user.department.departmentName.toLowerCase() ===
-          selectedDept.toLowerCase()
-      );
-      setSortedUsers(usersByDept);
-    }
-  }, [selectedDept, users]);
-
-  useEffect(() => {
-    setSortedUsers(users);
-  }, [users]);
-
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      setDebouncedSearch(searchText);
-      setLoadingSearch(true);
-    }, 1000);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchText]);
-
-  const handleSortClicked = (field: string) => {
-    if (selectedField === field) {
-      setDirection(direction === "asc" ? "desc" : "asc");
-    } else {
-      setDirection("asc");
-    }
-    setSelectedField(field);
-  };
-
-  useEffect(() => {
-    const searchUsers = () => {
-      const searchTerm = debouncedSearch.toLowerCase().trim();
-      const usersSearchResults = users.filter((user) => {
-        const fullName = `${user.firstName} ${user.middleName} ${user.lastName}`
-          .toLowerCase()
-          .trim();
-        return fullName.includes(searchTerm);
-      });
-
-      setSortedUsers(usersSearchResults);
-    };
-
-    searchUsers();
-  }, [debouncedSearch, users]);
-
-  useEffect(() => {
-    const sortUsers = () => {
-      const sorted = [...users].sort((a, b) => {
-        let valueA, valueB;
-
-        switch (selectedField) {
-          case "firstname":
-            valueA = a.firstName.toLowerCase();
-            valueB = b.firstName.toLowerCase();
-            break;
-          case "middlename":
-            valueA = a.middleName?.toLowerCase();
-            valueB = b.middleName?.toLowerCase();
-            break;
-          case "lastname":
-            valueA = a.lastName.toLowerCase();
-            valueB = b.lastName.toLowerCase();
-            break;
-          case "email":
-            valueA = a.email.toLowerCase();
-            valueB = b.email.toLowerCase();
-            break;
-          case "department":
-            valueA = a.department.departmentName.toLowerCase();
-            valueB = b.department.departmentName.toLowerCase();
-            break;
-          case "dob":
-            valueA = new Date(a.dob).getTime();
-            valueB = new Date(b.dob).getTime();
-            break;
-          default:
-            return 0;
+  const accept = () => {
+    deleteUserById(selectedUserId)
+      .then((response) => {
+        if (response.status === 200) {
+          toastRef.current?.show({
+            summary: "Success",
+            detail: "The user has been removed",
+          });
+          refetch();
         }
-
-        if (valueA && valueB) {
-          if (valueA < valueB) {
-            return direction === "asc" ? -1 : 1;
-          }
-          if (valueA > valueB) {
-            return direction === "asc" ? 1 : -1;
-          }
-        }
-
-        return 0;
+      })
+      .catch((error) => {
+        console.error(error);
+        toastRef.current?.show({
+          summary: "There was a problem in removing the user",
+          severity: "error",
+        });
       });
-
-      setSortedUsers(sorted);
-    };
-
-    sortUsers();
-  }, [selectedField, direction, users]);
+  };
 
   return (
-    <div className="users-component">
-      <div className="w-full  bg-white dark:bg-neutral-900 py-5 px-10 shadow flex justify-between items-center">
-        <h1 className="">
-          <p className="text-2xl font-extrabold">Users</p>
-        </h1>
-        <div className="flex gap-3 items-center">
-          <Searchbar
-            loading={loadingSearch}
-            handleSearchChange={handleSearchChange}
-            searchText={searchText}
+    <div>
+      <Toast ref={toastRef} />
+      <AddUserDialog setVisible={setAddUserVisible} visible={addUserVisible} />
+      <DeactivateUserDialog
+        refetch={refetch}
+        visible={deactivateUserVisible}
+        setVisible={setDeactivateUserVisible}
+        employeeId={selectedEmployeeId}
+      />
+      <EditUserDialog
+        refetch={refetch}
+        setVisible={setEditUserVisible}
+        visible={editUserVisible}
+        userId={selectedUserId}
+      />
+
+      <div className="h-20 bg-white border-b dark:bg-neutral-800 dark:border-neutral-700 px-6 flex items-center justify-between">
+        <h3 className="font-bold  text-xl">Users</h3>
+        <div className="flex items-center me-4 gap-2">
+          <InputText
+            placeholder="Search a user"
+            className="bg-neutral-100 dark:bg-neutral-700 px-4 h-10 w-72"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+            }}
           />
-          <ModeToggler />
+          <Button
+            icon={`${PrimeIcons.PLUS} text-lg text-white`}
+            onClick={() => {
+              setAddUserVisible(true);
+            }}
+            className="justify-center items-center flex h-9 w-9 rounded bg-blue-400"
+          />
         </div>
       </div>
-
-      <div className="p-10 h-[500px] overflow-auto">
-        <div
-          className="flex justify-between border bg-white dark:bg-neutral-900 border-b-gray-300 border-x-gray-300 dark:border-neutral-800
-         rounded-t-xl p-5"
-        >
-          <button
-            onClick={handleAddClicked}
-            className="flex items-center justify-between gap-2 px-5 bg-gray-300 hover:shadow rounded-full dark:bg-neutral-700"
+      <div className="w-full md:h-[86vh] overflow-auto p-6">
+        {isLoading ? (
+          <p>Loading users...</p>
+        ) : (
+          <DataTable
+            paginator
+            rows={4}
+            value={data?.data.users}
+            size="normal"
+            pt={{
+              paginator: {
+                root: { className: "dark:bg-neutral-800 dark:text-white" },
+              },
+            }}
           >
-            <Icon icon={"ant-design:user-add-outlined"} className="h-6 w-6" />
-            <p>Add</p>
-          </button>
-          <select
-            onChange={handleSelectChange}
-            className="bg-gray-300 dark:bg-neutral-700 border outline-none rounded-full border-gray-400 dark:border-neutral-800 text-center w-24 cursor-pointer h-8"
-          >
-            {departments.map((dept, index) => (
-              <option
-                value={dept.field}
-                key={index}
-                className="bg-gray-300 dark:bg-neutral-700 grid place-content-center"
-              >
-                {dept.deptName}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div
-          className="border bg-white dark:bg-neutral-900 border-gray-300 dark:border-neutral-800
-         pb-5 rounded-b-xl shadow"
-        >
-          <table className="min-w-full bg-inherit  min-h-96">
-            <thead className="bg-inherit dark:text-white border-b border-gray-300 dark:border-neutral-800 uppercase text-sm">
-              <tr>
-                {heads.map((head, index) => (
-                  <th className="py-3 px-4" key={index}>
-                    <div className="flex items-center justify-center gap-2">
-                      <p>{head.head}</p>
-                      <Icon
-                        onClick={() => handleSortClicked(head.field)}
-                        icon={"bx:sort"}
-                        className={`${
-                          selectedField === head.field && "rotate-45"
-                        } ${
-                          direction === "desc" &&
-                          selectedField === head.field &&
-                          "-rotate-45"
-                        } cursor-pointer p-1 rounded-full hover:bg-gray-300 dark:hover:bg-neutral-700 h-6 w-6`}
-                      />
-                    </div>
-                  </th>
-                ))}
-                <th className="py-3 px-4">ACTION</th>
-              </tr>
-            </thead>
-
-            <tbody className="align-top relative">
-              {sortedUsers.length > 0 ? (
-                sortedUsers
-                  .slice(minMax.min, minMax.max)
-                  .map((user) => <Tr {...user} key={user.id} />)
-              ) : (
-                <tr>
-                  <td
-                    colSpan={heads.length + 1}
-                    className="text-center p-10 text-gray-500"
-                  >
-                    No users found.
-                  </td>
-                </tr>
+            <Column
+              sortable
+              field="employeeId"
+              header="ID"
+              pt={{
+                headerCell: {
+                  className: "dark:bg-neutral-950 dark:text-white",
+                },
+                bodyCell: {
+                  className: "dark:bg-neutral-800 dark:text-white",
+                },
+              }}
+            ></Column>
+            <Column
+              sortable
+              field="firstName"
+              header="First Name"
+              pt={{
+                headerCell: {
+                  className: "dark:bg-neutral-950 dark:text-white",
+                },
+                bodyCell: {
+                  className: "dark:bg-neutral-800 dark:text-white",
+                },
+              }}
+            ></Column>
+            <Column
+              sortable
+              field="lastName"
+              header="Last Name"
+              pt={{
+                headerCell: {
+                  className: "dark:bg-neutral-950 dark:text-white",
+                },
+                bodyCell: {
+                  className: "dark:bg-neutral-800 dark:text-white",
+                },
+              }}
+            ></Column>
+            <Column
+              sortable
+              field="confirmed"
+              header="Activated"
+              pt={{
+                headerCell: {
+                  className: "dark:bg-neutral-950 dark:text-white",
+                },
+                bodyCell: {
+                  className: "dark:bg-neutral-800 dark:text-white",
+                },
+              }}
+            ></Column>
+            <Column
+              sortable
+              header="Department"
+              pt={{
+                headerCell: {
+                  className: "dark:bg-neutral-950 dark:text-white",
+                },
+                bodyCell: {
+                  className: "dark:bg-neutral-800 dark:text-white",
+                },
+              }}
+              body={(rowData) => <p>{rowData.department.departmentName}</p>}
+            ></Column>
+            <Column
+              sortable
+              header="Level"
+              pt={{
+                headerCell: {
+                  className: "dark:bg-neutral-950 dark:text-white",
+                },
+                bodyCell: {
+                  className: "dark:bg-neutral-800 dark:text-white",
+                },
+              }}
+              body={(rowData) => (
+                <p>
+                  {rowData.employeeLevel.level === "All Employees"
+                    ? "Staff"
+                    : rowData.employeeLevel.level}
+                </p>
               )}
-            </tbody>
-          </table>
-          <div className="flex mx-6 gap-5 mt-5 justify-between">
-            <p>Page {page}</p>
-            <div className="flex gap-3">
-              <button onClick={handlePrevClicked}>
-                <Icon
-                  icon={"grommet-icons:link-previous"}
-                  className="h-7 hover:bg-gray-300 rounded-full dark:hover:bg-neutral-600  p-1 w-7"
+            ></Column>
+            <Column
+              sortable
+              header="Created"
+              pt={{
+                headerCell: {
+                  className: "dark:bg-neutral-950 dark:text-white",
+                },
+                bodyCell: {
+                  className: "dark:bg-neutral-800 dark:text-white",
+                },
+              }}
+              body={(rowData) => (
+                <p>
+                  {new Date(rowData.createdAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
+              )}
+            ></Column>
+
+            <Column
+              pt={{
+                headerCell: {
+                  className: "dark:bg-neutral-950 dark:text-white",
+                },
+                bodyCell: {
+                  className: "dark:bg-neutral-800 dark:text-white",
+                },
+              }}
+              header="Action"
+              body={(rowData) => (
+                <UserOverlay
+                  accept={accept}
+                  setEditUserVisible={setEditUserVisible}
+                  rowData={rowData}
+                  setDeactivateUserVisible={setDeactivateUserVisible}
+                  setSelectedEmployeeId={setSelectedEmployeeId}
+                  setSelectedUserId={setSelectedUserId}
                 />
-              </button>
-              <button onClick={handleNextClicked}>
-                <Icon
-                  icon={"grommet-icons:link-next"}
-                  className="h-7 hover:bg-gray-300 dark:hover:bg-neutral-600 rounded-full p-1 w-7"
-                />
-              </button>
-            </div>
-          </div>
-        </div>
+              )}
+            ></Column>
+          </DataTable>
+        )}
       </div>
     </div>
   );
 };
 
-export default Users;
+export default Departments;
