@@ -83,8 +83,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
         (userData?.lid && post?.lid && userData?.lid > post?.lid) ||
         post?.userId === userData?.sub;
 
-      console.log("Can View Post:", canViewPost);
-
       if (!canViewPost) {
         router.push("/");
         toast("You are not allowed to view that post", {
