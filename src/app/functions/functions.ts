@@ -253,7 +253,7 @@ const fetchPendingUsers = async () => {
       `${API_BASE}/users?confirm=false&deptId=${decodeUserData()?.deptId}`
     );
 
-    return response.data.users.users as User[];
+    return response.data.users as User[];
   } catch (error) {
     console.error(error);
     return [];

@@ -19,7 +19,7 @@ const useUsers = () => {
         const data = response.data;
 
         if (data.statusCode === 200) {
-          setUsers(data.users.users);
+          setUsers(data.users);
         }
       } catch (error) {
         console.error(error);
