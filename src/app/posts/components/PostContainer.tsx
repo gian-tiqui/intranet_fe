@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PostSkeleton from "./PostSkeleton";
 import Comments from "./Comments";
 import { GroupedFiles, ImageLocation, PostComment } from "@/app/types/types";
@@ -30,6 +30,7 @@ import useImagesStore from "@/app/store/imagesStore";
 import useDeleteModalStore from "@/app/store/deleteModalStore";
 import useSignalStore from "@/app/store/signalStore";
 import { Avatar } from "primereact/avatar";
+import { Toast } from "primereact/toast";
 
 interface Props {
   id: number;
@@ -67,6 +68,32 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
     lastName: string;
     departmentName: string;
   } | null>(null);
+  const toastRef = useRef<Toast>(null);
+
+  useEffect(() => {
+    const checkLevel = async () => {
+      const userData = await decodeUserData();
+
+      if (!post?.lid || !post?.userId) {
+        console.log("Post data not ready, skipping check...");
+        return;
+      }
+
+      const canViewPost =
+        (userData?.lid && post?.lid && userData?.lid > post?.lid) ||
+        post?.userId === userData?.sub;
+
+      if (!canViewPost) {
+        router.push("/");
+        toast("You are not allowed to view that post", {
+          className: toastClass,
+          type: "error",
+        });
+      }
+    };
+
+    checkLevel();
+  }, [post, router]);
 
   useEffect(() => {
     const data = decodeUserData();
@@ -401,6 +428,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
 
   return (
     <>
+      <Toast ref={toastRef} />
       <div
         onClick={generalPost ? handleClick : undefined}
         className={`ignore-click ${
@@ -428,11 +456,16 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           <div className="flex gap-3 items-start">
             {userData && (
               <Avatar
-                label={userData?.firstName[0] + userData?.lastName[0]}
+                label={
+                  decodeUserData()?.sub === post?.userId
+                    ? userData?.firstName[0] + userData?.lastName[0]
+                    : `${post?.user?.firstName[0]}${post?.user?.lastName[0]}`
+                }
                 shape="circle"
                 className="font-bold bg-blue-500"
               />
             )}
+
             <h1 className="text-lg font-semibold">
               {decodeUserData()?.sub !== post?.userId
                 ? `${post?.user?.firstName} ${post?.user?.lastName}`

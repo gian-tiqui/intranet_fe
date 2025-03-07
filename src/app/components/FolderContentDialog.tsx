@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { getFolderById } from "../functions/functions";
+import { checkDept, getFolderById } from "../functions/functions";
 import {
   deleteFolder,
   getFolderPostsByFolderId,
@@ -17,9 +17,6 @@ import { Folder, Post, Query } from "../types/types";
 import { PrimeIcons } from "primereact/api";
 import { InputText } from "primereact/inputtext";
 import useSignalStore from "../store/signalStore";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { API_BASE } from "../bindings/binding";
 import { Button } from "primereact/button";
 import AddSubfolderDialog from "./AddSubfolderDialog";
 import { OverlayPanel } from "primereact/overlaypanel";
@@ -28,6 +25,7 @@ import { Toast } from "primereact/toast";
 import CustomToast from "./CustomToast";
 import EditFolderDialog from "./EditFolderDialog";
 import useDarkModeStore from "../store/darkModeStore";
+import FolderPost from "./FolderPost";
 
 interface Props {
   visible: boolean;
@@ -59,7 +57,6 @@ const FolderContentDialog: React.FC<Props> = ({
   const [subfolderDialogVisible, setSubfolderDialogVisible] =
     useState<boolean>(false);
   const { signal } = useSignalStore();
-  const router = useRouter();
 
   // Create refs object to store multiple overlay panels
   const overlayPanelsRef = useRef<{ [key: number]: OverlayPanel | null }>({});
@@ -236,37 +233,37 @@ const FolderContentDialog: React.FC<Props> = ({
                       <i className={`${PrimeIcons.FOLDER} text-xl`}></i>
                       <p className="font-medium">{subfolder.name}</p>
                     </div>
-                    <Button
-                      icon={`${PrimeIcons.COG} text-xl`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // Toggle this specific subfolder's overlay panel
-                        overlayPanelsRef.current[subfolder.id]?.toggle(e);
-                      }}
-                    >
-                      {/* Create a unique overlay panel for each subfolder */}
-                      <OverlayPanel
-                        ref={setOverlayPanelRef(subfolder.id)}
-                        className="dark:bg-neutral-950 dark:text-white"
+                    {checkDept() && (
+                      <Button
+                        icon={`${PrimeIcons.COG} text-xl`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          overlayPanelsRef.current[subfolder.id]?.toggle(e);
+                        }}
                       >
-                        <div className="flex flex-col gap-2">
-                          <Button
-                            icon={`${PrimeIcons.USER_EDIT}`}
-                            className="gap-2"
-                            onClick={() => handleEditClick(subfolder.id)}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            icon={`${PrimeIcons.TRASH}`}
-                            className="gap-2"
-                            onClick={() => handleDeleteClick(subfolder.id)}
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      </OverlayPanel>
-                    </Button>
+                        <OverlayPanel
+                          ref={setOverlayPanelRef(subfolder.id)}
+                          className="dark:bg-neutral-950 dark:text-white"
+                        >
+                          <div className="flex flex-col gap-2">
+                            <Button
+                              icon={`${PrimeIcons.USER_EDIT}`}
+                              className="gap-2"
+                              onClick={() => handleEditClick(subfolder.id)}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              icon={`${PrimeIcons.TRASH}`}
+                              className="gap-2"
+                              onClick={() => handleDeleteClick(subfolder.id)}
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        </OverlayPanel>
+                      </Button>
+                    )}
                   </div>
                   <div></div>
                   <div className="flex justify-end">
@@ -276,33 +273,9 @@ const FolderContentDialog: React.FC<Props> = ({
               ))}
 
               {folderPosts.data.post && folderPosts.data.post.length > 0 ? (
-                folderPosts.data.post.map((post: Post) => (
-                  <div
-                    onClick={() => {
-                      router.push(`/posts/${post.pid}`);
-                    }}
-                    key={post.pid}
-                    className="w-full h-52 bg-neutral-200 hover:bg-neutral-300 flex flex-col justify-between dark:bg-neutral-800 dark:hover:bg-neutral-700 rounded-lg hover:shadow p-4"
-                  >
-                    <p className="font-medium">{post.title}</p>
-
-                    <div className="w-full h-[70%] rounded bg-neutral-50 grid relative place-content-center dark:bg-neutral-900">
-                      {post.imageLocations && post.imageLocations.length > 0 ? (
-                        <Image
-                          src={`${API_BASE}/uploads/${post.imageLocations[0].imageLocation}`}
-                          alt={post.imageLocations[0].imageLocation}
-                          className="rounded"
-                          fill
-                        />
-                      ) : (
-                        <div className="flex flex-col items-center gap-2">
-                          <i className={`${PrimeIcons.IMAGE} text-2xl`}></i>
-                          <p className="text-sm">No attachments</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))
+                folderPosts.data.post.map((post: Post) => {
+                  return <FolderPost post={post} key={post.pid} />;
+                })
               ) : (
                 <p
                   className={
