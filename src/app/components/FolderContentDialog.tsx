@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { getFolderById } from "../functions/functions";
+import { checkDept, getFolderById } from "../functions/functions";
 import {
   deleteFolder,
   getFolderPostsByFolderId,
@@ -236,37 +236,37 @@ const FolderContentDialog: React.FC<Props> = ({
                       <i className={`${PrimeIcons.FOLDER} text-xl`}></i>
                       <p className="font-medium">{subfolder.name}</p>
                     </div>
-                    <Button
-                      icon={`${PrimeIcons.COG} text-xl`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // Toggle this specific subfolder's overlay panel
-                        overlayPanelsRef.current[subfolder.id]?.toggle(e);
-                      }}
-                    >
-                      {/* Create a unique overlay panel for each subfolder */}
-                      <OverlayPanel
-                        ref={setOverlayPanelRef(subfolder.id)}
-                        className="dark:bg-neutral-950 dark:text-white"
+                    {checkDept() && (
+                      <Button
+                        icon={`${PrimeIcons.COG} text-xl`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          overlayPanelsRef.current[subfolder.id]?.toggle(e);
+                        }}
                       >
-                        <div className="flex flex-col gap-2">
-                          <Button
-                            icon={`${PrimeIcons.USER_EDIT}`}
-                            className="gap-2"
-                            onClick={() => handleEditClick(subfolder.id)}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            icon={`${PrimeIcons.TRASH}`}
-                            className="gap-2"
-                            onClick={() => handleDeleteClick(subfolder.id)}
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      </OverlayPanel>
-                    </Button>
+                        <OverlayPanel
+                          ref={setOverlayPanelRef(subfolder.id)}
+                          className="dark:bg-neutral-950 dark:text-white"
+                        >
+                          <div className="flex flex-col gap-2">
+                            <Button
+                              icon={`${PrimeIcons.USER_EDIT}`}
+                              className="gap-2"
+                              onClick={() => handleEditClick(subfolder.id)}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              icon={`${PrimeIcons.TRASH}`}
+                              className="gap-2"
+                              onClick={() => handleDeleteClick(subfolder.id)}
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        </OverlayPanel>
+                      </Button>
+                    )}
                   </div>
                   <div></div>
                   <div className="flex justify-end">
