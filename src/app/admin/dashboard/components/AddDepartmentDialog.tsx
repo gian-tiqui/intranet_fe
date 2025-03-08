@@ -67,9 +67,9 @@ const AddDepartmentDialog: React.FC<Props> = ({ visible, setVisible }) => {
         className="w-96"
         pt={{
           header: {
-            className: "bg-neutral-100 dark:bg-neutral-950 dark:text-white",
+            className: "bg-neutral-50 dark:bg-neutral-950 dark:text-white",
           },
-          content: { className: "bg-neutral-100 dark:bg-neutral-950" },
+          content: { className: "bg-neutral-200 dark:bg-neutral-950" },
         }}
         visible={visible}
         onHide={() => {

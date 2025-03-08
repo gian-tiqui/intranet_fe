@@ -96,6 +96,8 @@ type Department = {
   deptId: number;
   departmentName: string;
   departmentCode: string;
+  divisionId: number;
+  division: Division;
   users: User[];
   posts: Post[];
 };
