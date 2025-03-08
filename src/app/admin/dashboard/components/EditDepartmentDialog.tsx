@@ -60,7 +60,6 @@ const EditDepartmentDialog: React.FC<Props> = ({
   useEffect(() => {
     const setDeptData = () => {
       if (departmentData?.data) {
-        console.log(departmentData.data);
         setValue("departmentName", departmentData.data.departmentName);
         setValue("departmentCode", departmentData.data.departmentCode);
         setValue("divisionId", departmentData.data.divisionId);
