@@ -1,7 +1,6 @@
 import { API_BASE } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
 import { AddDepartmentFormField, Query } from "@/app/types/types";
-import { Department } from "../enums/enum";
 
 const addDepartment = async (data: AddDepartmentFormField) => {
   return apiClient.post(`${API_BASE}/department`, {
