@@ -10,13 +10,8 @@ import SecretQuestion from "./SecretQuestion";
 
 const Settings = () => {
   const { setShown } = useShowSettingsStore();
-  const [mode, setMode] = useState<string>("save");
   const [fragment, setFragment] = useState<string>("userInfo");
   const { setHidden } = useNavbarVisibilityStore();
-
-  const handleModeChange = () => {
-    setMode(mode === "save" ? "edit" : "save");
-  };
 
   const stopPropa = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -92,9 +87,7 @@ const Settings = () => {
             </HoverBox>
           </div>
           <div className="md:w-2/3 p-2 h-64 overflow-auto">
-            {fragment === "userInfo" && (
-              <UserInfo mode={mode} handleModeChange={handleModeChange} />
-            )}
+            {fragment === "userInfo" && <UserInfo />}
             {fragment === "password" && <Password />}
             {fragment === "secret" && <SecretQuestion />}
           </div>

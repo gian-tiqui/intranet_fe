@@ -341,7 +341,7 @@ const Divider: React.FC<Props> = ({ children }) => {
                 </div>
 
                 <div
-                  className={`flex items-center gap-2 ${
+                  className={`hidden md:flex items-center gap-2 ${
                     isCollapsed && "ms-48"
                   }`}
                 >
