@@ -5,7 +5,6 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
 import { API_BASE, INTRANET } from "../bindings/binding";
-import useShowSettingsStore from "../store/showSettingStore";
 import useLogoutArtStore from "../store/useLogoutSplashStore";
 import { decodeUserData } from "../functions/functions";
 import { toast } from "react-toastify";
@@ -13,6 +12,7 @@ import apiClient from "../http-common/apiUrl";
 import { toastClass } from "../tailwind-classes/tw_classes";
 import useToggleStore from "../store/navbarCollapsedStore";
 import { Avatar } from "primereact/avatar";
+import SettingsDialog from "./SettingsDialog";
 
 interface Props {
   uVisible: boolean;
@@ -21,9 +21,10 @@ interface Props {
 }
 
 const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
+  const [settingsDialogVisible, setSettingsDialogVisible] =
+    useState<boolean>(false);
   const { setShowLogoutArt } = useLogoutArtStore();
   const { setHidden } = useNavbarVisibilityStore();
-  const { setShown } = useShowSettingsStore();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const { isCollapsed, setIsCollapsed } = useToggleStore();
   const [loading, setLoading] = useState<boolean>(true);
@@ -103,13 +104,15 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
 
   const handleShowSettings = (event: React.MouseEvent) => {
     event.stopPropagation();
-    setShown(true);
+    // setShown(true);
+    setSettingsDialogVisible(true);
   };
 
   const handleShowSettingsMobile = (event: React.MouseEvent) => {
     event.stopPropagation();
-    setHidden(false);
-    setShown(true);
+    // setHidden(false);
+    // setShown(true);
+    setSettingsDialogVisible(true);
   };
 
   const handleOpenModal = () => {
@@ -118,6 +121,10 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
 
   return (
     <div className="px-3 mb-3 relative" onClick={handleOpenModal}>
+      <SettingsDialog
+        setVisible={setSettingsDialogVisible}
+        visible={settingsDialogVisible}
+      />
       {uVisible && (
         <div
           onClick={(e: React.MouseEvent) => e.stopPropagation()}

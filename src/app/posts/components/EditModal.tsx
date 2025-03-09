@@ -327,7 +327,9 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
       formData.append("deptIds", selectedDepartments.join(","));
       formData.append("updatedBy", String(data.userId));
       formData.append("addPhoto", data.addPhoto);
-      formData.append("folderId", String(selectedFolder?.id));
+      if (selectedFolder?.id !== undefined) {
+        formData.append("folderId", String(selectedFolder.id));
+      }
       if (data.title) formData.append("title", data.title);
       if (data.message) formData.append("message", data.message);
       formData.append(

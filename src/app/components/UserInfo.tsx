@@ -7,11 +7,6 @@ import { API_BASE, INTRANET } from "../bindings/binding";
 import { decodeUserData } from "../functions/functions";
 import { User } from "../types/types";
 
-interface Props {
-  mode: string;
-  handleModeChange: () => void;
-}
-
 interface FormFields {
   firstName: string | undefined;
   middleName: string | undefined;
@@ -22,10 +17,16 @@ interface FormFields {
   address: string | undefined;
 }
 
-const UserInfo: React.FC<Props> = ({ mode, handleModeChange }) => {
+const UserInfo = () => {
+  const [mode, setMode] = useState<string>("save");
+
   const { register, handleSubmit, setValue } = useForm<FormFields>();
   const [user, setUser] = useState<User | undefined>(undefined);
   const [saving, setSaving] = useState<boolean>(false);
+
+  const handleModeChange = () => {
+    setMode(mode === "save" ? "edit" : "save");
+  };
 
   const handleEditProfile = async (data: FormFields) => {
     const userId = decodeUserData()?.sub;
