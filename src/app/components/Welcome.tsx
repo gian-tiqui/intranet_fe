@@ -17,11 +17,11 @@ const Welcome = () => {
       path: "/departments-memo",
       icon: "arcticons:emoji-department-store",
     },
-    {
-      title: "Posts for your employee level",
-      path: "/for-you",
-      icon: "icon-park-outline:file-staff",
-    },
+    // {
+    //   title: "Posts for your employee level",
+    //   path: "/for-you",
+    //   icon: "icon-park-outline:file-staff",
+    // },
   ];
 
   return (
