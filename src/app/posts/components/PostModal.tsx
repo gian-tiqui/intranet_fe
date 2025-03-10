@@ -647,7 +647,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             </div>
           </div>
         </div>
-        <div className="flex justify-between w-96">
+        <div className="flex flex-col gap-2 md:flex-row justify-between w-96">
           <div>
             <Checkbox
               id="notifyCheckbox"
