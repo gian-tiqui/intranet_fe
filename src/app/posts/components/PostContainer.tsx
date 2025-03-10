@@ -79,6 +79,11 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
         return;
       }
 
+      console.log("user lid: ", userData?.lid);
+      console.log("post lid", post.lid);
+      console.log("user id", userData?.sub);
+      console.log("post lid", post.userId);
+
       const canViewPost =
         (userData?.lid && post?.lid && userData?.lid > post?.lid) ||
         post?.userId === userData?.sub;
