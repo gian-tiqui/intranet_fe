@@ -179,13 +179,13 @@ const Aside: React.FC<Props> = ({
               <p className="w-full text-sm">Department Bulletin</p>
             </div>
 
-            <div
+            {/* <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
               onClick={() => handleClick("/for-you")}
             >
               <Icon icon={"icon-park-outline:level"} className="h-5 w-5" />
               <p className="w-full text-sm">Posts for</p>
-            </div>
+            </div> */}
 
             {userDeptId &&
               [
@@ -316,7 +316,7 @@ const Aside: React.FC<Props> = ({
               <p className="w-full text-sm">Department Bulletin</p>
             </div>
 
-            <div
+            {/* <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
               onClick={() => {
                 handleClick("/for-you");
@@ -325,7 +325,7 @@ const Aside: React.FC<Props> = ({
             >
               <Icon icon={"icon-park-outline:level"} className="h-5 w-5" />
               <p className="w-full text-sm">Posts for your employee level</p>
-            </div>
+            </div> */}
 
             {userDeptId &&
               [
