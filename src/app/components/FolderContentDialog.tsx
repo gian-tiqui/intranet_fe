@@ -111,6 +111,11 @@ const FolderContentDialog: React.FC<Props> = ({
   });
 
   useEffect(() => {
+    refetch();
+    refetchSubfolders();
+  }, [query, refetch, refetchSubfolders]);
+
+  useEffect(() => {
     if (folderId) {
       refetch();
     }
