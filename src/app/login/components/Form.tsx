@@ -30,10 +30,12 @@ const Form = () => {
   const { showLogoutArt, setShowLogoutArt } = useLogoutArtStore();
   const { setIsCollapsed } = useToggleStore();
   const router = useRouter();
+  const [wrongAttempts, setWrongAttempts] = useState<number>(0);
   const {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm<FormFields>();
 
   useEffect(() => {
@@ -50,6 +52,30 @@ const Form = () => {
       router.push("/");
     }
   }, [setHidden, router]);
+
+  useEffect(() => {
+    const lockOutUser = async () => {
+      if (wrongAttempts <= 5) return;
+
+      const currentEmployeeId = getValues("employeeId");
+      if (!currentEmployeeId) return;
+
+      try {
+        console.log("Attempting to lock user with ID:", currentEmployeeId);
+        const response = await axios.post(
+          `${API_BASE}/auth/${currentEmployeeId}/lock-user`
+        );
+
+        if (response.status === 201) {
+          setWrongAttempts(0);
+        }
+      } catch (error) {
+        console.error("Error locking user:", error);
+      }
+    };
+
+    lockOutUser();
+  }, [wrongAttempts, getValues]);
 
   const handleLogin = async ({ employeeId, password }: FormFields) => {
     try {
@@ -99,6 +125,7 @@ const Form = () => {
           type: "error",
           className: toastClass,
         });
+        setWrongAttempts((prev) => prev + 1);
       } else {
         console.error("Unexpected error:", error);
       }
