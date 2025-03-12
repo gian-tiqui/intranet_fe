@@ -8,7 +8,7 @@ const Login = () => {
   return (
     <div className="relative">
       <LoginTemplate>
-        <div className="grid place-content-center relative">
+        <div className="grid place-content-center md:place-content-end md:pe-10 relative">
           <Image src={facade} alt="Westlake Facade" fill />
 
           <Form />

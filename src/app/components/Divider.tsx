@@ -46,6 +46,8 @@ import { Dialog } from "primereact/dialog";
 import useUpdateDialogStore from "../store/updateDialogStore";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import Image from "next/image";
+import bg from "../assets/lakeimg.png";
+
 // import bg from "../assets/employeeportalbg.jpg";
 
 interface Props {
@@ -274,6 +276,15 @@ const Divider: React.FC<Props> = ({ children }) => {
         </div>
       </Dialog>
       <div className="flex h-screen text-neutral-800 dark:text-neutral-100">
+        <Image
+          alt="lakeimage"
+          src={bg}
+          fill
+          objectFit="cover"
+          objectPosition="center 10%"
+          quality={100}
+          priority
+        />
         {visible && <PostModal isMobile={isMobile} />}
         {shown && <Settings />}
         {showSplash && <LoginSplash />}

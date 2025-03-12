@@ -23,7 +23,7 @@ const WelcomeNavbar = () => {
 
   return (
     <>
-      <nav className="w-full flex bg-white/70 dark:bg-neutral-900 backdrop-blur-3xl justify-between border-b dark:border-neutral-800 shadow  p-4 fixed top-0">
+      <nav className="w-full flex bg-white/70 dark:bg-neutral-900 backdrop-blur-3xl justify-between border-b z-50 dark:border-neutral-800 shadow  p-4 fixed top-0">
         <div className="flex gap-2 items-center cursor-default">
           <Image
             src={wmcLogo}
