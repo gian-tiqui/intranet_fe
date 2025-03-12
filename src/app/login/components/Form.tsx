@@ -61,7 +61,6 @@ const Form = () => {
       if (!currentEmployeeId) return;
 
       try {
-        console.log("Attempting to lock user with ID:", currentEmployeeId);
         const response = await axios.post(
           `${API_BASE}/auth/${currentEmployeeId}/lock-user`
         );
