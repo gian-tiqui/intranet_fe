@@ -188,16 +188,6 @@ const Posts = () => {
             <Icon icon={"material-symbols:post-add"} className="h-6 w-6" />
             <p>Add</p>
           </button>
-          <select
-            onChange={handleSelectChange}
-            className="bg-gray-300 dark:bg-neutral-700 border outline-none rounded-full border-gray-400 dark:border-neutral-900 text-center me-5 w-24 cursor-pointer py-1"
-          >
-            {departments.map((dept, index) => (
-              <option value={dept.field} key={index}>
-                {dept.deptName}
-              </option>
-            ))}
-          </select>
         </div>
         <div className="border border-gray-300 bg-white dark:bg-neutral-900 dark:border-neutral-900 pb-5 rounded-b-xl shadow">
           <table className="min-w-full border-b bg-white dark:bg-neutral-900 min-h-96 overflow-x-auto">
