@@ -18,7 +18,7 @@ const Posts = () => {
   const [loadingSearch, setLoadingSearch] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>("");
   const [debouncedSearch, setDebouncedSearch] = useState<string>("");
-  const [selectedDept, setSelectedDept] = useState<string>("");
+  const [selectedDept] = useState<string>("");
   const { setVisible } = useShowPostStore();
 
   const JUMP = 4;
@@ -45,17 +45,6 @@ const Posts = () => {
     setSearchText(value);
   };
 
-  const departments: { field: string; deptName: string }[] = [
-    { deptName: "ALL", field: "" },
-    { deptName: "IT", field: "it" },
-    { deptName: "HR", field: "hr" },
-    { deptName: "QM", field: "qm" },
-    { deptName: "ACNT", field: "accounting" },
-    { deptName: "ADM", field: "admitting" },
-    { deptName: "MRKTG", field: "marketing" },
-    { deptName: "PRCHS", field: "purchasing" },
-  ];
-
   const handleNextClicked = () => {
     if (minMax.max <= posts.length - 1) {
       setMinMax((prevState) => ({
@@ -74,10 +63,6 @@ const Posts = () => {
       }));
       setPage((prevNum) => prevNum - 1);
     }
-  };
-
-  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedDept(e.target.value);
   };
 
   useEffect(() => {
