@@ -18,7 +18,7 @@ const Posts = () => {
   const [loadingSearch, setLoadingSearch] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>("");
   const [debouncedSearch, setDebouncedSearch] = useState<string>("");
-  const [selectedDept, setSelectedDept] = useState<string>("");
+  const [selectedDept] = useState<string>("");
   const { setVisible } = useShowPostStore();
 
   const JUMP = 4;
@@ -45,17 +45,6 @@ const Posts = () => {
     setSearchText(value);
   };
 
-  const departments: { field: string; deptName: string }[] = [
-    { deptName: "ALL", field: "" },
-    { deptName: "IT", field: "it" },
-    { deptName: "HR", field: "hr" },
-    { deptName: "QM", field: "qm" },
-    { deptName: "ACNT", field: "accounting" },
-    { deptName: "ADM", field: "admitting" },
-    { deptName: "MRKTG", field: "marketing" },
-    { deptName: "PRCHS", field: "purchasing" },
-  ];
-
   const handleNextClicked = () => {
     if (minMax.max <= posts.length - 1) {
       setMinMax((prevState) => ({
@@ -74,10 +63,6 @@ const Posts = () => {
       }));
       setPage((prevNum) => prevNum - 1);
     }
-  };
-
-  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedDept(e.target.value);
   };
 
   useEffect(() => {
@@ -188,16 +173,6 @@ const Posts = () => {
             <Icon icon={"material-symbols:post-add"} className="h-6 w-6" />
             <p>Add</p>
           </button>
-          <select
-            onChange={handleSelectChange}
-            className="bg-gray-300 dark:bg-neutral-700 border outline-none rounded-full border-gray-400 dark:border-neutral-900 text-center me-5 w-24 cursor-pointer py-1"
-          >
-            {departments.map((dept, index) => (
-              <option value={dept.field} key={index}>
-                {dept.deptName}
-              </option>
-            ))}
-          </select>
         </div>
         <div className="border border-gray-300 bg-white dark:bg-neutral-900 dark:border-neutral-900 pb-5 rounded-b-xl shadow">
           <table className="min-w-full border-b bg-white dark:bg-neutral-900 min-h-96 overflow-x-auto">
