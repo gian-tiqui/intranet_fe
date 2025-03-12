@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import WelcomeNavbar from "./components/WelcomeNavbar";
 import Hero from "./components/Hero";
-import bg from "../assets/Hospital Facade Edited 2.png";
+import bg from "../assets/Hospital Facade Edited 2 - Copy.png";
 
 const WelcomePage = () => {
   return (
