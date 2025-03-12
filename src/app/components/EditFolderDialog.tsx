@@ -145,7 +145,13 @@ const EditFolderDialog: React.FC<Props> = ({
                     setTextColor(String(e.value))
                   }
                 />
-                <span>{textColor}</span>
+                <InputText
+                  id="textColorId"
+                  value={textColor}
+                  className="w-32 text-center bg-neutral-200 h-10"
+                  placeholder="B00000"
+                  onChange={(e) => setTextColor(e.target.value)}
+                />
               </div>
               <div className="flex flex-col w-full items-center font-medium gap-1">
                 <span>
@@ -159,7 +165,13 @@ const EditFolderDialog: React.FC<Props> = ({
                     setFolderCOlor(String(e.value))
                   }
                 />
-                <span>{folderColor}</span>
+                <InputText
+                  id="folderColorId"
+                  value={folderColor}
+                  className="w-32 text-center bg-neutral-200 h-10"
+                  placeholder="FFFFFF"
+                  onChange={(e) => setFolderCOlor(e.target.value)}
+                />
               </div>
             </div>
           )}
