@@ -1,19 +1,14 @@
-import { Icon } from "@iconify/react/dist/iconify.js";
 import React from "react";
-import Link from "next/link";
 
 const Hero = () => {
   return (
     <>
-      <div className="flex flex-col items-center h-screen gap-4 absolute w-screen md:gap-3 text-4xl md:text-3xl text-center place-content-center pt-20">
-        <p className="text-3xl mb-3 font-mono text-wh">Welcome to the</p>
-        <p className="font-semibold text-6xl">WMC Employee Portal</p>
-        <Link href={"/login"}>
-          <button className="mx-auto text-xl mt-7 font-bold flex items-center justify-center gap-2 w-52 py-2 border bg-black text-white border-black hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 rounded">
-            <Icon icon={"mdi:user"} className="h-7 w-7" />
-            Login
-          </button>
-        </Link>
+      <div className="w-full grid grid-cols-5 gap-6 px-6 md:h-[75%] mb-6">
+        <div className="rounded-3xl col-span-3 bg-black"></div>
+        <div className="col-span-2 gap-6 grid">
+          <div className="rounded-3xl bg-amber-100"></div>
+          <div className="rounded-3xl bg-blue-600"></div>
+        </div>
       </div>
     </>
   );
