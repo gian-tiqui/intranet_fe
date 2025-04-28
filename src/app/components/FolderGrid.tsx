@@ -25,7 +25,7 @@ const FolderGrid = () => {
     take: 50,
     includeSubfolders: 0,
   });
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm] = useState<string>("");
   const { signal, setSignal } = useSignalStore();
   const [folderId, setFolderId] = useState<number>();
   const [editFolderId, setEditFolderId] = useState<number>();
