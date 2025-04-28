@@ -11,12 +11,14 @@ import useLogoutArtStore from "@/app/store/useLogoutSplashStore";
 import { toast } from "react-toastify";
 import { INTRANET, API_BASE } from "@/app/bindings/binding";
 import { jwtDecode } from "jwt-decode";
-import { motion } from "framer-motion";
-import EaseString from "./EaseString";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import Link from "next/link";
 import axios from "axios";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
+import { InputText } from "primereact/inputtext";
+import { Button } from "primereact/button";
+import wmcLogo from "../../assets/westlake_logo_horizontal.jpg.png";
+import { Image } from "primereact/image";
 
 type FormFields = {
   employeeId: string;
@@ -138,105 +140,70 @@ const Form = () => {
   return (
     <form
       onSubmit={handleSubmit(handleLogin)}
-      className="p-6 border-0 text-black dark:text-white flex flex-col justify-center items-center relative h-screen"
+      className="lg:w-[490px] bg-amber-100 flex justify-center shadow-lg"
     >
-      <div className="lg:w-96 shadow p-7 rounded-2xl bg-white dark:bg-neutral-800">
-        <div className="flex flex-col items-center">
-          <div className="flex gap-1 mb-3">
-            {"Welcome back!".split(" ").map((word, index) => (
-              <EaseString size="" word={word} key={index} />
-            ))}
+      {" "}
+      <main className="lg:w-[490px] p-7 dark:bg-neutral-800 h-screen flex flex-col justify-between items-center">
+        <header className="w-full">
+          <Link href={"/welcome"} className="flex items-center gap-4">
+            <Image src={wmcLogo.src} alt="wmc logo" height="45" width="45" />
+            <div className="text-blue-600">
+              <h4 className="font-semibold text-xl">Westlake</h4>
+              <h6 className="text-xs font-semibold">Medical Center</h6>
+            </div>
+          </Link>
+        </header>
+        <section className="w-full lg:w-96">
+          <div className="flex flex-col mb-10">
+            <p className="text-blue-600 text-3xl font-bold">Welcome back</p>
+            <p className="font-medium">Sign in to your account</p>
           </div>
-          <div className="flex gap-1 mb-16">
-            {"Sign in to your account".split(" ").map((word, index) => (
-              <EaseString size="" word={word} key={index} />
-            ))}
-          </div>
-        </div>
-
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 1, delay: 0.7 }}
-          className="mb-3 h-14"
-        >
-          <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-700 border dark:border-black rounded-lg mb-1">
-            <Icon
-              className="h-6 w-6 text-neutral-400"
-              icon={"teenyicons:id-outline"}
-            />
-            <input
-              className="bg-inherit outline-none w-full"
+          <div className="mb-3 h-20">
+            <label htmlFor="idInput" className="text-sm font-semibold">
+              ID Number
+            </label>
+            <InputText
+              id="idInput"
               {...register("employeeId", { required: true })}
               placeholder="Enter your ID"
+              className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
             />
+            {errors.employeeId && (
+              <MotionP className="text-red-500 text-xs font-semibold">
+                {errors.employeeId?.message}
+              </MotionP>
+            )}
           </div>
-          {errors.employeeId && (
-            <MotionP className="text-red-500 text-xs ms-4 font-bold">
-              {errors.employeeId?.message}
-            </MotionP>
-          )}
-        </motion.div>
-
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 1, delay: 0.7 }}
-          className="h-14 mb-14"
-        >
-          <div className="flex w-full gap-2 items-center px-4 h-10 bg-neutral-100 dark:bg-neutral-700 border dark:border-black rounded-lg mb-1">
-            <Icon
-              className="h-6 w-6 text-neutral-400"
-              icon={"mdi:password-outline"}
-            />
-            <input
-              className="bg-inherit outline-none w-full"
+          <div className="h-14 mb-12">
+            <label htmlFor="passwordInput" className="text-sm font-semibold">
+              Password
+            </label>
+            <InputText
+              id="passwordInput"
               {...register("password", { required: true })}
-              placeholder="Password"
+              placeholder="*********"
               type="password"
+              className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
             />
+            {errors.password && (
+              <MotionP className="text-red-500 font-semibold text-xs">
+                Password required
+              </MotionP>
+            )}
           </div>
-          {errors.password && (
-            <MotionP className="text-red-500 ms-4 font-bold text-xs">
-              Password required
-            </MotionP>
-          )}
-        </motion.div>
-
-        <div className="flex flex-col items-center">
-          <motion.button
-            initial={{ width: 0 }}
-            animate={{ width: "100%" }}
+          <Button
             disabled={loading}
-            transition={{ duration: 1, delay: 0.7 }}
             className={`${
               loading && "opacity-80"
-            } mb-2 rounded-lg justify-center flex gap-2 items-center h-10 font-bold bg-neutral-900 dark:bg-neutral-200 dark:text-black text-white hover:bg-neutral-900`}
+            } bg-blue-600 h-12 w-full justify-center font-bold text-white mb-2`}
           >
             {loading && (
               <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
             )}
-            Login
-          </motion.button>{" "}
-          <hr className="border-b/0 w-[96%] mt-2 mb-4" />
-          <motion.button
-            type="button"
-            onClick={() => router.push("/activate")}
-            initial={{ width: 0 }}
-            animate={{ width: "100%" }}
-            disabled={loading}
-            transition={{ duration: 1, delay: 0.7 }}
-            className={`${
-              loading && "opacity-80"
-            } mb-2 rounded-lg justify-center flex gap-2 items-center h-10 font-bold dark:bg-neutral-900 border dark:border-white border-black bg-white text-black dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-800`}
-          >
-            {loading && (
-              <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
-            )}
-            Activate
-          </motion.button>{" "}
+            Sign in
+          </Button>{" "}
           <div className="w-full">
-            <p className="dark:text-white text-end text-xs">
+            <p className="dark:text-white text-center text-sm font-semibold">
               Forgot password?{" "}
               <Link href={"forgot-password"}>
                 <span className="hover:underline text-blue-700 dark:text-blue-500 cursor-pointer">
@@ -245,13 +212,17 @@ const Form = () => {
               </Link>
             </p>
           </div>
-        </div>
-      </div>
-      <div className="w-full flex justify-end px-3">
-        <Link href={"/welcome"} className="">
-          <p className="text-white text-sm mt-3  hover:underline">Go back</p>
-        </Link>
-      </div>
+        </section>
+        <footer className="w-96">
+          <hr className="border-b/0 border-black w-full mb-2" />
+          <p className="text-xs font-medium">
+            Copyright 2025 All Rights Reserved
+          </p>
+          <p className="text-xs font-bold text-blue-600">
+            Westlake Medical Center
+          </p>
+        </footer>
+      </main>
     </form>
   );
 };

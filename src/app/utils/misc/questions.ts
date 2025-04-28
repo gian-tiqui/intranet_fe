@@ -1,5 +1,4 @@
 const questions: string[] = [
-  "Select a question",
   "What is your first pet's name?",
   "What is the name of your first school?",
   "In what city were you born?",

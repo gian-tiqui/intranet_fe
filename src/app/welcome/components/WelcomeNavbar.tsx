@@ -33,7 +33,7 @@ const WelcomeNavbar = () => {
         <Link href={""}>Home</Link>
         <Link href={""}>About</Link>
         <Link href={""}>FAQS</Link>
-        <Link href={""}>Login</Link>
+        <Link href={"login"}>Login</Link>
         <Link
           href={""}
           className="h-10 rounded-full w-10 grid place-content-center bg-blue-600"
