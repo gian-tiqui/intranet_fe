@@ -1,5 +1,4 @@
 "use client";
-import ModeToggler from "@/app/components/ModeToggler";
 import React from "react";
 import Navlinks from "./Navlinks";
 import { motion } from "framer-motion";
@@ -24,9 +23,7 @@ const Appbar = () => {
             delay: 0.3,
           }}
           className="w-full flex justify-end"
-        >
-          <ModeToggler />
-        </motion.div>
+        ></motion.div>
       </div>
       <motion.hr
         initial={{ width: 0 }}

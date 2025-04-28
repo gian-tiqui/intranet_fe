@@ -3,7 +3,6 @@ import React, { ChangeEvent, ReactNode, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import HoverBox from "./HoverBox";
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
-import ModeToggler from "./ModeToggler";
 import useToggleStore from "../store/navbarCollapsedStore";
 import { AnimatePresence } from "framer-motion";
 import Aside from "./Aside";
@@ -46,6 +45,9 @@ import { Dialog } from "primereact/dialog";
 import useUpdateDialogStore from "../store/updateDialogStore";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import Image from "next/image";
+import ovalGradient from "../assets/oval-gradient.png";
+import upperLeftGradient from "../assets/upper-left-gradient.png";
+import { Image as PrimeImage } from "primereact/image";
 
 interface Props {
   children?: ReactNode;
@@ -300,11 +302,21 @@ const Divider: React.FC<Props> = ({ children }) => {
               ))}
           </AnimatePresence>
         </div>
+        <PrimeImage
+          src={upperLeftGradient.src}
+          alt="large-gradient"
+          className="absolute top-0 left-24 w-[550px] h-[550px] -z-10"
+        />
+        <PrimeImage
+          src={ovalGradient.src}
+          alt="large-gradient"
+          className="absolute top-24 right-24 -z-10 h-64 w-64"
+        />
 
         <main className={`max-h-screen overflow-auto relative w-full`}>
           {hidden && (
             <div
-              className="sticky z-10 w-full flex justify-between pt-3 pb-3 top-0 bg-neutral-200/70 dark:bg-neutral-900/60 backdrop-blur"
+              className="sticky z-10 w-full flex justify-between pt-3 pb-3 top-0"
               id="hi"
             >
               <div id="buttons" className="flex w-full pt-2 mb-2 gap-3">
@@ -344,15 +356,18 @@ const Divider: React.FC<Props> = ({ children }) => {
                     isCollapsed && "ms-48"
                   }`}
                 >
-                  <Image
-                    src={facade}
-                    alt="Westlake Facade"
-                    className="h-8 w-8"
-                  />
-
-                  <h3 className="text-xl font-bold text-blue-500">
-                    WMC Employee Portal
-                  </h3>
+                  <div className="flex items-center gap-4">
+                    <Image
+                      src={facade.src}
+                      alt="wmc logo"
+                      height="45"
+                      width="45"
+                    />
+                    <div className="text-blue-600">
+                      <h4 className="font-semibold text-xl">Westlake</h4>
+                      <h6 className="text-xs font-semibold">Medical Center</h6>
+                    </div>
+                  </div>
                 </div>
 
                 {/* THIS IS FOR MOBILE VIEW */}
@@ -398,7 +413,6 @@ const Divider: React.FC<Props> = ({ children }) => {
 
                   <Unseen />
                   <NotificationBell />
-                  <ModeToggler size={5} />
                 </div>
               </div>
             </div>

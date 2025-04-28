@@ -3,7 +3,6 @@ import useComments from "@/app/custom-hooks/comments";
 import { useState, useEffect, ChangeEvent } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Searchbar from "@/app/components/Searchbar";
-import ModeToggler from "@/app/components/ModeToggler";
 import { PostComment } from "@/app/types/types";
 
 const Comments = () => {
@@ -139,7 +138,6 @@ const Comments = () => {
             handleSearchChange={handleSearchChange}
             searchText={searchText}
           />
-          <ModeToggler />
         </div>
       </div>
 

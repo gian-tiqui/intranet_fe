@@ -1,5 +1,4 @@
 "use client";
-import ModeToggler from "@/app/components/ModeToggler";
 import useAdminPosts from "@/app/custom-hooks/adminPost";
 import useComments from "@/app/custom-hooks/comments";
 import useDepartments from "@/app/custom-hooks/departments";
@@ -257,7 +256,6 @@ const Graphs = () => {
 
       <div className="w-full h-20 border-b border-gray-300 dark:border-neutral-700 flex justify-between px-3 items-center">
         <div></div>
-        <ModeToggler />
       </div>
 
       {/*

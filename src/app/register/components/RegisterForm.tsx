@@ -1,6 +1,5 @@
 "use client";
 import { API_BASE } from "@/app/bindings/binding";
-import ModeToggler from "@/app/components/ModeToggler";
 import apiClient from "@/app/http-common/apiUrl";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import { User } from "@/app/types/types";
@@ -141,10 +140,6 @@ const RegisterForm: React.FC<Props> = ({ hashedMmployeeId }) => {
 
   return (
     <div className="h-screen grid place-content-center">
-      <div className="absolute top-5 right-5">
-        <ModeToggler />
-      </div>
-
       <form
         onSubmit={handleSubmit(handleRegister)}
         className="w-96 bg-white dark:bg-neutral-900 shadow p-6 rounded-lg"
@@ -200,9 +195,6 @@ const RegisterForm: React.FC<Props> = ({ hashedMmployeeId }) => {
 
 const TokenExpired: React.FC = () => (
   <div className="w-screen h-screen flex items-center justify-center">
-    <div className="absolute top-3 right-3">
-      <ModeToggler />
-    </div>
     <div className="text-center">
       <h2 className="text-2xl font-bold">Session has expired.</h2>
       <p className="mb-5">Please activate again to continue.</p>

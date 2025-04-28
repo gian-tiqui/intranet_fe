@@ -36,7 +36,7 @@ export default function RootLayout({
     <PrimeReactProvider value={{ unstyled: false, pt: {}, ripple: true }}>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-neutral-200 dark:bg-neutral-900`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-200`}
         >
           <ToastContainer />
           <WelcomeSidebar />
