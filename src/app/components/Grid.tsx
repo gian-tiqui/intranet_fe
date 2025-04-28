@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import Welcome from "./Welcome";
 import { INTRANET } from "../bindings/binding";
 import EaseString from "../login/components/EaseString";
 import FolderGrid from "./FolderGrid";
@@ -25,7 +24,6 @@ const Grid = () => {
   return (
     <div className="grid gap-20 pb-20">
       <FolderGrid />
-      <Welcome />
     </div>
   );
 };

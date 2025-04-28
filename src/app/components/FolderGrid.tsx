@@ -5,7 +5,6 @@ import { Query } from "../types/types";
 import useSignalStore from "../store/signalStore";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
-import { InputText } from "primereact/inputtext";
 import FolderContentDialog from "./FolderContentDialog";
 import AddFolderDialog from "./AddFolderDialog";
 import { OverlayPanel } from "primereact/overlaypanel";
@@ -15,7 +14,9 @@ import { confirmDialog } from "primereact/confirmdialog";
 import { deleteFolder } from "../utils/service/folderService";
 import CustomToast from "./CustomToast";
 import { Toast } from "primereact/toast";
-import useDarkModeStore from "../store/darkModeStore";
+import SearchV2 from "./SearchV2";
+import { Image } from "primereact/image";
+import folderImg from "../assets/blue-folder.png";
 
 const FolderGrid = () => {
   const [query, setQuery] = useState<Query>({
@@ -24,13 +25,12 @@ const FolderGrid = () => {
     take: 50,
     includeSubfolders: 0,
   });
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm] = useState<string>("");
   const { signal, setSignal } = useSignalStore();
   const [folderId, setFolderId] = useState<number>();
   const [editFolderId, setEditFolderId] = useState<number>();
   const [editFolderDialogVisible, setEditFolderDialogVisible] =
     useState<boolean>(false);
-  const { isDarkMode } = useDarkModeStore();
   const [folderDialogVisible, setFolderDialogVisible] =
     useState<boolean>(false);
   const [addFolderDialogVisible, setAddFolderDialogVisible] =
@@ -82,7 +82,7 @@ const FolderGrid = () => {
   if (isLoading) return <FolderGridSkeleton />;
 
   return (
-    <div className="pt-5 border-b">
+    <div className="pt-14 border-b">
       <CustomToast ref={toastRef} />
       <AddFolderDialog
         refetch={refetch}
@@ -102,15 +102,20 @@ const FolderGrid = () => {
         setFolderId={setEditFolderId}
         refetch={refetch}
       />
-      <div className="flex justify-end gap-2 mb-10">
-        <InputText
-          className="px-2 dark:bg-neutral-800 rounded-lg h-10"
-          placeholder="Search a folder"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-
-        {checkDept() && (
+      <div className="mx-auto w-[600px]">
+        <h2 className="text-4xl font-extrabold">
+          Need to find a{" "}
+          <span className="font-black text-blue-600">folder</span>,{" "}
+          <span className="font-black text-blue-600">memo</span>, or a{" "}
+          <span className="font-black text-blue-600">guideline</span> in the{" "}
+          <span className="font-black text-blue-600">Employee Portal</span>?{" "}
+          <span className="font-black text-blue-600">Search</span> it by{" "}
+          <span className="font-black text-blue-600">typing something</span> in
+          the
+          <span className="font-black text-blue-600"> box </span>below.
+        </h2>
+        <SearchV2 />
+        {/* {checkDept() && (
           <Button
             severity="info"
             className="h-10 w-32 bg-white rounded-lg dark:bg-neutral-800 justify-center hover:shadow hover:bg-neutral-100 dark:hover:bg-neutral-700"
@@ -119,85 +124,84 @@ const FolderGrid = () => {
           >
             Add folder
           </Button>
-        )}
+        )} */}
       </div>
 
-      <div className="flex gap-2 items-center mb-5">
-        <i className={`${PrimeIcons.FOLDER} text-lg`}></i>
-        <p className="text-lg font-medium">WMC Division/Departments</p>
+      <div className="text-sm flex items-center gap-2 justify-center mb-6">
+        <i className={`${PrimeIcons.POWER_OFF}`}></i>
+        <p>
+          Folders <span className="text-blue-600 font-semibold">managed</span>{" "}
+          by <span className="text-blue-600 font-semibold">HR</span> and{" "}
+          <span className="text-blue-600 font-semibold">QM</span>
+        </p>
       </div>
 
-      <div className="min-h-96 grid grid-cols-3 gap-2 items-start content-start">
+      <h2></h2>
+
+      <div className="min-h-96 grid grid-cols-3 gap-3 items-start content-start">
         {data?.folders && data?.folders.length > 0 ? (
           data.folders.map((folder) => {
             const folderOverlayRef = React.createRef<OverlayPanel>();
 
             return (
               <div
-                className={`h-12 hover:cursor-pointer px-3 rounded-lg flex items-center gap-2 justify-between ${
-                  !folder.folderColor
-                    ? "bg-white hover:shadow dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700"
-                    : ""
-                }`}
-                style={{
-                  color: folder.textColor,
-                  backgroundColor: folder.folderColor
-                    ? folder.folderColor
-                    : isDarkMode
-                    ? "black"
-                    : "white",
-                }}
+                className={`h-32 hover:cursor-pointer p-3 rounded-xl flex flex-col shadow-lg gap-2 justify-between bg-gray-50`}
                 key={folder.id}
                 onClick={() => {
                   setFolderId(folder.id);
                   setFolderDialogVisible(true);
                 }}
               >
-                <div className="flex gap-2 truncate">
-                  <i className={`${PrimeIcons.FOLDER} text-lg`}></i>
-                  <p className="text-sm font-medium ">{folder.name}</p>
-                </div>
-                {checkDept() && (
-                  <Button
-                    icon={PrimeIcons.ELLIPSIS_H}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      folderOverlayRef.current?.toggle(e);
-                    }}
-                    className={`h-5 w-5 rounded-full grid place-content-center hover:bg-neutral-400 dark:hover:bg-neutral-700 p-4`}
-                  >
-                    <OverlayPanel
-                      ref={folderOverlayRef}
-                      className="bg-white dark:bg-neutral-900 text-black dark:text-white"
+                <div className="flex justify-between">
+                  {" "}
+                  <Image
+                    src={folderImg.src}
+                    alt="folder"
+                    className="h-700 w-7"
+                  />
+                  {checkDept() && (
+                    <Button
+                      icon={PrimeIcons.ELLIPSIS_H}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        folderOverlayRef.current?.toggle(e);
+                      }}
+                      className={`h-5 w-5 rounded-full grid place-content-center hover:bg-neutral-400 dark:hover:bg-neutral-700 p-4`}
                     >
-                      <div className="flex flex-col gap-1">
-                        <Button
-                          icon={`${PrimeIcons.USER_EDIT} text-lg`}
-                          className="gap-2"
-                          onClick={() => handleRenameClick(folder.id)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          onClick={() => {
-                            confirmDialog({
-                              message:
-                                "Are you sure you want to delete the folder?",
-                              header: "Delete folder",
-                              icon: "pi pi-exclamation-triangle",
-                              defaultFocus: "accept",
-                              accept: () => handleDeleteFolder(folder.id),
-                            });
-                          }}
-                          icon={`${PrimeIcons.TRASH} text-lg`}
-                          className="gap-2"
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </OverlayPanel>
-                  </Button>
-                )}
+                      <OverlayPanel
+                        ref={folderOverlayRef}
+                        className="bg-white dark:bg-neutral-900 text-black dark:text-white"
+                      >
+                        <div className="flex flex-col gap-1">
+                          <Button
+                            icon={`${PrimeIcons.USER_EDIT} text-lg`}
+                            className="gap-2"
+                            onClick={() => handleRenameClick(folder.id)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              confirmDialog({
+                                message:
+                                  "Are you sure you want to delete the folder?",
+                                header: "Delete folder",
+                                icon: "pi pi-exclamation-triangle",
+                                defaultFocus: "accept",
+                                accept: () => handleDeleteFolder(folder.id),
+                              });
+                            }}
+                            icon={`${PrimeIcons.TRASH} text-lg`}
+                            className="gap-2"
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </OverlayPanel>
+                    </Button>
+                  )}
+                </div>
+                <p className="text-sm font-semibold">{folder.name}</p>
               </div>
             );
           })

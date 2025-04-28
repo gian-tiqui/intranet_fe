@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import useSidebarStore from "@/app/store/sidebarStore";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
-import ModeToggler from "@/app/components/ModeToggler";
 
 const WelcomeSidebar = () => {
   const { sidebarShown, setSidebarShown } = useSidebarStore();
@@ -36,10 +35,6 @@ const WelcomeSidebar = () => {
           </Link>
         </div>
       </div>
-
-      <footer className="w-full flex justify-end">
-        <ModeToggler size={10} />
-      </footer>
     </motion.div>
   );
 };

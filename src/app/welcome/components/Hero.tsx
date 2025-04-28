@@ -51,7 +51,7 @@ const Hero = () => {
          * Second Column
          */}
         <div className="col-span-2 gap-6 grid">
-          <div className="rounded-3xl bg-amber-100 relative flex flex-col justify-between p-6">
+          <div className="rounded-3xl bg-gray-50 relative flex flex-col justify-between p-6">
             <Image
               src={msMarieAnaAlvarez}
               alt="Ms. Marie Ana Alvarez"

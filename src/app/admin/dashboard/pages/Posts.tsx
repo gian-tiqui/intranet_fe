@@ -1,5 +1,4 @@
 "use client";
-import ModeToggler from "@/app/components/ModeToggler";
 import Searchbar from "@/app/components/Searchbar";
 import useShowPostStore from "@/app/store/showPostStore";
 import { MinMax, ThType, Post } from "@/app/types/types";
@@ -160,7 +159,6 @@ const Posts = () => {
             handleSearchChange={handleSearchChange}
             searchText={searchText}
           />
-          <ModeToggler />
         </div>
       </div>
 
