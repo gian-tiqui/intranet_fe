@@ -297,30 +297,36 @@ const Divider: React.FC<Props> = ({ children }) => {
         )}
 
         <main className={`max-h-screen overflow-auto relative w-full`}>
-          <header className="flex justify-between pt-5 items-center px-2">
-            <div className="flex gap-3">
-              {isCollapsed && (
-                <Button
-                  icon={`pi pi-expand`}
-                  onClick={() => setIsCollapsed(false)}
-                />
-              )}
-              <div className="flex items-center gap-4">
-                <Image
-                  src={wmcLogo.src}
-                  alt="wmc logo"
-                  height="45"
-                  width="45"
-                />
-                <div className="text-blue-600">
-                  <h4 className="font-semibold text-xl">Westlake</h4>
-                  <h6 className="text-xs font-semibold">Medical Center</h6>
+          {hidden && (
+            <header
+              className={`flex justify-between pt-5 items-center ${
+                isCollapsed ? "ps-2" : "ps-5"
+              } pe-2`}
+            >
+              <div className="flex gap-3">
+                {isCollapsed && (
+                  <Button
+                    icon={`pi pi-expand`}
+                    onClick={() => setIsCollapsed(false)}
+                  />
+                )}
+                <div className="flex items-center gap-4">
+                  <Image
+                    src={wmcLogo.src}
+                    alt="wmc logo"
+                    height="45"
+                    width="45"
+                  />
+                  <div className="text-blue-600">
+                    <h4 className="font-semibold text-xl">Westlake</h4>
+                    <h6 className="text-xs font-semibold">Medical Center</h6>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <HeaderIcons showPendingUsers={showPendingUsers} />
-          </header>
+              <HeaderIcons showPendingUsers={showPendingUsers} />
+            </header>
+          )}
           <div
             className={`mx-auto w-full relative ${
               hidden && "max-w-[750px]"

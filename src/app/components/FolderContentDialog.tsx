@@ -24,6 +24,8 @@ import { Toast } from "primereact/toast";
 import CustomToast from "./CustomToast";
 import EditFolderDialog from "./EditFolderDialog";
 import FolderPost from "./FolderPost";
+import blueFolder from "../assets/blue-folder.png";
+import { Image } from "primereact/image";
 
 interface Props {
   visible: boolean;
@@ -151,17 +153,13 @@ const FolderContentDialog: React.FC<Props> = ({
         }}
         pt={{
           header: {
-            className: `bg-[#CBD5E1]`,
+            className: `bg-[#CBD5E1] rounded-t-3xl`,
           },
-          content: { className: "bg-[#CBD5E1] pt-2" },
+          content: { className: "bg-[#CBD5E1] pt-2 rounded-b-3xl" },
+          root: { className: "rounded-3xl" },
         }}
-        className="w-[70%] h-[80vh]"
-        header={
-          <div className="flex gap-3 items-center">
-            <i className={`${PrimeIcons.FOLDER_OPEN} text-2xl`}></i>
-            <p>{folderData?.name || "Folder"}</p>
-          </div>
-        }
+        className="w-[65%] h-[75vh]"
+        header={<p className="ms-6">{folderData?.name || "Folder"}</p>}
       >
         <AddSubfolderDialog
           refetchFolders={refetchSubfolders}
@@ -188,13 +186,14 @@ const FolderContentDialog: React.FC<Props> = ({
                     setVisible(false);
                     handleSubfolderClick(subfolder.id);
                   }}
-                  className={`hover:cursor-pointer h-52 px-3 rounded-lg flex flex-col p-4 gap-2 justify-between bg-[#EEEEEE]`}
+                  className={`hover:cursor-pointer h-36 px-3 rounded-2xl shadow-lg flex flex-col p-4 gap-2 justify-between bg-[#EEEEEE]`}
                 >
                   <div className="flex items-start gap-2 w-full justify-between">
-                    <div className="flex gap-2 w-48">
-                      <i className={`${PrimeIcons.FOLDER} text-xl`}></i>
-                      <p className="font-medium">{subfolder.name}</p>
-                    </div>
+                    <Image
+                      src={blueFolder.src}
+                      className="h-6 w-6"
+                      alt="blue-folder"
+                    />
                     {checkDept() && (
                       <Button
                         icon={`${PrimeIcons.COG} text-xl`}
@@ -228,9 +227,7 @@ const FolderContentDialog: React.FC<Props> = ({
                     )}
                   </div>
                   <div></div>
-                  <div className="flex justify-end">
-                    <i className={`${PrimeIcons.ANGLE_RIGHT} text-lg`}></i>
-                  </div>
+                  <p className="font-semibold text-sm">{subfolder.name}</p>
                 </div>
               ))}
 

@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Icon } from "@iconify/react/dist/iconify.js";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
@@ -10,9 +9,9 @@ import { decodeUserData } from "../functions/functions";
 import { toast } from "react-toastify";
 import apiClient from "../http-common/apiUrl";
 import { toastClass } from "../tailwind-classes/tw_classes";
-import useToggleStore from "../store/navbarCollapsedStore";
 import { Avatar } from "primereact/avatar";
 import SettingsDialog from "./SettingsDialog";
+import UserModal from "./UserModal";
 
 interface Props {
   uVisible: boolean;
@@ -20,13 +19,20 @@ interface Props {
   isMobile?: boolean;
 }
 
-const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
+/**
+ *
+ * @param param
+ * @returns
+ *
+ * viewing of statements of accounts in landing page option. (TBD on wednesday april 29)
+ */
+
+const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
   const [settingsDialogVisible, setSettingsDialogVisible] =
     useState<boolean>(false);
   const { setShowLogoutArt } = useLogoutArtStore();
   const { setHidden } = useNavbarVisibilityStore();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
-  const { isCollapsed, setIsCollapsed } = useToggleStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [userData, setUserData] = useState<{
     firstName: string;
@@ -35,20 +41,6 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
   } | null>(null);
   const router = useRouter();
   const [showMyPosts, setShowMyPosts] = useState<boolean>(false);
-
-  useEffect(() => {
-    const handleClick = () => {
-      if (uVisible) {
-        setUVisible(false);
-      }
-    };
-
-    document.addEventListener("click", handleClick);
-
-    return () => {
-      document.removeEventListener("click", handleClick);
-    };
-  }, [setUVisible, uVisible]);
 
   useEffect(() => {
     const checkRole = () => {
@@ -121,81 +113,26 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible, isMobile }) => {
 
   return (
     <div className="px-3 mb-3 relative" onClick={handleOpenModal}>
+      <UserModal
+        visible={uVisible}
+        setVisible={setUVisible}
+        isAdmin={isAdmin}
+        showMyPosts={showMyPosts}
+        handleShowSettings={handleShowSettings}
+        handleShowSettingsMobile={handleShowSettingsMobile}
+        handleLogout={handleLogout}
+      />
       <SettingsDialog
         setVisible={setSettingsDialogVisible}
         visible={settingsDialogVisible}
       />
-      {uVisible && (
-        <div
-          onClick={(e: React.MouseEvent) => e.stopPropagation()}
-          className="absolute z-50 p-3 w-full bg-white dark:bg-neutral-800 border-[1px] flex flex-col gap-3 border-neutral-200 dark:border-neutral-700 bottom-12 rounded-2xl"
-        >
-          {isAdmin && (
-            <>
-              <div
-                className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg"
-                onClick={() => router.push("/admin/dashboard")}
-              >
-                <Icon icon={"file-icons:dashboard"} className="w-6 h-6" />
-                <p>Dashboard</p>
-              </div>
-            </>
-          )}
-          {showMyPosts && (
-            <div
-              className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg"
-              onClick={() => {
-                router.push("/monitoring");
 
-                if (isMobile) setIsCollapsed(!isCollapsed);
-              }}
-            >
-              <Icon icon={"mdi:list-status"} className="w-6 h-6" />
-              <p className="text-sm">Monitoring</p>
-            </div>
-          )}
-          <div
-            className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg"
-            onClick={() => {
-              router.push("/history");
-
-              if (isMobile) setIsCollapsed(!isCollapsed);
-            }}
-          >
-            <Icon icon={"material-symbols:post-outline"} className="w-6 h-6" />
-            <p className="text-sm">History</p>
-          </div>
-          <div
-            className="w-full gap-2 items-center hidden md:flex hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg"
-            onClick={handleShowSettings}
-          >
-            <Icon icon={"uil:setting"} className="w-6 h-6" />
-            <p className="text-sm">Settings</p>
-          </div>
-
-          <div
-            className="w-full flex gap-2 items-center md:hidden hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg"
-            onClick={handleShowSettingsMobile}
-          >
-            <Icon icon={"uil:setting"} className="w-6 h-6" />
-            <p className="text-sm">Settings</p>
-          </div>
-          <hr className="w-full border border-neutral-200 dark:border-neutral-700" />
-          <div
-            className="w-full flex gap-2 items-center hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg"
-            onClick={handleLogout}
-          >
-            <Icon icon={"material-symbols:logout"} className="w-6 h-6" />
-            <p className="text-sm">Logout</p>
-          </div>
-        </div>
-      )}
       <div className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg">
         {userData && (
           <Avatar
             label={userData?.firstName[0] + userData?.lastName[0]}
             shape="circle"
-            className="font-bold bg-blue-500"
+            className="font-bold bg-blue-500 text-white"
           />
         )}
 
