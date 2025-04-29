@@ -167,17 +167,11 @@ const FolderContentDialog: React.FC<Props> = ({
         }}
         pt={{
           header: {
-            className: ` ${
-              !folderData?.folderColor ? "dark:bg-neutral-900" : ""
-            } dark:text-white`,
-            style: {
-              color: folderData?.textColor,
-              backgroundColor: folderData?.folderColor,
-            },
+            className: `bg-[#CBD5E1]`,
           },
-          content: { className: "dark:bg-neutral-900 dark:text-white pt-2" },
+          content: { className: "bg-[#CBD5E1] pt-2" },
         }}
-        className="w-[95%] h-[95vh]"
+        className="w-[70%] h-[80vh]"
         header={
           <div className="flex gap-3 items-center">
             <i className={`${PrimeIcons.FOLDER_OPEN} text-2xl`}></i>
@@ -199,39 +193,18 @@ const FolderContentDialog: React.FC<Props> = ({
           visible={editSubfolderVisible}
           setVisible={setEditSubfolderVisible}
         />
-        <div className="my-4 flex gap-3">
-          <InputText
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search folder contents..."
-            className="w-full bg-neutral-200 dark:bg-neutral-800 py-2 px-4"
-          />
-          <Button
-            icon={`${PrimeIcons.PLUS} text-lg`}
-            className="bg-neutral-200 dark:bg-neutral-800"
-            onClick={() => setAddSubfolder(true)}
-          ></Button>
-        </div>
+
         <div>
           {folderPosts ? (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
               {data?.data?.subfolders?.map((subfolder: Folder) => (
                 <div
                   key={subfolder.id}
-                  onClick={() => handleSubfolderClick(subfolder.id)}
-                  className={`hover:cursor-pointer h-52 px-3 rounded-lg flex flex-col p-4 gap-2 justify-between ${
-                    !subfolder.folderColor
-                      ? "bg-neutral-200 hover:shadow dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700"
-                      : ""
-                  }`}
-                  style={{
-                    color: subfolder.textColor,
-                    backgroundColor: subfolder.folderColor
-                      ? subfolder.folderColor
-                      : isDarkMode
-                      ? "black"
-                      : "white",
+                  onClick={() => {
+                    setVisible(false);
+                    handleSubfolderClick(subfolder.id);
                   }}
+                  className={`hover:cursor-pointer h-52 px-3 rounded-lg flex flex-col p-4 gap-2 justify-between bg-[#EEEEEE]`}
                 >
                   <div className="flex items-start gap-2 w-full justify-between">
                     <div className="flex gap-2 w-48">

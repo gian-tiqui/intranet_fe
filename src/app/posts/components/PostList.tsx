@@ -7,14 +7,9 @@ import PostListSkeleton from "./PostListSkeleton";
 import NoPosts from "./NoPosts";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
 import { useQuery } from "@tanstack/react-query";
-import {
-  decodeUserData,
-  fetchPostDeptIds,
-  fetchPublicPosts,
-} from "@/app/functions/functions";
+import { fetchPublicPosts } from "@/app/functions/functions";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import PostListItem from "./PostListItem";
-import useDepartments from "@/app/custom-hooks/departments";
 import useSignalStore from "@/app/store/signalStore";
 import { INTRANET } from "@/app/bindings/binding";
 import Cookies from "js-cookie";
@@ -81,26 +76,6 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [allPosts, setAllPosts] = useState<Post[]>([]);
-  const [selectedDeptId, setSelectedDeptId] = useState<number>(-1);
-  const departments = useDepartments();
-
-  const handleDeptClicked = async (deptId: number) => {
-    if (selectedVis !== "all") return;
-
-    setSelectedDeptId(deptId);
-
-    if (deptId === -1) {
-      setPosts(_posts?.posts || []);
-    } else {
-      const filteredPosts = await Promise.all(
-        (_allPosts?.posts || []).map(async (post) => {
-          const deptIds = await fetchPostDeptIds(post.pid);
-          return deptIds.includes(String(deptId)) ? post : null;
-        })
-      );
-      setAllPosts(filteredPosts.filter((post) => post !== null));
-    }
-  };
 
   useEffect(() => {
     if (_posts) setPosts(_posts.posts);
@@ -157,40 +132,6 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
     <>
       <div>
         {" "}
-        {selectedVis === "all" && (
-          <div className="w-full flex gap-2 px-5 mb-5 overflow-x-auto p-2">
-            <div
-              onClick={() => handleDeptClicked(-1)}
-              className={`text-xs border dark:border-neutral-700 rounded ${
-                selectedDeptId === -1 ? "bg-gray-200 dark:bg-neutral-700" : ""
-              } grid place-content-center px-3 py-1 font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-neutral-700`}
-              key={-1}
-            >
-              All
-            </div>
-            {departments
-              .filter((dept) => dept.posts.length > 0)
-              .map((dept) => {
-                const deptId = decodeUserData()?.deptId;
-
-                if (dept.deptId === 9 && deptId !== 9) return null;
-
-                return (
-                  <div
-                    onClick={() => handleDeptClicked(dept.deptId)}
-                    className={`text-xs border dark:border-neutral-700 rounded ${
-                      selectedDeptId === dept.deptId
-                        ? "bg-gray-200 dark:bg-neutral-700"
-                        : ""
-                    } grid place-content-center px-3 py-1 font-semibold cursor-pointer hover:bg-gray-200 dark:hover:bg-neutral-700`}
-                    key={dept.deptId}
-                  >
-                    {dept.departmentCode}
-                  </div>
-                );
-              })}
-          </div>
-        )}
         {Object.keys(groupedPosts)
           .slice(0, maxNum)
           .map((date) => (
