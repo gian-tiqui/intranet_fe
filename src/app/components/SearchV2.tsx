@@ -4,7 +4,7 @@ import React from "react";
 
 const SearchV2 = () => {
   return (
-    <div className="bg-gray-50 w-full h-16 mt-4 rounded-full justify-between border-2 p-2 border-black mb-6 flex items-center ps-7">
+    <div className="bg-[#EEEEEE] w-full h-16 mt-4 rounded-full justify-between border-2 p-2 border-black mb-6 flex items-center ps-7">
       <input
         type="text"
         className="border-none bg-inherit outline-none w-96"

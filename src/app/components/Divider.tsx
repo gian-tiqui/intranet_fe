@@ -1,7 +1,5 @@
 "use client";
-import React, { ChangeEvent, ReactNode, useEffect, useState } from "react";
-import { Icon } from "@iconify/react";
-import HoverBox from "./HoverBox";
+import React, { ReactNode, useEffect, useState } from "react";
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
 import useToggleStore from "../store/navbarCollapsedStore";
 import { AnimatePresence } from "framer-motion";
@@ -12,15 +10,11 @@ import Settings from "./Settings";
 import useShowSettingsStore from "../store/showSettingStore";
 import LoginSplash from "./RefreshSplashArt";
 import useSplashToggler from "../store/useSplashStore";
-import Searchbar from "./Searchbar";
-import useHideSearchBarStore from "../store/hideSearchBar";
-import usePostUriStore from "../store/usePostUri";
 import useEditModalStore from "../store/editModal";
 import EditPostModal from "../posts/components/EditModal";
 import usePostIdStore from "../store/postId";
 import { checkDept, decodeUserData } from "../functions/functions";
-import NotificationBell from "./NotificationBell";
-import facade from "../assets/westlake_logo_horizontal.jpg.png";
+import wmcLogo from "../assets/westlake_logo_horizontal.jpg.png";
 import { toast } from "react-toastify";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import apiClient from "../http-common/apiUrl";
@@ -29,8 +23,6 @@ import DeleteCommentPopup from "../posts/components/DeleteCommentPopup";
 import showDeleteCommentModalStore from "../store/deleteComment";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Cookies from "js-cookie";
-import Unseen from "./Unseen";
-import PendingUsers from "./PendingUsers";
 import { jwtDecode } from "jwt-decode";
 import useDeleteModalStore from "../store/deleteModalStore";
 import DeleteModal from "../posts/components/DeleteModal";
@@ -48,23 +40,25 @@ import Image from "next/image";
 import ovalGradient from "../assets/oval-gradient.png";
 import upperLeftGradient from "../assets/upper-left-gradient.png";
 import { Image as PrimeImage } from "primereact/image";
+import { usePathname } from "next/navigation";
+import HeaderIcons from "./HeaderIcons";
+import UserActivitiesBar from "./UserActivitiesBar";
+import useActivityBarStore from "../store/activitybar";
+import { Button } from "primereact/button";
 
 interface Props {
   children?: ReactNode;
 }
 
 const Divider: React.FC<Props> = ({ children }) => {
+  const { showActivityBar } = useActivityBarStore();
+  const pathname = usePathname();
   const { hidden } = useNavbarVisibilityStore();
   const { isCollapsed, setIsCollapsed } = useToggleStore();
-  const { visible, setVisible } = useShowPostStore();
+  const { visible } = useShowPostStore();
   const { shown } = useShowSettingsStore();
   const [isMobile, setIsMobile] = useState(false);
   const { showSplash, setShowSplash } = useSplashToggler();
-  const [searchText, setSearchText] = useState<string>("");
-  const [debouncedSearch, setDebouncedSearch] = useState<string>("");
-  const { searchBarHidden } = useHideSearchBarStore();
-  const { setPostUri } = usePostUriStore();
-  const [loadingSearch, setLoadingSearch] = useState<boolean>(false);
   const { showEditModal } = useEditModalStore();
   const { postId } = usePostIdStore();
   const [editVisible, setEditVisible] = useState<boolean>(true);
@@ -98,9 +92,9 @@ const Divider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     if (!checkDept()) {
-      setEditVisible(false);
+      if (editVisible) setEditVisible(false);
     }
-  }, []);
+  }, [editVisible]);
 
   useEffect(() => {
     const fetchReads = async () => {
@@ -131,28 +125,6 @@ const Divider: React.FC<Props> = ({ children }) => {
       window.removeEventListener("resize", handleResize);
     };
   }, [setIsMobile]);
-
-  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setSearchText(value);
-  };
-
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      setDebouncedSearch(searchText);
-      setLoadingSearch(true);
-    }, 1000);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchText]);
-
-  useEffect(() => {
-    const refreshData = async () => {
-      setPostUri(debouncedSearch);
-    };
-
-    refreshData();
-  }, [debouncedSearch, setPostUri]);
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
@@ -217,6 +189,12 @@ const Divider: React.FC<Props> = ({ children }) => {
       opacity: 0,
       transition: { type: "spring", stiffness: 300, damping: 30 },
     },
+  };
+
+  const checkLocation = () => {
+    const locations = ["welcome", "login", "forgot-password"];
+
+    return !locations.some((location) => pathname.includes(location));
   };
 
   return (
@@ -285,6 +263,7 @@ const Divider: React.FC<Props> = ({ children }) => {
             <DeleteModal setShowDeleteModal={setShowDeleteModal} />
           </div>
         )}
+        {showActivityBar && <UserActivitiesBar />}
         {openCreateFolderModal && <MainFolderModal />}
         {openSubFolder && <SubFolderModal />}
         {showDeleteFolderModal && <DeleteFolderModal />}
@@ -302,122 +281,46 @@ const Divider: React.FC<Props> = ({ children }) => {
               ))}
           </AnimatePresence>
         </div>
-        <PrimeImage
-          src={upperLeftGradient.src}
-          alt="large-gradient"
-          className="absolute top-0 left-24 w-[550px] h-[550px] -z-10"
-        />
-        <PrimeImage
-          src={ovalGradient.src}
-          alt="large-gradient"
-          className="absolute top-24 right-24 -z-10 h-64 w-64"
-        />
+        {!checkLocation() && (
+          <>
+            <PrimeImage
+              src={upperLeftGradient.src}
+              alt="large-gradient"
+              className="absolute top-0 left-24 w-[550px] h-[550px] -z-10"
+            />
+            <PrimeImage
+              src={ovalGradient.src}
+              alt="large-gradient"
+              className="absolute top-24 right-24 -z-10 h-64 w-64"
+            />
+          </>
+        )}
 
         <main className={`max-h-screen overflow-auto relative w-full`}>
-          {hidden && (
-            <div
-              className="sticky z-10 w-full flex justify-between pt-3 pb-3 top-0"
-              id="hi"
-            >
-              <div id="buttons" className="flex w-full pt-2 mb-2 gap-3">
-                {/* THIS IS FOR DESKTOP VIEW */}
-                <div className="md:flex gap-1 hidden">
-                  {isCollapsed && (
-                    <>
-                      <HoverBox
-                        key="desktop-collapser"
-                        collapser={true}
-                        className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-                      >
-                        <Icon
-                          icon="iconoir:sidebar-collapse"
-                          className="h-5 w-5"
-                        />
-                      </HoverBox>
-
-                      {editVisible && [] && (
-                        <HoverBox
-                          key="desktop-edit"
-                          className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-                        >
-                          <Icon
-                            onClick={() => setVisible(true)}
-                            icon="lucide:edit"
-                            className="h-5 w-5"
-                          />
-                        </HoverBox>
-                      )}
-                    </>
-                  )}
-                </div>
-
-                <div
-                  className={`hidden md:flex items-center gap-2 ${
-                    isCollapsed && "ms-48"
-                  }`}
-                >
-                  <div className="flex items-center gap-4">
-                    <Image
-                      src={facade.src}
-                      alt="wmc logo"
-                      height="45"
-                      width="45"
-                    />
-                    <div className="text-blue-600">
-                      <h4 className="font-semibold text-xl">Westlake</h4>
-                      <h6 className="text-xs font-semibold">Medical Center</h6>
-                    </div>
-                  </div>
-                </div>
-
-                {/* THIS IS FOR MOBILE VIEW */}
-                <div className="flex gap-1 md:hidden">
-                  <>
-                    <HoverBox
-                      key="mobile-collapser"
-                      collapser={true}
-                      className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-                    >
-                      <Icon
-                        icon="iconoir:sidebar-collapse"
-                        className="h-5 w-5"
-                      />
-                    </HoverBox>
-
-                    {editVisible && (
-                      <HoverBox
-                        key="mobile-edit"
-                        className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded"
-                      >
-                        <Icon
-                          onClick={() => setVisible(true)}
-                          icon="lucide:edit"
-                          className="h-5 w-5"
-                        />
-                      </HoverBox>
-                    )}
-                  </>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 px-3">
-                {searchBarHidden && (
-                  <Searchbar
-                    searchText={searchText}
-                    handleSearchChange={handleSearchChange}
-                    loading={loadingSearch}
-                  />
-                )}
-
-                <div className="flex gap-8 items-center">
-                  {showPendingUsers && <PendingUsers />}
-
-                  <Unseen />
-                  <NotificationBell />
+          <header className="flex justify-between pt-5 items-center px-2">
+            <div className="flex gap-3">
+              {isCollapsed && (
+                <Button
+                  icon={`pi pi-expand`}
+                  onClick={() => setIsCollapsed(false)}
+                />
+              )}
+              <div className="flex items-center gap-4">
+                <Image
+                  src={wmcLogo.src}
+                  alt="wmc logo"
+                  height="45"
+                  width="45"
+                />
+                <div className="text-blue-600">
+                  <h4 className="font-semibold text-xl">Westlake</h4>
+                  <h6 className="text-xs font-semibold">Medical Center</h6>
                 </div>
               </div>
             </div>
-          )}
 
+            <HeaderIcons showPendingUsers={showPendingUsers} />
+          </header>
           <div
             className={`mx-auto w-full relative ${
               hidden && "max-w-[750px]"

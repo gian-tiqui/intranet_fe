@@ -16,6 +16,8 @@ import useReadStore from "../store/readStore";
 import ConfirmModal from "./ConfirmModal";
 import useDeptIdStore from "../store/deptIdStore";
 import { Department } from "../utils/enums/enum";
+import { Checkbox } from "primereact/checkbox";
+import { Divider } from "primereact/divider";
 
 interface Props {
   variants?: Variants;
@@ -30,6 +32,7 @@ const Aside: React.FC<Props> = ({
   variants,
   isMobile,
 }) => {
+  const [isChecked, setIsChecked] = useState<boolean>(true);
   const { setVisible } = useShowPostStore();
   const router = useRouter();
   const pathname = usePathname();
@@ -98,6 +101,11 @@ const Aside: React.FC<Props> = ({
     }
   }, [confirmed, router, _dest]);
 
+  useEffect(() => {
+    if (isChecked) setSelectedVis("dept");
+    else setSelectedVis("all");
+  }, [isChecked]);
+
   return (
     <>
       {showConfirmModal && (
@@ -117,7 +125,7 @@ const Aside: React.FC<Props> = ({
         animate="open"
         exit="collapsed"
         variants={variants}
-        className="hidden md:flex flex-col w-full bg-gray-50 shadow h-full p-1 rounded-e-3xl"
+        className="hidden md:flex flex-col w-full bg-[#EEEEEE] shadow h-full p-1 rounded-e-3xl"
       >
         <div
           id="buttons"
@@ -151,7 +159,7 @@ const Aside: React.FC<Props> = ({
 
         {/* THIS CONTAINS YOUR POSTS/MEMOS */}
         <div className="overflow-auto flex-grow mb-3">
-          <div id="menu-buttons" className="px-3 mt-2 mb-6">
+          <div id="menu-buttons" className="px-3 mt-2">
             <div
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
               onClick={() => handleClick("/")}
@@ -201,37 +209,22 @@ const Aside: React.FC<Props> = ({
                 </div>
               )}
           </div>
+          <Divider className="mx-auto border-b border-black w-[88%]" />
           <div className="flex flex-col">
             <div
-              onClick={(e) => e.stopPropagation()}
-              className="w-full flex text-center text-xs rounded mb-6 border dark:border-neutral-900"
+              className="flex items-center gap-2 mb-5 cursor-pointer"
+              onClick={() => {
+                setIsChecked((prev) => !prev);
+              }}
             >
-              <div
-                className={`w-full py-2 flex items-center justify-center gap-1 cursor-pointer px-2 ${
-                  selectedVis === "all" &&
-                  "bg-gray-200 dark:bg-neutral-700 rounded-s"
-                }`}
-                onClick={() => setSelectedVis("all")}
-              >
-                <Icon
-                  icon={"material-symbols-light:all-out-outline"}
-                  className="h-5 w-5"
-                />
-                General Posts
-              </div>
-              <div
-                className={`w-full py-2 flex items-center gap-2 justify-center cursor-pointer px-2 ${
-                  selectedVis === "dept" && "bg-gray-200 dark:bg-neutral-700"
-                }`}
-                onClick={() => setSelectedVis("dept")}
-              >
-                <Icon
-                  icon={"arcticons:emoji-department-store"}
-                  className="h-5 w-5"
-                />
-                Dept Posts
-              </div>
+              <Checkbox
+                checked={isChecked}
+                pt={{ box: { className: "h-4 w-4 rounded" } }}
+                className="bg-white h-4 w-4 place-content-center  ms-5"
+              />
+              <p className="text-sm">General Post</p>
             </div>
+
             <PostList
               selectedVis={selectedVis}
               isMobile={isMobile}
