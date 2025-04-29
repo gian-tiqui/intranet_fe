@@ -22,11 +22,11 @@ const DepartmentsList: React.FC<Props> = ({
       }))}
       pt={{
         root: {
-          className: "dark:bg-neutral-950 dark:border-neutral-700",
+          className: "bg-inherit",
         },
 
         panel: {
-          className: "dark:bg-neutral-950 dark:border-neutral-700",
+          className: "bg-inherit",
         },
         header: { className: "dark:bg-neutral-950" },
         token: { className: "dark:text-white h-7 dark:bg-neutral-800 text-sm" },

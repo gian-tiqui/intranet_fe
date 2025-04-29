@@ -7,9 +7,7 @@ interface State {
 
 const useShowUserModalStore = create<State>((set) => ({
   uVisible: false,
-  setUVisible: (uVisible: boolean) => {
-    set({ uVisible });
-  },
+  setUVisible: (uVisible: boolean) => set({ uVisible }),
 }));
 
 export default useShowUserModalStore;

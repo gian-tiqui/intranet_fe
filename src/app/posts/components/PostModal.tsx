@@ -514,10 +514,10 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       )}
       <form
         onSubmit={handleSubmit(handlePost)}
-        className="w-80 md:w-[400px] rounded-2xl bg-neutral-200 dark:bg-neutral-900"
+        className="w-80 md:w-[400px] rounded-2xl bg-[#CBD5E1]"
         onClick={handleFormClick}
       >
-        <div className="h-10 flex justify-between items-center rounded-t-2xl bg-white dark:bg-neutral-950 w-full p-4 border-b dark:border-black mb-3">
+        <div className="h-10 flex justify-between items-center rounded-t-2xl bg-[#EEEEEE] w-full p-4 border-b dark:border-black mb-3">
           <div className="w-full">
             <Icon
               icon={"akar-icons:cross"}
@@ -684,13 +684,13 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
           </div>
         </div>
 
-        <div className="rounded-2xl border-t mt-2 bg-white dark:bg-neutral-950 dark:border-black relative pb-2">
+        <div className="rounded-2xl border-t mt-2 bg-[#EEEEEE] dark:border-black relative pb-2">
           <div className="h-7 flex w-full justify-center items-center">
             <Icon icon={"octicon:dash-16"} className="w-7 h-7" />
           </div>
           <div className="flex items-center flex-col px-5">
             <Dropdown
-              className="w-full mb-2 h-8 items-center"
+              className="w-full mb-2 h-8 items-center bg-inherit"
               filter
               placeholder="Select a employee level"
               value={selectedLevel}
@@ -752,7 +752,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                     "dark:bg-neutral-700 dark:border-neutral-700 dark:text-neutral-100 dark:placeholder-neutral-400",
                 },
               }}
-              className="w-full mb-2 h-8 items-center"
+              className="w-full mb-2 h-8 items-center bg-inherit"
               options={buildTree(foldersData?.data.folders || [])}
               onChange={async (e: TreeSelectChangeEvent) => {
                 if (!e.value) return;

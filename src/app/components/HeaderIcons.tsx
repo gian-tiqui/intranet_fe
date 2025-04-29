@@ -15,6 +15,8 @@ const HeaderIcons: React.FC<Props> = () => {
   return (
     <div className="flex items-center gap-4">
       <Button
+        tooltip="History"
+        tooltipOptions={{ position: "bottom" }}
         onClick={() => {
           setTabIndex(0);
           setShowActivityBar(true);
@@ -23,6 +25,8 @@ const HeaderIcons: React.FC<Props> = () => {
         className="h-7 w-7"
       />
       <Button
+        tooltip="Unreads"
+        tooltipOptions={{ position: "bottom" }}
         onClick={() => {
           setTabIndex(1);
           setShowActivityBar(true);
@@ -31,6 +35,8 @@ const HeaderIcons: React.FC<Props> = () => {
         className="h-7 w-7"
       />
       <Button
+        tooltip="Notifications"
+        tooltipOptions={{ position: "left" }}
         onClick={() => {
           setTabIndex(2);
           setShowActivityBar(true);
