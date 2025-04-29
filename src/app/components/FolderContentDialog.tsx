@@ -15,7 +15,6 @@ import {
 } from "../utils/service/folderService";
 import { Folder, Post, Query } from "../types/types";
 import { PrimeIcons } from "primereact/api";
-import { InputText } from "primereact/inputtext";
 import useSignalStore from "../store/signalStore";
 import { Button } from "primereact/button";
 import AddSubfolderDialog from "./AddSubfolderDialog";
@@ -24,7 +23,6 @@ import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import CustomToast from "./CustomToast";
 import EditFolderDialog from "./EditFolderDialog";
-import useDarkModeStore from "../store/darkModeStore";
 import FolderPost from "./FolderPost";
 
 interface Props {
@@ -42,15 +40,13 @@ const FolderContentDialog: React.FC<Props> = ({
   const toastRef = useRef<Toast>(null);
   const [editSubfolderVisible, setEditSubfolderVisible] =
     useState<boolean>(false);
-  const [query, setQuery] = useState<Query>({
+  const [query] = useState<Query>({
     search: "",
     skip: 0,
     take: 1000,
   });
-  const [searchTerm, setSearchTerm] = useState<string>("");
   const [addSubfolder, setAddSubfolder] = useState<boolean>(false);
   const [folderToEdit, setFolderToEdit] = useState<number | undefined>();
-  const { isDarkMode } = useDarkModeStore();
   const [selectedSubfolder, setSelectedSubfolder] = useState<
     number | undefined
   >(undefined);
@@ -125,18 +121,6 @@ const FolderContentDialog: React.FC<Props> = ({
     refetch();
     refetchSubfolders();
   }, [refetch, signal, refetchSubfolders]);
-
-  useEffect(() => {
-    const interval = setTimeout(() => {
-      setQuery((prev) => ({
-        search: searchTerm,
-        take: prev.take,
-        skip: prev.skip,
-      }));
-    }, 700);
-
-    return () => clearTimeout(interval);
-  }, [searchTerm]);
 
   const handleSubfolderClick = (subfolderId: number) => {
     setSelectedSubfolder(subfolderId);
