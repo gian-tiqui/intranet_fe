@@ -1,6 +1,4 @@
 import { create } from "zustand";
-import { INTRANET } from "../bindings/binding";
-import Cookies from "js-cookie";
 
 interface State {
   isLoggedIn: boolean;
@@ -8,9 +6,7 @@ interface State {
 }
 
 const useLoginStore = create<State>((set) => ({
-  isLoggedIn:
-    localStorage.getItem(INTRANET) !== undefined &&
-    Cookies.get(INTRANET) !== undefined,
+  isLoggedIn: false,
   setIsLoggedIn: (isLoggedIn: boolean) => set({ isLoggedIn }),
 }));
 
