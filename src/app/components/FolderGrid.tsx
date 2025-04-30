@@ -104,9 +104,8 @@ const FolderGrid = () => {
       />
       <div className="mx-auto w-[600px]">
         <h2 className="text-4xl font-extrabold">
-          Need to find a{" "}
-          <span className="font-black text-blue-600">folder</span>,{" "}
-          <span className="font-black text-blue-600">memo</span>, or a{" "}
+          Looking for a <span className="font-black text-blue-600">folder</span>
+          , <span className="font-black text-blue-600">memo</span>, or a{" "}
           <span className="font-black text-blue-600">guideline</span> in the{" "}
           <span className="font-black text-blue-600">Employee Portal</span>?{" "}
           <span className="font-black text-blue-600">Search</span> it by{" "}
@@ -114,17 +113,8 @@ const FolderGrid = () => {
           the
           <span className="font-black text-blue-600"> box </span>below.
         </h2>
+
         <SearchV2 />
-        {/* {checkDept() && (
-          <Button
-            severity="info"
-            className="h-10 w-32 bg-white rounded-lg dark:bg-neutral-800 justify-center hover:shadow hover:bg-neutral-100 dark:hover:bg-neutral-700"
-            icon={`${PrimeIcons.PLUS} me-2`}
-            onClick={() => setAddFolderDialogVisible(true)}
-          >
-            Add folder
-          </Button>
-        )} */}
       </div>
 
       <div className="text-sm flex items-center gap-2 justify-center mb-6">

@@ -19,6 +19,7 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import wmcLogo from "../../assets/westlake_logo_horizontal.jpg.png";
 import { Image } from "primereact/image";
+import useLoginStore from "@/app/store/loggedInStore";
 
 type FormFields = {
   employeeId: string;
@@ -32,6 +33,7 @@ const Form = () => {
   const { showLogoutArt, setShowLogoutArt } = useLogoutArtStore();
   const { setIsCollapsed } = useToggleStore();
   const router = useRouter();
+  const { setIsLoggedIn } = useLoginStore();
   const [wrongAttempts, setWrongAttempts] = useState<number>(0);
   const {
     register,
@@ -115,6 +117,7 @@ const Form = () => {
 
       Cookies.set(INTRANET, rt, { expires: expirationDays });
       localStorage.setItem(INTRANET, response.data.tokens.accessToken);
+      setIsLoggedIn(true);
       setShowSplash(true);
       setIsCollapsed(true);
 

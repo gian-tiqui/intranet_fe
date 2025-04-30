@@ -45,13 +45,14 @@ import HeaderIcons from "./HeaderIcons";
 import UserActivitiesBar from "./UserActivitiesBar";
 import useActivityBarStore from "../store/activitybar";
 import { Button } from "primereact/button";
+import useLoginStore from "../store/loggedInStore";
 
 interface Props {
   children?: ReactNode;
 }
 
 const Divider: React.FC<Props> = ({ children }) => {
-  const { showActivityBar } = useActivityBarStore();
+  const { showActivityBar, setShowActivityBar } = useActivityBarStore();
   const pathname = usePathname();
   const { hidden } = useNavbarVisibilityStore();
   const { isCollapsed, setIsCollapsed } = useToggleStore();
@@ -71,6 +72,11 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { openSubFolder } = useSubFolderStore();
   const { showDeleteFolderModal } = deleteFolderStore();
   const { updatedDialogShown, setUpdateDialogShown } = useUpdateDialogStore();
+  const { isLoggedIn } = useLoginStore();
+
+  useEffect(() => {
+    if (!isLoggedIn) setShowActivityBar(false);
+  }, [isLoggedIn, setShowActivityBar]);
 
   useEffect(() => {
     const checkLevel = () => {
@@ -263,7 +269,7 @@ const Divider: React.FC<Props> = ({ children }) => {
             <DeleteModal setShowDeleteModal={setShowDeleteModal} />
           </div>
         )}
-        {showActivityBar && <UserActivitiesBar />}
+        {showActivityBar && isLoggedIn && <UserActivitiesBar />}
         {openCreateFolderModal && <MainFolderModal />}
         {openSubFolder && <SubFolderModal />}
         {showDeleteFolderModal && <DeleteFolderModal />}
