@@ -3,8 +3,13 @@ import React from "react";
 import { NotificationType } from "../types/types";
 import apiClient from "../http-common/apiUrl";
 import { API_BASE, INTRANET } from "../bindings/binding";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { PrimeIcons } from "primereact/api";
+import { Button } from "primereact/button";
+import { Avatar } from "primereact/avatar";
+import { Divider } from "primereact/divider";
 import useCommentIdRedirector from "../store/commentRedirectionId";
+import formatDate from "../utils/functions/formatDate"; // Assuming this exists
+import useActivityBarStore from "../store/activitybar";
 
 interface Props {
   notification: NotificationType;
@@ -13,6 +18,7 @@ interface Props {
 const Notification: React.FC<Props> = ({ notification }) => {
   const router = useRouter();
   const { setCid } = useCommentIdRedirector();
+  const { setShowActivityBar } = useActivityBarStore();
 
   const handleClick = async () => {
     try {
@@ -31,22 +37,46 @@ const Notification: React.FC<Props> = ({ notification }) => {
       } else {
         router.push(`/posts/${notification.postId}`);
       }
+      setShowActivityBar(false);
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <div
-      onClick={handleClick}
-      className={`border w-full p-2  dark:border-black rounded-lg text-sm  cursor-pointer hover:bg-gray-100 dark:hover:bg-neutral-800 ${
-        notification.isRead
-          ? "bg-neutral-100 dark:bg-neutral-900"
-          : "bg-white dark:bg-neutral-700"
-      }`}
-    >
-      <Icon icon={`akar-icons:info`} className="h-5 w-5 mb-1" />
-      <p>{notification.message}</p>
+    <div>
+      <div
+        className={`flex gap-3 px-6 pt-1 cursor-pointer`}
+        onClick={handleClick}
+      >
+        <div className="w-10">
+          <Avatar
+            className="h-10 w-10 bg-green-600 text-white text-sm font-bold"
+            shape="circle"
+            label="NT"
+          />
+        </div>
+        <div className="flex flex-col gap-1 w-full">
+          <div className="flex gap-3">
+            <p className="w-full">
+              <span className="font-bold">Notification:</span>{" "}
+              {notification.message}
+            </p>
+            <Button
+              className="h-8 w-8"
+              icon={PrimeIcons.ARROW_UP_RIGHT}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClick();
+              }}
+            />
+          </div>
+          {notification.createdAt && (
+            <small>{formatDate(notification.createdAt)}</small>
+          )}
+        </div>
+      </div>
+      <Divider className="border-b border-black" />
     </div>
   );
 };

@@ -25,6 +25,11 @@ type User = {
   lid: number;
 };
 
+type TabType = {
+  name: string;
+  component: ReactNode;
+};
+
 type PostReader = {
   id: number;
   postId: number;
@@ -152,6 +157,7 @@ type NotificationType = {
   postId: number;
   commentId: number;
   deptId: number;
+  createdAt: string | Date;
   message: string;
   isRead: boolean;
   comment?: PostComment;
@@ -316,4 +322,5 @@ export type {
   ThType,
   NavLinksType,
   PostDepartment,
+  TabType,
 };

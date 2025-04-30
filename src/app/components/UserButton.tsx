@@ -12,20 +12,13 @@ import { toastClass } from "../tailwind-classes/tw_classes";
 import { Avatar } from "primereact/avatar";
 import SettingsDialog from "./SettingsDialog";
 import UserModal from "./UserModal";
+import useLoginStore from "../store/loggedInStore";
 
 interface Props {
   uVisible: boolean;
   setUVisible: (visible: boolean) => void;
   isMobile?: boolean;
 }
-
-/**
- *
- * @param param
- * @returns
- *
- * viewing of statements of accounts in landing page option. (TBD on wednesday april 29)
- */
 
 const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
   const [settingsDialogVisible, setSettingsDialogVisible] =
@@ -34,6 +27,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
   const { setHidden } = useNavbarVisibilityStore();
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const { setIsLoggedIn } = useLoginStore();
   const [userData, setUserData] = useState<{
     firstName: string;
     lastName: string;
@@ -65,6 +59,8 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
           type: "success",
           className: toastClass,
         });
+
+        setIsLoggedIn(false);
       } catch (error) {
         console.error(error);
 

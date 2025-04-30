@@ -18,6 +18,10 @@ import useDeptIdStore from "../store/deptIdStore";
 import { Department } from "../utils/enums/enum";
 import { Checkbox } from "primereact/checkbox";
 import { Divider } from "primereact/divider";
+import { Button } from "primereact/button";
+import { Image } from "primereact/image";
+import collapseImage from "../assets/collapse.png";
+import { PrimeIcons } from "primereact/api";
 
 interface Props {
   variants?: Variants;
@@ -46,7 +50,6 @@ const Aside: React.FC<Props> = ({
   const [confirmed, setConfirmed] = useState<boolean>(false);
   const [_dest, setDest] = useState<string>("");
   const { deptId } = useDeptIdStore();
-  const [showCollapseText, setShowCollapseText] = useState<boolean>(false);
   const [userDeptId, setUserDeptId] = useState<number>();
 
   useEffect(() => {
@@ -131,21 +134,17 @@ const Aside: React.FC<Props> = ({
           id="buttons"
           className="flex justify-between w-full px-3 pt-2 mb-2"
         >
-          <div
+          <Button
             onClick={
               setIsCollapsed ? () => setIsCollapsed(!isCollapsed) : undefined
             }
-            onMouseEnter={() => setShowCollapseText(true)}
-            onMouseLeave={() => setShowCollapseText(false)}
-            className="hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded relative"
           >
-            <Icon icon="iconoir:sidebar-collapse" className="h-5 w-5" />
-            {showCollapseText && (
-              <div className="h-9 w-32 top-0 left-10 absolute bg-white border dark:bg-neutral-800 dark:border-neutral-700 grid place-content-center rounded">
-                <p className="text-sm">Collapse Sidebar</p>
-              </div>
-            )}
-          </div>
+            <Image
+              src={collapseImage.src}
+              className="h-5 w-5"
+              alt="collapse-button"
+            />
+          </Button>
 
           {editVisible && (
             <div
@@ -164,7 +163,7 @@ const Aside: React.FC<Props> = ({
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
               onClick={() => handleClick("/")}
             >
-              <Icon icon={"ph:hospital"} className="h-5 w-5" />
+              <i className={`${PrimeIcons.HOME} text-lg`}></i>
               <p className="w-full text-sm">Home</p>
             </div>
 
@@ -172,7 +171,8 @@ const Aside: React.FC<Props> = ({
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
               onClick={() => handleClick("/bulletin")}
             >
-              <Icon icon={"gridicons:posts"} className="h-5 w-5" />
+              <i className={`${PrimeIcons.GLOBE} text-lg`}></i>
+
               <p className="w-full text-sm">General Bulletin</p>
             </div>
 
@@ -180,10 +180,8 @@ const Aside: React.FC<Props> = ({
               className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
               onClick={() => handleClick("/departments-memo")}
             >
-              <Icon
-                icon={"arcticons:emoji-department-store"}
-                className="h-5 w-5"
-              />
+              <i className={`${PrimeIcons.BUILDING} text-lg`}></i>
+
               <p className="w-full text-sm">Department Bulletin</p>
             </div>
 
@@ -204,7 +202,8 @@ const Aside: React.FC<Props> = ({
                   className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
                   onClick={() => handleClick("/my-posts")}
                 >
-                  <Icon icon={"ph:folder-user-bold"} className="h-5 w-5" />
+                  <i className={`${PrimeIcons.USER_EDIT} text-xl`}></i>
+
                   <p className="w-full text-sm">My posts</p>
                 </div>
               )}

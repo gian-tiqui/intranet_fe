@@ -4,7 +4,9 @@ import { API_BASE, INTRANET } from "../bindings/binding";
 import { decodeUserData } from "../functions/functions";
 import usePostUriStore from "../store/usePostUri";
 
-const useHistory = async (): Promise<{ post: Post }[]> => {
+const useHistory = async (): Promise<
+  { createdAt: string; updatedAt: string; post: Post }[]
+> => {
   const { uriPost } = usePostUriStore.getState();
 
   const response = await apiClient.get(

@@ -5,10 +5,28 @@ import useActivityBarStore from "../store/activitybar";
 import { motion } from "framer-motion";
 import { TabPanel, TabView } from "primereact/tabview";
 import tabIndexStore from "../store/tabIndex";
+import { TabType } from "../types/types";
+import HistoryTab from "./HistoryTab";
+import UnreadsTab from "./UnreadsTab";
+import NotificationsTab from "./NotificationsTab";
 
 const UserActivitiesBar = () => {
   const { setShowActivityBar } = useActivityBarStore();
   const { tabIndex } = tabIndexStore();
+  const tabs: TabType[] = [
+    {
+      component: <HistoryTab />,
+      name: "History",
+    },
+    {
+      component: <UnreadsTab />,
+      name: "Unreads",
+    },
+    {
+      component: <NotificationsTab />,
+      name: "Notifications",
+    },
+  ];
 
   return (
     <motion.div className="h-screen w-96 absolute right-0 bg-[#EEEEEE] shadow-lg z-20 pt-6">
@@ -20,28 +38,22 @@ const UserActivitiesBar = () => {
       <TabView
         activeIndex={tabIndex}
         pt={{
-          panelContainer: { className: "h-[452px] bg-inherit" },
+          panelContainer: { className: "h-[452px] bg-inherit p-0 pe-1 py-1" },
           nav: { className: "bg-inherit border-b border-black" },
         }}
       >
-        <TabPanel
-          pt={{ headerAction: { className: "bg-inherit" } }}
-          header="History"
-        >
-          history
-        </TabPanel>
-        <TabPanel
-          header="Unreads"
-          pt={{ headerAction: { className: "bg-inherit" } }}
-        >
-          unreads
-        </TabPanel>
-        <TabPanel
-          header="Notifications"
-          pt={{ headerAction: { className: "bg-inherit" } }}
-        >
-          notifications
-        </TabPanel>
+        {tabs.map((tab, index) => (
+          <TabPanel
+            key={index}
+            pt={{
+              headerAction: { className: "bg-inherit" },
+              content: { className: "pt-3" },
+            }}
+            header={tab.name}
+          >
+            {tab.component}
+          </TabPanel>
+        ))}
       </TabView>
     </motion.div>
   );
