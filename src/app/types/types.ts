@@ -1,3 +1,4 @@
+import { StaticImageData } from "next/image";
 import { ReactNode } from "react";
 
 type User = {
@@ -149,6 +150,12 @@ type ThType = {
 type NavLinksType = {
   name: string;
   link: string;
+};
+
+type TabContent = {
+  title: string;
+  message: string;
+  image: StaticImageData;
 };
 
 type NotificationType = {
@@ -308,6 +315,7 @@ export type {
   Decoder,
   UnreadPost,
   DepartmentMonitoring,
+  TabContent,
   UserMonitoring,
   NotificationType,
   Post,

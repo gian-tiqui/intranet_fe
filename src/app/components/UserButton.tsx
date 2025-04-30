@@ -15,12 +15,10 @@ import UserModal from "./UserModal";
 import useLoginStore from "../store/loggedInStore";
 
 interface Props {
-  uVisible: boolean;
-  setUVisible: (visible: boolean) => void;
   isMobile?: boolean;
 }
 
-const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
+const UserButton: React.FC<Props> = () => {
   const [settingsDialogVisible, setSettingsDialogVisible] =
     useState<boolean>(false);
   const { setShowLogoutArt } = useLogoutArtStore();
@@ -28,6 +26,7 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const { setIsLoggedIn } = useLoginStore();
+  const [showUserModal, setShowUserModal] = useState<boolean>(false);
   const [userData, setUserData] = useState<{
     firstName: string;
     lastName: string;
@@ -103,15 +102,16 @@ const UserButton: React.FC<Props> = ({ uVisible, setUVisible }) => {
     setSettingsDialogVisible(true);
   };
 
-  const handleOpenModal = () => {
-    setUVisible(true);
-  };
-
   return (
-    <div className="px-3 mb-3 relative" onClick={handleOpenModal}>
+    <div
+      className="px-3 mb-3 relative"
+      onClick={() => {
+        setShowUserModal(true);
+      }}
+    >
       <UserModal
-        visible={uVisible}
-        setVisible={setUVisible}
+        visible={showUserModal}
+        setVisible={setShowUserModal}
         isAdmin={isAdmin}
         showMyPosts={showMyPosts}
         handleShowSettings={handleShowSettings}

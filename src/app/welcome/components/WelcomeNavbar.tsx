@@ -8,6 +8,7 @@ import useNavbarVisibilityStore from "@/app/store/navbarVisibilityStore";
 import { useRouter } from "next/navigation";
 import { PrimeIcons } from "primereact/api";
 import { Image } from "primereact/image";
+import { motion } from "motion/react";
 
 const WelcomeNavbar = () => {
   const router = useRouter();
@@ -22,14 +23,23 @@ const WelcomeNavbar = () => {
 
   return (
     <nav className="w-full items-center px-6 flex h-20 justify-between">
-      <div className="flex items-center gap-4">
+      <motion.div
+        initial={{ opacity: 0, x: -70 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.1, duration: 1.5 }}
+        className="flex items-center gap-4"
+      >
         <Image src={wmcLogo.src} alt="wmc logo" height="45" width="45" />
         <div className="text-blue-600">
-          <h4 className="font-semibold text-xl">Westlake</h4>
-          <h6 className="text-xs font-semibold">Medical Center</h6>
+          <h4 className="font-bold text-3xl">Westlake Medical Center</h4>
         </div>
-      </div>
-      <div className="flex items-center text-lg gap-7 font-semibold text-blue-600">
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.9, duration: 0.7 }}
+        className="flex items-center text-lg gap-7 text-blue-600"
+      >
         <Link href={""}>Home</Link>
         <Link href={""}>About</Link>
         <Link href={""}>FAQS</Link>
@@ -40,7 +50,7 @@ const WelcomeNavbar = () => {
         >
           <i className={`${PrimeIcons.USER} text-lg text-white`}></i>
         </Link>
-      </div>
+      </motion.div>
     </nav>
   );
 };

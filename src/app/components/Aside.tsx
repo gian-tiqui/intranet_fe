@@ -3,7 +3,6 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { motion, Variants } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import useShowPostStore from "../store/showPostStore";
-import useShowUserModalStore from "../store/showUserModal";
 import UserButton from "./UserButton";
 import { usePathname, useRouter } from "next/navigation";
 import PostList from "../posts/components/PostList";
@@ -40,7 +39,6 @@ const Aside: React.FC<Props> = ({
   const { setVisible } = useShowPostStore();
   const router = useRouter();
   const pathname = usePathname();
-  const { uVisible, setUVisible } = useShowUserModalStore();
   const { setToken } = useTokenStore();
   const [editVisible, setEditVisible] = useState<boolean>(true);
   const [selectedVis, setSelectedVis] = useState<string>("dept");
@@ -231,11 +229,7 @@ const Aside: React.FC<Props> = ({
             />
           </div>
         </div>
-        <UserButton
-          isMobile={isMobile}
-          uVisible={uVisible}
-          setUVisible={setUVisible}
-        />
+        <UserButton isMobile={isMobile} />
       </motion.aside>
 
       {/* THIS IS FOR MOBILE VIEW */}
@@ -381,11 +375,7 @@ const Aside: React.FC<Props> = ({
             </div>
           </div>
         </div>
-        <UserButton
-          isMobile={isMobile}
-          uVisible={uVisible}
-          setUVisible={setUVisible}
-        />
+        <UserButton isMobile={isMobile} />
       </motion.aside>
     </>
   );

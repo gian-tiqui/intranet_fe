@@ -46,6 +46,8 @@ import UserActivitiesBar from "./UserActivitiesBar";
 import useActivityBarStore from "../store/activitybar";
 import { Button } from "primereact/button";
 import useLoginStore from "../store/loggedInStore";
+import searchTermStore from "../store/search";
+import SearchContainer from "./SearchContainer";
 
 interface Props {
   children?: ReactNode;
@@ -72,6 +74,7 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { openSubFolder } = useSubFolderStore();
   const { showDeleteFolderModal } = deleteFolderStore();
   const { updatedDialogShown, setUpdateDialogShown } = useUpdateDialogStore();
+  const { searchTerm } = searchTermStore();
   const { isLoggedIn } = useLoginStore();
 
   useEffect(() => {
@@ -259,6 +262,7 @@ const Divider: React.FC<Props> = ({ children }) => {
         </div>
       </Dialog>
       <div className="flex h-screen text-neutral-800 dark:text-neutral-100">
+        {searchTerm !== "" && searchTerm !== undefined && <SearchContainer />}
         {visible && <PostModal isMobile={isMobile} />}
         {shown && <Settings />}
         {showSplash && <LoginSplash />}
@@ -287,7 +291,7 @@ const Divider: React.FC<Props> = ({ children }) => {
               ))}
           </AnimatePresence>
         </div>
-        {!checkLocation() && (
+        {checkLocation() && (
           <>
             <PrimeImage
               src={upperLeftGradient.src}
@@ -302,10 +306,10 @@ const Divider: React.FC<Props> = ({ children }) => {
           </>
         )}
 
-        <main className={`max-h-screen overflow-auto relative w-full`}>
+        <main className={`max-h-screen overflow-auto relative w-full pt-20`}>
           {hidden && (
             <header
-              className={`flex justify-between pt-5 items-center ${
+              className={`flex justify-between pt-5 items-center fixed pe-80 top-0 w-full ${
                 isCollapsed ? "ps-2" : "ps-5"
               } pe-2`}
             >

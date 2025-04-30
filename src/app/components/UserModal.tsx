@@ -1,15 +1,10 @@
 import { useRouter } from "next/navigation";
 import { Dialog } from "primereact/dialog";
-import React from "react";
-import useShowUserModalStore from "../store/showUserModal";
-
-/**
- * Fix the modal not closing when the x button is clicked
- */
+import React, { Dispatch, SetStateAction } from "react";
 
 interface Props {
   visible: boolean;
-  setVisible: (visible: boolean) => void;
+  setVisible: Dispatch<SetStateAction<boolean>>;
   isAdmin: boolean;
   showMyPosts: boolean;
   handleShowSettings: (event: React.MouseEvent) => void;
@@ -23,13 +18,15 @@ const UserModal: React.FC<Props> = ({
   handleLogout,
   handleShowSettings,
   handleShowSettingsMobile,
+  visible,
+  setVisible,
 }) => {
   const router = useRouter();
-  const { setUVisible, uVisible } = useShowUserModalStore();
 
   return (
     <Dialog
-      visible={uVisible}
+      visible={visible}
+      onHide={() => setVisible(false)}
       className="w-96"
       pt={{
         header: {
@@ -40,57 +37,54 @@ const UserModal: React.FC<Props> = ({
         },
         root: { className: "rounded-3xl" },
       }}
-      onHide={() => {
-        setUVisible(false);
-      }}
       header="What would you like to do?"
     >
       {isAdmin && (
         <>
           <div
-            className="w-full h-12 px-5 flex items-center border border-black"
+            className="w-full h-12 cursor-pointer px-5 flex items-center border border-black"
             onClick={() => router.push("/admin/dashboard")}
           >
-            <p>Dashboard</p>
+            <p>View Dashboard</p>
           </div>
         </>
       )}
       {showMyPosts && (
         <div
-          className="w-full h-12 px-5 flex items-center border border-black"
+          className="w-full h-12 cursor-pointer px-5 flex items-center border border-black"
           onClick={() => {
             router.push("/monitoring");
           }}
         >
-          <p className="text-sm font-medium">Monitoring</p>
+          <p className="text-sm font-medium">Check user read count</p>
         </div>
       )}
       <div
-        className="w-full h-12 px-5 flex items-center border border-black"
+        className="w-full h-12 cursor-pointer px-5 flex items-center border border-black"
         onClick={() => {
           router.push("/history");
         }}
       >
-        <p className="text-sm font-medium">History</p>
+        <p className="text-sm font-medium">Check my history</p>
       </div>
       <div
-        className="hidden w-full h-12 px-5 md:flex items-center border border-black"
+        className="hidden w-full h-12 cursor-pointer px-5 md:flex items-center border border-black"
         onClick={handleShowSettings}
       >
-        <p className="text-sm font-medium">Settings</p>
+        <p className="text-sm font-medium">Update my settings</p>
       </div>
 
       <div
-        className="w-full h-12 px-5 flex items-center border border-black md:hidden"
+        className="w-full h-12 cursor-pointer px-5 flex items-center border border-black md:hidden"
         onClick={handleShowSettingsMobile}
       >
-        <p className="text-sm font-medium">Settings</p>
+        <p className="text-sm font-medium">Update my settings</p>
       </div>
       <div
-        className="w-full h-12 px-5 flex items-center border border-black"
+        className="w-full h-12 cursor-pointer px-5 flex items-center border border-black"
         onClick={handleLogout}
       >
-        <p className="text-sm font-medium">Logout</p>
+        <p className="text-sm font-medium">Logout the portal</p>
       </div>
     </Dialog>
   );
