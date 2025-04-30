@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Post } from "../types/types";
 import { Avatar } from "primereact/avatar";
 import { Divider } from "primereact/divider";
@@ -7,6 +7,7 @@ import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
 import { useRouter } from "next/navigation";
 import useActivityBarStore from "../store/activitybar";
+import { decodeUserData } from "../functions/functions";
 
 interface Props {
   item: { createdAt: string; updatedAt: string; post: Post };
@@ -15,6 +16,19 @@ interface Props {
 const HistoryTabItem: React.FC<Props> = ({ item }) => {
   const router = useRouter();
   const { setShowActivityBar } = useActivityBarStore();
+  const [avatarLabel, setAvatarLabel] = useState<string>("");
+
+  useEffect(() => {
+    const fn = decodeUserData()?.firstName;
+    const ln = decodeUserData()?.lastName;
+
+    if (!ln || !fn) return;
+
+    const label = fn[0].toUpperCase() + ln[0].toUpperCase();
+
+    setAvatarLabel(label);
+  }, []);
+
   return (
     <div>
       <div className="flex gap-3 px-6 pt-1">
@@ -22,7 +36,7 @@ const HistoryTabItem: React.FC<Props> = ({ item }) => {
           <Avatar
             className="h-10 w-10 bg-blue-600 text-white text-sm font-bold"
             shape="circle"
-            label="MT"
+            label={avatarLabel}
           />
         </div>
         <div className="flex flex-col gap-1 w-full">

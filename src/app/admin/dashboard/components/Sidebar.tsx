@@ -8,7 +8,6 @@ import Comments from "../pages/Comments";
 import Replies from "../pages/Replies";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import UserButton from "@/app/components/UserButton";
-import useShowUserModalStore from "@/app/store/showUserModal";
 import HoverBox from "@/app/components/HoverBox";
 import { useRouter } from "next/navigation";
 import useAdminHiderStore from "@/app/store/adminOpacitor";
@@ -28,7 +27,6 @@ import Departments from "../pages/Departments";
 const Sidebar = () => {
   const [selectedComp, setSelectedComp] = useState<ReactNode>(<Graphs />);
   const [collapsed, setCollapsed] = useState<boolean>(false);
-  const { uVisible, setUVisible } = useShowUserModalStore();
   const router = useRouter();
   const { aShown, setAShown } = useAdminHiderStore();
   const { addModalShown, setAddModalShown } = addModalStore();
@@ -181,7 +179,7 @@ const Sidebar = () => {
             </div>
             <hr className="border-b border-gray-200 dark:border-neutral-700 mx-4" />
           </div>
-          <UserButton uVisible={uVisible} setUVisible={setUVisible} />
+          <UserButton />
         </motion.div>
       )}
 

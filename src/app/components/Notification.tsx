@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NotificationType } from "../types/types";
 import apiClient from "../http-common/apiUrl";
 import { API_BASE, INTRANET } from "../bindings/binding";
@@ -10,6 +10,7 @@ import { Divider } from "primereact/divider";
 import useCommentIdRedirector from "../store/commentRedirectionId";
 import formatDate from "../utils/functions/formatDate"; // Assuming this exists
 import useActivityBarStore from "../store/activitybar";
+import { decodeUserData } from "../functions/functions";
 
 interface Props {
   notification: NotificationType;
@@ -19,6 +20,18 @@ const Notification: React.FC<Props> = ({ notification }) => {
   const router = useRouter();
   const { setCid } = useCommentIdRedirector();
   const { setShowActivityBar } = useActivityBarStore();
+  const [avatarLabel, setAvatarLabel] = useState<string>("");
+
+  useEffect(() => {
+    const fn = decodeUserData()?.firstName;
+    const ln = decodeUserData()?.lastName;
+
+    if (!ln || !fn) return;
+
+    const label = fn[0].toUpperCase() + ln[0].toUpperCase();
+
+    setAvatarLabel(label);
+  }, []);
 
   const handleClick = async () => {
     try {
@@ -53,7 +66,7 @@ const Notification: React.FC<Props> = ({ notification }) => {
           <Avatar
             className="h-10 w-10 bg-green-600 text-white text-sm font-bold"
             shape="circle"
-            label="NT"
+            label={avatarLabel}
           />
         </div>
         <div className="flex flex-col gap-1 w-full">
