@@ -48,6 +48,7 @@ import { Button } from "primereact/button";
 import useLoginStore from "../store/loggedInStore";
 import searchTermStore from "../store/search";
 import SearchContainer from "./SearchContainer";
+import { SpeedDial } from "primereact/speeddial";
 
 interface Props {
   children?: ReactNode;
@@ -58,7 +59,7 @@ const Divider: React.FC<Props> = ({ children }) => {
   const pathname = usePathname();
   const { hidden } = useNavbarVisibilityStore();
   const { isCollapsed, setIsCollapsed } = useToggleStore();
-  const { visible } = useShowPostStore();
+  const { visible, setVisible } = useShowPostStore();
   const { shown } = useShowSettingsStore();
   const [isMobile, setIsMobile] = useState(false);
   const { showSplash, setShowSplash } = useSplashToggler();
@@ -77,9 +78,25 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { searchTerm } = searchTermStore();
   const { isLoggedIn } = useLoginStore();
 
+  const items = [
+    {
+      label: "Update",
+      icon: "pi pi-pen-to-square",
+      command: () => {
+        setVisible(true);
+      },
+    },
+  ];
+
   useEffect(() => {
     if (!isLoggedIn) setShowActivityBar(false);
   }, [isLoggedIn, setShowActivityBar]);
+
+  useEffect(() => {
+    if (!checkDept()) {
+      setEditVisible(false);
+    }
+  }, []);
 
   useEffect(() => {
     const checkLevel = () => {
@@ -273,7 +290,10 @@ const Divider: React.FC<Props> = ({ children }) => {
             <DeleteModal setShowDeleteModal={setShowDeleteModal} />
           </div>
         )}
-        {showActivityBar && isLoggedIn && <UserActivitiesBar />}
+        <AnimatePresence key={`user-activities-bar`}>
+          {showActivityBar && isLoggedIn && <UserActivitiesBar />}
+        </AnimatePresence>
+
         {openCreateFolderModal && <MainFolderModal />}
         {openSubFolder && <SubFolderModal />}
         {showDeleteFolderModal && <DeleteFolderModal />}
@@ -306,16 +326,21 @@ const Divider: React.FC<Props> = ({ children }) => {
           </>
         )}
 
-        <main className={`max-h-screen overflow-auto relative w-full pt-20`}>
+        <main
+          className={`max-h-screen overflow-auto relative ${
+            !isCollapsed && isLoggedIn ? "w-[80%]" : "w-full"
+          }`}
+        >
           {hidden && (
             <header
-              className={`flex justify-between pt-5 items-center fixed pe-80 top-0 w-full ${
-                isCollapsed ? "ps-2" : "ps-5"
-              } pe-2`}
+              className={`flex justify-between pt-5 items-center ${
+                !isCollapsed ? "w-[80%]" : "w-full"
+              } fixed pe-10 top-0 ${isCollapsed ? "ps-2" : "ps-5"} pe-2`}
             >
               <div className="flex gap-3">
                 {isCollapsed && (
                   <Button
+                    tooltip="Expand Sidebar"
                     icon={`pi pi-expand`}
                     onClick={() => setIsCollapsed(false)}
                   />
@@ -338,14 +363,30 @@ const Divider: React.FC<Props> = ({ children }) => {
             </header>
           )}
           <div
-            className={`mx-auto w-full relative ${
+            className={`mx-auto w-full relative ${isLoggedIn && "pt-20"} ${
               hidden && "max-w-[750px]"
             } px-3 md:px-0`}
           >
             {children}
           </div>
         </main>
-        {/* <Image src={bg} alt="main-bg" fill className="-z-10" /> */}
+        {editVisible && (
+          <SpeedDial
+            model={items}
+            radius={120}
+            type="linear"
+            direction="up"
+            className="bottom-5 right-5"
+            showIcon={`pi pi-sparkles`}
+            hideIcon={`pi pi-times`}
+            pt={{
+              button: {
+                root: { className: "bg-white h-10 w-10" },
+              },
+              action: { className: "bg-white h-10 w-10" },
+            }}
+          />
+        )}
       </div>
     </QueryClientProvider>
   );
