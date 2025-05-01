@@ -49,6 +49,8 @@ import useLoginStore from "../store/loggedInStore";
 import searchTermStore from "../store/search";
 import SearchContainer from "./SearchContainer";
 import { SpeedDial } from "primereact/speeddial";
+import useAddFolderStore from "../store/addFolderDialog";
+import { PrimeIcons } from "primereact/api";
 
 interface Props {
   children?: ReactNode;
@@ -78,13 +80,21 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { searchTerm } = searchTermStore();
   const { isLoggedIn } = useLoginStore();
   const [hydrated, setHydrated] = useState<boolean>(false);
+  const { setAddFolderDialogVisible } = useAddFolderStore();
 
   const items = [
     {
-      label: "Update",
+      label: "Post",
       icon: "pi pi-pen-to-square",
       command: () => {
         setVisible(true);
+      },
+    },
+    {
+      label: "New Folder",
+      icon: PrimeIcons.FOLDER,
+      command: () => {
+        setAddFolderDialogVisible(true);
       },
     },
   ];

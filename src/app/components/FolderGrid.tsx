@@ -17,6 +17,7 @@ import { Toast } from "primereact/toast";
 import SearchV2 from "./SearchV2";
 import { Image } from "primereact/image";
 import folderImg from "../assets/blue-folder.png";
+import useAddFolderStore from "../store/addFolderDialog";
 
 const FolderGrid = () => {
   const [query, setQuery] = useState<Query>({
@@ -33,8 +34,8 @@ const FolderGrid = () => {
     useState<boolean>(false);
   const [folderDialogVisible, setFolderDialogVisible] =
     useState<boolean>(false);
-  const [addFolderDialogVisible, setAddFolderDialogVisible] =
-    useState<boolean>(false);
+  const { addFolderDialogVisible, setAddFolderDialogVisible } =
+    useAddFolderStore();
   const toastRef = useRef<Toast>(null);
 
   const { data, isLoading, refetch } = useQuery({
