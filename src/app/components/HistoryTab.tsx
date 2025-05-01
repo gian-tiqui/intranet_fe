@@ -26,6 +26,14 @@ const HistoryTab = () => {
       </div>
     );
 
+  if (data?.length === 0) {
+    return (
+      <div className="px-6">
+        <p>You haven&apos;t read anything yet.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="h-[70vh] overflow-auto">
       <div className="flex gap-3">

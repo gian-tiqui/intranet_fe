@@ -2,13 +2,13 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { motion, Variants } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import useShowPostStore from "../store/showPostStore";
+
 import UserButton from "./UserButton";
 import { usePathname, useRouter } from "next/navigation";
 import PostList from "../posts/components/PostList";
 import useTokenStore from "../store/tokenStore";
 import { API_BASE, INTRANET } from "../bindings/binding";
-import { checkDept, decodeUserData } from "../functions/functions";
+import { decodeUserData } from "../functions/functions";
 import usePostIdStore from "../store/postId";
 import apiClient from "../http-common/apiUrl";
 import useReadStore from "../store/readStore";
@@ -36,11 +36,10 @@ const Aside: React.FC<Props> = ({
   isMobile,
 }) => {
   const [isChecked, setIsChecked] = useState<boolean>(true);
-  const { setVisible } = useShowPostStore();
+
   const router = useRouter();
   const pathname = usePathname();
   const { setToken } = useTokenStore();
-  const [editVisible, setEditVisible] = useState<boolean>(true);
   const [selectedVis, setSelectedVis] = useState<string>("dept");
   const { postId } = usePostIdStore();
   const { isRead, setIsRead } = useReadStore();
@@ -73,12 +72,6 @@ const Aside: React.FC<Props> = ({
   useEffect(() => {
     setToken(localStorage.getItem(INTRANET) || "");
   }, [setToken]);
-
-  useEffect(() => {
-    if (!checkDept()) {
-      setEditVisible(false);
-    }
-  }, []);
 
   const handleClick = (dest: string) => {
     fetchReadStatus();
@@ -130,9 +123,10 @@ const Aside: React.FC<Props> = ({
       >
         <div
           id="buttons"
-          className="flex justify-between w-full px-3 pt-2 mb-2"
+          className="flex justify-between w-full px-5 pt-5 mb-2"
         >
           <Button
+            tooltip="Collapse Sidebar"
             onClick={
               setIsCollapsed ? () => setIsCollapsed(!isCollapsed) : undefined
             }
@@ -143,15 +137,6 @@ const Aside: React.FC<Props> = ({
               alt="collapse-button"
             />
           </Button>
-
-          {editVisible && (
-            <div
-              onClick={() => setVisible(true)}
-              className="hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
-            >
-              <Icon icon="lucide:edit" className="h-5 w-5" />
-            </div>
-          )}
         </div>
 
         {/* THIS CONTAINS YOUR POSTS/MEMOS */}
@@ -252,15 +237,6 @@ const Aside: React.FC<Props> = ({
           >
             <Icon icon="iconoir:sidebar-collapse" className="h-5 w-5" />
           </div>
-
-          {editVisible && (
-            <div
-              onClick={() => setVisible(true)}
-              className="hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
-            >
-              <Icon icon="lucide:edit" className="h-5 w-5" />
-            </div>
-          )}
         </div>
 
         {/* THIS CONTAINS YOUR POSTS/MEMOS */}

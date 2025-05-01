@@ -30,6 +30,14 @@ const UnreadsTab = () => {
       </div>
     );
 
+  if (unreads?.length === 0) {
+    return (
+      <div className="px-6">
+        <p>No unreads yet. Good job!</p>
+      </div>
+    );
+  }
+
   return (
     <div className="h-[70vh] overflow-auto">
       <div className="flex gap-3">

@@ -82,7 +82,7 @@ const FolderGrid = () => {
   if (isLoading) return <FolderGridSkeleton />;
 
   return (
-    <div className="pt-14 border-b">
+    <div className="pt-14">
       <CustomToast ref={toastRef} />
       <AddFolderDialog
         refetch={refetch}
@@ -128,76 +128,74 @@ const FolderGrid = () => {
 
       <h2></h2>
 
-      <div className="min-h-96 grid grid-cols-3 gap-3 items-start content-start">
-        {data?.folders && data?.folders.length > 0 ? (
-          data.folders.map((folder) => {
-            const folderOverlayRef = React.createRef<OverlayPanel>();
+      <div className="max-h-96 grid grid-cols-3 gap-3 items-start content-start">
+        {data?.folders && data?.folders.length > 0
+          ? data.folders.map((folder) => {
+              const folderOverlayRef = React.createRef<OverlayPanel>();
 
-            return (
-              <div
-                className={`h-32 hover:cursor-pointer p-3 rounded-xl flex flex-col shadow-lg gap-2 justify-between bg-[#EEEEEE]`}
-                key={folder.id}
-                onClick={() => {
-                  setFolderId(folder.id);
-                  setFolderDialogVisible(true);
-                }}
-              >
-                <div className="flex justify-between">
-                  {" "}
-                  <Image
-                    src={folderImg.src}
-                    alt="folder"
-                    className="h-700 w-7"
-                  />
-                  {checkDept() && (
-                    <Button
-                      icon={PrimeIcons.ELLIPSIS_H}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        folderOverlayRef.current?.toggle(e);
-                      }}
-                      className={`h-5 w-5 rounded-full grid place-content-center hover:bg-neutral-400 dark:hover:bg-neutral-700 p-4`}
-                    >
-                      <OverlayPanel
-                        ref={folderOverlayRef}
-                        className="bg-white dark:bg-neutral-900 text-black dark:text-white"
+              return (
+                <div
+                  className={`h-32 hover:cursor-pointer p-3 rounded-xl flex flex-col shadow-lg gap-2 justify-between bg-[#EEEEEE]`}
+                  key={folder.id}
+                  onClick={() => {
+                    setFolderId(folder.id);
+                    setFolderDialogVisible(true);
+                  }}
+                >
+                  <div className="flex justify-between">
+                    {" "}
+                    <Image
+                      src={folderImg.src}
+                      alt="folder"
+                      className="h-700 w-7"
+                    />
+                    {checkDept() && (
+                      <Button
+                        icon={PrimeIcons.ELLIPSIS_H}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          folderOverlayRef.current?.toggle(e);
+                        }}
+                        className={`h-5 w-5 rounded-full grid place-content-center hover:bg-neutral-400 dark:hover:bg-neutral-700 p-4`}
                       >
-                        <div className="flex flex-col gap-1">
-                          <Button
-                            icon={`${PrimeIcons.USER_EDIT} text-lg`}
-                            className="gap-2"
-                            onClick={() => handleRenameClick(folder.id)}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            onClick={() => {
-                              confirmDialog({
-                                message:
-                                  "Are you sure you want to delete the folder?",
-                                header: "Delete folder",
-                                icon: "pi pi-exclamation-triangle",
-                                defaultFocus: "accept",
-                                accept: () => handleDeleteFolder(folder.id),
-                              });
-                            }}
-                            icon={`${PrimeIcons.TRASH} text-lg`}
-                            className="gap-2"
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      </OverlayPanel>
-                    </Button>
-                  )}
+                        <OverlayPanel
+                          ref={folderOverlayRef}
+                          className="bg-white dark:bg-neutral-900 text-black dark:text-white"
+                        >
+                          <div className="flex flex-col gap-1">
+                            <Button
+                              icon={`${PrimeIcons.USER_EDIT} text-lg`}
+                              className="gap-2"
+                              onClick={() => handleRenameClick(folder.id)}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                confirmDialog({
+                                  message:
+                                    "Are you sure you want to delete the folder?",
+                                  header: "Delete folder",
+                                  icon: "pi pi-exclamation-triangle",
+                                  defaultFocus: "accept",
+                                  accept: () => handleDeleteFolder(folder.id),
+                                });
+                              }}
+                              icon={`${PrimeIcons.TRASH} text-lg`}
+                              className="gap-2"
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        </OverlayPanel>
+                      </Button>
+                    )}
+                  </div>
+                  <p className="text-sm font-semibold">{folder.name}</p>
                 </div>
-                <p className="text-sm font-semibold">{folder.name}</p>
-              </div>
-            );
-          })
-        ) : (
-          <p>No folders found</p>
-        )}
+              );
+            })
+          : null}
       </div>
     </div>
   );

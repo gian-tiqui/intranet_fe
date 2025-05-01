@@ -33,6 +33,14 @@ const HistoryTab = () => {
       </div>
     );
 
+  if (notifications?.length === 0) {
+    return (
+      <div className="px-6">
+        <p>No notifications yet.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="h-[70vh] overflow-auto">
       <div className="flex gap-3">

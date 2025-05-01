@@ -29,7 +29,13 @@ const UserActivitiesBar = () => {
   ];
 
   return (
-    <motion.div className="h-screen w-96 absolute right-0 bg-[#EEEEEE] shadow-lg z-20 pt-6">
+    <motion.div
+      initial={{ opacity: 0, x: 70 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0, duration: 0.3, ease: "easeInOut" }}
+      exit={{ opacity: 0, x: 70 }}
+      className="h-screen w-96 absolute right-0 bg-[#EEEEEE] shadow-lg z-20 pt-6"
+    >
       <Button
         className="h-7 w-7 ms-6 mb-10"
         onClick={() => setShowActivityBar(false)}
