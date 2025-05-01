@@ -77,6 +77,7 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { updatedDialogShown, setUpdateDialogShown } = useUpdateDialogStore();
   const { searchTerm } = searchTermStore();
   const { isLoggedIn } = useLoginStore();
+  const [hydrated, setHydrated] = useState<boolean>(false);
 
   const items = [
     {
@@ -87,6 +88,10 @@ const Divider: React.FC<Props> = ({ children }) => {
       },
     },
   ];
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
 
   useEffect(() => {
     if (!isLoggedIn) setShowActivityBar(false);
@@ -328,14 +333,14 @@ const Divider: React.FC<Props> = ({ children }) => {
 
         <main
           className={`max-h-screen overflow-auto relative ${
-            !isCollapsed && isLoggedIn ? "w-[80%]" : "w-full"
+            hydrated && isLoggedIn && !isCollapsed ? "w-[80%]" : "w-full"
           }`}
         >
           {hidden && (
             <header
               className={`flex justify-between pt-5 items-center ${
                 !isCollapsed ? "w-[80%]" : "w-full"
-              } fixed pe-10 top-0 ${isCollapsed ? "ps-2" : "ps-5"} pe-2`}
+              } fixed pe-10 top-0 ${isCollapsed ? "ps-2" : "ps-5"} pe-10`}
             >
               <div className="flex gap-3">
                 {isCollapsed && (
@@ -363,14 +368,14 @@ const Divider: React.FC<Props> = ({ children }) => {
             </header>
           )}
           <div
-            className={`mx-auto w-full relative ${isLoggedIn && "pt-20"} ${
-              hidden && "max-w-[750px]"
-            } px-3 md:px-0`}
+            className={`mx-auto w-full relative ${
+              hydrated && isLoggedIn && "pt-20"
+            } ${hidden && "max-w-[750px]"} px-3 md:px-0`}
           >
             {children}
           </div>
         </main>
-        {editVisible && (
+        {editVisible && isLoggedIn && (
           <SpeedDial
             model={items}
             radius={120}

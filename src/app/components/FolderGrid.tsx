@@ -82,7 +82,7 @@ const FolderGrid = () => {
   if (isLoading) return <FolderGridSkeleton />;
 
   return (
-    <div className="pt-14">
+    <div className="pt-36">
       <CustomToast ref={toastRef} />
       <AddFolderDialog
         refetch={refetch}

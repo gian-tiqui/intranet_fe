@@ -21,7 +21,7 @@ const SearchV2 = () => {
   return (
     <form
       onSubmit={handleSubmit(handleSearch)}
-      className="bg-[#EEEEEE] w-full h-16 mt-4 rounded-full justify-between border-2 p-2 border-black mb-6 flex items-center ps-7"
+      className="bg-[#EEEEEE] w-full h-18 mt-4 rounded-full justify-between border-2 p-1 border-black mb-6 flex items-center ps-7"
     >
       <input
         type="text"
@@ -30,7 +30,7 @@ const SearchV2 = () => {
         placeholder="Search here..."
       />
       <Button
-        className="bg-white rounded-full shadow-xl h-12 w-32 border justify-center gap-2"
+        className="bg-white rounded-full shadow-xl h-14 w-40 border justify-center gap-2"
         icon={`${PrimeIcons.SEARCH}`}
       >
         Search

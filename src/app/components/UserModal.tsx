@@ -37,12 +37,12 @@ const UserModal: React.FC<Props> = ({
         },
         root: { className: "rounded-3xl" },
       }}
-      header="What would you like to do?"
+      header={`What would you like to do? `}
     >
       {isAdmin && (
         <>
           <div
-            className="w-full h-12 cursor-pointer px-5 flex items-center border border-black"
+            className="w-full h-12 cursor-pointer px-5 flex items-center border border-black hover:bg-gray-200"
             onClick={() => router.push("/admin/dashboard")}
           >
             <p>View Dashboard</p>
@@ -51,7 +51,7 @@ const UserModal: React.FC<Props> = ({
       )}
       {showMyPosts && (
         <div
-          className="w-full h-12 cursor-pointer px-5 flex items-center border border-black"
+          className="w-full h-12 cursor-pointer px-5 flex items-center border border-black hover:bg-gray-200"
           onClick={() => {
             router.push("/monitoring");
           }}
@@ -59,29 +59,22 @@ const UserModal: React.FC<Props> = ({
           <p className="text-sm font-medium">Check user read count</p>
         </div>
       )}
+
       <div
-        className="w-full h-12 cursor-pointer px-5 flex items-center border border-black"
-        onClick={() => {
-          router.push("/history");
-        }}
-      >
-        <p className="text-sm font-medium">Check my history</p>
-      </div>
-      <div
-        className="hidden w-full h-12 cursor-pointer px-5 md:flex items-center border border-black"
+        className="hidden w-full h-12 cursor-pointer px-5 md:flex items-center border border-black hover:bg-gray-200"
         onClick={handleShowSettings}
       >
         <p className="text-sm font-medium">Update my settings</p>
       </div>
 
       <div
-        className="w-full h-12 cursor-pointer px-5 flex items-center border border-black md:hidden"
+        className="w-full h-12 cursor-pointer px-5 flex items-center border border-black md:hidden hover:bg-gray-200"
         onClick={handleShowSettingsMobile}
       >
         <p className="text-sm font-medium">Update my settings</p>
       </div>
       <div
-        className="w-full h-12 cursor-pointer px-5 flex items-center border border-black"
+        className="w-full h-12 cursor-pointer px-5 flex items-center border border-black hover:bg-gray-200"
         onClick={handleLogout}
       >
         <p className="text-sm font-medium">Logout the portal</p>

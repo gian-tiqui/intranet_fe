@@ -19,39 +19,42 @@ interface Props {
 }
 
 const UserButton: React.FC<Props> = () => {
-  const [settingsDialogVisible, setSettingsDialogVisible] =
-    useState<boolean>(false);
+  const [settingsDialogVisible, setSettingsDialogVisible] = useState(false);
   const { setShowLogoutArt } = useLogoutArtStore();
   const { setHidden } = useNavbarVisibilityStore();
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
   const { setIsLoggedIn } = useLoginStore();
-  const [showUserModal, setShowUserModal] = useState<boolean>(false);
+  const [showUserModal, setShowUserModal] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [showMyPosts, setShowMyPosts] = useState(false);
   const [userData, setUserData] = useState<{
     firstName: string;
     lastName: string;
     departmentName: string;
   } | null>(null);
+
   const router = useRouter();
-  const [showMyPosts, setShowMyPosts] = useState<boolean>(false);
 
   useEffect(() => {
-    const checkRole = () => {
-      const userDept = decodeUserData()?.departmentCode;
-
-      if (userDept?.toLowerCase() === "it") setIsAdmin(true);
-    };
-
-    checkRole();
+    const data = decodeUserData();
+    if (data) {
+      setUserData(data);
+      const dept = data.departmentCode?.toLowerCase();
+      if (dept === "it") setIsAdmin(true);
+      if (["hr", "qm", "admin"].includes(dept)) setShowMyPosts(true);
+    }
+    setLoading(false);
   }, []);
 
   const handleLogout = async (event: React.MouseEvent) => {
+    event.stopPropagation();
+
     const userId = decodeUserData()?.sub;
 
     if (userId) {
       try {
         const response = await apiClient.post(`${API_BASE}/auth/logout`, {
-          userId: userId,
+          userId,
         });
 
         toast(response.data.message, {
@@ -62,13 +65,11 @@ const UserButton: React.FC<Props> = () => {
         setIsLoggedIn(false);
       } catch (error) {
         console.error(error);
-
         const { message } = error as { message: string };
         toast(message, { type: "error", className: toastClass });
       }
     }
 
-    event.stopPropagation();
     setShowLogoutArt(true);
     setHidden(false);
     Cookies.remove(INTRANET);
@@ -76,39 +77,18 @@ const UserButton: React.FC<Props> = () => {
     router.push("/login");
   };
 
-  useEffect(() => {
-    const data = decodeUserData();
-    if (data) {
-      setUserData(data);
-    }
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    const dept = decodeUserData()?.departmentCode.toLowerCase();
-    if (dept && ["hr", "qm", "admin"].includes(dept)) setShowMyPosts(true);
-  }, []);
-
   const handleShowSettings = (event: React.MouseEvent) => {
     event.stopPropagation();
-    // setShown(true);
     setSettingsDialogVisible(true);
   };
 
   const handleShowSettingsMobile = (event: React.MouseEvent) => {
     event.stopPropagation();
-    // setHidden(false);
-    // setShown(true);
     setSettingsDialogVisible(true);
   };
 
   return (
-    <div
-      className="px-3 mb-3 relative"
-      onClick={() => {
-        setShowUserModal(true);
-      }}
-    >
+    <div className="px-3 mb-3">
       <UserModal
         visible={showUserModal}
         setVisible={setShowUserModal}
@@ -118,26 +98,31 @@ const UserButton: React.FC<Props> = () => {
         handleShowSettingsMobile={handleShowSettingsMobile}
         handleLogout={handleLogout}
       />
+
       <SettingsDialog
-        setVisible={setSettingsDialogVisible}
         visible={settingsDialogVisible}
+        setVisible={setSettingsDialogVisible}
       />
 
-      <div className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg">
+      <div
+        className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg"
+        onClick={() => setShowUserModal(true)}
+      >
         {userData && (
           <Avatar
-            label={userData?.firstName[0] + userData?.lastName[0]}
+            label={userData.firstName[0] + userData.lastName[0]}
             shape="circle"
             className="font-bold bg-blue-500 text-white"
           />
         )}
-
         <div>
           {loading ? (
             <p className="text-sm">Loading...</p>
           ) : userData ? (
             <>
-              <p className="text-sm">{`${userData.firstName} ${userData.lastName}`}</p>
+              <p className="text-sm">
+                {`${userData.firstName} ${userData.lastName}`}
+              </p>
               <p className="text-xs truncate">{userData.departmentName}</p>
             </>
           ) : (
