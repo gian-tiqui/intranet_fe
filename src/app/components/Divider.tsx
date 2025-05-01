@@ -375,7 +375,7 @@ const Divider: React.FC<Props> = ({ children }) => {
             {children}
           </div>
         </main>
-        {editVisible && isLoggedIn && (
+        {editVisible && isLoggedIn && hydrated && (
           <SpeedDial
             model={items}
             radius={120}
