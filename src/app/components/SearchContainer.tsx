@@ -5,10 +5,13 @@ import { PrimeIcons } from "primereact/api";
 import useShowSearchStore from "../store/showSearch";
 import { Image } from "primereact/image";
 import wmcLogo from "../assets/westlake_logo_horizontal.jpg.png";
-import { Query } from "../types/types";
+import { Folder, Post, Query, User } from "../types/types";
 import { useQuery } from "@tanstack/react-query";
 import { search } from "../utils/service/searchService";
 import { useForm } from "react-hook-form";
+import UserSearchItem from "./UserSearchItem";
+import PostSearchItem from "./PostSearchItem";
+import FolderSearchItem from "./FolderSearchItem";
 
 interface FormFields {
   searchTerm: string;
@@ -20,7 +23,7 @@ const SearchContainer = () => {
   const [query, setQuery] = useState<Query>({
     search: searchTerm,
     skip: 0,
-    take: 10,
+    take: 5,
   });
 
   const { register, handleSubmit } = useForm<FormFields>({
@@ -85,13 +88,58 @@ const SearchContainer = () => {
           ></Button>
         </div>
       </header>
-      <section>
+      <section className="p-4 flex flex-col items-center w-full gap-1 h-96">
         {isLoading && <p>Loading...</p>}
         {isError && (
           <p>There was a problem with your search. Try again later.</p>
         )}
-        {JSON.stringify(data?.data)}
+        <p>Results for this search: {data?.data.total}</p>
+        {data?.data.results.map(
+          (item: { type: string; data: Post | Folder | User }) => {
+            switch (item.type) {
+              case "post":
+                const post: Post = item.data as Post;
+
+                return (
+                  <PostSearchItem
+                    type={item.type}
+                    key={post.pid}
+                    post={post}
+                    handleClose={handleClose}
+                  />
+                );
+                break;
+              case "folder":
+                const folder: Folder = item.data as Folder;
+
+                return (
+                  <FolderSearchItem
+                    type={item.type}
+                    key={folder.id}
+                    folder={folder}
+                    handleClose={handleClose}
+                  />
+                );
+                break;
+              case "user":
+                const user: User = item.data as User;
+
+                return (
+                  <UserSearchItem
+                    key={user.id}
+                    type={item.type}
+                    user={user}
+                    handleClose={handleClose}
+                  />
+                );
+                break;
+              default:
+                return <p>There was an error in this item</p>;
+            }
+          }
+        )}
       </section>
+      <footer className="w-[43%] mx-auto mt-5">test</footer>
     </div>
   );
 };

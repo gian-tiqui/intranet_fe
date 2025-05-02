@@ -18,6 +18,8 @@ import SearchV2 from "./SearchV2";
 import { Image } from "primereact/image";
 import folderImg from "../assets/blue-folder.png";
 import useAddFolderStore from "../store/addFolderDialog";
+import folderIdStore from "../store/folderId";
+import useFolderDialogVisibleStore from "../store/folderDialog";
 
 const FolderGrid = () => {
   const [query, setQuery] = useState<Query>({
@@ -28,12 +30,13 @@ const FolderGrid = () => {
   });
   const [searchTerm] = useState<string>("");
   const { signal, setSignal } = useSignalStore();
-  const [folderId, setFolderId] = useState<number>();
+  const { folderId, setFolderId } = folderIdStore();
   const [editFolderId, setEditFolderId] = useState<number>();
   const [editFolderDialogVisible, setEditFolderDialogVisible] =
     useState<boolean>(false);
-  const [folderDialogVisible, setFolderDialogVisible] =
-    useState<boolean>(false);
+
+  const { folderDialogVisible, setFolderDialogVisible } =
+    useFolderDialogVisibleStore();
   const { addFolderDialogVisible, setAddFolderDialogVisible } =
     useAddFolderStore();
   const toastRef = useRef<Toast>(null);

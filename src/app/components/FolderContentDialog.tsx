@@ -1,12 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Dialog } from "primereact/dialog";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { checkDept, getFolderById } from "../functions/functions";
 import {
   deleteFolder,
@@ -29,9 +23,9 @@ import { Image } from "primereact/image";
 
 interface Props {
   visible: boolean;
-  setVisible: Dispatch<SetStateAction<boolean>>;
+  setVisible: (visible: boolean) => void;
   folderId: number | undefined;
-  setFolderId: Dispatch<SetStateAction<number | undefined>>;
+  setFolderId: (folderId: number) => void;
 }
 
 const FolderContentDialog: React.FC<Props> = ({

@@ -51,6 +51,7 @@ import { SpeedDial } from "primereact/speeddial";
 import useAddFolderStore from "../store/addFolderDialog";
 import { PrimeIcons } from "primereact/api";
 import useShowSearchStore from "../store/showSearch";
+import UserProfileDialog from "./UserProfileDialog";
 
 interface Props {
   children?: ReactNode;
@@ -293,6 +294,7 @@ const Divider: React.FC<Props> = ({ children }) => {
           </ul>
         </div>
       </Dialog>
+      <UserProfileDialog />
       <div className="flex h-screen text-neutral-800 dark:text-neutral-100">
         {showSearch && <SearchContainer />}
         {visible && <PostModal isMobile={isMobile} />}
@@ -348,7 +350,7 @@ const Divider: React.FC<Props> = ({ children }) => {
         >
           {hidden && (
             <header
-              className={`flex justify-between pt-5 items-center ${
+              className={`flex justify-between items-center backdrop-blur bg-slate-100/10 z-10 h-20 ${
                 !isCollapsed ? "w-[80%]" : "w-full"
               } fixed pe-10 top-0 ${isCollapsed ? "ps-2" : "ps-5"} pe-10`}
             >
