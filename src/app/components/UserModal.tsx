@@ -53,6 +53,7 @@ const UserModal: React.FC<Props> = ({
         <div
           className="w-full h-12 cursor-pointer px-5 flex items-center border border-black hover:bg-gray-200"
           onClick={() => {
+            setVisible(false);
             router.push("/monitoring");
           }}
         >
@@ -62,20 +63,29 @@ const UserModal: React.FC<Props> = ({
 
       <div
         className="hidden w-full h-12 cursor-pointer px-5 md:flex items-center border border-black hover:bg-gray-200"
-        onClick={handleShowSettings}
+        onClick={(e) => {
+          handleShowSettings(e);
+          setVisible(false);
+        }}
       >
         <p className="text-sm font-medium">Update my settings</p>
       </div>
 
       <div
         className="w-full h-12 cursor-pointer px-5 flex items-center border border-black md:hidden hover:bg-gray-200"
-        onClick={handleShowSettingsMobile}
+        onClick={(e) => {
+          handleShowSettingsMobile(e);
+          setVisible(false);
+        }}
       >
         <p className="text-sm font-medium">Update my settings</p>
       </div>
       <div
         className="w-full h-12 cursor-pointer px-5 flex items-center border border-black hover:bg-gray-200"
-        onClick={handleLogout}
+        onClick={(e) => {
+          handleLogout(e);
+          setVisible(false);
+        }}
       >
         <p className="text-sm font-medium">Logout the portal</p>
       </div>
