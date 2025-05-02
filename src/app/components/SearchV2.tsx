@@ -3,6 +3,7 @@ import { Button } from "primereact/button";
 import React from "react";
 import { useForm } from "react-hook-form";
 import searchTermStore from "../store/search";
+import useShowSearchStore from "../store/showSearch";
 
 interface FormFields {
   searchTerm: string;
@@ -11,10 +12,12 @@ interface FormFields {
 const SearchV2 = () => {
   const { handleSubmit, register, reset } = useForm<FormFields>();
   const { setSearchTerm } = searchTermStore();
+  const { setShowSearch } = useShowSearchStore();
   const handleSearch = (data: FormFields) => {
     if (!data.searchTerm) return;
 
     setSearchTerm(data.searchTerm);
+    setShowSearch(true);
     reset();
   };
 

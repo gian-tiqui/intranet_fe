@@ -161,6 +161,11 @@ const FolderContentDialog: React.FC<Props> = ({
         className="w-[65%] h-[75vh]"
         header={<p className="ms-6">{folderData?.name || "Folder"}</p>}
       >
+        <Button
+          icon={`${PrimeIcons.PLUS}`}
+          onClick={() => setAddSubfolder(true)}
+          className="absolute right-16 bottom-10 bg-white rounded-full h-10 w-10 shadow-xl border z-10"
+        />
         <AddSubfolderDialog
           refetchFolders={refetchSubfolders}
           parentId={folderId}

@@ -46,11 +46,11 @@ import UserActivitiesBar from "./UserActivitiesBar";
 import useActivityBarStore from "../store/activitybar";
 import { Button } from "primereact/button";
 import useLoginStore from "../store/loggedInStore";
-import searchTermStore from "../store/search";
 import SearchContainer from "./SearchContainer";
 import { SpeedDial } from "primereact/speeddial";
 import useAddFolderStore from "../store/addFolderDialog";
 import { PrimeIcons } from "primereact/api";
+import useShowSearchStore from "../store/showSearch";
 
 interface Props {
   children?: ReactNode;
@@ -77,10 +77,10 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { openSubFolder } = useSubFolderStore();
   const { showDeleteFolderModal } = deleteFolderStore();
   const { updatedDialogShown, setUpdateDialogShown } = useUpdateDialogStore();
-  const { searchTerm } = searchTermStore();
   const { isLoggedIn } = useLoginStore();
   const [hydrated, setHydrated] = useState<boolean>(false);
   const { setAddFolderDialogVisible } = useAddFolderStore();
+  const { showSearch } = useShowSearchStore();
 
   const items = [
     {
@@ -294,7 +294,7 @@ const Divider: React.FC<Props> = ({ children }) => {
         </div>
       </Dialog>
       <div className="flex h-screen text-neutral-800 dark:text-neutral-100">
-        {searchTerm !== "" && searchTerm !== undefined && <SearchContainer />}
+        {showSearch && <SearchContainer />}
         {visible && <PostModal isMobile={isMobile} />}
         {shown && <Settings />}
         {showSplash && <LoginSplash />}
