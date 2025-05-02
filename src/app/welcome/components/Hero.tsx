@@ -54,7 +54,7 @@ const Hero = () => {
         <div className="rounded-3xl col-span-3 relative bg-black">
           <Image src={wmcFacade} alt="WMC Facade" fill />
           <div className="absolute top-0 left-0 text-blue-600 font-semibold text-5xl">
-            <div className="bg-[#CBD5E1] pe-8 rounded-br-3xl pb-6">
+            <div className="bg-[#CBD5E1] pe-8 rounded-br-3xl pb-6 shadow-lg">
               <motion.p
                 initial={{ opacity: 0, x: -70 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -63,7 +63,7 @@ const Hero = () => {
                 Employee
               </motion.p>
             </div>
-            <div className="bg-[#CBD5E1] w-40 rounded-br-3xl pb-6">
+            <div className="bg-[#CBD5E1] w-40 rounded-br-3xl pb-6 shadow-lg shadow-">
               <motion.p
                 initial={{ opacity: 0, x: -70 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -144,13 +144,23 @@ const Hero = () => {
               alt="Ms. Marie Ana Alvarez"
               className="h-48 w-48 absolute bottom-0 right-10 "
             />
-            <div className="h-10 text-blue-600 flex items-center rounded-full justify-center w-48 bg-[#EEEEEE] font-medium text-lg">
+            <motion.div
+              initial={{ opacity: 0, y: -30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 1 }}
+              className="h-10 text-blue-600 flex items-center rounded-full justify-center w-48 bg-[#EEEEEE] font-medium text-lg"
+            >
               Posting
-            </div>
-            <div className="text-center text-white w-44">
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 1 }}
+              className="text-center text-white w-44"
+            >
               <p className="">Know more about us</p>
               <p className="text-lg font-medium">2.1k</p>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>

@@ -9,7 +9,7 @@ const Footer = () => {
         className="text-blue-600 font-medium"
         initial={{ opacity: 0, y: 0 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.3, duration: 1 }}
+        transition={{ delay: 1.7, duration: 1 }}
       >
         Powered by Westlake Medical Center ICT Department
       </motion.p>
