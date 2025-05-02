@@ -1,6 +1,7 @@
 import { API_BASE } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
 import { Query, User } from "@/app/types/types";
+import { AxiosResponse } from "axios";
 
 const addUser = async (data: User) => {
   return apiClient.post(`${API_BASE}/auth/register`, { ...data });
@@ -10,7 +11,9 @@ const findUsers = async (params: Query) => {
   return apiClient.get(`${API_BASE}/users`, { params });
 };
 
-const findUserById = async (id: number | undefined) => {
+const findUserById = async (
+  id: number | undefined
+): Promise<AxiosResponse<{ user: User }>> => {
   return apiClient.get(`${API_BASE}/users/${id}`);
 };
 
