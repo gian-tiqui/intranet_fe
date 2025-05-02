@@ -10,14 +10,13 @@ interface Props {
   type: string;
 }
 
-const UserSearchItem: React.FC<Props> = ({ user, handleClose, type }) => {
+const UserSearchItem: React.FC<Props> = ({ user, type }) => {
   const { setUserProfileVisible } = useUserProfileStore();
   const { setUserId } = useUserIdStore();
 
   const handleClick = () => {
     setUserId(user.id);
     setUserProfileVisible(true);
-    handleClose();
   };
 
   return (
