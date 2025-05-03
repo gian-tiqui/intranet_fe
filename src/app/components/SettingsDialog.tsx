@@ -26,7 +26,7 @@ const SettingsDialog: React.FC<Props> = ({ setVisible, visible }) => {
           setVisible(false);
         }
       }}
-      className="h-[85vh] w-[95%] md:w-[35%]"
+      className="h-[65vh] w-[95%] md:w-[35%]"
       header={"Settings"}
     >
       <TabView
@@ -44,7 +44,10 @@ const SettingsDialog: React.FC<Props> = ({ setVisible, visible }) => {
         </TabPanel>
         <TabPanel
           header="Password"
-          pt={{ headerAction: { className: "bg-inherit" } }}
+          pt={{
+            headerAction: { className: "bg-inherit" },
+            content: { className: "grid place-content-center" },
+          }}
         >
           <Password />
         </TabPanel>
