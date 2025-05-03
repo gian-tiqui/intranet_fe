@@ -5,6 +5,9 @@ import apiClient from "../http-common/apiUrl";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import { decodeUserData } from "../functions/functions";
 import { toastClass } from "../tailwind-classes/tw_classes";
+import { Button } from "primereact/button";
+import MotionP from "./animation/MotionP";
+import { InputText } from "primereact/inputtext";
 
 interface FormFields {
   currentPassword: string;
@@ -13,7 +16,12 @@ interface FormFields {
 }
 
 const Password = () => {
-  const { register, handleSubmit, reset } = useForm<FormFields>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormFields>();
 
   const onPasswordReset = async (data: FormFields) => {
     const userId = decodeUserData()?.sub;
@@ -50,57 +58,71 @@ const Password = () => {
   };
 
   return (
-    <form
-      className="flex w-72 mx-auto md:w-96 flex-col gap-4 p-4 border rounded-md shadow-md bg-white dark:bg-neutral-900 dark:border-black"
-      onSubmit={handleSubmit(onPasswordReset)}
-    >
-      <h2 className="text-xl font-semibold text-center">Change Password</h2>
-
-      <div className="flex flex-col">
-        <label htmlFor="currentPassword" className="text-sm font-medium">
+    <form className="w-96  mx-auto" onSubmit={handleSubmit(onPasswordReset)}>
+      <div className="flex flex-col h-24">
+        <label htmlFor="currentPassword" className="text-xs font-medium">
           Current Password
         </label>
-        <input
+        <InputText
           type="password"
           id="currentPassword"
-          placeholder="Enter current password"
-          className="mt-1 p-2 border rounded-md bg-inherit outline-none"
-          {...register("currentPassword", { required: true })}
+          placeholder="********"
+          className="mt-1 p-2 border rounded-md bg-inherit outline-none bg-white mb-1 text-sm h-10 px-3 border-black"
+          {...register("currentPassword", {
+            required: "Current password is required",
+          })}
         />
+        {errors.currentPassword && (
+          <MotionP className="text-xs text-red-600">
+            {errors.currentPassword.message}
+          </MotionP>
+        )}
       </div>
 
-      <div className="flex flex-col">
-        <label htmlFor="newPassword" className="text-sm font-medium">
+      <div className="flex flex-col h-24">
+        <label htmlFor="newPassword" className="text-xs font-medium">
           New Password
         </label>
-        <input
+        <InputText
           type="password"
           id="newPassword"
-          placeholder="Enter new password"
-          className="mt-1 p-2 border rounded-md bg-inherit outline-none"
-          {...register("newPassword", { required: true })}
+          placeholder="********"
+          className="mt-1 p-2 border rounded-md bg-inherit outline-none bg-white mb-1 text-sm h-10 px-3 border-black"
+          {...register("newPassword", { required: "New password is required" })}
         />
+        {errors.newPassword && (
+          <MotionP className="text-xs text-red-600">
+            {errors.newPassword.message}
+          </MotionP>
+        )}
       </div>
 
-      <div className="flex flex-col">
-        <label htmlFor="confirmNewPassword" className="text-sm font-medium">
+      <div className="flex flex-col h-24 mb-4">
+        <label htmlFor="confirmNewPassword" className="text-xs font-medium">
           Confirm New Password
         </label>
-        <input
+        <InputText
           type="password"
           id="confirmNewPassword"
-          placeholder="Re-enter new password"
-          className="mt-1 p-2 border rounded-md bg-inherit outline-none"
-          {...register("confirmNewPassword", { required: true })}
+          placeholder="********"
+          className="mt-1 p-2 border rounded-md bg-inherit outline-none flex bg-white mb-1 text-sm h-10 px-3 border-black"
+          {...register("confirmNewPassword", {
+            required: "Please enter your new password again",
+          })}
         />
+        {errors.confirmNewPassword && (
+          <MotionP className="text-xs text-red-600">
+            {errors.confirmNewPassword.message}
+          </MotionP>
+        )}
       </div>
 
-      <button
+      <Button
         type="submit"
-        className="p-2 bg-neutral-900 text-white font-medium rounded-md hover:bg-neutral-800 transition dark:bg-white dark:text-black dark:hover:bg-neutral-200"
+        className="p-2 bg-blue-600 w-full text-white justify-center font-bold h-10"
       >
         Save Password
-      </button>
+      </Button>
     </form>
   );
 };

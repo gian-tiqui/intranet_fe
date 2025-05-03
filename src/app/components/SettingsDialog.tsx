@@ -14,10 +14,11 @@ const SettingsDialog: React.FC<Props> = ({ setVisible, visible }) => {
   return (
     <Dialog
       pt={{
-        header: { className: "dark:bg-neutral-950 dark:text-white" },
+        header: { className: "rounded-t-2xl bg-[#CBD5E1]" },
         content: {
-          className: "bg-neutral-100 dark:bg-neutral-900 dark:text-white",
+          className: "rounded-b-2xl bg-[#CBD5E1]",
         },
+        root: { className: "rounded-2xl" },
       }}
       visible={visible}
       onHide={() => {
