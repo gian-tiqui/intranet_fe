@@ -113,7 +113,7 @@ const ForgotPasswordForm = () => {
             </label>
             <InputText
               id="idInput"
-              {...register("employeeId", { required: true })}
+              {...register("employeeId", { required: "Your id is required" })}
               placeholder="Enter your ID"
               className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
             />
@@ -149,13 +149,13 @@ const ForgotPasswordForm = () => {
             </label>
             <InputText
               id="idInput"
-              {...register("answer", { required: true })}
+              {...register("answer", { required: "Your answer is required" })}
               placeholder="Enter your ID"
               className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
             />
             {errors.answer && (
               <MotionP className="text-red-500 text-xs font-semibold">
-                {errors.employeeId?.message}
+                {errors.answer?.message}
               </MotionP>
             )}
           </div>

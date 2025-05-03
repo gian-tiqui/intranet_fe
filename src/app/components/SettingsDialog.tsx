@@ -14,7 +14,9 @@ const SettingsDialog: React.FC<Props> = ({ setVisible, visible }) => {
   return (
     <Dialog
       pt={{
-        header: { className: "rounded-t-2xl bg-[#CBD5E1]" },
+        header: {
+          className: "rounded-t-2xl bg-[#CBD5E1]",
+        },
         content: {
           className: "rounded-b-2xl bg-[#CBD5E1]",
         },
@@ -33,12 +35,14 @@ const SettingsDialog: React.FC<Props> = ({ setVisible, visible }) => {
         className="mt-5"
         pt={{
           panelContainer: { className: "bg-inherit" },
-          nav: { className: "bg-inherit" },
+          nav: { className: "bg-inherit border-b border-black" },
         }}
       >
         <TabPanel
           header="User Profile"
-          pt={{ headerAction: { className: "bg-inherit" } }}
+          pt={{
+            headerAction: { className: "bg-inherit  " },
+          }}
         >
           <UserInfo />
         </TabPanel>

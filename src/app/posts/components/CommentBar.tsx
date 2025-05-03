@@ -8,6 +8,7 @@ import apiClient from "@/app/http-common/apiUrl";
 import { decodeUserData } from "@/app/functions/functions";
 import { useRouter } from "next/navigation";
 import useSignalStore from "@/app/store/signalStore";
+import { Button } from "primereact/button";
 
 interface Props {
   postId?: number;
@@ -107,25 +108,28 @@ const CommentBar: React.FC<Props> = ({
   return (
     <form
       onSubmit={handleSubmit(handleCommentSubmit)}
-      className="sticky bottom-0 pb-8 bg-neutral-200/70 dark:bg-neutral-900/70 backdrop-blur rounded-t-3xl"
+      className="sticky bottom-0 pb-8 backdrop-blur rounded-t-3xl"
     >
-      <div className="w-full h-auto rounded-3xl rounded-b-3xl bg-white dark:bg-neutral-700 ps-6 cursor-text flex items-end gap-3 px-3 py-[10px] border dark:border-neutral-900">
+      <div className="w-full h-auto rounded-3xl rounded-b-3xl bg-[#EEEEEE] ps-6 cursor-text flex items-end gap-3 px-3 py-[10px] border dark:border-neutral-900">
         <textarea
           {...register("message", { required: true })}
           placeholder="Write your feedback here."
-          className="w-full outline-none px-2 resize-none overflow-hidden min-h-8 max-h-[200px] dark:bg-neutral-700"
+          className="w-full outline-none px-2 resize-none overflow-hidden min-h-8 max-h-[200px] bg-inherit"
           rows={1}
           onInput={handleInput}
         />
         {spamming ? (
           <Icon icon={"line-md:loading-loop"} className="h-8 w-8" />
         ) : (
-          <button
+          <Button
             type="submit"
-            className="bg-neutral-200 rounded-2xl grid place-content-center h-9 w-10 dark:bg-neutral-500 hover:bg-neutral-300 dark:hover:bg-neutral-800"
+            className="bg-blue-600 rounded-2xl grid place-content-center h-9 w-10"
           >
-            <Icon icon={"mi:send"} className="h-5 w-5 cursor-pointer" />
-          </button>
+            <Icon
+              icon={"mi:send"}
+              className="h-5 w-5 cursor-pointer text-white"
+            />
+          </Button>
         )}
       </div>
     </form>

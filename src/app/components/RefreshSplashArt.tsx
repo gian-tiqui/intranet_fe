@@ -15,7 +15,7 @@ const RefreshSplashArt: React.FC<Props> = ({ children }) => {
   const { View } = useLottie(logginAnimOptions);
 
   return (
-    <div className="absolute w-full h-full bg-neutral-200 grid place-content-center dark:bg-neutral-800 z-30">
+    <div className="absolute w-full h-full bg-[#CBD5E1] grid place-content-center dark:bg-neutral-800 z-30">
       {children ? children : View}
     </div>
   );

@@ -55,7 +55,7 @@ const SecretQuestion = () => {
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="w-96 mx-auto">
       <div className="flex flex-col h-24">
-        <label htmlFor="answer" className="text-xs font-medium">
+        <label htmlFor="answer" className="text-xs font-medium mb-1">
           Question
         </label>
         <Dropdown
@@ -63,11 +63,16 @@ const SecretQuestion = () => {
             required: "Secret question is required",
           })}
           value={watch("secretQuestion")}
+          placeholder="Select a question"
           options={questions}
+          pt={{
+            input: { className: "text-sm" },
+            item: { className: "text-sm" },
+          }}
           onChange={(e: DropdownChangeEvent) => {
             setValue("secretQuestion", e.value, { shouldValidate: true });
           }}
-          className="h-10 items-center"
+          className="h-10 items-center border border-black"
         />
 
         {errors.secretQuestion && (

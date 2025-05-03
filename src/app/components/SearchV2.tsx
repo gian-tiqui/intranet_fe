@@ -4,6 +4,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import searchTermStore from "../store/search";
 import useShowSearchStore from "../store/showSearch";
+import { motion } from "motion/react";
 
 interface FormFields {
   searchTerm: string;
@@ -22,7 +23,10 @@ const SearchV2 = () => {
   };
 
   return (
-    <form
+    <motion.form
+      initial={{ opacity: 0, x: 50 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 1.2, duration: 1 }}
       onSubmit={handleSubmit(handleSearch)}
       className="bg-[#EEEEEE] w-full h-18 mt-4 rounded-full justify-between border-2 p-1 border-black mb-6 flex items-center ps-7"
     >
@@ -38,7 +42,7 @@ const SearchV2 = () => {
       >
         Search
       </Button>
-    </form>
+    </motion.form>
   );
 };
 

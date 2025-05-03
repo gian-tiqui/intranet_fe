@@ -167,7 +167,9 @@ const Form = () => {
             </label>
             <InputText
               id="idInput"
-              {...register("employeeId", { required: true })}
+              {...register("employeeId", {
+                required: "Employee id is required",
+              })}
               placeholder="Enter your ID"
               className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
             />
