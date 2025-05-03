@@ -67,7 +67,7 @@ const Password = () => {
           type="password"
           id="currentPassword"
           placeholder="********"
-          className="mt-1 p-2 border rounded-md bg-inherit outline-none bg-white mb-1 text-sm h-10 px-3 border-black"
+          className="mt-1 border rounded-md bg-inherit outline-none bg-white mb-1 h-10 px-4 text-xs border-black"
           {...register("currentPassword", {
             required: "Current password is required",
           })}
@@ -87,7 +87,7 @@ const Password = () => {
           type="password"
           id="newPassword"
           placeholder="********"
-          className="mt-1 p-2 border rounded-md bg-inherit outline-none bg-white mb-1 text-sm h-10 px-3 border-black"
+          className="mt-1 border rounded-md bg-inherit outline-none bg-white mb-1 h-10 px-4 text-xs border-black"
           {...register("newPassword", { required: "New password is required" })}
         />
         {errors.newPassword && (
