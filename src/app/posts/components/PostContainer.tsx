@@ -42,12 +42,15 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
   const router = useRouter();
   const { setRefetch } = useRefetchPostStore();
 
-  const { data: post, refetch } = useQuery({
+  const {
+    data: post,
+    refetch,
+    isLoading,
+  } = useQuery({
     queryKey: [`single-post-${id}-${type}`],
     queryFn: () => fetchPost(id),
   });
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true);
   const [comments, setComments] = useState<PostComment[]>([]);
   const [editable, setEditable] = useState<boolean>(false);
   const [openOptions, setOpenOptions] = useState<boolean>(true);
@@ -100,7 +103,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
     if (data) {
       setUserData(data);
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -330,7 +332,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
 
           return;
         }
-        setLoading(false);
       }
     };
 
@@ -422,7 +423,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return <PostSkeleton />;
   }
 
@@ -462,7 +463,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
                     : `${post?.user?.firstName[0]}${post?.user?.lastName[0]}`
                 }
                 shape="circle"
-                className="font-bold bg-blue-500"
+                className="font-bold bg-blue-500 text-white"
               />
             )}
 
@@ -528,7 +529,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           </div>
         </div>
 
-        <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-2" />
+        <hr className="w-full border-t border-black mb-2" />
 
         {extracting && <p>Extracting text</p>}
 
@@ -581,7 +582,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
             )}
         </div>
       </div>
-      <hr className="w-full border-t border-gray-300 dark:border-gray-700 mb-6" />
+      <hr className="w-full border-t border-black mb-6" />
       {!generalPost && (
         <>
           {comments && <Comments comments={comments} postId={id} />}

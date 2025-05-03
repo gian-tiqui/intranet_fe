@@ -474,12 +474,12 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
         />
       )}
       <form
-        className="w-80 md:w-[420px] rounded-2xl bg-neutral-200 dark:bg-neutral-900 relative"
+        className="w-80 md:w-[420px] rounded-2xl bg-[#CBD5E1] relative"
         onClick={handleFormClick}
         onSubmit={handleSubmit(handleEditPost)}
       >
         <div className="gap-3 mb-2">
-          <div className="h-10 flex justify-between items-center rounded-t-2xl bg-white dark:bg-neutral-950 w-full p-4 border-b dark:border-black mb-3">
+          <div className="h-10 flex justify-between items-center rounded-t-2xl bg-[#EEEEEE] w-full p-4 border-b dark:border-black mb-3">
             <div className="w-full">
               <Icon
                 icon={"akar-icons:cross"}
@@ -623,13 +623,13 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
           <input type="checkbox" onChange={handleChangeCheckbox} />
           <p className="text-sm">Keep previous files</p>
         </div>
-        <div className="bg-white dark:bg-neutral-950 rounded-xl pb-3 px-4">
+        <div className="bg-[#EEEEEE] rounded-xl pb-3 px-4">
           <div className="h-7 flex w-full justify-center items-center">
             <Icon icon={"octicon:dash-16"} className="w-7 h-7" />
           </div>
 
           <Dropdown
-            className="w-full mb-2 h-8 items-center"
+            className="w-full mb-2 h-8 items-center bg-inherit"
             filter
             placeholder="Select a employee level"
             value={selectedLevel}
@@ -692,7 +692,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                   "dark:bg-neutral-700 dark:border-neutral-700 dark:text-neutral-100 dark:placeholder-neutral-400",
               },
             }}
-            className="w-full mb-2 h-8 items-center"
+            className="w-full mb-2 h-8 items-center bg-inherit"
             options={buildTree(foldersData?.data.folders || [])}
             onChange={async (e: TreeSelectChangeEvent) => {
               if (!e.value) return;
