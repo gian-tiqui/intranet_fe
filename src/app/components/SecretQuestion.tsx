@@ -8,6 +8,10 @@ import { toastClass } from "../tailwind-classes/tw_classes";
 import apiClient from "../http-common/apiUrl";
 import { API_BASE } from "../bindings/binding";
 import { questions } from "../utils/misc/questions";
+import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
+import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import MotionP from "./animation/MotionP";
 
 interface FormFields {
   secretQuestion: string;
@@ -15,7 +19,13 @@ interface FormFields {
 }
 
 const SecretQuestion = () => {
-  const { register, handleSubmit, setValue } = useForm<FormFields>();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<FormFields>();
 
   const handleFormSubmit = async (data: FormFields) => {
     const userId = decodeUserData()?.sub;
@@ -43,50 +53,54 @@ const SecretQuestion = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(handleFormSubmit)}
-      className="flex w-72 mx-auto md:w-96 flex-col gap-4 p-4 border rounded-md shadow-md bg-white dark:bg-neutral-900 dark:border-black"
-    >
-      <h2 className="text-xl font-semibold">Set Secret Question</h2>
-
-      <div className="flex flex-col">
-        <label htmlFor="question" className="text-sm font-medium">
-          Secret Question
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="w-96 mx-auto">
+      <div className="flex flex-col h-24">
+        <label htmlFor="answer" className="text-xs font-medium">
+          Question
         </label>
-        <select
-          onChange={(e) => {
-            setValue("secretQuestion", e.target.value);
+        <Dropdown
+          {...register("secretQuestion", {
+            required: "Secret question is required",
+          })}
+          value={watch("secretQuestion")}
+          options={questions}
+          onChange={(e: DropdownChangeEvent) => {
+            setValue("secretQuestion", e.value, { shouldValidate: true });
           }}
-          id="question"
-          className="mt-1 p-2 border rounded-md bg-inherit outline-none"
-        >
-          {questions.map((question: string, index) => (
-            <option className="dark:bg-black" value={question} key={index}>
-              {question}
-            </option>
-          ))}
-        </select>
+          className="h-10 items-center"
+        />
+
+        {errors.secretQuestion && (
+          <MotionP className="text-red-500 text-xs">
+            {errors.secretQuestion.message}
+          </MotionP>
+        )}
       </div>
 
-      <div className="flex flex-col">
-        <label htmlFor="answer" className="text-sm font-medium">
+      <div className="flex flex-col h-24">
+        <label htmlFor="answer" className="text-xs font-medium">
           Answer
         </label>
-        <input
-          {...register("answer", { required: true })}
+        <InputText
+          {...register("answer", { required: "Answer is required" })}
           type="text"
           id="answer"
           placeholder="Enter your answer"
-          className="mt-1 p-2 border rounded-md bg-inherit outline-none"
+          className="my-1 p-2 border rounded-md bg-inherit outline-none border-black bg-white text-sm h-10 px-4"
         />
+        {errors.answer && (
+          <MotionP className="text-red-500 text-xs">
+            {errors.answer.message}
+          </MotionP>
+        )}
       </div>
 
-      <button
+      <Button
         type="submit"
-        className="p-2 bg-neutral-900 text-white font-medium rounded-md hover:bg-neutral-800 transition dark:bg-white dark:text-black dark:hover:bg-neutral-200"
+        className="justify-center w-full bg-blue-600 h-10 text-white font-bold"
       >
         Save Secret Question
-      </button>
+      </Button>
     </form>
   );
 };
