@@ -8,9 +8,10 @@ import { decodeUserData } from "../functions/functions";
 
 interface Props {
   post: Post;
+  setVisible: (visible: boolean) => void;
 }
 
-const FolderPost: React.FC<Props> = ({ post }) => {
+const FolderPost: React.FC<Props> = ({ post, setVisible }) => {
   const router = useRouter();
   const [canView, setCanView] = useState<boolean>(true);
 
@@ -38,10 +39,11 @@ const FolderPost: React.FC<Props> = ({ post }) => {
   return canView ? (
     <div
       onClick={() => {
+        setVisible(false);
         router.push(`/posts/${post.pid}`);
       }}
       key={post.pid}
-      className="w-full h-36 bg-[#EEEEEE] flex flex-col justify-between rounded-xl shadow p-4"
+      className="w-full h-36 bg-[#EEEEEE] flex flex-col justify-between rounded-xl shadow p-4 cursor-pointer"
     >
       <p className="font-medium">{post.title}</p>
       <div className="w-full h-[70%] rounded bg-neutral-50 grid relative place-content-center dark:bg-neutral-900">

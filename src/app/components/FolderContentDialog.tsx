@@ -230,19 +230,17 @@ const FolderContentDialog: React.FC<Props> = ({
                 </div>
               ))}
 
-              {folderPosts.data.post && folderPosts.data.post.length > 0 ? (
-                folderPosts.data.post.map((post: Post) => {
-                  return <FolderPost post={post} key={post.pid} />;
-                })
-              ) : (
-                <p
-                  className={
-                    data?.data?.subfolders?.length ? "col-span-full" : ""
-                  }
-                >
-                  No posts found in this folder.
-                </p>
-              )}
+              {folderPosts.data.post && folderPosts.data.post.length > 0
+                ? folderPosts.data.post.map((post: Post) => {
+                    return (
+                      <FolderPost
+                        post={post}
+                        key={post.pid}
+                        setVisible={setVisible}
+                      />
+                    );
+                  })
+                : null}
             </div>
           ) : (
             <p>Loading folder contents...</p>
