@@ -7,6 +7,7 @@ import Aside from "./Aside";
 import PostModal from "../posts/components/PostModal";
 import useShowPostStore from "../store/showPostStore";
 import Settings from "./Settings";
+import { motion } from "motion/react";
 import useShowSettingsStore from "../store/showSettingStore";
 import LoginSplash from "./RefreshSplashArt";
 import useSplashToggler from "../store/useSplashStore";
@@ -362,7 +363,12 @@ const Divider: React.FC<Props> = ({ children }) => {
                     onClick={() => setIsCollapsed(false)}
                   />
                 )}
-                <div className="flex items-center gap-4">
+                <motion.div
+                  className="flex items-center gap-4"
+                  initial={{ opacity: 0, x: 40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1, duration: 1 }}
+                >
                   <Image
                     src={wmcLogo.src}
                     alt="wmc logo"
@@ -373,7 +379,7 @@ const Divider: React.FC<Props> = ({ children }) => {
                     <h4 className="font-semibold text-xl">Westlake</h4>
                     <h6 className="text-xs font-semibold">Medical Center</h6>
                   </div>
-                </div>
+                </motion.div>
               </div>
 
               <HeaderIcons showPendingUsers={showPendingUsers} />

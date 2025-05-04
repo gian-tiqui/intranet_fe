@@ -108,44 +108,34 @@ const FolderGrid = () => {
         refetch={refetch}
       />
       <div className="mx-auto w-[600px]">
-        <h2 className="text-4xl font-extrabold">
+        <motion.span
+          className="block text-5xl font-black mb-2"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.5 }}
+        >
+          Looking for <span className="text-blue-600">something</span>?
+        </motion.span>
+        <h2 className="text-3xl font-semibold">
           <motion.span
             className="block"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
           >
-            Looking for a{" "}
-            <span className="font-black text-blue-600">folder</span>,{" "}
-            <span className="font-black text-blue-600">memo</span>, or a{" "}
+            Find a <span className="font-bold text-blue-600">folder</span>,{" "}
+            <span className="font-bold text-blue-600">memo</span>, or a{" "}
+            <span className="font-bold text-blue-600">guideline</span> in the
           </motion.span>
           <motion.span
             className="block"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 1 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
           >
-            <span className="font-black text-blue-600">guideline</span> in the{" "}
-            <span className="font-black text-blue-600">Employee Portal</span>?{" "}
-          </motion.span>
-          <motion.span
-            className="block"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 1 }}
-          >
-            <span className="font-black text-blue-600">Search</span> it by{" "}
-            <span className="font-black text-blue-600">typing something</span>{" "}
-            in{" "}
-          </motion.span>
-          <motion.span
-            className="block"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 1 }}
-          >
-            the
-            <span className="font-black text-blue-600"> box </span>below.
+            <span className="font-bold text-blue-600">portal by</span>{" "}
+            <span className="font-bold text-blue-600">typing something</span>{" "}
+            below
           </motion.span>
         </h2>
 
@@ -155,7 +145,7 @@ const FolderGrid = () => {
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5, duration: 1 }}
+        transition={{ delay: 0.9, duration: 0.5 }}
         className="text-sm flex items-center gap-2 justify-center mb-6"
       >
         <i className={`${PrimeIcons.POWER_OFF}`}></i>
@@ -167,9 +157,9 @@ const FolderGrid = () => {
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.8, duration: 1 }}
+        initial={{ opacity: 0, x: 70, y: 20 }}
+        animate={{ opacity: 1, x: 0, y: 0 }}
+        transition={{ delay: 1.1, duration: 1 }}
         className="max-h-96 grid grid-cols-3 gap-3 items-start content-start"
       >
         {data?.folders && data?.folders.length > 0
