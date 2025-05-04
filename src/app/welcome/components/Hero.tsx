@@ -99,39 +99,33 @@ const Hero = () => {
          * Second Column
          */}
         <div className="col-span-2 gap-6 grid">
-          <AnimatePresence>
-            <div className="rounded-3xl bg-gray-50 relative flex flex-col justify-between p-6">
+          <div className="rounded-3xl bg-gray-50 relative flex flex-col justify-between p-6 overflow-hidden">
+            <AnimatePresence mode="wait">
               <motion.div
-                initial={{ opacity: 0, x: 50 }}
+                key={tabContent.title}
+                initial={{ opacity: 0, x: 100 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1, duration: 1 }}
-                className="absolute bottom-0 right-10"
+                exit={{ opacity: 0, x: -100 }}
+                transition={{ duration: 0.6 }}
+                className="absolute inset-0 p-6 flex flex-col justify-between"
               >
-                <Image
-                  src={tabContent.image}
-                  alt="Ms. Marie Ana Alvarez"
-                  className="h-48 w-48 "
-                />
-              </motion.div>
+                <div className="absolute bottom-0 right-10">
+                  <Image
+                    src={tabContent.image}
+                    alt={tabContent.title}
+                    className="h-48 w-48"
+                  />
+                </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: -30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 1 }}
-                className="h-10 text-white flex items-center rounded-full justify-center w-48 bg-blue-600 font-medium text-lg"
-              >
-                {tabContent.title}
+                <div className="h-10 text-white flex items-center rounded-full justify-center w-48 bg-blue-600 font-medium text-lg">
+                  {tabContent.title}
+                </div>
+                <p className="text-blue-600 text-lg font-medium">
+                  {tabContent.message}
+                </p>
               </motion.div>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 1 }}
-                className="text-blue-600 text-lg font-medium"
-              >
-                {tabContent.message}
-              </motion.p>
-            </div>
-          </AnimatePresence>
+            </AnimatePresence>
+          </div>
 
           <motion.div
             initial={{ opacity: 0, x: 100 }}

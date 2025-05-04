@@ -3,6 +3,7 @@ import { Button } from "primereact/button";
 import React from "react";
 import useActivityBarStore from "../store/activitybar";
 import tabIndexStore from "../store/tabIndex";
+import { motion } from "motion/react";
 
 interface Props {
   showPendingUsers: boolean;
@@ -13,7 +14,12 @@ const HeaderIcons: React.FC<Props> = () => {
   const { setTabIndex } = tabIndexStore();
 
   return (
-    <div className="flex items-center gap-4">
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1.5, duration: 1 }}
+      className="flex items-center gap-4"
+    >
       <Button
         tooltip="History"
         tooltipOptions={{ position: "bottom" }}
@@ -44,7 +50,7 @@ const HeaderIcons: React.FC<Props> = () => {
         icon={`${PrimeIcons.BELL} text-xl`}
         className="h-7 w-7"
       />
-    </div>
+    </motion.div>
   );
 };
 

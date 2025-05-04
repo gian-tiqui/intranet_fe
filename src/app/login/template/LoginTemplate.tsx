@@ -15,7 +15,7 @@ const LoginTemplate: React.FC<Props> = ({ children }) => {
   const { showLogoutArt } = useLogoutArtStore();
 
   return (
-    <div className="relative h-screen">
+    <div className="relative h-screen flex">
       <Image
         src={largeGradient.src}
         alt="large-gradient"
