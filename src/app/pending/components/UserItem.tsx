@@ -3,15 +3,19 @@ import apiClient from "@/app/http-common/apiUrl";
 import useSignalStore from "@/app/store/signalStore";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import { User } from "@/app/types/types";
+import { PrimeIcons } from "primereact/api";
+import { Avatar } from "primereact/avatar";
+import { Button } from "primereact/button";
 import React from "react";
 import { toast } from "react-toastify";
 
 interface Props {
   pendingUser: User;
+  index: number;
   onRefetch: () => void;
 }
 
-const UserItem: React.FC<Props> = ({ pendingUser, onRefetch }) => {
+const UserItem: React.FC<Props> = ({ pendingUser, onRefetch, index }) => {
   const { setSignal } = useSignalStore();
 
   const handleConfirm = async () => {
@@ -61,31 +65,39 @@ const UserItem: React.FC<Props> = ({ pendingUser, onRefetch }) => {
   };
 
   return (
-    <div className="w-full h-36 bg-gray-100 cursor-default dark:bg-neutral-700 flex flex-col shadow p-3 rounded justify-between">
-      <div className="w-full flex items-center gap-2">
-        <div className="rounded-full h-10 w-10 bg-blue-500 grid place-content-center font-extrabold text-lg">
-          {pendingUser.firstName[0].toUpperCase() +
-            pendingUser.lastName[0].toLowerCase()}
+    <div
+      className={`w-full flex items-center ${
+        index !== 0 && "border-t"
+      } border-gray-300`}
+    >
+      <div className="w-full flex items-center gap-4 text-xl ps-5 py-5">
+        <Avatar
+          shape="circle"
+          className="bg-blue-600 h-12 w-12 text-white font-bold text-xl"
+          label={
+            pendingUser.firstName[0].toUpperCase() +
+            pendingUser.lastName[0].toLowerCase()
+          }
+        />
+        <div className="flex gap-2 text-lg font-semibold">
+          <p>{pendingUser.firstName}</p>
+          {pendingUser.middleName && pendingUser.middleName !== "" && (
+            <p>{pendingUser?.middleName[0]}.</p>
+          )}
+          <p>{pendingUser.lastName}</p>
         </div>
-        <p className="font-medium">{pendingUser.firstName}</p>
-        {pendingUser.middleName && pendingUser.middleName !== "" && (
-          <p className="font-medium">{pendingUser?.middleName[0]}.</p>
-        )}
-        <p className="font-medium">{pendingUser.lastName}</p>
       </div>
-      <div className="flex gap-2 w-full justify-end">
-        <button
-          className="bg-green-400 rounded h-8 font-medium w-20"
+      <div className="flex gap-4 w-full justify-end pe-5">
+        <Button
           onClick={handleConfirm}
-        >
-          Approve
-        </button>
-        <button
-          className="bg-red-400 rounded h-8 font-medium w-20"
+          className="rounded-full h-10 w-10 bg-[#CBD5E1] text-blue-600"
+          icon={`${PrimeIcons.CHECK}`}
+        ></Button>
+        <Button
           onClick={handleDecline}
-        >
-          Decline
-        </button>
+          className="rounded-full h-10 w-10 bg-[#CBD5E1] text-blue-600"
+          icon={`${PrimeIcons.TIMES}`}
+        ></Button>
       </div>
     </div>
   );

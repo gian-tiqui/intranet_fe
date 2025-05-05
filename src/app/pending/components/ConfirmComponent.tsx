@@ -45,9 +45,9 @@ const ConfirmComponent = () => {
   if (isLoading) return <p>Loading...</p>;
 
   return (
-    <div className="h-[740px] sm:h-[600px] bg-white rounded dark:bg-neutral-800">
-      <div className="border-b p-5 dark:border-b-black">
-        <h1 className="text-2xl font-bold">Pending Users</h1>
+    <div>
+      <div className="p-5">
+        <h1 className="text-xl font-bold text-blue-600">Pending Users</h1>
       </div>
       <div className="p-5">
         {data && data?.length > 0 ? (
