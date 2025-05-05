@@ -10,8 +10,10 @@ import phone from "../../assets/phone_diagonal.png";
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { TabContent } from "@/app/types/types";
+import { useRouter } from "next/navigation";
 
 const Hero = () => {
+  const router = useRouter();
   const [tabContent, setTabContent] = useState<TabContent>({
     title: "HR Department",
     message: "Know more about us",
@@ -80,15 +82,19 @@ const Hero = () => {
             className="absolute bottom-0 w-full flex items-center justify-between p-7"
           >
             <Button
-              icon={`${PrimeIcons.ARROW_UP_RIGHT}`}
+              icon={PrimeIcons.ARROW_UP_RIGHT}
               iconPos="right"
               className="bg-blue-600/60 backdrop-blur text-white justify-center px-10 gap-2 h-12 rounded-full shadow"
+              onClick={() =>
+                window.open("https://westlakemed.com.ph", "_blank")
+              }
             >
               Westlake Medical Center
             </Button>
             <Button
               icon={`${PrimeIcons.ARROW_UP_RIGHT}`}
               iconPos="right"
+              onClick={() => router.push("/login")}
               className="bg-blue-600/60 backdrop-blur text-white justify-center px-10 h-12 rounded-full gap-2 shadow"
             >
               Get Started
@@ -99,7 +105,7 @@ const Hero = () => {
          * Second Column
          */}
         <div className="col-span-2 gap-6 grid">
-          <div className="rounded-3xl bg-gray-50 relative flex flex-col justify-between p-6 overflow-hidden">
+          <div className="rounded-3xl bg-gray-50 h-52 relative flex flex-col justify-between p-6 overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div
                 key={tabContent.title}
@@ -131,11 +137,11 @@ const Hero = () => {
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1, duration: 1 }}
-            className="rounded-3xl bg-gradient-to-tl from-blue-800 via-blue-600 to-blue-400 p-6 relative flex flex-col justify-between"
+            className="rounded-3xl bg-gradient-to-tl h-52 from-blue-800 via-blue-600 to-blue-400 p-6 relative flex flex-col justify-between"
           >
             <Image
               src={phone}
-              alt="Ms. Marie Ana Alvarez"
+              alt="phone"
               className="h-48 w-48 absolute bottom-0 right-10 "
             />
             <motion.div

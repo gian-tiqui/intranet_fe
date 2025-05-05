@@ -558,7 +558,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
             post?.imageLocations && post?.imageLocations?.length > 0
               ? "justify-between"
               : "justify-end"
-          } gap-1 rounded-lg pt-4 mb-2`}
+          } gap-1 rounded-lg pt-4 mb-6`}
         >
           {post?.downloadable &&
             post?.imageLocations &&
@@ -582,7 +582,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
             )}
         </div>
       </div>
-      <hr className="w-full border-t border-black mb-6" />
       {!generalPost && (
         <>
           {comments && <Comments comments={comments} postId={id} />}
