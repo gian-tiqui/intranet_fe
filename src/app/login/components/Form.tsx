@@ -20,6 +20,8 @@ import { Button } from "primereact/button";
 import wmcLogo from "../../assets/westlake_logo_horizontal.jpg.png";
 import { Image } from "primereact/image";
 import useLoginStore from "@/app/store/loggedInStore";
+import { motion } from "motion/react";
+import Curtain from "@/app/welcome/components/Curtain";
 
 type FormFields = {
   employeeId: string;
@@ -141,94 +143,99 @@ const Form = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(handleLogin)}
-      className="lg:w-[490px] bg-[#EEEEEE] flex justify-center shadow-lg"
-    >
-      {" "}
-      <main className="lg:w-[490px] p-7 dark:bg-neutral-800 h-screen flex flex-col justify-between items-center">
-        <header className="w-full">
-          <Link href={"/welcome"} className="flex items-center gap-4">
-            <Image src={wmcLogo.src} alt="wmc logo" height="45" width="45" />
-            <div className="text-blue-600">
-              <h4 className="font-semibold text-xl">Westlake</h4>
-              <h6 className="text-xs font-semibold">Medical Center</h6>
+    <>
+      <motion.form
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 2.8, duration: 0.7 }}
+        onSubmit={handleSubmit(handleLogin)}
+        className="lg:w-[490px] bg-[#EEEEEE] flex justify-center shadow-lg"
+      >
+        <main className="lg:w-[490px] p-7 dark:bg-neutral-800 h-screen flex flex-col justify-between items-center">
+          <header className="w-full">
+            <Link href={"/welcome"} className="flex items-center gap-4">
+              <Image src={wmcLogo.src} alt="wmc logo" height="45" width="45" />
+              <div className="text-blue-600">
+                <h4 className="font-semibold text-xl">Westlake</h4>
+                <h6 className="text-xs font-semibold">Medical Center</h6>
+              </div>
+            </Link>
+          </header>
+          <section className="w-full lg:w-96">
+            <div className="flex flex-col mb-10">
+              <p className="text-blue-600 text-3xl font-bold">Welcome back</p>
+              <p className="font-medium">Sign in to your account</p>
             </div>
-          </Link>
-        </header>
-        <section className="w-full lg:w-96">
-          <div className="flex flex-col mb-10">
-            <p className="text-blue-600 text-3xl font-bold">Welcome back</p>
-            <p className="font-medium">Sign in to your account</p>
-          </div>
-          <div className="mb-3 h-20">
-            <label htmlFor="idInput" className="text-sm font-semibold">
-              ID Number
-            </label>
-            <InputText
-              id="idInput"
-              {...register("employeeId", {
-                required: "Employee id is required",
-              })}
-              placeholder="Enter your ID"
-              className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-            />
-            {errors.employeeId && (
-              <MotionP className="text-red-500 text-xs font-semibold">
-                {errors.employeeId?.message}
-              </MotionP>
-            )}
-          </div>
-          <div className="h-14 mb-12">
-            <label htmlFor="passwordInput" className="text-sm font-semibold">
-              Password
-            </label>
-            <InputText
-              id="passwordInput"
-              {...register("password", { required: true })}
-              placeholder="*********"
-              type="password"
-              className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-            />
-            {errors.password && (
-              <MotionP className="text-red-500 font-semibold text-xs">
-                Password required
-              </MotionP>
-            )}
-          </div>
-          <Button
-            disabled={loading}
-            className={`${
-              loading && "opacity-80"
-            } bg-blue-600 h-12 w-full justify-center font-bold text-white mb-2`}
-          >
-            {loading && (
-              <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
-            )}
-            Sign in
-          </Button>{" "}
-          <div className="w-full">
-            <p className="dark:text-white text-center text-sm font-semibold">
-              Forgot password?{" "}
-              <Link href={"forgot-password"}>
-                <span className="hover:underline text-blue-700 dark:text-blue-500 cursor-pointer">
-                  Click me
-                </span>
-              </Link>
+            <div className="mb-3 h-20">
+              <label htmlFor="idInput" className="text-sm font-semibold">
+                ID Number
+              </label>
+              <InputText
+                id="idInput"
+                {...register("employeeId", {
+                  required: "Employee id is required",
+                })}
+                placeholder="Enter your ID"
+                className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
+              />
+              {errors.employeeId && (
+                <MotionP className="text-red-500 text-xs font-semibold">
+                  {errors.employeeId?.message}
+                </MotionP>
+              )}
+            </div>
+            <div className="h-14 mb-12">
+              <label htmlFor="passwordInput" className="text-sm font-semibold">
+                Password
+              </label>
+              <InputText
+                id="passwordInput"
+                {...register("password", { required: true })}
+                placeholder="*********"
+                type="password"
+                className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
+              />
+              {errors.password && (
+                <MotionP className="text-red-500 font-semibold text-xs">
+                  Password required
+                </MotionP>
+              )}
+            </div>
+            <Button
+              disabled={loading}
+              className={`${
+                loading && "opacity-80"
+              } bg-blue-600 h-12 w-full justify-center font-bold text-white mb-2`}
+            >
+              {loading && (
+                <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
+              )}
+              Sign in
+            </Button>{" "}
+            <div className="w-full">
+              <p className="dark:text-white text-center text-sm font-semibold">
+                Forgot password?{" "}
+                <Link href={"forgot-password"}>
+                  <span className="hover:underline text-blue-700 dark:text-blue-500 cursor-pointer">
+                    Click me
+                  </span>
+                </Link>
+              </p>
+            </div>
+          </section>
+          <footer className="w-96">
+            <hr className="border-b/0 border-black w-full mb-2" />
+            <p className="text-xs font-medium">
+              Copyright 2025 All Rights Reserved
             </p>
-          </div>
-        </section>
-        <footer className="w-96">
-          <hr className="border-b/0 border-black w-full mb-2" />
-          <p className="text-xs font-medium">
-            Copyright 2025 All Rights Reserved
-          </p>
-          <p className="text-xs font-bold text-blue-600">
-            Westlake Medical Center
-          </p>
-        </footer>
-      </main>
-    </form>
+            <p className="text-xs font-bold text-blue-600">
+              Westlake Medical Center
+            </p>
+          </footer>
+        </main>
+      </motion.form>
+      <Curtain />
+    </>
   );
 };
 

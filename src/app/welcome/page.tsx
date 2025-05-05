@@ -5,7 +5,7 @@ import Footer from "./components/Footer";
 
 const WelcomePage = () => {
   return (
-    <div className="relative h-screen">
+    <div className="relative h-screen overflow-hidden">
       <WelcomeNavbar />
       <Hero />
       <Footer />
