@@ -47,13 +47,17 @@ const ConfirmComponent = () => {
   return (
     <div>
       <div className="p-5">
-        <h1 className="text-xl font-bold text-blue-600">Pending Users</h1>
+        <h1 className="text-xl font-bold text-blue-600">
+          Users to be approved
+        </h1>
       </div>
       <div className="p-5">
         {data && data?.length > 0 ? (
           <UserList pendingUsers={data} onRefetch={onRefetch} />
         ) : (
-          <p className="text-center mt-10 font-semibold">No pending users</p>
+          <p className="text-center mt-10 font-semibold">
+            No users at the moment
+          </p>
         )}
       </div>
     </div>

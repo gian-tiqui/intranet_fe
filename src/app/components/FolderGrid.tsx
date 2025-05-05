@@ -168,7 +168,7 @@ const FolderGrid = () => {
 
               return (
                 <div
-                  className={`h-32 hover:cursor-pointer p-3 rounded-xl flex flex-col shadow-lg gap-2 justify-between bg-[#EEEEEE]`}
+                  className={`h-32 hover:cursor-pointer p-3 rounded-xl flex flex-col shadow-lg gap-2 justify-between bg-[#EEEEEE] hover:bg-white`}
                   key={folder.id}
                   onClick={() => {
                     setFolderId(folder.id);

@@ -50,9 +50,6 @@ const MonitoringMain = () => {
 
   return (
     <div className="container mx-auto p-5">
-      <h1 className="text-sm font-semibold">Users / Read counts</h1>
-      <h1 className="text-2xl font-bold mb-5">Monitoring Dashboard</h1>
-
       <div className="mb-5"></div>
 
       {isLoading ? (
@@ -61,7 +58,6 @@ const MonitoringMain = () => {
         <DepartmentUsers
           department={dept}
           departments={departments}
-          dept={dept}
           setDept={setDept}
         />
       )}
