@@ -8,7 +8,7 @@ const WeMeanCare = () => {
       <motion.div
         initial={{ opacity: 1, y: 210 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5, duration: 1 }}
+        transition={{ delay: 1.5, duration: 0.7 }}
         className="flex gap-5 text-7xl font-black font-serif"
       >
         <motion.h1

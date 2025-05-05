@@ -15,10 +15,10 @@ const SettingsDialog: React.FC<Props> = ({ setVisible, visible }) => {
     <Dialog
       pt={{
         header: {
-          className: "rounded-t-2xl bg-[#CBD5E1]",
+          className: "rounded-t-2xl bg-[#EEEEEE]",
         },
         content: {
-          className: "rounded-b-2xl bg-[#CBD5E1]",
+          className: "rounded-b-2xl bg-[#EEEEEE]",
         },
         root: { className: "rounded-2xl" },
       }}

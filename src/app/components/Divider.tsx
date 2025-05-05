@@ -9,7 +9,6 @@ import useShowPostStore from "../store/showPostStore";
 import Settings from "./Settings";
 import { motion } from "motion/react";
 import useShowSettingsStore from "../store/showSettingStore";
-import LoginSplash from "./RefreshSplashArt";
 import useSplashToggler from "../store/useSplashStore";
 import useEditModalStore from "../store/editModal";
 import EditPostModal from "../posts/components/EditModal";
@@ -300,7 +299,6 @@ const Divider: React.FC<Props> = ({ children }) => {
         {showSearch && <SearchContainer />}
         {visible && <PostModal isMobile={isMobile} />}
         {shown && <Settings />}
-        {showSplash && <LoginSplash />}
         {showEditModal && <EditPostModal postId={postId} />}
         {showDeleteComment && <DeleteCommentPopup />}
         {showDeleteModal && (

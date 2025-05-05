@@ -22,7 +22,7 @@ const ConfirmModal: React.FC<Props> = ({
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className="bg-white dark:bg-neutral-900 w-64 rounded-3xl pt-10"
+      className="bg-[#EEEEEE] w-64 rounded-3xl pt-10"
     >
       <Icon
         icon={"material-symbols:warning-outline"}
@@ -35,13 +35,13 @@ const ConfirmModal: React.FC<Props> = ({
       <div className="w-full flex justify-between">
         <button
           onClick={() => handleButtonClick("yes")}
-          className="rounded-bl-3xl w-full border py-2 bg-inherit hover:bg-gray-100 dark:hover:bg-neutral-700 dark:border-black"
+          className="rounded-bl-3xl w-full border py-2 bg-inherit hover:bg-gray-100 border-black"
         >
           Yes
         </button>
         <button
           onClick={() => handleButtonClick("no")}
-          className="rounded-br-3xl w-full border py-2 bg-inherit hover:bg-gray-100 dark:hover:bg-neutral-700 dark:border-black"
+          className="rounded-br-3xl w-full border py-2 bg-inherit hover:bg-gray-100 border-black"
         >
           No
         </button>
