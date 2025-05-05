@@ -463,7 +463,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
                     : `${post?.user?.firstName[0]}${post?.user?.lastName[0]}`
                 }
                 shape="circle"
-                className="font-bold bg-blue-500 text-white"
+                className="font-bold bg-blue-500 text-white h-10 w-10"
               />
             )}
 
