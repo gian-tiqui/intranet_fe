@@ -27,7 +27,7 @@ const UserList: React.FC<Props> = ({ pendingUsers, onRefetch }) => {
         .sort()
         .map((letter) => (
           <div key={letter}>
-            <h2 className="text-lg font-semibold mb-5">{letter}</h2>
+            <h2 className="text-2xl font-bold mb-3 text-blue-700">{letter}</h2>
             <div className="flex flex-col bg-[#EEEEEE] py-1 rounded-xl shadow">
               {groupedUsers[letter].map((user, index) => (
                 <UserItem
