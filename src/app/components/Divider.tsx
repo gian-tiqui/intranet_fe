@@ -15,10 +15,8 @@ import EditPostModal from "../posts/components/EditModal";
 import usePostIdStore from "../store/postId";
 import { checkDept, decodeUserData } from "../functions/functions";
 import wmcLogo from "../assets/westlake_logo_horizontal.jpg.png";
-import { toast } from "react-toastify";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import apiClient from "../http-common/apiUrl";
-import { toastClass } from "../tailwind-classes/tw_classes";
 import DeleteCommentPopup from "../posts/components/DeleteCommentPopup";
 import showDeleteCommentModalStore from "../store/deleteComment";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -52,6 +50,7 @@ import useAddFolderStore from "../store/addFolderDialog";
 import { PrimeIcons } from "primereact/api";
 import useShowSearchStore from "../store/showSearch";
 import UserProfileDialog from "./UserProfileDialog";
+import UnreadDialog from "./UnreadDialog";
 
 interface Props {
   children?: ReactNode;
@@ -82,6 +81,8 @@ const Divider: React.FC<Props> = ({ children }) => {
   const [hydrated, setHydrated] = useState<boolean>(false);
   const { setAddFolderDialogVisible } = useAddFolderStore();
   const { showSearch } = useShowSearchStore();
+  const [unreadVisible, setUnreadVisible] = useState<boolean>(false);
+  const [unreadMessage, setUnreadMessage] = useState<string>("");
 
   const items = [
     {
@@ -149,7 +150,8 @@ const Divider: React.FC<Props> = ({ children }) => {
       );
 
       if (!response.data.readAll) {
-        toast(response.data.message, { type: "error", className: toastClass });
+        setUnreadVisible(true);
+        setUnreadMessage(response.data.message);
       }
     };
 
@@ -249,6 +251,11 @@ const Divider: React.FC<Props> = ({ children }) => {
           acceptButton: { className: "ms-2 w-20 h-8" },
           rejectButton: { className: "ms-2 w-20 bg-red-400 h-8" },
         }}
+      />
+      <UnreadDialog
+        message={unreadMessage}
+        visible={unreadVisible}
+        setVisible={setUnreadVisible}
       />
       <Dialog
         visible={updatedDialogShown}

@@ -119,7 +119,7 @@ const Form = () => {
       localStorage.setItem(INTRANET, response.data.tokens.accessToken);
       setIsLoggedIn(true);
       setShowSplash(true);
-      setIsCollapsed(true);
+      setIsCollapsed(false);
 
       router.push("/");
     } catch (error: unknown) {

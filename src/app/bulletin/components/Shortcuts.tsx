@@ -42,7 +42,7 @@ const Shortcuts: React.FC<Props> = ({ setMinMax, totalPosts, limit, min }) => {
     <div className="flex flex-wrap my-12 gap-2">
       <div
         onClick={() => !isFirstPage && jumpPage("first")}
-        className={`rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-800 flex gap-1 items-center ${
+        className={`rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-[#EEEEEE] hover:bg-gray-100 dark:bg-neutral-800 flex gap-1 items-center ${
           isFirstPage ? "cursor-not-allowed opacity-50" : ""
         }`}
         style={{ pointerEvents: isFirstPage ? "none" : "auto" }}
@@ -52,7 +52,7 @@ const Shortcuts: React.FC<Props> = ({ setMinMax, totalPosts, limit, min }) => {
       </div>
       <div
         onClick={() => !isFirstPage && handlePageMove("prev")}
-        className={`rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-white hover:bg-gray-100 dark:bg-neutral-800 flex gap-1 items-center ${
+        className={`rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-[#EEEEEE] hover:bg-gray-100 dark:bg-neutral-800 flex gap-1 items-center ${
           isFirstPage ? "cursor-not-allowed opacity-50" : ""
         }`}
         style={{ pointerEvents: isFirstPage ? "none" : "auto" }}

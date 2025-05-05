@@ -1,6 +1,7 @@
 import { useRouter } from "next/navigation";
 import { Dialog } from "primereact/dialog";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { decodeUserData } from "../functions/functions";
 
 interface Props {
   visible: boolean;
@@ -22,6 +23,15 @@ const UserModal: React.FC<Props> = ({
   setVisible,
 }) => {
   const router = useRouter();
+  const [lid, setLid] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    const l = decodeUserData()?.lid;
+
+    console.log(l);
+
+    if (l) setLid(l);
+  }, []);
 
   return (
     <Dialog
@@ -58,6 +68,18 @@ const UserModal: React.FC<Props> = ({
           }}
         >
           <p className="text-sm font-medium">Check user read count</p>
+        </div>
+      )}
+
+      {lid && lid > 1 && (
+        <div
+          className="hidden w-full h-12 cursor-pointer px-5 md:flex items-center border border-black hover:bg-gray-200"
+          onClick={() => {
+            router.push("pending");
+            setVisible(false);
+          }}
+        >
+          <p className="text-sm font-medium">Check users to be approved</p>
         </div>
       )}
 
