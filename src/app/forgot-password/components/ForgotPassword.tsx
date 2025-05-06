@@ -4,7 +4,7 @@ import ForgotPasswordForm from "./ForgotPasswordForm";
 
 const ForgotPassword = () => {
   return (
-    <div className="h-screen w-full">
+    <div className="h-screen">
       <ForgotPasswordForm />
     </div>
   );

@@ -53,13 +53,8 @@ const UserButton: React.FC<Props> = () => {
 
     if (userId) {
       try {
-        const response = await apiClient.post(`${API_BASE}/auth/logout`, {
+        await apiClient.post(`${API_BASE}/auth/logout`, {
           userId,
-        });
-
-        toast(response.data.message, {
-          type: "success",
-          className: toastClass,
         });
 
         setIsLoggedIn(false);

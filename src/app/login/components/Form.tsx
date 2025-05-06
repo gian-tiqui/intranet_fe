@@ -21,7 +21,6 @@ import wmcLogo from "../../assets/westlake_logo_horizontal.jpg.png";
 import { Image } from "primereact/image";
 import useLoginStore from "@/app/store/loggedInStore";
 import { motion } from "motion/react";
-import Curtain from "@/app/welcome/components/Curtain";
 
 type FormFields = {
   employeeId: string;
@@ -145,9 +144,9 @@ const Form = () => {
   return (
     <>
       <motion.form
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 2.8, duration: 0.7 }}
+        // initial={{ opacity: 0, x: -50 }}
+        // animate={{ opacity: 1, x: 0 }}
+        // transition={{ delay: 0, duration: 0.7 }}
         onSubmit={handleSubmit(handleLogin)}
         className="lg:w-[490px] bg-[#EEEEEE] flex justify-center shadow-lg"
       >
@@ -234,7 +233,6 @@ const Form = () => {
           </footer>
         </main>
       </motion.form>
-      <Curtain />
     </>
   );
 };
