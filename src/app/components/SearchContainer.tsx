@@ -88,20 +88,24 @@ const SearchContainer = () => {
           ></Button>
         </div>
       </header>
-      <section className="p-4 flex flex-col items-center w-full gap-1 h-96">
+      <section className="py-3 flex flex-col items-center mx-auto h-96 bg-[#EEEEEE] w-[43%] rounded-t-2xl shadow">
         {isLoading && <p>Loading...</p>}
         {isError && (
           <p>There was a problem with your search. Try again later.</p>
         )}
-        <p>Results for this search: {data?.data.total}</p>
+        <p className="my-2">Results for this search: {data?.data.total}</p>
         {data?.data.results.map(
-          (item: { type: string; data: Post | Folder | User }) => {
+          (
+            item: { type: string; data: Post | Folder | User },
+            index: number
+          ) => {
             switch (item.type) {
               case "post":
                 const post: Post = item.data as Post;
 
                 return (
                   <PostSearchItem
+                    index={index}
                     type={item.type}
                     key={post.pid}
                     post={post}
@@ -114,6 +118,7 @@ const SearchContainer = () => {
 
                 return (
                   <FolderSearchItem
+                    index={index}
                     type={item.type}
                     key={folder.id}
                     folder={folder}
@@ -126,6 +131,7 @@ const SearchContainer = () => {
 
                 return (
                   <UserSearchItem
+                    index={index}
                     key={user.id}
                     type={item.type}
                     user={user}
@@ -139,7 +145,31 @@ const SearchContainer = () => {
           }
         )}
       </section>
-      <footer className="w-[43%] mx-auto mt-5">test</footer>
+      <footer className="w-[43%] mx-auto bg-[#EEEEEE] rounded-b-3xl pb-4 px-5 flex justify-center gap-2">
+        <Button
+          className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium"
+          icon={`${PrimeIcons.ARROW_LEFT} text-xs`}
+        ></Button>
+        <Button className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium">
+          1
+        </Button>
+        <Button className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium">
+          2
+        </Button>
+        <Button className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium">
+          3
+        </Button>
+        <Button className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium">
+          4
+        </Button>
+        <Button className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium">
+          5
+        </Button>
+        <Button
+          className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium"
+          icon={`${PrimeIcons.ARROW_RIGHT} text-xs`}
+        ></Button>
+      </footer>
     </div>
   );
 };

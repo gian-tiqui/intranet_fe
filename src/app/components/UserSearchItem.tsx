@@ -8,9 +8,10 @@ interface Props {
   user: User;
   handleClose: () => void;
   type: string;
+  index: number;
 }
 
-const UserSearchItem: React.FC<Props> = ({ user, type }) => {
+const UserSearchItem: React.FC<Props> = ({ user, type, index }) => {
   const { setUserProfileVisible } = useUserProfileStore();
   const { setUserId } = useUserIdStore();
 
@@ -22,7 +23,9 @@ const UserSearchItem: React.FC<Props> = ({ user, type }) => {
   return (
     <div
       onClick={handleClick}
-      className="h-16 cursor-pointer w-[43%] flex items-center justify-between px-5 border border-black"
+      className={`h-16 cursor-pointer w-full flex items-center justify-between px-5 ${
+        index !== 0 && "border-t"
+      } border-black`}
     >
       <div className="flex items-center gap-3">
         <div className="h-10 w-10 bg-blue-600 rounded-full grid place-content-center">

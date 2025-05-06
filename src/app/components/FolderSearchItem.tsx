@@ -8,9 +8,15 @@ interface Props {
   folder: Folder;
   handleClose: () => void;
   type: string;
+  index: number;
 }
 
-const FolderSearchItem: React.FC<Props> = ({ folder, handleClose, type }) => {
+const FolderSearchItem: React.FC<Props> = ({
+  folder,
+  handleClose,
+  type,
+  index,
+}) => {
   const { setFolderDialogVisible } = useFolderDialogVisibleStore();
   const { setFolderId } = folderIdStore();
 
@@ -25,7 +31,9 @@ const FolderSearchItem: React.FC<Props> = ({ folder, handleClose, type }) => {
   return (
     <div
       onClick={handleClick}
-      className="h-16 cursor-pointer w-[43%] flex items-center justify-between px-5 border border-black"
+      className={`h-16 cursor-pointer w-full flex items-center justify-between px-5 ${
+        index !== 0 && "border-t"
+      } border-black`}
     >
       <div className="flex items-center gap-3">
         <div className="h-10 w-10 bg-blue-600 rounded-full grid place-content-center">

@@ -7,9 +7,15 @@ interface Props {
   post: Post;
   handleClose: () => void;
   type: string;
+  index: number;
 }
 
-const PostSearchItem: React.FC<Props> = ({ post, handleClose, type }) => {
+const PostSearchItem: React.FC<Props> = ({
+  post,
+  handleClose,
+  type,
+  index,
+}) => {
   const router = useRouter();
 
   const handleClick = () => {
@@ -20,7 +26,9 @@ const PostSearchItem: React.FC<Props> = ({ post, handleClose, type }) => {
   return (
     <div
       onClick={handleClick}
-      className="h-16 cursor-pointer w-[43%] flex items-center justify-between px-5 border border-black"
+      className={`h-16 cursor-pointer w-full flex items-center justify-between px-5 ${
+        index !== 0 && "border-t"
+      } border-black`}
     >
       <div className="flex items-center gap-3">
         <div className="h-10 w-10 bg-blue-600 rounded-full grid place-content-center">
