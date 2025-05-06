@@ -56,7 +56,7 @@ const SettingsDialog: React.FC<Props> = ({ setVisible, visible }) => {
           <Password />
         </TabPanel>
         <TabPanel
-          header="Secret Question"
+          header="Recovery"
           pt={{ headerAction: { className: "bg-inherit" } }}
         >
           <SecretQuestion />{" "}

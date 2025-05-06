@@ -27,7 +27,7 @@ const HeaderIcons: React.FC<Props> = () => {
           setTabIndex(0);
           setShowActivityBar(true);
         }}
-        icon={`${PrimeIcons.CLOCK} text-xl`}
+        icon={`${PrimeIcons.HISTORY} text-xl`}
         className="h-7 w-7"
       />
       <Button

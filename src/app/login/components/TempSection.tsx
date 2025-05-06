@@ -8,14 +8,15 @@ const TempSection = () => {
       <Image
         src={wmcBuilding.src}
         alt="wmc building"
-        className="h-[900px] w-[880px] absolute -z-10 -bottom-72 left-0"
+        className="h-[900px] w-[880px] absolute -z-10 -bottom-72 left-0 opacity-30"
       />
-      <div className="bottom-0 left-7 absolute "></div>
-      <div className="text-7xl font-bold text-[#EEEEEE] p-20">
-        <h1>Your Hospital</h1>
-        <h1>at the Heart</h1>
-        <h1>of Laguna</h1>
-      </div>
+      <h1 className="left-2 top-0 font-serif absolute text-slate-50 text-4xl font-bold backdrop-blur">
+        HOSPITAL AT THE HEART OF LAGUNA
+      </h1>
+
+      <h1 className="bottom-0 right-2 font-serif absolute text-slate-100 text-7xl font-bold backdrop-blur">
+        CENTERS OF CARE
+      </h1>
     </div>
   );
 };
