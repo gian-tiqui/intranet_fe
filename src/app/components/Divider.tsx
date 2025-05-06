@@ -190,7 +190,7 @@ const Divider: React.FC<Props> = ({ children }) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setShowSplash(false);
-    }, 3000);
+    }, 6000);
 
     return () => clearTimeout(timeout);
   }, [setShowSplash, showSplash]);
@@ -252,6 +252,7 @@ const Divider: React.FC<Props> = ({ children }) => {
           rejectButton: { className: "ms-2 w-20 bg-red-400 h-8" },
         }}
       />
+
       <UnreadDialog
         message={unreadMessage}
         visible={unreadVisible}

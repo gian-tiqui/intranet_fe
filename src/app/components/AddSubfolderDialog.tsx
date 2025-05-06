@@ -98,8 +98,8 @@ const AddSubfolderDialog: React.FC<Props> = ({
         header="Create new folder"
         className="w-96"
         pt={{
-          header: { className: "dark:bg-neutral-950 dark:text-white" },
-          content: { className: "dark:bg-neutral-950" },
+          header: { className: "bg-[#EEEEEE]" },
+          content: { className: "bg-[#EEEEEE]" },
         }}
       >
         <form className="pt-5" onSubmit={handleSubmit(handleFormSubmit)}>
@@ -123,7 +123,7 @@ const AddSubfolderDialog: React.FC<Props> = ({
 
           <Button
             icon={`${PrimeIcons.PLUS} me-2`}
-            className="justify-center w-full bg-neutral-900 h-10 text-white dark:bg-white dark:text-black"
+            className="justify-center w-full bg-blue-600 h-10 text-white dark:bg-white dark:text-black"
           >
             Create folder
           </Button>

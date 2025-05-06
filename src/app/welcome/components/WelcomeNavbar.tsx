@@ -26,7 +26,7 @@ const WelcomeNavbar = () => {
       <motion.div
         initial={{ opacity: 0, x: -70 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.1, duration: 1.5 }}
+        transition={{ delay: 2.9, duration: 1.5 }}
         className="flex items-center gap-4"
       >
         <Image src={wmcLogo.src} alt="wmc logo" height="45" width="45" />
@@ -37,7 +37,7 @@ const WelcomeNavbar = () => {
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9, duration: 0.7 }}
+        transition={{ delay: 3.7, duration: 0.7 }}
         className="flex items-center text-lg gap-7 text-blue-600"
       >
         <Link href={""}>Home</Link>

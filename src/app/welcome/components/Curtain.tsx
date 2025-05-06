@@ -31,7 +31,16 @@ const Curtain = () => {
           duration: 3,
           times: [0, 0.3, 1],
         }}
-        className="absolute bottom-8 left-36 bg-blue-600 h-8 rounded-xl w-[80%] origin-left"
+        className="absolute bottom-8 left-36 bg-blue-600 h-8 rounded-xl w-[79%] z-50 origin-left"
+      />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 0, 1, 1, 1, 0] }}
+        transition={{
+          duration: 3,
+          times: [0, 0.2, 0.7, 1],
+        }}
+        className="absolute bottom-8 left-36 bg-gray-200 h-8 rounded-xl w-[79%] origin-left"
       />
     </div>
   );
