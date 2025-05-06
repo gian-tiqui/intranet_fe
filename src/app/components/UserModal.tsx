@@ -28,8 +28,6 @@ const UserModal: React.FC<Props> = ({
   useEffect(() => {
     const l = decodeUserData()?.lid;
 
-    console.log(l);
-
     if (l) setLid(l);
   }, []);
 

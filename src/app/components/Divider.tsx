@@ -303,7 +303,7 @@ const Divider: React.FC<Props> = ({ children }) => {
         </div>
       </Dialog>
       <UserProfileDialog />
-      <div className="flex h-screen text-neutral-800 dark:text-neutral-100">
+      <div className="flex h-screen text-neutral-800 dark:text-neutral-100 ">
         {showSearch && <SearchContainer />}
         {visible && <PostModal isMobile={isMobile} />}
         {shown && <Settings />}
