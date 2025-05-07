@@ -23,7 +23,7 @@ const Faqs = () => {
 
   return (
     <div className="h-screen w-screen overflow-auto">
-      <WelcomeNavbar />
+      <WelcomeNavbar disableAnimation />
 
       <div className="w-64 border shadow h-9 mb-5 rounded-full grid place-content-center bg-[#EEEEEE] mx-52 mt-14">
         <h4 className="text-sm font-semibold">Frequently Asked Questions</h4>

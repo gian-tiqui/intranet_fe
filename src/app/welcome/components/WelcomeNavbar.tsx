@@ -10,7 +10,11 @@ import { PrimeIcons } from "primereact/api";
 import { Image } from "primereact/image";
 import { motion } from "motion/react";
 
-const WelcomeNavbar = () => {
+const WelcomeNavbar = ({
+  disableAnimation = false,
+}: {
+  disableAnimation?: boolean;
+}) => {
   const router = useRouter();
   const { setHidden } = useNavbarVisibilityStore();
 
@@ -21,23 +25,30 @@ const WelcomeNavbar = () => {
     }
   }, [setHidden, router]);
 
+  const MotionDiv = disableAnimation ? "div" : motion.div;
+
   return (
     <nav className="w-full items-center px-6 flex h-20 justify-between">
-      <motion.div
-        initial={{ opacity: 0, x: -70 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 2.9, duration: 1.5 }}
+      <MotionDiv
+        initial={disableAnimation ? undefined : { opacity: 0, x: -70 }}
+        animate={disableAnimation ? undefined : { opacity: 1, x: 0 }}
+        transition={
+          disableAnimation ? undefined : { delay: 2.9, duration: 1.5 }
+        }
         className="flex items-center gap-4"
       >
         <Image src={wmcLogo.src} alt="wmc logo" height="45" width="45" />
         <div className="text-blue-600">
           <h4 className="font-bold text-3xl">Westlake Medical Center</h4>
         </div>
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 3.7, duration: 0.7 }}
+      </MotionDiv>
+
+      <MotionDiv
+        initial={disableAnimation ? undefined : { opacity: 0, y: -50 }}
+        animate={disableAnimation ? undefined : { opacity: 1, y: 0 }}
+        transition={
+          disableAnimation ? undefined : { delay: 3.7, duration: 0.7 }
+        }
         className="flex items-center text-lg gap-7 text-blue-600"
       >
         <Link href={"welcome"}>Home</Link>
@@ -49,7 +60,7 @@ const WelcomeNavbar = () => {
         >
           <i className={`${PrimeIcons.USER} text-lg text-white`}></i>
         </Link>
-      </motion.div>
+      </MotionDiv>
     </nav>
   );
 };
