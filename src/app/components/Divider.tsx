@@ -45,6 +45,8 @@ import { PrimeIcons } from "primereact/api";
 import useShowSearchStore from "../store/showSearch";
 import UserProfileDialog from "./UserProfileDialog";
 import UnreadDialog from "./UnreadDialog";
+import useToastRefStore from "../store/toastRef";
+import { Toast } from "primereact/toast";
 
 interface Props {
   children?: ReactNode;
@@ -74,6 +76,7 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { showSearch } = useShowSearchStore();
   const [unreadVisible, setUnreadVisible] = useState<boolean>(false);
   const [unreadMessage, setUnreadMessage] = useState<string>("");
+  const { toastRef } = useToastRefStore();
 
   const items = [
     {
@@ -243,7 +246,7 @@ const Divider: React.FC<Props> = ({ children }) => {
           rejectButton: { className: "ms-2 w-20 bg-red-400 h-8" },
         }}
       />
-
+      <Toast ref={toastRef} />
       <UnreadDialog
         message={unreadMessage}
         visible={unreadVisible}
