@@ -39,7 +39,7 @@ const SearchV2 = () => {
         type="text"
         {...register("searchTerm")}
         className="border-none bg-inherit outline-none w-96"
-        placeholder="Search here..."
+        placeholder="Looking for something?"
       />
       <Button
         className="bg-white rounded-full shadow-xl h-14 w-40 border justify-center gap-2 hover:bg-blue-600 hover:shadow-2xl hover:text-white"

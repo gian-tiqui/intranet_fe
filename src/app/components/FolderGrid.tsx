@@ -87,7 +87,7 @@ const FolderGrid = () => {
   if (isLoading) return <FolderGridSkeleton />;
 
   return (
-    <div className="pt-36">
+    <div className="pt-12">
       <CustomToast ref={toastRef} />
       <AddFolderDialog
         refetch={refetch}
@@ -108,15 +108,6 @@ const FolderGrid = () => {
         refetch={refetch}
       />
       <div className="mx-auto w-[600px]">
-        <motion.span
-          className="block text-5xl text-center font-bold font-serif mb-2"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.5 }}
-        >
-          Looking for <span className="text-blue-600">something</span>?
-        </motion.span>
-
         <SearchV2 />
       </div>
 
@@ -126,7 +117,7 @@ const FolderGrid = () => {
         transition={{ delay: 0.6, duration: 0.5 }}
         className="text-sm flex items-center gap-2 justify-center mb-6"
       >
-        <i className={`${PrimeIcons.POWER_OFF}`}></i>
+        <i className={`${PrimeIcons.FOLDER}`}></i>
         <motion.p>
           Folders <span className="text-blue-600 font-semibold">managed</span>{" "}
           by <span className="text-blue-600 font-semibold">HR</span> and{" "}

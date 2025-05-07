@@ -93,8 +93,7 @@ const ForgotPasswordForm = () => {
           <Link href={"/welcome"} className="flex items-center gap-4">
             <Image src={wmcLogo.src} alt="wmc logo" height="45" width="45" />
             <div className="text-blue-600">
-              <h4 className="font-semibold text-xl">Westlake</h4>
-              <h6 className="text-xs font-semibold">Medical Center</h6>
+              <h4 className="font-semibold text-xl">Westlake Medical Center</h4>
             </div>
           </Link>
         </header>

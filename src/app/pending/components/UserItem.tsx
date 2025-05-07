@@ -70,16 +70,16 @@ const UserItem: React.FC<Props> = ({ pendingUser, onRefetch, index }) => {
         index !== 0 && "border-t"
       } border-gray-300`}
     >
-      <div className="w-full flex items-center gap-4 text-xl ps-5 py-5">
+      <div className="w-full flex items-center gap-2 text-xl ps-5 py-3">
         <Avatar
           shape="circle"
-          className="bg-blue-600 h-12 w-12 text-white font-bold text-xl"
+          className="bg-blue-600 text-sm h-8 w-8 text-white font-bold"
           label={
             pendingUser.firstName[0].toUpperCase() +
             pendingUser.lastName[0].toLowerCase()
           }
         />
-        <div className="flex gap-2 text-lg font-semibold">
+        <div className="flex gap-2 text-sm font-semibold">
           <p>{pendingUser.firstName}</p>
           {pendingUser.middleName && pendingUser.middleName !== "" && (
             <p>{pendingUser?.middleName[0]}.</p>
@@ -90,13 +90,13 @@ const UserItem: React.FC<Props> = ({ pendingUser, onRefetch, index }) => {
       <div className="flex gap-4 w-full justify-end pe-5">
         <Button
           onClick={handleConfirm}
-          className="rounded-full h-10 w-10 bg-[#CBD5E1] text-blue-600"
-          icon={`${PrimeIcons.CHECK}`}
+          className="rounded-full h-8 w-8 bg-[#CBD5E1] text-blue-600"
+          icon={`${PrimeIcons.CHECK} text-sm`}
         ></Button>
         <Button
           onClick={handleDecline}
-          className="rounded-full h-10 w-10 bg-[#CBD5E1] text-blue-600"
-          icon={`${PrimeIcons.TIMES}`}
+          className="rounded-full h-8 w-8 bg-[#CBD5E1] text-blue-600"
+          icon={`${PrimeIcons.TIMES} text-sm`}
         ></Button>
       </div>
     </div>

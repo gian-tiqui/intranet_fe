@@ -129,7 +129,7 @@ const Divider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     if (!checkDept()) {
-      if (editVisible) setEditVisible(false);
+      setEditVisible(false);
     }
   }, [editVisible]);
 
@@ -372,8 +372,9 @@ const Divider: React.FC<Props> = ({ children }) => {
                     width="45"
                   />
                   <div className="text-blue-600">
-                    <h4 className="font-semibold text-xl">Westlake</h4>
-                    <h6 className="text-xs font-semibold">Medical Center</h6>
+                    <h4 className="font-semibold text-xl">
+                      Westlake Medical Center
+                    </h4>
                   </div>
                 </motion.div>
               </div>
