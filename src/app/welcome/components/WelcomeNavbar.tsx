@@ -41,7 +41,6 @@ const WelcomeNavbar = () => {
         className="flex items-center text-lg gap-7 text-blue-600"
       >
         <Link href={""}>Home</Link>
-        <Link href={"about"}>About</Link>
         <Link href={"faqs"}>FAQS</Link>
         <Link href={"login"}>Login</Link>
         <Link

@@ -25,12 +25,6 @@ import { jwtDecode } from "jwt-decode";
 import useDeleteModalStore from "../store/deleteModalStore";
 import DeleteModal from "../posts/components/DeleteModal";
 import useTokenStore from "../store/tokenStore";
-import useOpenCreateFolderMainStore from "../store/createMainFolder";
-import MainFolderModal from "../qm-portal/components/MainFolderModal";
-import useSubFolderStore from "../store/createSubFolder";
-import SubFolderModal from "../qm-portal/components/SubFolderModal";
-import deleteFolderStore from "../store/deleteFolder";
-import DeleteFolderModal from "../qm-portal/components/DeleteFolderModal";
 import { Dialog } from "primereact/dialog";
 import useUpdateDialogStore from "../store/updateDialogStore";
 import { ConfirmDialog } from "primereact/confirmdialog";
@@ -73,9 +67,6 @@ const Divider: React.FC<Props> = ({ children }) => {
   const [showPendingUsers, setShowPendingUsers] = useState<boolean>(false);
   const { setShowDeleteModal, showDeleteModal } = useDeleteModalStore();
   const { token } = useTokenStore();
-  const { openCreateFolderModal } = useOpenCreateFolderMainStore();
-  const { openSubFolder } = useSubFolderStore();
-  const { showDeleteFolderModal } = deleteFolderStore();
   const { updatedDialogShown, setUpdateDialogShown } = useUpdateDialogStore();
   const { isLoggedIn } = useLoginStore();
   const [hydrated, setHydrated] = useState<boolean>(false);
@@ -317,10 +308,6 @@ const Divider: React.FC<Props> = ({ children }) => {
         <AnimatePresence key={`user-activities-bar`}>
           {showActivityBar && isLoggedIn && <UserActivitiesBar />}
         </AnimatePresence>
-
-        {openCreateFolderModal && <MainFolderModal />}
-        {openSubFolder && <SubFolderModal />}
-        {showDeleteFolderModal && <DeleteFolderModal />}
 
         <div id="sidebar" onClick={(e) => e.stopPropagation()}>
           <AnimatePresence>

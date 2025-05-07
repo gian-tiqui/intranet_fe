@@ -91,7 +91,10 @@ const Faqs = () => {
           <AccordionTab
             key={key}
             header={content.question}
-            pt={{ content: { className: "bg-[#EEEEEE]" } }}
+            pt={{
+              content: { className: "bg-[#EEEEEE]" },
+              headerAction: { className: "bg-[#EEEEEE] text-blue-600" },
+            }}
           >
             <p className="m-0">{content.answer}</p>
           </AccordionTab>
