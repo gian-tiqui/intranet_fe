@@ -63,7 +63,7 @@ const Faqs = () => {
             pt={{
               content: { className: "bg-inherit ms-12" },
               headerAction: {
-                className: "bg-inherit gap-5 text-3xl font-semibold",
+                className: "bg-inherit gap-5 text-2xl font-semibold",
               },
             }}
           >
