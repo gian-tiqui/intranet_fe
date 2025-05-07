@@ -10,9 +10,8 @@ import apiClient from "@/app/http-common/apiUrl";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
 import useShowPostStore from "@/app/store/showPostStore";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import { pdfjs } from "react-pdf";
 import { Folder, Level, Query } from "@/app/types/types";
 import { useQuery } from "@tanstack/react-query";
@@ -27,6 +26,8 @@ import { getFolders } from "@/app/utils/service/folderService";
 import { MultiStateCheckbox } from "primereact/multistatecheckbox";
 import { TreeSelect, TreeSelectChangeEvent } from "primereact/treeselect";
 import { PrimeIcons } from "primereact/api";
+import { Toast } from "primereact/toast";
+import useToastRefStore from "@/app/store/toastRef";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -57,14 +58,13 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const [notify, setNotify] = useState<boolean>(false);
   const [downloadable, setDownloadable] = useState<boolean>(false);
   const { setVisible } = useShowPostStore();
+  const { setToastRef } = useToastRefStore();
   const { setIsCollapsed } = useToggleStore();
   const departments = useDepartments();
   const { register, handleSubmit, setValue, watch } = useForm<FormFields>();
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [convertedFiles, setConvertedFiles] = useState<File[]>([]);
   const [isConverting, setIsConverting] = useState<boolean>(false);
-  const toastClass =
-    "bg-neutral-200 dark:bg-neutral-800 border border-gray-300 dark:border-gray-700 text-black dark:text-white";
   const [posting, setPosting] = useState<boolean>(false);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [levels, setLevels] = useState<Level[]>([]);
@@ -79,6 +79,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const [selectedFolder, setSelectedFolder] = useState<Folder | undefined>(
     undefined
   );
+  const toastRef = useRef<Toast>(null);
   const [foldersQuery] = useState<Query>({
     includeSubfolders: 0,
     search: "",
@@ -86,6 +87,10 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     take: 500,
     depth: MAX_DEPTH,
   });
+
+  useEffect(() => {
+    setToastRef(toastRef);
+  }, [toastRef, setToastRef]);
 
   const [postVisibility, setPostVisibility] = useState<string>("public");
   const { setSignal } = useSignalStore();
@@ -198,9 +203,9 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       try {
         for (const file of files) {
           if (file.type === "application/pdf") {
-            toast(`Converting PDF: ${file.name}`, {
-              type: "info",
-              className: toastClass,
+            toastRef.current?.show({
+              content: `Converting PDF: ${file.name}`,
+              severity: "info",
             });
 
             const convertedImages = await convertPdfToImage(file);
@@ -223,9 +228,9 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             convertedFiles.push(file);
             previews.push(URL.createObjectURL(file));
           } else {
-            toast(`Unsupported file format: ${file.name}`, {
-              type: "error",
-              className: toastClass,
+            toastRef.current?.show({
+              content: `Unsupported file format: ${file.name}`,
+              severity: "info",
             });
           }
 
@@ -236,15 +241,17 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
         setConvertedFiles(convertedFiles);
         setFilePreviews(previews);
         setValue("extractedText", extractedTexts.trim());
-        toast("Files processed successfully!", {
-          type: "success",
-          className: toastClass,
+
+        toastRef.current?.show({
+          summary: "Files processed successfully!",
+          severity: "info",
         });
       } catch (error) {
         console.error("Error processing files:", error);
-        toast("An error occurred while processing files.", {
-          type: "error",
-          className: toastClass,
+
+        toastRef.current?.show({
+          summary: "An error occurred while processing files.",
+          severity: "info",
         });
       } finally {
         setIsConverting(false);
@@ -262,9 +269,9 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     if (_title && _message && filePreviews.length > 0) {
       setShowPreview(true);
     } else {
-      toast("Please fill the fields", {
-        className: toastClass,
-        type: "error",
+      toastRef.current?.show({
+        summary: "Please fill the fields.",
+        severity: "info",
       });
     }
   };
@@ -277,48 +284,48 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
 
   const handlePost = async (data: FormFields) => {
     if (!postVisibility || postVisibility == "") {
-      toast("Please select post visibility.", {
-        type: "error",
-        className: toastClass,
+      toastRef.current?.show({
+        summary: "Select post visibility.",
+        severity: "info",
       });
       return;
     }
 
     if (!data.lid) {
-      toast("Please select an employee level.", {
-        type: "error",
-        className: toastClass,
+      toastRef.current?.show({
+        summary: "Select an employee level.",
+        severity: "info",
       });
       return;
     }
 
     if (selectedDepartments.length == 0) {
-      toast("Please select at least one department.", {
-        type: "error",
-        className: toastClass,
+      toastRef.current?.show({
+        summary: "Select at least one department.",
+        severity: "info",
       });
       return;
     }
 
     if (!data.title && !data.message && convertedFiles.length == 0) {
-      toast("Please upload the documents or write a title or a message.", {
-        type: "error",
-        className: toastClass,
+      toastRef.current?.show({
+        summary: "Upload a document or write a title or description.",
+        severity: "info",
       });
       return;
     }
 
     if (convertedFiles.length >= 25) {
-      toast("You have exceeded the file limit", {
-        className: toastClass,
-        type: "error",
+      toastRef.current?.show({
+        summary: "You have exceeded the file limit.",
+        severity: "info",
       });
       return;
     }
     if (isConverting) {
-      toast("Please wait for file processing to complete", {
-        type: "info",
-        className: toastClass,
+      toastRef.current?.show({
+        summary: "Processing. Please wait.",
+        severity: "info",
       });
       return;
     }
@@ -391,10 +398,6 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
 
         if (response.status === 201) {
           setVisible(false);
-          toast(response.data.message, {
-            type: "success",
-            className: toastClass,
-          });
 
           if (notify) {
             const notifications = data.deptIds.split(",").map((deptId) =>
@@ -413,9 +416,9 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
 
             Promise.all(notifications)
               .then(async () => {
-                toast("Notifications sent to the departments.", {
-                  type: "success",
-                  className: toastClass,
+                toastRef.current?.show({
+                  summary: "Notified the departments.",
+                  severity: "info",
                 });
 
                 const userLid = decodeUserData()?.lid;
@@ -445,9 +448,9 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
         }
       } catch (error) {
         console.error(error);
-        toast("Error creating post", {
-          type: "error",
-          className: toastClass,
+        toastRef.current?.show({
+          summary: "Error creating post.",
+          severity: "info",
         });
       } finally {
         setPosting(false);

@@ -1,97 +1,71 @@
 "use client";
-import { useRouter } from "next/navigation";
+import WelcomeNavbar from "@/app/welcome/components/WelcomeNavbar";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { PrimeIcons } from "primereact/api";
-import { Button } from "primereact/button";
-import React from "react";
+import React, { useState } from "react";
 
 const Faqs = () => {
-  const router = useRouter();
+  const [activeIndex, setActiveIndex] = useState<number | number[]>([]);
+
   const accordionContent: { question: string; answer: string }[] = [
-    {
-      answer: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.`,
-      question: "What",
-    },
-    {
-      answer: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.`,
-      question: "Do",
-    },
-    {
-      answer: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.`,
-      question: "I",
-    },
-    {
-      answer: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.`,
-      question: "Put",
-    },
-    {
-      answer: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.`,
-      question: "Here",
-    },
-    {
-      answer: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.`,
-      question: "?",
-    },
+    { question: "What", answer: "Lorem ipsum..." },
+    { question: "Do", answer: "Lorem ipsum..." },
+    { question: "I", answer: "Lorem ipsum..." },
+    { question: "Put", answer: "Lorem ipsum..." },
+    { question: "Here", answer: "Lorem ipsum..." },
+    { question: "?", answer: "Lorem ipsum..." },
   ];
 
-  return (
-    <div className="h-screen w-screen overflow-auto flex items-center py-14 flex-col">
-      <Button
-        onClick={() => router.back()}
-        className="mb-6 text-white bg-blue-500 w-32 font-medium justify-center py-5 gap-2"
-        icon={`${PrimeIcons.HOME}`}
-      >
-        Home
-      </Button>
+  const isActive = (index: number) => {
+    if (Array.isArray(activeIndex)) return activeIndex.includes(index);
+    return activeIndex === index;
+  };
 
-      <h1 className="text-4xl text-center font-bold mb-12">
-        <span className="text-blue-600">F</span>requently{" "}
-        <span className="text-blue-600">A</span>sked{" "}
-        <span className="text-blue-600">Q</span>uestion
-        <span className="text-blue-600">s</span>
+  return (
+    <div className="h-screen w-screen overflow-auto">
+      <WelcomeNavbar />
+
+      <div className="w-64 border shadow h-9 mb-5 rounded-full grid place-content-center bg-[#EEEEEE] mx-52 mt-14">
+        <h4 className="text-sm font-semibold">Frequently Asked Questions</h4>
+      </div>
+
+      <h1 className="text-5xl font-medium mb-2 mx-52">
+        Your questions answered
       </h1>
-      <Accordion className="w-[35%]">
+      <p className="text-sm font-medium mb-10 mx-52 w-[600px]">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+
+      <Accordion
+        className="w-full px-36"
+        activeIndex={activeIndex}
+        onTabChange={(e) => setActiveIndex(e.index)}
+      >
         {accordionContent.map((content, key) => (
           <AccordionTab
             key={key}
-            header={content.question}
-            pt={{ content: { className: "bg-[#EEEEEE]" } }}
+            header={
+              <div className="flex items-center justify-between w-full">
+                <div className="flex gap-5 items-center">
+                  <div className="w-16 h-10 rounded-full shadow-lg bg-[#EEEEEE] text-black font-bold text-center text-lg flex items-center justify-center">
+                    {key + 1 < 10 ? `0${key + 1}` : `${key + 1}`}
+                  </div>
+                  <span>{content.question}</span>
+                </div>
+                <i
+                  className={`pi ${
+                    isActive(key) ? PrimeIcons.MINUS : PrimeIcons.PLUS
+                  }`}
+                ></i>
+              </div>
+            }
+            pt={{
+              content: { className: "bg-inherit ms-12" },
+              headerAction: {
+                className: "bg-inherit gap-5 text-2xl font-semibold",
+              },
+            }}
           >
             <p className="m-0">{content.answer}</p>
           </AccordionTab>

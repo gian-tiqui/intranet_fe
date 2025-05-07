@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import searchTermStore from "../store/search";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
@@ -45,6 +45,10 @@ const SearchContainer = () => {
     queryKey: [`search-${JSON.stringify(query)}`],
     queryFn: () => search(query),
   });
+
+  useEffect(() => {
+    console.log(data?.data);
+  }, [data]);
 
   if (isError) {
     console.error(error);
@@ -145,28 +149,42 @@ const SearchContainer = () => {
           }
         )}
       </section>
-      <footer className="w-[43%] mx-auto bg-[#EEEEEE] rounded-b-3xl pb-4 px-5 flex justify-center gap-2">
+      <footer className="w-[43%] mx-auto bg-[#EEEEEE] rounded-b-3xl pb-4 px-5 flex justify-between gap-2">
         <Button
-          className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium"
+          onClick={() => {
+            setQuery((prev) => {
+              const skip = prev.skip ?? 0;
+              const take = prev.take ?? 5;
+              const newSkip = Math.max(skip - take, 0);
+              return { ...prev, skip: newSkip };
+            });
+          }}
+          disabled={(query.skip ?? 0) === 0}
+          className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium disabled:opacity-50"
           icon={`${PrimeIcons.ARROW_LEFT} text-xs`}
         ></Button>
-        <Button className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium">
-          1
-        </Button>
-        <Button className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium">
-          2
-        </Button>
-        <Button className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium">
-          3
-        </Button>
-        <Button className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium">
-          4
-        </Button>
-        <Button className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium">
-          5
-        </Button>
+
+        <span className="text-sm font-medium self-center">
+          Page {Math.floor((query.skip ?? 0) / (query.take ?? 5)) + 1} of{" "}
+          {data ? Math.ceil(data.data.total / (query.take ?? 5)) : 1}
+        </span>
+
         <Button
-          className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium"
+          onClick={() => {
+            setQuery((prev) => {
+              const skip = prev.skip ?? 0;
+              const take = prev.take ?? 5;
+              const nextSkip = skip + take;
+              if (data && nextSkip >= data.data.total) return prev;
+              return { ...prev, skip: nextSkip };
+            });
+          }}
+          disabled={
+            data
+              ? (query.skip ?? 0) + (query.take ?? 5) >= data.data.total
+              : true
+          }
+          className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium disabled:opacity-50"
           icon={`${PrimeIcons.ARROW_RIGHT} text-xs`}
         ></Button>
       </footer>
