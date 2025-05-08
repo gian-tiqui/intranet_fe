@@ -18,7 +18,6 @@ import { useQuery } from "@tanstack/react-query";
 import { createWorker } from "tesseract.js";
 import DepartmentsList from "./DepartmentsList";
 import { jwtDecode } from "jwt-decode";
-import PostPreview from "./PostPreview";
 import useSignalStore from "@/app/store/signalStore";
 import { Checkbox } from "primereact/checkbox";
 import { Dropdown, DropdownProps } from "primereact/dropdown";
@@ -61,7 +60,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const { setToastRef } = useToastRefStore();
   const { setIsCollapsed } = useToggleStore();
   const departments = useDepartments();
-  const { register, handleSubmit, setValue, watch } = useForm<FormFields>();
+  const { register, handleSubmit, setValue } = useForm<FormFields>();
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [convertedFiles, setConvertedFiles] = useState<File[]>([]);
   const [isConverting, setIsConverting] = useState<boolean>(false);
@@ -69,10 +68,6 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [levels, setLevels] = useState<Level[]>([]);
   const [filePreviews, setFilePreviews] = useState<string[]>([]);
-  const [showPreview, setShowPreview] = useState<boolean>(false);
-  const [title, setTitle] = useState<string | undefined>(undefined);
-  const [message, setMessage] = useState<string | undefined>(undefined);
-  const [previewClickable, setPreviewClickable] = useState<boolean>(false);
   const [selectedLevel, setSelectedLevel] = useState<Level | undefined>(
     undefined
   );
@@ -258,29 +253,6 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       }
     }
   };
-
-  const handleShowPreview = () => {
-    const _title = watch("title");
-    const _message = watch("message");
-
-    setTitle(_title);
-    setMessage(_message);
-
-    if (_title && _message && filePreviews.length > 0) {
-      setShowPreview(true);
-    } else {
-      toastRef.current?.show({
-        summary: "Please fill the fields.",
-        severity: "info",
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (title && message && filePreviews.length > 0) {
-      setPreviewClickable(true);
-    }
-  }, [title, message, filePreviews.length]);
 
   const handlePost = async (data: FormFields) => {
     if (!postVisibility || postVisibility == "") {
@@ -506,21 +478,13 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   };
 
   return (
-    <div className="min-w-full min-h-full bg-black bg-opacity-85 dark:bg-black/50 absolute z-50 grid place-content-center">
-      {showPreview && (
-        <PostPreview
-          title={title}
-          message={message}
-          filePreviews={filePreviews}
-          setShowPreview={setShowPreview}
-        />
-      )}
+    <div className="h-screen w-screen bg-[#CBD5E1] z-50 absolute">
       <form
         onSubmit={handleSubmit(handlePost)}
-        className="w-80 md:w-[400px] rounded-2xl bg-[#CBD5E1]"
+        className="w-[50%] rounded-2xl bg-[#CBD5E1] overflow-auto mx-auto"
         onClick={handleFormClick}
       >
-        <div className="h-10 flex justify-between items-center rounded-t-2xl bg-[#EEEEEE] w-full p-4 border-b dark:border-black mb-3">
+        <div className="h-10 flex justify-between items-center rounded-t-2xl  w-full p-4 mb-3">
           <div className="w-full">
             <Icon
               icon={"akar-icons:cross"}
@@ -566,19 +530,6 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
               <p className="font-bold">
                 {decodeUserData()?.firstName} {decodeUserData()?.lastName}
               </p>
-              <div
-                className="p-1 hover:bg-gray-100 dark:hover:bg-neutral-700 me-1 rounded"
-                onClick={handleShowPreview}
-              >
-                <Icon
-                  icon={
-                    previewClickable
-                      ? "mdi:eye-outline"
-                      : "weui:eyes-off-outlined"
-                  }
-                  className="h-6 w-6 "
-                />
-              </div>
             </div>
 
             <div className="bg-inherit text-sm items-center flex gap-1">
@@ -687,7 +638,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
           </div>
         </div>
 
-        <div className="rounded-2xl border-t mt-2 bg-[#EEEEEE] dark:border-black relative pb-2">
+        <div className="rounded-2xl mt-2 relative pb-2">
           <div className="h-7 flex w-full justify-center items-center">
             <Icon icon={"octicon:dash-16"} className="w-7 h-7" />
           </div>
