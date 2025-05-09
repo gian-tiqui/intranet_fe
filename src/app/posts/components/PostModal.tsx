@@ -480,7 +480,11 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   };
 
   return (
-    <div className="h-screen w-screen bg-[#CBD5E1] z-50 absolute">
+    <form
+      onSubmit={handleSubmit(handlePost)}
+      onClick={handleFormClick}
+      className="h-screen w-screen bg-[#CBD5E1] z-50 absolute"
+    >
       <div className="h-[10vh] flex items-center justify-between px-5">
         <div className="w-full">
           <Icon
@@ -515,11 +519,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
         </div>
       </div>
       <div className="flex">
-        <form
-          onSubmit={handleSubmit(handlePost)}
-          className="w-[50%] rounded-2xl bg-[#CBD5E1] overflow-auto h-[90vh] overflow-y-auto"
-          onClick={handleFormClick}
-        >
+        <div className="w-[50%] rounded-2xl bg-[#CBD5E1] overflow-auto h-[90vh] overflow-y-auto">
           <div className="flex items-start gap-3 mb-2 mx-4">
             <Avatar
               className="bg-blue-600 h-12 w-12 font-bold text-white"
@@ -564,9 +564,13 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
               </p>
               <hr className="w-full border-b border border-gray-400" />
               <textarea
-                className="w-full h-52 outline-none p-2 bg-inherit placeholder-neutral-600"
+                className="w-full outline-none p-2 bg-inherit placeholder-neutral-600 resize-none overflow-hidden"
                 placeholder="Is there something you want to write for the memo?"
                 {...register("message")}
+                onInput={(e) => {
+                  e.currentTarget.style.height = "auto";
+                  e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
+                }}
               />
 
               <div className="w-full p-4 mb-4 dark:bg-neutral-900 rounded-md">
@@ -614,7 +618,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
               </div>
             </div>
           </div>
-        </form>
+        </div>
         <div className="w-[50%] h-[90vh]">
           <div className="flex flex-col gap-2 md:flex-row justify-between w-96">
             <div>
@@ -734,7 +738,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 
