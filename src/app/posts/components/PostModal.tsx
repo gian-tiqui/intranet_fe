@@ -27,6 +27,8 @@ import { TreeSelect, TreeSelectChangeEvent } from "primereact/treeselect";
 import { PrimeIcons } from "primereact/api";
 import { Toast } from "primereact/toast";
 import useToastRefStore from "@/app/store/toastRef";
+import { Avatar } from "primereact/avatar";
+import { Image } from "primereact/image";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -479,246 +481,259 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
 
   return (
     <div className="h-screen w-screen bg-[#CBD5E1] z-50 absolute">
-      <form
-        onSubmit={handleSubmit(handlePost)}
-        className="w-[50%] rounded-2xl bg-[#CBD5E1] overflow-auto mx-auto"
-        onClick={handleFormClick}
-      >
-        <div className="h-10 flex justify-between items-center rounded-t-2xl  w-full p-4 mb-3">
-          <div className="w-full">
-            <Icon
-              icon={"akar-icons:cross"}
-              className="h-4 w-4 cursor-pointer"
-              onClick={() => setVisible(false)}
-            />
-          </div>
-          <p className="w-full text-center text-sm font-semibold">
-            Create Post
-          </p>
-          <div className="w-full flex justify-end">
-            <button
-              type="submit"
-              className={`${
-                posting && "opacity-80"
-              }  bg-inherit text-sm flex justify-end gap-1 items-center`}
-              disabled={isConverting || posting}
-            >
-              {posting ? (
-                <>
-                  {" "}
-                  <Icon
-                    icon={"material-symbols:post-add"}
-                    className="h-5 w-5 animate-spin"
-                  />
-                </>
-              ) : (
-                <>
-                  {" "}
-                  <Icon
-                    icon={"material-symbols:post-add"}
-                    className="h-5 w-5"
-                  />
-                </>
-              )}
-            </button>
-          </div>
+      <div className="h-[10vh] flex items-center justify-between px-5">
+        <div className="w-full">
+          <Icon
+            icon={"akar-icons:cross"}
+            className="h-4 w-4 cursor-pointer"
+            onClick={() => setVisible(false)}
+          />
         </div>
-        <div className="flex items-start gap-3 mb-2 mx-4">
-          <div className="rounded-full w-12 h-10 bg-gray-400"></div>
-          <div className="w-full">
-            <div className="flex justify-between">
-              <p className="font-bold">
-                {decodeUserData()?.firstName} {decodeUserData()?.lastName}
-              </p>
-            </div>
-
-            <div className="bg-inherit text-sm items-center flex gap-1">
-              <MultiStateCheckbox
-                value={postVisibility}
-                options={options}
-                onChange={(e) => setPostVisibility(e.value)}
-                optionValue="value"
-              />
-              <span>{postVisibility || "nothing selected"}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="relative mx-4">
-          <div>
-            <input
-              className="w-full outline-none p-2 bg-inherit placeholder-neutral-600"
-              placeholder="Memo title"
-              {...register("title")}
-            />
-            <hr className="w-full border-b border border-neutral-300 dark:border-neutral-800" />
-            <textarea
-              className="w-full h-20 outline-none p-2 bg-inherit placeholder-neutral-600"
-              placeholder="Is there something you want to write for the memo?"
-              {...register("message")}
-            />
-
-            <div className="w-full p-4 mb-4 dark:bg-neutral-900 rounded-md">
-              <div className="relative w-full border border-dashed border-neutral-400 dark:border-neutral-800 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-all duration-200">
-                <input
-                  type="file"
-                  multiple={true}
-                  accept=".pdf,.jpg,.jpeg,.png"
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                  {...register("memo")}
-                  onChange={handleFileChange}
+        <div className="w-full flex justify-end">
+          <button
+            type="submit"
+            className={`${
+              posting && "opacity-80"
+            }  bg-inherit text-sm flex justify-end gap-1 items-center`}
+            disabled={isConverting || posting}
+          >
+            {posting ? (
+              <>
+                {" "}
+                <Icon
+                  icon={"material-symbols:post-add"}
+                  className="h-5 w-5 animate-spin"
                 />
-                <div className="flex flex-col items-center justify-center text-gray-500">
-                  {isConverting ? (
-                    <div className="flex flex-col items-center">
-                      <Icon
-                        icon="eos-icons:loading"
-                        className="h-10 w-10 animate-spin"
-                      />
-                      <span className="mt-2 text-sm">Converting PDF...</span>
-                    </div>
-                  ) : fileNames.length > 0 ? (
-                    <div className="flex flex-col items-center">
-                      <Icon
-                        icon={"weui:done2-outlined"}
-                        className="h-10 w-10"
-                      />
-                      <div className="flex flex-wrap">Files Uploaded</div>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center">
-                      <Icon
-                        icon={"material-symbols:upload"}
-                        className="h-10 w-10"
-                      />
-                      <span className="mt-2 text-sm">
-                        Click to upload memo (PDF or Image)
-                      </span>
-                    </div>
-                  )}
+              </>
+            ) : (
+              <>
+                {" "}
+                <Icon icon={"material-symbols:post-add"} className="h-5 w-5" />
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+      <div className="flex">
+        <form
+          onSubmit={handleSubmit(handlePost)}
+          className="w-[50%] rounded-2xl bg-[#CBD5E1] overflow-auto h-[90vh] overflow-y-auto"
+          onClick={handleFormClick}
+        >
+          <div className="flex items-start gap-3 mb-2 mx-4">
+            <Avatar
+              className="bg-blue-600 h-12 w-12 font-bold text-white"
+              shape="circle"
+              label={
+                String(decodeUserData()?.firstName[0]).toUpperCase() +
+                String(decodeUserData()?.lastName[0]).toUpperCase()
+              }
+            />
+            <div>
+              <div className="flex justify-between">
+                <p className="font-bold">
+                  {decodeUserData()?.firstName} {decodeUserData()?.lastName}
+                </p>
+              </div>
+
+              <div className="bg-inherit text-sm items-center flex gap-1">
+                <MultiStateCheckbox
+                  value={postVisibility}
+                  options={options}
+                  onChange={(e) => setPostVisibility(e.value)}
+                  optionValue="value"
+                />
+                <span>{postVisibility || "nothing selected"}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative mx-4">
+            <div>
+              <input
+                className="w-full outline-none p-2 bg-inherit placeholder-neutral-600"
+                placeholder="Write the title here"
+                {...register("title")}
+              />
+              <p className="mb-3 text-sm font-medium ms-2">
+                {new Date().toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+              <hr className="w-full border-b border border-gray-400" />
+              <textarea
+                className="w-full h-52 outline-none p-2 bg-inherit placeholder-neutral-600"
+                placeholder="Is there something you want to write for the memo?"
+                {...register("message")}
+              />
+
+              <div className="w-full p-4 mb-4 dark:bg-neutral-900 rounded-md">
+                <div className="relative w-full border border-dashed border-neutral-400 dark:border-neutral-800 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-all duration-200">
+                  <input
+                    type="file"
+                    multiple={true}
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                    {...register("memo")}
+                    onChange={handleFileChange}
+                  />
+                  <div className="flex flex-col items-center justify-center text-gray-500">
+                    {isConverting ? (
+                      <div className="flex flex-col items-center">
+                        <Icon
+                          icon="eos-icons:loading"
+                          className="h-10 w-10 animate-spin"
+                        />
+                        <span className="mt-2 text-sm">Converting PDF...</span>
+                      </div>
+                    ) : fileNames.length > 0 ? (
+                      <div>
+                        {filePreviews.map((preview, index) => (
+                          <Image
+                            src={preview}
+                            key={index}
+                            alt={`${preview}-${index}`}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <Icon
+                          icon={"material-symbols:upload"}
+                          className="h-10 w-10"
+                        />
+                        <span className="mt-2 text-sm">
+                          Click to upload memo (PDF or Image)
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="flex flex-col gap-2 md:flex-row justify-between w-96">
-          <div>
-            <Checkbox
-              id="notifyCheckbox"
-              className="ms-7 me-2"
-              value={notify}
-              checked={notify}
-              onChange={() => {
-                setNotify((prev) => !prev);
-              }}
-            />
-            <label
-              htmlFor="notifyCheckbox"
-              onClick={() => setNotify((prev) => !prev)}
-              className="hover:cursor-pointer text-sm"
-            >
-              Notify recipients?
-            </label>
+        </form>
+        <div className="w-[50%] h-[90vh]">
+          <div className="flex flex-col gap-2 md:flex-row justify-between w-96">
+            <div>
+              <Checkbox
+                id="notifyCheckbox"
+                className="ms-7 me-2"
+                value={notify}
+                checked={notify}
+                onChange={() => {
+                  setNotify((prev) => !prev);
+                }}
+              />
+              <label
+                htmlFor="notifyCheckbox"
+                onClick={() => setNotify((prev) => !prev)}
+                className="hover:cursor-pointer text-sm"
+              >
+                Notify recipients?
+              </label>
+            </div>
+            <div>
+              <Checkbox
+                id="downloadable"
+                className="ms-7 me-2"
+                onClick={() => setDownloadable((prev) => !prev)}
+                value={downloadable}
+                checked={downloadable}
+              />
+              <label
+                htmlFor="downloadable"
+                className="hover:cursor-pointer text-sm"
+                onClick={() => setDownloadable((prev) => !prev)}
+              >
+                Downloadable
+              </label>
+            </div>
           </div>
-          <div>
-            <Checkbox
-              id="downloadable"
-              className="ms-7 me-2"
-              onClick={() => setDownloadable((prev) => !prev)}
-              value={downloadable}
-              checked={downloadable}
-            />
-            <label
-              htmlFor="downloadable"
-              className="hover:cursor-pointer text-sm"
-              onClick={() => setDownloadable((prev) => !prev)}
-            >
-              Downloadable
-            </label>
-          </div>
-        </div>
+          <div className="rounded-2xl mt-2 relative pb-2">
+            <div className="h-7 flex w-full justify-center items-center">
+              <Icon icon={"octicon:dash-16"} className="w-7 h-7" />
+            </div>
+            <div className="flex items-center flex-col px-5">
+              <Dropdown
+                className="w-full mb-2 h-8 items-center bg-inherit"
+                filter
+                placeholder="Select a employee level"
+                value={selectedLevel}
+                onChange={(e) => {
+                  const lid = e.target.value.lid;
 
-        <div className="rounded-2xl mt-2 relative pb-2">
-          <div className="h-7 flex w-full justify-center items-center">
-            <Icon icon={"octicon:dash-16"} className="w-7 h-7" />
-          </div>
-          <div className="flex items-center flex-col px-5">
-            <Dropdown
-              className="w-full mb-2 h-8 items-center bg-inherit"
-              filter
-              placeholder="Select a employee level"
-              value={selectedLevel}
-              onChange={(e) => {
-                const lid = e.target.value.lid;
+                  if (lid === 1) {
+                    setSelectedDepartments([
+                      ...departments.map((dept) => String(dept.deptId)),
+                    ]);
+                  } else {
+                    setSelectedDepartments([]);
+                  }
 
-                if (lid === 1) {
-                  setSelectedDepartments([
-                    ...departments.map((dept) => String(dept.deptId)),
-                  ]);
-                } else {
-                  setSelectedDepartments([]);
-                }
-
-                setSelectedLevel(e.target.value);
-              }}
-              options={levels}
-              pt={{
-                root: {
-                  className: "dark:bg-neutral-950 dark:border-neutral-700",
-                },
-
-                panel: {
-                  className: "dark:bg-neutral-950 dark:border-neutral-700",
-                },
-                header: { className: "dark:bg-neutral-950" },
-                filterInput: {
-                  className: "dark:bg-neutral-800 dark:text-white",
-                },
-              }}
-              valueTemplate={selectedOptionTemplate}
-              itemTemplate={levelOptionTemplate}
-              optionLabel="level"
-            />
-            <DepartmentsListMemo
-              setSelectedDepartments={setSelectedDepartments}
-              departments={departments}
-              selectedDepartments={selectedDepartments}
-            />
-            <TreeSelect
-              filter
-              pt={{
-                root: {
-                  className:
-                    "dark:bg-neutral-950 dark:border-neutral-700 dark:text-neutral-100",
-                },
-                tree: {
-                  root: { className: "dark:bg-neutral-950 rounded-none" },
-                  content: {
-                    className:
-                      "dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-100",
+                  setSelectedLevel(e.target.value);
+                }}
+                options={levels}
+                pt={{
+                  root: {
+                    className: "dark:bg-neutral-950 dark:border-neutral-700",
                   },
-                },
-                header: {
-                  className: "dark:bg-neutral-950 dark:text-neutral-100",
-                },
-                filter: {
-                  className:
-                    "dark:bg-neutral-700 dark:border-neutral-700 dark:text-neutral-100 dark:placeholder-neutral-400",
-                },
-              }}
-              className="w-full mb-2 h-8 items-center bg-inherit"
-              options={buildTree(foldersData?.data.folders || [])}
-              onChange={async (e: TreeSelectChangeEvent) => {
-                if (!e.value) return;
-                const selected = await getFolderById(+e.value);
-                if (selected) setSelectedFolder(selected);
-              }}
-              value={selectedFolder?.id.toString()}
-              placeholder="Select a folder"
-            />
+
+                  panel: {
+                    className: "dark:bg-neutral-950 dark:border-neutral-700",
+                  },
+                  header: { className: "dark:bg-neutral-950" },
+                  filterInput: {
+                    className: "dark:bg-neutral-800 dark:text-white",
+                  },
+                }}
+                valueTemplate={selectedOptionTemplate}
+                itemTemplate={levelOptionTemplate}
+                optionLabel="level"
+              />
+              <DepartmentsListMemo
+                setSelectedDepartments={setSelectedDepartments}
+                departments={departments}
+                selectedDepartments={selectedDepartments}
+              />
+              <TreeSelect
+                filter
+                pt={{
+                  root: {
+                    className:
+                      "dark:bg-neutral-950 dark:border-neutral-700 dark:text-neutral-100",
+                  },
+                  tree: {
+                    root: { className: "dark:bg-neutral-950 rounded-none" },
+                    content: {
+                      className:
+                        "dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-100",
+                    },
+                  },
+                  header: {
+                    className: "dark:bg-neutral-950 dark:text-neutral-100",
+                  },
+                  filter: {
+                    className:
+                      "dark:bg-neutral-700 dark:border-neutral-700 dark:text-neutral-100 dark:placeholder-neutral-400",
+                  },
+                }}
+                className="w-full mb-2 h-8 items-center bg-inherit"
+                options={buildTree(foldersData?.data.folders || [])}
+                onChange={async (e: TreeSelectChangeEvent) => {
+                  if (!e.value) return;
+                  const selected = await getFolderById(+e.value);
+                  if (selected) setSelectedFolder(selected);
+                }}
+                value={selectedFolder?.id.toString()}
+                placeholder="Select a folder"
+              />
+            </div>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 };
