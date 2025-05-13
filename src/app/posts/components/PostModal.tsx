@@ -209,7 +209,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
         for (const file of files) {
           if (file.type === "application/pdf") {
             toastRef.current?.show({
-              content: `Converting PDF: ${file.name}`,
+              detail: `Converting PDF: ${file.name}`,
               severity: "info",
             });
 
