@@ -9,6 +9,9 @@ import { Toast } from "primereact/toast";
 import { RefetchOptions } from "@tanstack/react-query";
 import CustomToast from "./CustomToast";
 import MotionP from "./animation/MotionP";
+import { Checkbox } from "primereact/checkbox";
+import useDepartments from "../custom-hooks/departments";
+import CreateFolderDropdown from "./CreateFolderDropdown";
 
 interface Props {
   visible: boolean;
@@ -18,13 +21,11 @@ interface Props {
 
 interface FormFields {
   name: string;
-  textColor: string;
-  folderColor: string;
+  isPublished: number;
+  deptIds: string;
 }
 
 const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
-  const [textColor, setTextColor] = useState<string>("");
-  const [folderColor, setFolderCOlor] = useState<string>("");
   const {
     register,
     handleSubmit,
@@ -33,12 +34,14 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
     formState: { errors },
   } = useForm<FormFields>();
   const toastRef = useRef<Toast>(null);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const departments = useDepartments();
+  const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
 
   const handleFormSubmit = (data: FormFields) => {
     addMainFolder({
       name: data.name,
-      textColor: data.textColor,
-      folderColor: data.folderColor,
+      isPublished: data.isPublished,
     })
       .then((response) => {
         if (response.status === 201) {
@@ -49,8 +52,7 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
           });
           refetch();
           reset();
-          setTextColor("");
-          setFolderCOlor("");
+          setIsChecked(false);
           setVisible(false);
         }
       })
@@ -58,11 +60,18 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
   };
 
   useEffect(() => {
-    setValue("textColor", `#${textColor}`);
-  }, [textColor, setValue]);
+    if (!selectedDepartments) return;
+    const joinedDepartmentIds = selectedDepartments.join(",");
+
+    console.log(joinedDepartmentIds);
+
+    setValue("deptIds", joinedDepartmentIds);
+  }, [selectedDepartments, setValue]);
+
   useEffect(() => {
-    setValue("folderColor", `#${folderColor}`);
-  }, [folderColor, setValue]);
+    if (isChecked) setValue("isPublished", 1);
+    else setValue("isPublished", 0);
+  }, [isChecked, setValue]);
 
   return (
     <>
@@ -72,16 +81,15 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
         onHide={() => {
           if (visible) {
             reset();
-            setFolderCOlor("");
-            setTextColor("");
+
             setVisible(false);
           }
         }}
         header="Create new folder"
         className="w-96"
         pt={{
-          header: { className: "bg-[#EEEEEE]" },
-          content: { className: "bg-[#EEEEEE]" },
+          header: { className: "bg-[#EEEEEE] rounded-t-2xl" },
+          content: { className: "bg-[#EEEEEE] rounded-b-2xl" },
         }}
       >
         <form className="pt-5" onSubmit={handleSubmit(handleFormSubmit)}>
@@ -101,6 +109,22 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
                 Folder name is required
               </MotionP>
             )}
+          </div>
+
+          <div className="h-20">
+            <CreateFolderDropdown
+              departments={departments}
+              selectedDepartments={selectedDepartments}
+              setSelectedDepartments={setSelectedDepartments}
+            />
+          </div>
+
+          <div
+            className="flex items-center gap-2 mb-6 hover:underline cursor-pointer w-[25%]"
+            onClick={() => setIsChecked((prev) => !prev)}
+          >
+            <Checkbox checked={isChecked} />
+            <p className="text-sm text-blue-600 font-medium">Publish</p>
           </div>
 
           <Button

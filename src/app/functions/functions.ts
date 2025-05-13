@@ -68,7 +68,7 @@ const fetchPublicPosts = async () => {
       const response = await apiClient.get(
         `${API_BASE}/post?lid=${
           decodeUserData()?.lid
-        }&public=true&userIdComment=${decodeUserData()?.sub}`
+        }&public=true&userIdComment=${decodeUserData()?.sub}&isPublished=${1}`
       );
 
       return response.data as RetPost;
@@ -136,7 +136,7 @@ const fetchPostsByLevel = async () => {
     const response = await apiClient.get(
       `${API_BASE}/post/level/${decodeUserData()?.lid}?deptId=${
         decodeUserData()?.deptId
-      }`
+      }&isPublished=${1}`
     );
 
     return response.data as RetPost;

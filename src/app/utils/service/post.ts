@@ -9,7 +9,7 @@ const fetchDeptPostsByLid = async () => {
   if (deptId && lid) {
     try {
       const response = await apiClient.get(
-        `${API_BASE}/post/${deptId}/level/${lid}`
+        `${API_BASE}/post/${deptId}/level/${lid}?isPublished=${1}`
       );
 
       return {

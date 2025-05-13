@@ -40,6 +40,7 @@ const FolderContentDialog: React.FC<Props> = ({
     search: "",
     skip: 0,
     take: 1000,
+    isPublished: 1,
   });
   const [addSubfolder, setAddSubfolder] = useState<boolean>(false);
   const [folderToEdit, setFolderToEdit] = useState<number | undefined>();
@@ -68,10 +69,11 @@ const FolderContentDialog: React.FC<Props> = ({
   });
 
   const { data, refetch: refetchSubfolders } = useQuery({
-    queryKey: [`folder-${folderId}-subfolder`],
+    queryKey: [`folder-${folderId}-subfolder-${JSON.stringify(query)}`],
     queryFn: async () => {
       if (!folderId) return { data: { subfolders: [], count: 0 } };
       const response = await getFolderSubfolders(folderId, query);
+
       return response;
     },
     enabled: !!folderId,

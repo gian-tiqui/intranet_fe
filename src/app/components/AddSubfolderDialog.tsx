@@ -15,6 +15,9 @@ import { Toast } from "primereact/toast";
 import { RefetchOptions } from "@tanstack/react-query";
 import CustomToast from "./CustomToast";
 import MotionP from "./animation/MotionP";
+import { Checkbox } from "primereact/checkbox";
+import CreateFolderDropdown from "./CreateFolderDropdown";
+import useDepartments from "../custom-hooks/departments";
 
 interface Props {
   visible: boolean;
@@ -26,8 +29,8 @@ interface Props {
 
 interface FormFields {
   name: string;
-  textColor: string;
-  folderColor: string;
+  isPublished: number;
+  deptIds: string;
 }
 
 const AddSubfolderDialog: React.FC<Props> = ({
@@ -37,25 +40,26 @@ const AddSubfolderDialog: React.FC<Props> = ({
   parentId,
   refetchFolders,
 }) => {
-  const [textColor, setTextColor] = useState<string>("");
-  const [folderColor, setFolderCOlor] = useState<string>("");
   const {
     register,
     handleSubmit,
     reset,
-    setValue,
     formState: { errors },
+    setValue,
   } = useForm<FormFields>();
   const toastRef = useRef<Toast>(null);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const departments = useDepartments();
+  const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
 
   const handleFormSubmit = (data: FormFields) => {
     if (!parentId) return;
 
     addSubfolder({
       name: data.name,
-      textColor: data.textColor,
-      folderColor: data.folderColor,
+      isPublished: data.isPublished,
       parentId,
+      deptIds: data.deptIds,
     })
       .then((response) => {
         if (response.status === 201) {
@@ -66,8 +70,7 @@ const AddSubfolderDialog: React.FC<Props> = ({
           });
           refetch();
           reset();
-          setTextColor("");
-          setFolderCOlor("");
+          setIsChecked(false);
           setVisible(false);
           refetchFolders();
         }
@@ -76,11 +79,18 @@ const AddSubfolderDialog: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    setValue("textColor", `#${textColor}`);
-  }, [textColor, setValue]);
+    if (!selectedDepartments) return;
+    const joinedDepartmentIds = selectedDepartments.join(",");
+
+    console.log(joinedDepartmentIds);
+
+    setValue("deptIds", joinedDepartmentIds);
+  }, [selectedDepartments, setValue]);
+
   useEffect(() => {
-    setValue("folderColor", `#${folderColor}`);
-  }, [folderColor, setValue]);
+    if (isChecked) setValue("isPublished", 1);
+    else setValue("isPublished", 0);
+  }, [isChecked, setValue]);
 
   return (
     <>
@@ -90,16 +100,14 @@ const AddSubfolderDialog: React.FC<Props> = ({
         onHide={() => {
           if (visible) {
             reset();
-            setFolderCOlor("");
-            setTextColor("");
             setVisible(false);
           }
         }}
         header="Create new folder"
         className="w-96"
         pt={{
-          header: { className: "bg-[#EEEEEE]" },
-          content: { className: "bg-[#EEEEEE]" },
+          header: { className: "bg-[#EEEEEE] rounded-t-2xl" },
+          content: { className: "bg-[#EEEEEE] rounded-b-2xl" },
         }}
       >
         <form className="pt-5" onSubmit={handleSubmit(handleFormSubmit)}>
@@ -119,6 +127,25 @@ const AddSubfolderDialog: React.FC<Props> = ({
                 Folder name is required
               </MotionP>
             )}
+          </div>
+
+          <div className="h-24">
+            <label htmlFor="folderNameInput" className="text-sm font-semibold">
+              Departments
+            </label>
+            <CreateFolderDropdown
+              departments={departments}
+              selectedDepartments={selectedDepartments}
+              setSelectedDepartments={setSelectedDepartments}
+            />
+          </div>
+
+          <div
+            className="flex items-center gap-2 mb-6 hover:underline cursor-pointer w-[25%]"
+            onClick={() => setIsChecked((prev) => !prev)}
+          >
+            <Checkbox checked={isChecked} />
+            <p className="text-sm text-blue-600 font-medium">Publish</p>
           </div>
 
           <Button
