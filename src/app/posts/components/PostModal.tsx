@@ -29,6 +29,7 @@ import { Toast } from "primereact/toast";
 import useToastRefStore from "@/app/store/toastRef";
 import { Avatar } from "primereact/avatar";
 import { Image } from "primereact/image";
+import { Button } from "primereact/button";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -46,6 +47,7 @@ interface FormFields {
   extractedText: string;
   postId?: number;
   downloadable: string;
+  isPublished: number;
 }
 
 const DepartmentsListMemo = React.memo(DepartmentsList);
@@ -56,6 +58,7 @@ interface Props {
 }
 
 const PostModal: React.FC<Props> = ({ isMobile }) => {
+  const [publish, setPublish] = useState<boolean>(false);
   const [notify, setNotify] = useState<boolean>(false);
   const [downloadable, setDownloadable] = useState<boolean>(false);
   const { setVisible } = useShowPostStore();
@@ -84,6 +87,11 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     take: 500,
     depth: MAX_DEPTH,
   });
+
+  useEffect(() => {
+    if (publish) setValue("isPublished", 1);
+    else setValue("isPublished", 0);
+  }, [publish, setValue]);
 
   useEffect(() => {
     setToastRef(toastRef);
@@ -318,6 +326,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       formData.append("lid", String(data.lid));
       formData.append("extractedText", data.extractedText);
       formData.append("downloadable", data.downloadable);
+      formData.append("isPublished", data.isPublished.toString());
 
       if (selectedFolder)
         formData.append("folderId", String(selectedFolder.id));
@@ -485,184 +494,125 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       onClick={handleFormClick}
       className="h-screen w-screen bg-[#CBD5E1] z-50 absolute"
     >
-      <div className="h-[10vh] flex items-center justify-between px-5">
-        <div className="w-full">
-          <Icon
-            icon={"akar-icons:cross"}
-            className="h-4 w-4 cursor-pointer"
-            onClick={() => setVisible(false)}
-          />
-        </div>
-        <div className="w-full flex justify-end">
-          <button
-            type="submit"
-            className={`${
-              posting && "opacity-80"
-            }  bg-inherit text-sm flex justify-end gap-1 items-center`}
-            disabled={isConverting || posting}
-          >
-            {posting ? (
-              <>
-                {" "}
-                <Icon
-                  icon={"material-symbols:post-add"}
-                  className="h-5 w-5 animate-spin"
-                />
-              </>
-            ) : (
-              <>
-                {" "}
-                <Icon icon={"material-symbols:post-add"} className="h-5 w-5" />
-              </>
-            )}
-          </button>
-        </div>
-      </div>
       <div className="flex">
-        <div className="w-[50%] rounded-2xl bg-[#CBD5E1] overflow-auto h-[90vh] overflow-y-auto">
-          <div className="flex items-start gap-3 mb-2 mx-4">
-            <Avatar
-              className="bg-blue-600 h-12 w-12 font-bold text-white"
-              shape="circle"
-              label={
-                String(decodeUserData()?.firstName[0]).toUpperCase() +
-                String(decodeUserData()?.lastName[0]).toUpperCase()
-              }
-            />
-            <div>
-              <div className="flex justify-between">
-                <p className="font-bold">
-                  {decodeUserData()?.firstName} {decodeUserData()?.lastName}
-                </p>
-              </div>
+        <div className="w-[70%] flex justify-center h-[100vh]  overflow-y-auto">
+          <div className="w-[70%] bg-[#CBD5E1] pt-14">
+            <div className="flex items-start gap-3 mb-2 mx-4">
+              <Avatar
+                className="bg-blue-600 h-12 w-12 font-bold text-white"
+                shape="circle"
+                label={
+                  String(decodeUserData()?.firstName[0]).toUpperCase() +
+                  String(decodeUserData()?.lastName[0]).toUpperCase()
+                }
+              />
+              <div>
+                <div className="flex justify-between">
+                  <p className="font-bold">
+                    {decodeUserData()?.firstName} {decodeUserData()?.lastName}
+                  </p>
+                </div>
 
-              <div className="bg-inherit text-sm items-center flex gap-1">
-                <MultiStateCheckbox
-                  value={postVisibility}
-                  options={options}
-                  onChange={(e) => setPostVisibility(e.value)}
-                  optionValue="value"
-                />
-                <span>{postVisibility || "nothing selected"}</span>
+                <div className="bg-inherit text-sm items-center flex gap-1">
+                  <MultiStateCheckbox
+                    value={postVisibility}
+                    options={options}
+                    onChange={(e) => setPostVisibility(e.value)}
+                    optionValue="value"
+                  />
+                  <span>{postVisibility || "nothing selected"}</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="relative mx-4">
-            <div>
-              <input
-                className="w-full outline-none p-2 bg-inherit placeholder-neutral-600"
-                placeholder="Write the title here"
-                {...register("title")}
-              />
-              <p className="mb-3 text-sm font-medium ms-2">
-                {new Date().toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </p>
-              <hr className="w-full border-b border border-gray-400" />
-              <textarea
-                className="w-full outline-none p-2 bg-inherit placeholder-neutral-600 resize-none overflow-hidden"
-                placeholder="Is there something you want to write for the memo?"
-                {...register("message")}
-                onInput={(e) => {
-                  e.currentTarget.style.height = "auto";
-                  e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
-                }}
-              />
+            <div className="relative mx-4">
+              <div>
+                <input
+                  className="w-full outline-none p-2 bg-inherit placeholder-neutral-600"
+                  placeholder="Write the title here"
+                  {...register("title")}
+                />
+                <p className="mb-3 text-sm font-medium ms-2">
+                  {new Date().toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
+                <hr className="w-full border-b border border-gray-400" />
+                <textarea
+                  className="w-full outline-none p-2 bg-inherit placeholder-neutral-600 resize-none overflow-hidden"
+                  placeholder="Is there something you want to write for the memo?"
+                  {...register("message")}
+                  onInput={(e) => {
+                    e.currentTarget.style.height = "auto";
+                    e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
+                  }}
+                />
 
-              <div className="w-full p-4 mb-4 dark:bg-neutral-900 rounded-md">
-                <div className="relative w-full border border-dashed border-neutral-400 dark:border-neutral-800 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-all duration-200">
-                  <input
-                    type="file"
-                    multiple={true}
-                    accept=".pdf,.jpg,.jpeg,.png"
-                    className="absolute inset-0 opacity-0 cursor-pointer"
-                    {...register("memo")}
-                    onChange={handleFileChange}
-                  />
-                  <div className="flex flex-col items-center justify-center text-gray-500">
-                    {isConverting ? (
-                      <div className="flex flex-col items-center">
-                        <Icon
-                          icon="eos-icons:loading"
-                          className="h-10 w-10 animate-spin"
-                        />
-                        <span className="mt-2 text-sm">Converting PDF...</span>
-                      </div>
-                    ) : fileNames.length > 0 ? (
-                      <div>
-                        {filePreviews.map((preview, index) => (
-                          <Image
-                            src={preview}
-                            key={index}
-                            alt={`${preview}-${index}`}
+                <div className="w-full p-4 mb-4 dark:bg-neutral-900 rounded-md">
+                  <div className="relative w-full border border-dashed border-neutral-400 dark:border-neutral-800 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-all duration-200">
+                    <input
+                      type="file"
+                      multiple={true}
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      {...register("memo")}
+                      onChange={handleFileChange}
+                    />
+                    <div className="flex flex-col items-center justify-center text-gray-500">
+                      {isConverting ? (
+                        <div className="flex flex-col items-center">
+                          <Icon
+                            icon="eos-icons:loading"
+                            className="h-10 w-10 animate-spin"
                           />
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-center">
-                        <Icon
-                          icon={"material-symbols:upload"}
-                          className="h-10 w-10"
-                        />
-                        <span className="mt-2 text-sm">
-                          Click to upload memo (PDF or Image)
-                        </span>
-                      </div>
-                    )}
+                          <span className="mt-2 text-sm">
+                            Converting PDF...
+                          </span>
+                        </div>
+                      ) : fileNames.length > 0 ? (
+                        <div>
+                          {filePreviews.map((preview, index) => (
+                            <Image
+                              src={preview}
+                              key={index}
+                              alt={`${preview}-${index}`}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center">
+                          <Icon
+                            icon={"material-symbols:upload"}
+                            className="h-10 w-10"
+                          />
+                          <span className="mt-2 text-sm">
+                            Click to upload memo (PDF or Image)
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="w-[50%] h-[90vh]">
-          <div className="flex flex-col gap-2 md:flex-row justify-between w-96">
-            <div>
-              <Checkbox
-                id="notifyCheckbox"
-                className="ms-7 me-2"
-                value={notify}
-                checked={notify}
-                onChange={() => {
-                  setNotify((prev) => !prev);
-                }}
-              />
-              <label
-                htmlFor="notifyCheckbox"
-                onClick={() => setNotify((prev) => !prev)}
-                className="hover:cursor-pointer text-sm"
-              >
-                Notify recipients?
-              </label>
-            </div>
-            <div>
-              <Checkbox
-                id="downloadable"
-                className="ms-7 me-2"
-                onClick={() => setDownloadable((prev) => !prev)}
-                value={downloadable}
-                checked={downloadable}
-              />
-              <label
-                htmlFor="downloadable"
-                className="hover:cursor-pointer text-sm"
-                onClick={() => setDownloadable((prev) => !prev)}
-              >
-                Downloadable
-              </label>
-            </div>
+        <div className="w-[30%] h-[100vh] shadow-lg bg-[#EEEEEE] pt-4">
+          <div className="w-full flex items-center justify-between px-5 mb-10">
+            <p className="text-lg font-medium">Post Settings</p>
+            <Button
+              className="h-6 w-6"
+              icon={`${PrimeIcons.TIMES}`}
+              onClick={() => setVisible(false)}
+            ></Button>
           </div>
+
           <div className="rounded-2xl mt-2 relative pb-2">
-            <div className="h-7 flex w-full justify-center items-center">
-              <Icon icon={"octicon:dash-16"} className="w-7 h-7" />
-            </div>
             <div className="flex items-center flex-col px-5">
               <Dropdown
-                className="w-full mb-2 h-8 items-center bg-inherit"
+                className="w-full mb-6 h-12 border border-black items-center bg-inherit"
                 filter
                 placeholder="Select a employee level"
                 value={selectedLevel}
@@ -686,11 +636,11 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                   },
 
                   panel: {
-                    className: "dark:bg-neutral-950 dark:border-neutral-700",
+                    className: "bg-[#EEEEEE]",
                   },
-                  header: { className: "dark:bg-neutral-950" },
+                  header: { className: "bg-[#EEEEEE]" },
                   filterInput: {
-                    className: "dark:bg-neutral-800 dark:text-white",
+                    className: "bg-white border border-black h-10 px-3 text-sm",
                   },
                 }}
                 valueTemplate={selectedOptionTemplate}
@@ -710,12 +660,12 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                       "dark:bg-neutral-950 dark:border-neutral-700 dark:text-neutral-100",
                   },
                   tree: {
-                    root: { className: "dark:bg-neutral-950 rounded-none" },
+                    root: { className: "bg-[#eeeeee]" },
                     content: {
-                      className:
-                        "dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-100",
+                      className: "bg-[#EEEEEE]",
                     },
                   },
+                  wrapper: { className: "bg-[#EEEEEE]" },
                   header: {
                     className: "dark:bg-neutral-950 dark:text-neutral-100",
                   },
@@ -724,7 +674,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                       "dark:bg-neutral-700 dark:border-neutral-700 dark:text-neutral-100 dark:placeholder-neutral-400",
                   },
                 }}
-                className="w-full mb-2 h-8 items-center bg-inherit"
+                className="w-full mb-6 h-12 border border-black items-center bg-inherit"
                 options={buildTree(foldersData?.data.folders || [])}
                 onChange={async (e: TreeSelectChangeEvent) => {
                   if (!e.value) return;
@@ -734,6 +684,68 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 value={selectedFolder?.id.toString()}
                 placeholder="Select a folder"
               />
+
+              <div
+                className="h-12 border flex items-center gap-2 px-3 w-full border-black mb-6 rounded-lg"
+                onClick={() => setNotify((prev) => !prev)}
+              >
+                <Checkbox
+                  id="notifyCheckbox"
+                  className=""
+                  value={notify}
+                  checked={notify}
+                />
+                <label
+                  htmlFor="notifyCheckbox"
+                  className="hover:cursor-pointer text-sm"
+                >
+                  Notify recipients?
+                </label>
+              </div>
+              <div
+                className="h-12 border flex items-center gap-2 px-3 w-full border-black mb-6 rounded-lg"
+                onClick={() => setDownloadable((prev) => !prev)}
+              >
+                <Checkbox
+                  id="downloadable"
+                  className=""
+                  value={downloadable}
+                  checked={downloadable}
+                />
+                <label
+                  htmlFor="downloadable"
+                  className="hover:cursor-pointer text-sm"
+                >
+                  Downloadable
+                </label>
+              </div>
+              <div
+                className="h-12 border flex items-center gap-2 px-3 w-full border-black mb-6 rounded-lg"
+                onClick={() => setPublish((prev) => !prev)}
+              >
+                <Checkbox
+                  id="publish"
+                  className=""
+                  value={publish}
+                  checked={publish}
+                />
+                <label
+                  htmlFor="publish"
+                  className="hover:cursor-pointer text-sm"
+                >
+                  Publish
+                </label>
+              </div>
+              <Button
+                type="submit"
+                icon={`${PrimeIcons.SAVE}`}
+                className={`${
+                  posting && "opacity-80"
+                }  bg-blue-600 text-white font-medium w-full gap-2 h-12 justify-center`}
+                disabled={isConverting || posting}
+              >
+                Post
+              </Button>
             </div>
           </div>
         </div>

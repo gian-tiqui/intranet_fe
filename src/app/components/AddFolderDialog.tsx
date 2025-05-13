@@ -42,6 +42,7 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
     addMainFolder({
       name: data.name,
       isPublished: data.isPublished,
+      deptIds: data.deptIds,
     })
       .then((response) => {
         if (response.status === 201) {
@@ -62,8 +63,6 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
   useEffect(() => {
     if (!selectedDepartments) return;
     const joinedDepartmentIds = selectedDepartments.join(",");
-
-    console.log(joinedDepartmentIds);
 
     setValue("deptIds", joinedDepartmentIds);
   }, [selectedDepartments, setValue]);

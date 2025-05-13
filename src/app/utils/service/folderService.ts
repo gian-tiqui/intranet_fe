@@ -28,13 +28,16 @@ const getFolderPostsByFolderId = async (
 const addMainFolder = async ({
   name,
   isPublished,
+  deptIds,
 }: {
   name: string;
   isPublished: number;
+  deptIds: string;
 }) => {
   return apiClient.post(`${API_BASE}/folders`, {
     name,
     isPublished,
+    deptIds,
   });
 };
 
