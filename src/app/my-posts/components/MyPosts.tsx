@@ -30,7 +30,9 @@ const MyPosts = () => {
       if (!userId) return;
 
       try {
-        const apiUri = `${API_BASE}/post/my-posts?userId=${userId}&direction=${direction}&offset=${minMax.min}&limit=${minMax.max}`;
+        const apiUri = `${API_BASE}/post/my-posts?userId=${userId}&direction=${direction}&offset=${
+          minMax.min
+        }&limit=${minMax.max}&isPublished=${1}`;
 
         const response = await apiClient.get(apiUri);
 

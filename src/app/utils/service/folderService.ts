@@ -27,35 +27,35 @@ const getFolderPostsByFolderId = async (
 
 const addMainFolder = async ({
   name,
-  textColor,
-  folderColor,
+  isPublished,
+  deptIds,
 }: {
   name: string;
-  textColor?: string;
-  folderColor?: string;
+  isPublished: number;
+  deptIds: string;
 }) => {
   return apiClient.post(`${API_BASE}/folders`, {
     name,
-    textColor,
-    folderColor,
+    isPublished,
+    deptIds,
   });
 };
 
 const addSubfolder = async ({
   name,
-  textColor,
-  folderColor,
+  isPublished,
   parentId,
+  deptIds,
 }: {
   name: string;
-  textColor?: string;
-  folderColor?: string;
+  isPublished: number;
   parentId: number;
+  deptIds: string;
 }) => {
   return apiClient.post(`${API_BASE}/folders/${parentId}/subfolder`, {
     name,
-    textColor,
-    folderColor,
+    isPublished,
+    deptIds,
   });
 };
 

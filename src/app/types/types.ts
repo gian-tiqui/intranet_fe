@@ -287,6 +287,7 @@ type Query = {
   take?: number;
   includeSubfolders?: number;
   depth?: number;
+  isPublished?: number;
 };
 
 type AddDepartmentFormField = {

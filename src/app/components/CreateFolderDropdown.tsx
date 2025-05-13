@@ -8,7 +8,7 @@ interface Props {
   setSelectedDepartments: Dispatch<SetStateAction<string[]>>;
 }
 
-const DepartmentsList: React.FC<Props> = ({
+const CreateFolderDropdown: React.FC<Props> = ({
   departments,
   selectedDepartments,
   setSelectedDepartments,
@@ -26,23 +26,21 @@ const DepartmentsList: React.FC<Props> = ({
         },
 
         panel: {
-          className: "bg-[#EEEEEE]",
+          className: "bg-inherit",
         },
-        header: { className: "bg-[#EEEEEE]" },
-        token: { className: "bg-blue-600 text-white text-sm" },
-        filterInput: { className: "h-10 bg-white border  border-black" },
-        filterContainer: {
-          className:
-            "h-10 bg-white flex px-3 items-center border border-black rounded",
+        header: { className: "dark:bg-neutral-950" },
+        token: {
+          className: "dark:text-white h-7 dark:bg-neutral-800 text-sm",
         },
+        filterInput: { className: "bg-neutral-800 dark:text-white" },
       }}
       onChange={(e) => setSelectedDepartments(e.value)}
       placeholder="Select department recipient/s"
-      className="w-full h-12 border border-black mb-6 items-center"
+      className="w-full mb-2 h-12 border border-black bg-white items-center"
       filter
       display="chip"
     />
   );
 };
 
-export default DepartmentsList;
+export default CreateFolderDropdown;

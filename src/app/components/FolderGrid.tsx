@@ -28,6 +28,7 @@ const FolderGrid = () => {
     skip: 0,
     take: 50,
     includeSubfolders: 0,
+    isPublished: 1,
   });
   const [searchTerm] = useState<string>("");
   const { signal, setSignal } = useSignalStore();
@@ -117,7 +118,6 @@ const FolderGrid = () => {
         transition={{ delay: 0.6, duration: 0.5 }}
         className="text-sm flex items-center gap-2 justify-center mb-6"
       >
-        <i className={`${PrimeIcons.FOLDER}`}></i>
         <motion.p>
           Folders <span className="text-blue-600 font-semibold">managed</span>{" "}
           by <span className="text-blue-600 font-semibold">HR</span> and{" "}

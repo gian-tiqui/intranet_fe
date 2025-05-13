@@ -28,7 +28,7 @@ const ForYou = () => {
         const response: AxiosResponse<RetPost> = await apiClient.get(
           `${API_BASE}/post/level/${decodeUserData()?.lid}?&offset=${
             minMax.min
-          }&limit=${minMax.max}&direction=${direction}`
+          }&limit=${minMax.max}&direction=${direction}&isPublished=${1}`
         );
 
         setTotalPosts(response.data.count);

@@ -19,7 +19,7 @@ const usePost = (id: number) => {
         else userCommentId = decodeUserData()?.sub;
 
         const response = await apiClient.get(
-          `${API_BASE}/post/${id}?userIdComment=${userCommentId}`,
+          `${API_BASE}/post/${id}?userIdComment=${userCommentId}&isPublished=${1}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
