@@ -17,7 +17,7 @@ import SmallToLarge from "@/app/components/animation/SmallToLarge";
 import useEditModalStore from "@/app/store/editModal";
 import usePostIdStore from "@/app/store/postId";
 import { jsPDF } from "jspdf";
-import apiClient from "@/app/http-common/apiUrl";
+import apiClient, { API_URI } from "@/app/http-common/apiUrl";
 import { toast } from "react-toastify";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import useSetCommentsStore from "@/app/store/useCommentsStore";
@@ -25,12 +25,14 @@ import useReadStore from "@/app/store/readStore";
 import useDeptIdStore from "@/app/store/deptIdStore";
 import { useQuery } from "@tanstack/react-query";
 import useRefetchPostStore from "@/app/store/refetchPostStore";
-import ImageSlider from "./ImageSlider";
 import useImagesStore from "@/app/store/imagesStore";
 import useDeleteModalStore from "@/app/store/deleteModalStore";
 import useSignalStore from "@/app/store/signalStore";
 import { Avatar } from "primereact/avatar";
 import { Toast } from "primereact/toast";
+import ImagePaginator from "@/app/components/ImagePaginator";
+import { Button } from "primereact/button";
+import { PrimeIcons } from "primereact/api";
 
 interface Props {
   id: number;
@@ -50,6 +52,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
     queryKey: [`single-post-${id}-${type}`],
     queryFn: () => fetchPost(id),
   });
+  const [preview, setPreviews] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [comments, setComments] = useState<PostComment[]>([]);
   const [editable, setEditable] = useState<boolean>(false);
@@ -107,12 +110,12 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
     if (post && post.imageLocations) {
       const imageLocations = [
         ...post.imageLocations?.map(
-          (imageLocation) => imageLocation.imageLocation
+          (imageLocation) => `${API_URI}/uploads/${imageLocation.imageLocation}`
         ),
       ];
 
       if (imageLocations != undefined) {
-        setImages(imageLocations);
+        setPreviews(imageLocations);
       }
     }
   }, [post, setImages]);
@@ -529,13 +532,10 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
 
         <hr className="w-full border-t border-black mb-2" />
 
+        <pre>{post?.message}</pre>
+
         {post?.imageLocations && post?.imageLocations?.length > 0 && (
-          <ImageSlider
-            postName={post.title}
-            imageLocations={post.imageLocations}
-            currentIndex={currentIndex}
-            setCurrentIndex={setCurrentIndex}
-          />
+          <ImagePaginator filePreviews={preview} currentPage={currentIndex} />
         )}
         <div
           className={`flex items-center w-full ${
@@ -575,6 +575,28 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
             postId={id}
           />
         </>
+      )}
+      {preview.length > 0 && (
+        <div className="h-10 w-36 flex items-center justify-between bg-[#EEEEEE] fixed top-60 z-40 right-7 shadow rounded-lg">
+          <Button
+            className="h-8 w-8"
+            onClick={() => {
+              if (currentIndex > 0) setCurrentIndex((prev) => prev - 1);
+            }}
+            icon={`${PrimeIcons.ARROW_LEFT} text-xs`}
+          />
+          <p className="text-xs">
+            Page {currentIndex + 1} of {preview.length}
+          </p>
+          <Button
+            className="h-8 w-8"
+            onClick={() => {
+              if (currentIndex < preview.length - 1)
+                setCurrentIndex((prev) => prev + 1);
+            }}
+            icon={`${PrimeIcons.ARROW_RIGHT} text-xs`}
+          />
+        </div>
       )}
     </>
   );

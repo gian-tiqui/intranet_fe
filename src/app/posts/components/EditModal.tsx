@@ -82,6 +82,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
     search: "",
     skip: 0,
     take: 500,
+    isPublished: 1,
   });
   const [postVisibility, setPostVisibility] = useState<string>("public");
   const options: { value: string; icon: string }[] = [
@@ -465,7 +466,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   return (
     <form
       onSubmit={handleSubmit(handleEditPost)}
-      className="h-screen w-screen flex absolute bg-[#CBD5E1] z-40 overflow-hidden"
+      className="h-screen w-screen flex absolute bg-[#CBD5E1] z-50 overflow-hidden"
     >
       <div className=" w-[70%] overflow-y-auto">
         <div className="w-[70%] mx-auto pt-10">
@@ -510,7 +511,14 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                   {...register("title")}
                 />
               )}
-              <hr className="w-full border-b border border-gray-300 dark:border-neutral-800" />
+              <p className="mb-3 text-sm font-medium ms-2">
+                {new Date().toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+              <hr className="w-full border-b/1 border-gray-800" />
               {loading ? (
                 <>
                   <div className="h-4 w-full rounded bg-gray-300 animate-pulse mb-2 mt-2"></div>
@@ -523,6 +531,10 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                   className="w-full h-20 outline-none p-2 bg-inherit"
                   placeholder="Edit your memo content"
                   {...register("message")}
+                  onInput={(e) => {
+                    e.currentTarget.style.height = "auto";
+                    e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
+                  }}
                 />
               )}
 

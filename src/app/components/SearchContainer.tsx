@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import searchTermStore from "../store/search";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
@@ -45,10 +45,6 @@ const SearchContainer = () => {
     queryKey: [`search-${JSON.stringify(query)}`],
     queryFn: () => search(query),
   });
-
-  useEffect(() => {
-    console.log(data?.data);
-  }, [data]);
 
   if (isError) {
     console.error(error);
