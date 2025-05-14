@@ -183,11 +183,11 @@ const Aside: React.FC<Props> = ({
               ].includes(userDeptId) && (
                 <div
                   className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
-                  onClick={() => handleClick("/my-posts")}
+                  onClick={() => handleClick("/drafts")}
                 >
                   <i className={`${PrimeIcons.USER_EDIT} text-xl`}></i>
 
-                  <p className="w-full text-sm">My posts</p>
+                  <p className="w-full text-sm">Drafts</p>
                 </div>
               )}
           </div>

@@ -28,8 +28,8 @@ import { PrimeIcons } from "primereact/api";
 import { Toast } from "primereact/toast";
 import useToastRefStore from "@/app/store/toastRef";
 import { Avatar } from "primereact/avatar";
-import { Image } from "primereact/image";
 import { Button } from "primereact/button";
+import ImagePaginator from "@/app/components/ImagePaginator";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -68,6 +68,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const { register, handleSubmit, setValue } = useForm<FormFields>();
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [convertedFiles, setConvertedFiles] = useState<File[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const [isConverting, setIsConverting] = useState<boolean>(false);
   const [posting, setPosting] = useState<boolean>(false);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
@@ -86,6 +87,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     skip: 0,
     take: 500,
     depth: MAX_DEPTH,
+    isPublished: 1,
   });
 
   useEffect(() => {
@@ -495,7 +497,29 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       className="h-screen w-screen bg-[#CBD5E1] z-50 absolute"
     >
       <div className="flex">
-        <div className="w-[70%] flex justify-center h-[100vh]  overflow-y-auto">
+        <div className="w-[70%] flex justify-center h-[100vh]  overflow-y-auto relative">
+          {filePreviews.length > 0 && (
+            <div className="fixed bottom-5 bg-[#EEEEEE] rounded-lg shadow h-12 px-2 items-center w-40 z-50 right-[438px] flex justify-between">
+              <Button
+                type="button"
+                className="h-7 w-7 bg-blue-600 justify-center text-white"
+                onClick={() => {
+                  if (currentPage > 0) setCurrentPage((prev) => prev - 1);
+                }}
+                icon={`${PrimeIcons.ARROW_LEFT}`}
+              ></Button>
+              <p className="text-sm font-medium">Page {currentPage + 1}</p>
+              <Button
+                type="button"
+                className="h-7 w-7 bg-blue-600 justify-center text-white"
+                onClick={() => {
+                  if (currentPage < filePreviews.length - 1)
+                    setCurrentPage((prev) => prev + 1);
+                }}
+                icon={`${PrimeIcons.ARROW_RIGHT}`}
+              ></Button>
+            </div>
+          )}
           <div className="w-[70%] bg-[#CBD5E1] pt-14">
             <div className="flex items-start gap-3 mb-2 mx-4">
               <Avatar
@@ -572,15 +596,10 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                           </span>
                         </div>
                       ) : fileNames.length > 0 ? (
-                        <div>
-                          {filePreviews.map((preview, index) => (
-                            <Image
-                              src={preview}
-                              key={index}
-                              alt={`${preview}-${index}`}
-                            />
-                          ))}
-                        </div>
+                        <ImagePaginator
+                          filePreviews={filePreviews}
+                          currentPage={currentPage}
+                        />
                       ) : (
                         <div className="flex flex-col items-center">
                           <Icon
