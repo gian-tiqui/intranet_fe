@@ -30,7 +30,9 @@ const GeneralBulletin = () => {
       try {
         const apiUri = `${API_BASE}/post?public=true&search=${uriPost}&lid=${
           decodeUserData()?.lid
-        }&direction=${direction}&offset=${minMax.min}&limit=${minMax.max}`;
+        }&direction=${direction}&offset=${minMax.min}&limit=${
+          minMax.max
+        }&isPublished=${1}`;
 
         const response = await apiClient.get(apiUri, {
           headers: {

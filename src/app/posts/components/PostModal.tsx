@@ -209,7 +209,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
         for (const file of files) {
           if (file.type === "application/pdf") {
             toastRef.current?.show({
-              content: `Converting PDF: ${file.name}`,
+              detail: `Converting PDF: ${file.name}`,
               severity: "info",
             });
 
@@ -612,7 +612,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
           <div className="rounded-2xl mt-2 relative pb-2">
             <div className="flex items-center flex-col px-5">
               <Dropdown
-                className="w-full mb-6 h-12 border border-black items-center bg-inherit"
+                className={`w-full mb-6 h-12 border border-black items-center bg-inherit`}
                 filter
                 placeholder="Select a employee level"
                 value={selectedLevel}
@@ -686,7 +686,9 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
               />
 
               <div
-                className="h-12 border flex items-center gap-2 px-3 w-full border-black mb-6 rounded-lg"
+                className={`h-12 border flex items-center gap-2 px-3 w-full ${
+                  notify && "bg-blue-500 text-white"
+                } border-black mb-6 rounded-lg`}
                 onClick={() => setNotify((prev) => !prev)}
               >
                 <Checkbox
@@ -703,7 +705,9 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 </label>
               </div>
               <div
-                className="h-12 border flex items-center gap-2 px-3 w-full border-black mb-6 rounded-lg"
+                className={`h-12 border flex items-center gap-2 px-3 w-full ${
+                  downloadable && "bg-blue-500 text-white"
+                } border-black mb-6 rounded-lg`}
                 onClick={() => setDownloadable((prev) => !prev)}
               >
                 <Checkbox
@@ -720,7 +724,9 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 </label>
               </div>
               <div
-                className="h-12 border flex items-center gap-2 px-3 w-full border-black mb-6 rounded-lg"
+                className={`h-12 border flex items-center gap-2 px-3 w-full ${
+                  publish && "bg-blue-500 text-white"
+                } border-black mb-6 rounded-lg`}
                 onClick={() => setPublish((prev) => !prev)}
               >
                 <Checkbox
