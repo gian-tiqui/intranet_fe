@@ -57,8 +57,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
   const { showDeleteModal, setShowDeleteModal } = useDeleteModalStore();
   const { setShowEditModal } = useEditModalStore();
   const { setPostId } = usePostIdStore();
-  const [message] = useState<string>("");
-  const [extracting] = useState<boolean>(false);
   const { setSetComments, setThisComments } = useSetCommentsStore();
   const { isRead, setIsRead } = useReadStore();
   const { setDeptId } = useDeptIdStore();
@@ -531,20 +529,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
 
         <hr className="w-full border-t border-black mb-2" />
 
-        {extracting && <p>Extracting text</p>}
-
-        {!extracting && (
-          <div
-            className="text-md mb-2 max-w-full whitespace-pre-wrap break-words"
-            style={{
-              overflowWrap: "break-word",
-              wordWrap: "break-word",
-              hyphens: "auto",
-            }}
-          >
-            {message || post?.message}
-          </div>
-        )}
         {post?.imageLocations && post?.imageLocations?.length > 0 && (
           <ImageSlider
             postName={post.title}

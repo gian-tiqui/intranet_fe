@@ -74,6 +74,7 @@ type Post = {
   folder: Folder;
   employeeLevel: Level;
   downloadable: boolean;
+  isPublished: boolean;
 };
 
 type PostDepartment = {

@@ -53,6 +53,7 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
           });
           refetch();
           reset();
+          setSelectedDepartments([]);
           setIsChecked(false);
           setVisible(false);
         }

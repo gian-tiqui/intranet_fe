@@ -72,6 +72,7 @@ const AddSubfolderDialog: React.FC<Props> = ({
           reset();
           setIsChecked(false);
           setVisible(false);
+          setSelectedDepartments([]);
           refetchFolders();
         }
       })

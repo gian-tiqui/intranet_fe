@@ -21,13 +21,16 @@ import { toast } from "react-toastify";
 import { createWorker } from "tesseract.js";
 import DepartmentsList from "./DepartmentsList";
 import useRefetchPostStore from "@/app/store/refetchPostStore";
-import PostPreview from "./PostPreview";
 import useSignalStore from "@/app/store/signalStore";
 import { Dropdown, DropdownProps } from "primereact/dropdown";
 import { MultiStateCheckbox } from "primereact/multistatecheckbox";
 import { getFolders } from "@/app/utils/service/folderService";
 import { TreeSelect, TreeSelectChangeEvent } from "primereact/treeselect";
 import { PrimeIcons } from "primereact/api";
+import { Avatar } from "primereact/avatar";
+import { Button } from "primereact/button";
+import { Checkbox } from "primereact/checkbox";
+import { Image } from "primereact/image";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -44,7 +47,8 @@ interface FormFields {
   extractedText: string;
   addPhoto: string;
   folderId?: number;
-  downloadable: string;
+  isPublished: number;
+  downloadable: number;
 }
 
 interface EditPostModalProps {
@@ -55,7 +59,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const departments = useDepartments();
   const { setShowEditModal } = useEditModalStore();
   const { setIsCollapsed } = useToggleStore();
-  const { register, handleSubmit, setValue, watch } = useForm<FormFields>();
+  const { register, handleSubmit, setValue } = useForm<FormFields>();
   const [loading, setLoading] = useState<boolean>(true);
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [saving, setSaving] = useState<boolean>(false);
@@ -63,13 +67,13 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const [isConverting, setIsConverting] = useState<boolean>(false);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const { refetch } = useRefetchPostStore();
+  const [isChecked, setIsChecked] = useState<boolean>(false);
   const [filePreviews, setFilePreviews] = useState<string[]>([]);
-  const [showPreview, setShowPreview] = useState<boolean>(false);
-  const [title, setTitle] = useState<string | undefined>(undefined);
-  const [message, setMessage] = useState<string | undefined>(undefined);
   const [selectedLevel, setSelectedLevel] = useState<Level | undefined>(
     undefined
   );
+  const [downloadable, setDownloadable] = useState<boolean>(false);
+  const [publish, setPublish] = useState<boolean>(false);
   const [selectedFolder, setSelectedFolder] = useState<Folder | undefined>(
     undefined
   );
@@ -93,23 +97,6 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
     queryKey: [`folders-${JSON.stringify(foldersQuery)}`],
     queryFn: () => getFolders(foldersQuery),
   });
-
-  const handleShowPreview = () => {
-    const _title = watch("title");
-    const _message = watch("message");
-
-    setTitle(_title);
-    setMessage(_message);
-
-    if (_title && _message && filePreviews.length > 0) {
-      setShowPreview(true);
-    } else {
-      toast("Please fill the fields", {
-        className: toastClass,
-        type: "error",
-      });
-    }
-  };
 
   const [levels, setLevels] = useState<Level[]>([]);
   const { data, isError, error } = useQuery({
@@ -164,6 +151,12 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
             postDept.department.deptId.toString()
           ),
         ];
+        setValue("isPublished", post.isPublished ? 1 : 0);
+        if (post.isPublished) setPublish(true);
+        else setPublish(false);
+        setValue("downloadable", post.downloadable ? 1 : 0);
+        if (post.downloadable) setDownloadable(true);
+        else setDownloadable(false);
 
         setSelectedDepartments(selectedDeptIds);
 
@@ -237,6 +230,11 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
 
     return convertedFiles;
   };
+
+  useEffect(() => {
+    if (downloadable) setValue("downloadable", 1);
+    else setValue("downloadable", 0);
+  }, [downloadable, setValue]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -336,6 +334,8 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
         "public",
         String(data.public === "public" ? "public" : "private")
       );
+      formData.append("downloadable", data.downloadable.toString());
+      formData.append("isPublished", data.isPublished.toString());
 
       convertedFiles.sort((a, b) => {
         const getPage = (name: string) => {
@@ -408,10 +408,6 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
     }
   };
 
-  const handleFormClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
   useEffect(() => {
     setIsCollapsed(true);
     return () => setIsCollapsed(false);
@@ -423,12 +419,15 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
     setConvertedFiles([]);
   };
 
-  const handleChangeCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = e.target.checked;
-
-    if (checked) setValue("addPhoto", "true");
+  useEffect(() => {
+    if (isChecked) setValue("addPhoto", "true");
     else setValue("addPhoto", "false");
-  };
+  }, [isChecked, setValue]);
+
+  useEffect(() => {
+    if (publish) setValue("isPublished", 1);
+    else setValue("isPublished", 0);
+  }, [publish, setValue]);
 
   const selectedOptionTemplate = (
     option: { level: string } | null,
@@ -464,172 +463,131 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   };
 
   return (
-    <div className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-40 grid place-content-center">
-      {showPreview && (
-        <PostPreview
-          title={title}
-          message={message}
-          filePreviews={filePreviews}
-          setShowPreview={setShowPreview}
-        />
-      )}
-      <form
-        className="w-80 md:w-[420px] rounded-2xl bg-[#CBD5E1] relative"
-        onClick={handleFormClick}
-        onSubmit={handleSubmit(handleEditPost)}
-      >
-        <div className="gap-3 mb-2">
-          <div className="h-10 flex justify-between items-center rounded-t-2xl bg-[#EEEEEE] w-full p-4 border-b dark:border-black mb-3">
-            <div className="w-full">
-              <Icon
-                icon={"akar-icons:cross"}
-                className="h-4 w-4 cursor-pointer"
-                onClick={() => setShowEditModal(false)}
+    <form
+      onSubmit={handleSubmit(handleEditPost)}
+      className="h-screen w-screen flex absolute bg-[#CBD5E1] z-40 overflow-hidden"
+    >
+      <div className=" w-[70%] overflow-y-auto">
+        <div className="w-[70%] mx-auto pt-10">
+          <div className="gap-3 mb-2 w-p"></div>
+          <div>
+            <div className="flex items-start gap-3 mx-4">
+              <Avatar
+                shape="circle"
+                className="h-10 w-10 bg-blue-600 text-white font-medium"
+                label={`${decodeUserData()?.firstName[0].toUpperCase()}${decodeUserData()?.lastName[0].toUpperCase()}`}
               />
-            </div>
-            <p className="w-full text-center text-sm font-semibold">
-              Edit Post
-            </p>
-            <div className="w-full flex justify-end">
-              <button
-                type="submit"
-                className={`${
-                  saving && "opacity-80"
-                }  bg-inherit text-sm flex justify-end gap-1 items-center`}
-                disabled={isConverting || saving}
-              >
-                {saving ? (
-                  <>
-                    {" "}
-                    <Icon
-                      icon={"material-symbols:post-add"}
-                      className="h-5 w-5 animate-spin"
-                    />
-                  </>
+
+              <div className="bg-inherit text-sm">
+                <div className="flex justify-between items-center">
+                  <p className="font-bold">
+                    {decodeUserData()?.firstName} {decodeUserData()?.lastName}
+                  </p>
+                </div>
+
+                {loading ? (
+                  <div className="h-3 w-1/3 rounded bg-gray-300 animate-pulse"></div>
                 ) : (
-                  <>
-                    {" "}
-                    <Icon
-                      icon={"material-symbols:post-add"}
-                      className="h-5 w-5"
+                  <div className="bg-inherit text-sm items-center flex gap-1">
+                    <MultiStateCheckbox
+                      value={postVisibility}
+                      options={options}
+                      onChange={(e) => setPostVisibility(e.value)}
+                      optionValue="value"
                     />
-                  </>
+                    <span>{postVisibility || "nothing selected"}</span>
+                  </div>
                 )}
-              </button>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div className="flex items-start gap-3 mx-4">
-            <div className="rounded-full w-10 h-10 bg-gray-400"></div>
-
-            <div className="bg-inherit text-sm w-full">
-              <div className="flex justify-between items-center">
-                <p className="font-bold">
-                  {decodeUserData()?.firstName} {decodeUserData()?.lastName}
-                </p>
-                <div
-                  className="p-1 hover:bg-gray-100 dark:hover:bg-neutral-700 me-1 rounded"
-                  onClick={handleShowPreview}
-                >
-                  <Icon icon={"mdi:eye-outline"} className="h-6 w-6 " />
-                </div>
               </div>
-
+            </div>
+            <div className="mx-3 pt-4">
               {loading ? (
-                <div className="h-3 w-1/3 rounded bg-gray-300 animate-pulse"></div>
+                <div className="h-4 w-1/3 rounded bg-gray-300 animate-pulse mb-2"></div>
               ) : (
-                <div className="bg-inherit text-sm items-center flex gap-1">
-                  <MultiStateCheckbox
-                    value={postVisibility}
-                    options={options}
-                    onChange={(e) => setPostVisibility(e.value)}
-                    optionValue="value"
-                  />
-                  <span>{postVisibility || "nothing selected"}</span>
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="mx-3 pt-4">
-            {loading ? (
-              <div className="h-4 w-1/3 rounded bg-gray-300 animate-pulse mb-2"></div>
-            ) : (
-              <input
-                className="w-full outline-none p-2 bg-inherit"
-                placeholder="Memo title"
-                {...register("title")}
-              />
-            )}
-            <hr className="w-full border-b border border-gray-300 dark:border-neutral-800" />
-            {loading ? (
-              <>
-                <div className="h-4 w-full rounded bg-gray-300 animate-pulse mb-2 mt-2"></div>
-                <div className="h-4 w-full rounded bg-gray-300 animate-pulse mb-2 mt-2"></div>
-                <div className="h-4 w-full rounded bg-gray-300 animate-pulse mb-2 mt-2"></div>
-                <div className="h-4 w-2/3 rounded bg-gray-300 animate-pulse mb-10 mt-2"></div>
-              </>
-            ) : (
-              <textarea
-                className="w-full h-20 outline-none p-2 bg-inherit"
-                placeholder="Edit your memo content"
-                {...register("message")}
-              />
-            )}
-
-            <div className="w-full p-4 mb-4 dark:bg-neutral-900 rounded-md">
-              <div className="relative w-full border border-dashed border-neutral-400  dark:border-neutral-800 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-all duration-200">
-                <div
-                  onClick={removeFile}
-                  className="absolute right-0 top-0 h-7 w-7 bg-red-700 hover:bg-red-500 grid place-content-center text-white rounded-tr rounded-bl z-50 cursor-pointer"
-                >
-                  <Icon icon={"icomoon-free:cancel-circle"} />
-                </div>
-
                 <input
-                  type="file"
-                  multiple={true}
-                  className="absolute inset-0 opacity-0 cursor-pointer border border-black"
-                  {...register("memo")}
-                  onChange={handleFileChange}
+                  className="w-full outline-none p-2 bg-inherit"
+                  placeholder="Memo title"
+                  {...register("title")}
                 />
-                <div className="flex flex-col items-center justify-center text-gray-500 ">
-                  {loading ? (
-                    <Icon icon={"line-md:loading-loop"} className="h-8 w-8" />
-                  ) : fileNames ? (
-                    <Icon icon={"weui:done2-outlined"} className="h-10 w-10" />
-                  ) : (
-                    <Icon
-                      icon={"material-symbols:upload"}
-                      className="h-10 w-10"
-                    />
-                  )}
-                  {loading ? (
-                    <>
-                      <div className="h-4 w-full rounded bg-gray-300 animate-pulse my-1"></div>
-                      <div className="h-4 w-2/3 rounded bg-gray-300 animate-pulse my-1"></div>
-                    </>
-                  ) : (
-                    <span className="mt-2 text-sm">
-                      {fileNames ? "File uploaded" : "Click to upload memo"}{" "}
-                    </span>
-                  )}
+              )}
+              <hr className="w-full border-b border border-gray-300 dark:border-neutral-800" />
+              {loading ? (
+                <>
+                  <div className="h-4 w-full rounded bg-gray-300 animate-pulse mb-2 mt-2"></div>
+                  <div className="h-4 w-full rounded bg-gray-300 animate-pulse mb-2 mt-2"></div>
+                  <div className="h-4 w-full rounded bg-gray-300 animate-pulse mb-2 mt-2"></div>
+                  <div className="h-4 w-2/3 rounded bg-gray-300 animate-pulse mb-10 mt-2"></div>
+                </>
+              ) : (
+                <textarea
+                  className="w-full h-20 outline-none p-2 bg-inherit"
+                  placeholder="Edit your memo content"
+                  {...register("message")}
+                />
+              )}
+
+              <div className="w-full p-4 mb-4 dark:bg-neutral-900 rounded-md">
+                <div className="relative w-full border border-dashed border-neutral-400  dark:border-neutral-800 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-50 dark:hover:bg-neutral-800 transition-all duration-200">
+                  <div
+                    onClick={removeFile}
+                    className="absolute right-0 top-0 h-7 w-7 bg-red-700 hover:bg-red-500 grid place-content-center text-white rounded-tr rounded-bl z-50 cursor-pointer"
+                  >
+                    <Icon icon={"icomoon-free:cancel-circle"} />
+                  </div>
+
+                  <input
+                    type="file"
+                    multiple={true}
+                    className="absolute inset-0 opacity-0 cursor-pointer border border-black"
+                    {...register("memo")}
+                    onChange={handleFileChange}
+                  />
+                  <div className="flex flex-col items-center justify-center text-gray-500 ">
+                    {loading ? (
+                      <Icon icon={"line-md:loading-loop"} className="h-8 w-8" />
+                    ) : fileNames ? (
+                      <Icon
+                        icon={"weui:done2-outlined"}
+                        className="h-10 w-10"
+                      />
+                    ) : (
+                      <Icon
+                        icon={"material-symbols:upload"}
+                        className="h-10 w-10"
+                      />
+                    )}
+                    {loading ? (
+                      <>
+                        <div className="h-4 w-full rounded bg-gray-300 animate-pulse my-1"></div>
+                        <div className="h-4 w-2/3 rounded bg-gray-300 animate-pulse my-1"></div>
+                      </>
+                    ) : (
+                      <span className="mt-2 text-sm">
+                        {fileNames ? "File uploaded" : "Click to upload memo"}{" "}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="mx-10 flex items-center gap-1 mb-2">
-          <input type="checkbox" onChange={handleChangeCheckbox} />
-          <p className="text-sm">Keep previous files</p>
+        {filePreviews.map((file, index) => (
+          <Image src={file} alt={file} key={index} />
+        ))}
+      </div>
+      <div className="w-[30%] bg-[#EEEEEE] shadow-lg overflow-y-auto">
+        <div className="pt-3 flex justify-between items-center rounded-t-2xl w-full p-4 mb-3">
+          <p className="text-lg font-semibold">Post Settings</p>
+          <Button
+            className="h-8 w-8"
+            icon={`${PrimeIcons.TIMES}`}
+            onClick={() => setShowEditModal(false)}
+          />
         </div>
-        <div className="bg-[#EEEEEE] rounded-xl pb-3 px-4">
-          <div className="h-7 flex w-full justify-center items-center">
-            <Icon icon={"octicon:dash-16"} className="w-7 h-7" />
-          </div>
-
+        <div className="rounded-xl pb-3 px-4">
           <Dropdown
-            className="w-full mb-2 h-8 items-center bg-inherit"
+            className="w-full h-12 border border-black mb-6 items-center bg-inherit"
             filter
             placeholder="Select a employee level"
             value={selectedLevel}
@@ -692,7 +650,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                   "dark:bg-neutral-700 dark:border-neutral-700 dark:text-neutral-100 dark:placeholder-neutral-400",
               },
             }}
-            className="w-full mb-2 h-8 items-center bg-inherit"
+            className="w-full mb-6 h-12 items-center border border-black bg-inherit"
             options={buildTree(foldersData?.data.folders || [])}
             onChange={async (e: TreeSelectChangeEvent) => {
               if (!e.value) return;
@@ -702,9 +660,44 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
             value={selectedFolder?.id.toString()}
             placeholder="Select a folder"
           />
+          <div
+            onClick={() => setIsChecked((prev) => !prev)}
+            className={`flex items-center cursor-pointer ${
+              isChecked && "bg-blue-500 text-white"
+            } gap-2 px-3 mb-6 h-12 border border-black rounded-lg`}
+          >
+            <Checkbox checked={isChecked} />
+            <p className="text-sm">Keep previous files</p>
+          </div>
+          <div
+            onClick={() => setDownloadable((prev) => !prev)}
+            className={`flex items-center cursor-pointer ${
+              downloadable && "bg-blue-500 text-white"
+            } gap-2 px-3 mb-6 h-12 border border-black rounded-lg`}
+          >
+            <Checkbox checked={downloadable} />
+            <p className="text-sm">Downloadable</p>
+          </div>
+          <div
+            onClick={() => setPublish((prev) => !prev)}
+            className={`flex items-center cursor-pointer ${
+              publish && "bg-blue-500 text-white"
+            } gap-2 px-3 mb-6 h-12 border border-black rounded-lg`}
+          >
+            <Checkbox checked={publish} />
+            <p className="text-sm">Publish</p>
+          </div>
+          <Button
+            type="submit"
+            className={`bg-blue-600 font-medium gap-2 h-12 justify-center text-white w-full`}
+            icon={`${PrimeIcons.UNDO}`}
+            disabled={isConverting || saving}
+          >
+            Update Post
+          </Button>
         </div>
-      </form>
-    </div>
+      </div>
+    </form>
   );
 };
 
