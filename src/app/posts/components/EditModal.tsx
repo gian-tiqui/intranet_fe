@@ -528,10 +528,10 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                 </>
               ) : (
                 <textarea
-                  className="w-full h-20 outline-none p-2 bg-inherit"
+                  className="w-full outline-none p-2 bg-inherit placeholder-neutral-600 resize-none overflow-hidden"
                   placeholder="Edit your memo content"
                   {...register("message")}
-                  onInput={(e) => {
+                  onLoad={(e) => {
                     e.currentTarget.style.height = "auto";
                     e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
                   }}
