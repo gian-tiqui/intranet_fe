@@ -55,7 +55,17 @@ const HistoryTabItem: React.FC<Props> = ({ item }) => {
           </div>
 
           <small>{formatDate(item.createdAt)}</small>
-          <p className="text-sm">{item.post.message || "No description"}</p>
+          <p
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+            className="text-sm"
+          >
+            {item.post.message || "No description"}
+          </p>
         </div>
       </div>
       <Divider className="border-b border-black" />
