@@ -12,6 +12,7 @@ import MotionP from "./animation/MotionP";
 import { Checkbox } from "primereact/checkbox";
 import useDepartments from "../custom-hooks/departments";
 import CreateFolderDropdown from "./CreateFolderDropdown";
+import { decodeUserData } from "../functions/functions";
 
 interface Props {
   visible: boolean;
@@ -39,10 +40,15 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
 
   const handleFormSubmit = (data: FormFields) => {
+    const userId = decodeUserData()?.sub;
+
+    if (!userId) return;
+
     addMainFolder({
       name: data.name,
       isPublished: data.isPublished,
       deptIds: data.deptIds,
+      userId,
     })
       .then((response) => {
         if (response.status === 201) {
