@@ -150,7 +150,7 @@ const FolderGrid = () => {
                     visible: { opacity: 1, y: 0 },
                   }}
                   transition={{ duration: 0.4 }}
-                  className="h-32 hover:cursor-pointer p-3 rounded-xl flex flex-col shadow-lg gap-2 justify-between bg-[#EEEEEE] hover:bg-white"
+                  className="h-32 hover:cursor-pointer p-3 rounded-xl flex flex-col shadow-lg gap-2 justify-between bg-[#EEEEEE] hover:bg-[#EEEEEE]/60"
                   onClick={() => {
                     setFolderId(folder.id);
                     setFolderDialogVisible(true);
@@ -169,7 +169,7 @@ const FolderGrid = () => {
                           e.stopPropagation();
                           folderOverlayRef.current?.toggle(e);
                         }}
-                        className="h-5 w-5 rounded-full grid place-content-center hover:bg-neutral-400 dark:hover:bg-neutral-700 p-4"
+                        className="h-5 w-5 rounded-full grid place-content-center hover:bg-neutral-200 p-4"
                       >
                         <OverlayPanel
                           ref={folderOverlayRef}

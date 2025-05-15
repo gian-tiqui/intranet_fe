@@ -26,15 +26,16 @@ const Faqs = () => {
       <WelcomeNavbar disableAnimation />
 
       <div className="w-64 border shadow h-9 mb-5 rounded-full grid place-content-center bg-[#EEEEEE] mx-52 mt-14">
-        <h4 className="text-sm font-semibold">Frequently Asked Questions</h4>
+        <h4 className="text-sm font-semibold text-blue-600">
+          Frequently Asked Questions
+        </h4>
       </div>
 
-      <h1 className="text-5xl font-medium mb-2 mx-52">
+      <h1 className="text-5xl font-medium mb-2 mx-52 text-blue-600">
         Your questions answered
       </h1>
-      <p className="text-sm font-medium mb-10 mx-52 w-[600px]">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua.
+      <p className="text-sm font-medium mb-10 mx-52 w-[600px] text-blue-950">
+        meow
       </p>
 
       <Accordion
@@ -48,7 +49,7 @@ const Faqs = () => {
             header={
               <div className="flex items-center justify-between w-full">
                 <div className="flex gap-5 items-center">
-                  <div className="w-16 h-10 rounded-full shadow-lg bg-[#EEEEEE] text-black font-bold text-center text-lg flex items-center justify-center">
+                  <div className="w-16 h-10 rounded-full shadow-lg bg-[#EEEEEE] text-blue-600 font-bold text-center text-lg flex items-center justify-center">
                     {key + 1 < 10 ? `0${key + 1}` : `${key + 1}`}
                   </div>
                   <span>{content.question}</span>
@@ -61,9 +62,10 @@ const Faqs = () => {
               </div>
             }
             pt={{
-              content: { className: "bg-inherit ms-12" },
+              content: { className: "bg-inherit ms-12 text-blue-950" },
               headerAction: {
-                className: "bg-inherit gap-5 text-2xl font-semibold",
+                className:
+                  "bg-inherit gap-5 text-2xl font-semibold text-blue-600",
               },
             }}
           >
