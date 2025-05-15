@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 
 const Drafts = () => {
   const [userId, setUserID] = useState<number>(-1);
-  const [query, setQuery] = useState<Query>({ search: "", skip: 0, take: 10 });
+  const [query] = useState<Query>({ search: "", skip: 0, take: 10 });
 
   const { data } = useQuery({
     queryKey: [`user-${userId}-drafts-${JSON.stringify(query)}`],
