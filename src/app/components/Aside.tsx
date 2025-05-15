@@ -190,6 +190,22 @@ const Aside: React.FC<Props> = ({
                   <p className="w-full text-sm">Drafts</p>
                 </div>
               )}
+
+            {userDeptId &&
+              [
+                Department.HUMAN_RESOURCE,
+                Department.QUALITY_MANAGEMENT,
+              ].includes(userDeptId) && (
+                <div
+                  className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
+                  onClick={() => {
+                    handleClick("/my-posts");
+                  }}
+                >
+                  <Icon icon={"ph:folder-user-bold"} className="h-5 w-5" />
+                  <p className="w-full text-sm">My posts</p>
+                </div>
+              )}
           </div>
           <Divider className="mx-auto border-b border-black w-[88%]" />
           <div className="flex flex-col">

@@ -1,6 +1,8 @@
 "use client";
+import FolderDraft from "@/app/components/FolderDraft";
+import PostDraft from "@/app/components/PostDraft";
 import { decodeUserData } from "@/app/functions/functions";
-import { Query } from "@/app/types/types";
+import { Folder, Post, Query } from "@/app/types/types";
 import { getDraftsByUserId } from "@/app/utils/service/userService";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
@@ -31,7 +33,27 @@ const Drafts = () => {
 
   return (
     <div className="w-full h-[86vh] overflow-y-auto pt-4">
-      <h4 className="font-medium text-blue-600 text-lg">Drafts</h4>
+      <h4 className="font-medium text-blue-600 text-lg mb-6">Drafts</h4>
+      <div className="flex flex-col gap-2">
+        {data?.data.results.map(
+          (data: { type: string; data: Post | Folder }) => {
+            switch (data.type) {
+              case "folder":
+                const folder = data.data as Folder;
+
+                return (
+                  <FolderDraft key={`folder-${folder.id}`} folder={folder} />
+                );
+              case "post":
+                const post = data.data as Post;
+
+                return <PostDraft key={`post-${post.pid}`} post={post} />;
+              default:
+                return <p>This is an outlier</p>;
+            }
+          }
+        )}
+      </div>
     </div>
   );
 };
