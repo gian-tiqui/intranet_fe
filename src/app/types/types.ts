@@ -276,6 +276,8 @@ type Folder = {
   icon: string;
   textColor?: string;
   folderColor?: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 type UpdateStatus = {
