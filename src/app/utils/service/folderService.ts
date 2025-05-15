@@ -29,15 +29,18 @@ const addMainFolder = async ({
   name,
   isPublished,
   deptIds,
+  userId,
 }: {
   name: string;
   isPublished: number;
   deptIds: string;
+  userId: number;
 }) => {
   return apiClient.post(`${API_BASE}/folders`, {
     name,
     isPublished,
     deptIds,
+    userId,
   });
 };
 
@@ -46,16 +49,19 @@ const addSubfolder = async ({
   isPublished,
   parentId,
   deptIds,
+  userId,
 }: {
   name: string;
   isPublished: number;
   parentId: number;
   deptIds: string;
+  userId: number;
 }) => {
   return apiClient.post(`${API_BASE}/folders/${parentId}/subfolder`, {
     name,
     isPublished,
     deptIds,
+    userId,
   });
 };
 

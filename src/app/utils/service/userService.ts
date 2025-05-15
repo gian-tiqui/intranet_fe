@@ -43,7 +43,13 @@ const deactivateUser = async ({
   );
 };
 
+const getDraftsByUserId = async (userId: number, params: Query) => {
+  if (!params) return;
+  return apiClient.get(`${API_BASE}/users/${userId}/drafts`, { params });
+};
+
 export {
+  getDraftsByUserId,
   findUsers,
   addUser,
   deleteUserById,

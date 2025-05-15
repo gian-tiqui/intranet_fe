@@ -18,6 +18,7 @@ import MotionP from "./animation/MotionP";
 import { Checkbox } from "primereact/checkbox";
 import CreateFolderDropdown from "./CreateFolderDropdown";
 import useDepartments from "../custom-hooks/departments";
+import { decodeUserData } from "../functions/functions";
 
 interface Props {
   visible: boolean;
@@ -53,13 +54,17 @@ const AddSubfolderDialog: React.FC<Props> = ({
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
 
   const handleFormSubmit = (data: FormFields) => {
+    const userId = decodeUserData()?.sub;
+
     if (!parentId) return;
+    if (!userId) return;
 
     addSubfolder({
       name: data.name,
       isPublished: data.isPublished,
       parentId,
       deptIds: data.deptIds,
+      userId,
     })
       .then((response) => {
         if (response.status === 201) {
