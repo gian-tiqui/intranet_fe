@@ -531,7 +531,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                   className="w-full outline-none p-2 bg-inherit placeholder-neutral-600 resize-none overflow-hidden"
                   placeholder="Edit your memo content"
                   {...register("message")}
-                  onLoad={(e) => {
+                  onInput={(e) => {
                     e.currentTarget.style.height = "auto";
                     e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
                   }}

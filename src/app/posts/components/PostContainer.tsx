@@ -532,7 +532,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
 
         <hr className="w-full border-t border-black mb-2" />
 
-        <pre>{post?.message}</pre>
+        <p>{post?.message}</p>
 
         {post?.imageLocations && post?.imageLocations?.length > 0 && (
           <ImagePaginator filePreviews={preview} currentPage={currentIndex} />
