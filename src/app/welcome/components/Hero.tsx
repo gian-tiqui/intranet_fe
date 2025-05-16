@@ -104,8 +104,8 @@ const Hero = () => {
         {/**
          * Second Column
          */}
-        <div className="col-span-2 gap-6 grid">
-          <div className="rounded-3xl bg-gray-50 h-52 relative flex flex-col justify-between p-6 overflow-hidden">
+        <div className="col-span-2 gap-6 flex flex-col">
+          <div className="rounded-3xl bg-gray-50 h-full relative flex flex-col justify-between p-6 overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div
                 key={tabContent.title}
@@ -137,7 +137,7 @@ const Hero = () => {
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 2.9, duration: 1 }}
-            className="rounded-3xl bg-blue-600/100 h-52 p-6 relative flex flex-col justify-between"
+            className="rounded-3xl bg-blue-600/100 h-full p-6 relative flex flex-col justify-between"
           >
             <Image
               src={phone}

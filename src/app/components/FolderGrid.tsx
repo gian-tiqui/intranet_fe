@@ -1,6 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
-import { checkDept, fetchMainFolders } from "../functions/functions";
+import {
+  checkDept,
+  decodeUserData,
+  fetchMainFolders,
+} from "../functions/functions";
 import { Query } from "../types/types";
 import useSignalStore from "../store/signalStore";
 import { Button } from "primereact/button";
@@ -45,7 +49,12 @@ const FolderGrid = () => {
   const toastRef = useRef<Toast>(null);
   const { data, isLoading, refetch } = useQuery({
     queryKey: [`folders-grid`],
-    queryFn: () => fetchMainFolders(query),
+    queryFn: () => {
+      const deptId = decodeUserData()?.sub;
+
+      if (checkDept()) return fetchMainFolders(query);
+      else return fetchMainFolders({ ...query, deptId });
+    },
   });
 
   useEffect(() => {

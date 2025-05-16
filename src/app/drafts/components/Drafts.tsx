@@ -27,10 +27,6 @@ const Drafts = () => {
     extractUser();
   }, []);
 
-  useEffect(() => {
-    console.log(data?.data);
-  }, [data]);
-
   return (
     <div className="w-full h-[86vh] overflow-y-auto pt-4">
       <h4 className="font-medium text-blue-600 text-lg mb-6">Drafts</h4>
