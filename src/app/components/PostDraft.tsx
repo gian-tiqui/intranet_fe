@@ -24,7 +24,9 @@ const PostDraft: React.FC<Props> = ({ post }) => {
           alt="drafts-folder-icon"
           className="h-7 w-7"
         />
-        <p className="font-medium text-blue-600 text-lg">{post.title}</p>
+        <p className="font-medium text-blue-600 text-lg w-20 truncate">
+          {post.title}
+        </p>
       </div>
       <div>
         <p className="text-xs">Created at</p>

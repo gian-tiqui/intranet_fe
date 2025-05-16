@@ -68,8 +68,8 @@ const addSubfolder = async ({
 const updateFolder = async (data: {
   folderId?: number;
   name?: string;
-  textColor?: string;
-  folderColor?: string;
+  deptIds?: string;
+  isPublished?: number;
 }) => {
   const { folderId, ...body } = data;
   return apiClient.put(`${API_BASE}/folders/${folderId}`, {
