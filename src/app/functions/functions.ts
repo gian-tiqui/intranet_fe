@@ -326,7 +326,7 @@ const getPostsFromSubfolderById = async (id: number): Promise<Post[]> => {
 
 const getFolderById = async (
   id: number | undefined,
-  deptId: number | undefined
+  deptId?: number | undefined
 ): Promise<Folder | null> => {
   if (!id) return null;
   try {
