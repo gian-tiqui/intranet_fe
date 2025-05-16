@@ -184,7 +184,7 @@ const ForgotPasswordForm = () => {
             {loading && (
               <Icon icon={"line-md:loading-loop"} className="h-6 w-6" />
             )}
-            Sign in
+            Recover Password
           </Button>{" "}
           <div className="w-full">
             <p className="dark:text-white text-center text-sm font-semibold">

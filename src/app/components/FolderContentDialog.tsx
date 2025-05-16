@@ -1,7 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { Dialog } from "primereact/dialog";
 import React, { useEffect, useRef, useState } from "react";
-import { checkDept, getFolderById } from "../functions/functions";
+import {
+  checkDept,
+  decodeUserData,
+  getFolderById,
+} from "../functions/functions";
 import {
   deleteFolder,
   getFolderPostsByFolderId,
@@ -63,7 +67,9 @@ const FolderContentDialog: React.FC<Props> = ({
     queryKey: [`folder-${folderId}`],
     queryFn: () => {
       if (!folderId) return null;
-      return getFolderById(folderId);
+      const deptId = decodeUserData()?.sub;
+
+      return getFolderById(folderId, deptId);
     },
     enabled: !!folderId,
   });
@@ -72,8 +78,11 @@ const FolderContentDialog: React.FC<Props> = ({
     queryKey: [`folder-${folderId}-subfolder-${JSON.stringify(query)}`],
     queryFn: async () => {
       if (!folderId) return { data: { subfolders: [], count: 0 } };
-      const response = await getFolderSubfolders(folderId, query);
+      let response;
+      const deptId = decodeUserData()?.sub;
 
+      if (checkDept()) response = await getFolderSubfolders(folderId, query);
+      else response = await getFolderSubfolders(folderId, { ...query, deptId });
       return response;
     },
     enabled: !!folderId,
@@ -157,11 +166,13 @@ const FolderContentDialog: React.FC<Props> = ({
         className="w-[65%] h-[75vh]"
         header={<p className="ms-6">{folderData?.name || "Folder"}</p>}
       >
-        <Button
-          icon={`${PrimeIcons.PLUS}`}
-          onClick={() => setAddSubfolder(true)}
-          className="absolute right-16 bottom-10 bg-white rounded-full h-10 w-10 shadow-xl border z-10"
-        />
+        {checkDept() && (
+          <Button
+            icon={`${PrimeIcons.PLUS}`}
+            onClick={() => setAddSubfolder(true)}
+            className="absolute right-16 bottom-10 bg-white rounded-full h-10 w-10 shadow-xl border z-10"
+          />
+        )}
         <AddSubfolderDialog
           refetchFolders={refetchSubfolders}
           parentId={folderId}

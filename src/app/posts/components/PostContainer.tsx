@@ -76,10 +76,9 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
 
   useEffect(() => {
     const checkLevel = async () => {
-      const userData = await decodeUserData();
+      const userData = decodeUserData();
 
       if (!post?.lid || !post?.userId) {
-        console.log("Post data not ready, skipping check...");
         return;
       }
 
