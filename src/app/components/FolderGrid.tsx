@@ -21,6 +21,8 @@ import useAddFolderStore from "../store/addFolderDialog";
 import folderIdStore from "../store/folderId";
 import useFolderDialogVisibleStore from "../store/folderDialog";
 import { motion } from "motion/react";
+import useEditFolderDialogVisibleStore from "../store/editFolderDialogVisible";
+import useEditFolderIdStore from "../store/editFolderId";
 
 const FolderGrid = () => {
   const [query, setQuery] = useState<Query>({
@@ -33,16 +35,14 @@ const FolderGrid = () => {
   const [searchTerm] = useState<string>("");
   const { signal, setSignal } = useSignalStore();
   const { folderId, setFolderId } = folderIdStore();
-  const [editFolderId, setEditFolderId] = useState<number>();
-  const [editFolderDialogVisible, setEditFolderDialogVisible] =
-    useState<boolean>(false);
-
+  const { editFolderId, setEditFolderId } = useEditFolderIdStore();
+  const { editFolderDialogVisible, setEditFolderDialogVisible } =
+    useEditFolderDialogVisibleStore();
   const { folderDialogVisible, setFolderDialogVisible } =
     useFolderDialogVisibleStore();
   const { addFolderDialogVisible, setAddFolderDialogVisible } =
     useAddFolderStore();
   const toastRef = useRef<Toast>(null);
-
   const { data, isLoading, refetch } = useQuery({
     queryKey: [`folders-grid`],
     queryFn: () => fetchMainFolders(query),

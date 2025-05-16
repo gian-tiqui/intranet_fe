@@ -5,12 +5,17 @@ import blueFolder from "../assets/blue-folder.png";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
 import { Avatar } from "primereact/avatar";
+import useEditFolderDialogVisibleStore from "../store/editFolderDialogVisible";
+import useEditFolderIdStore from "../store/editFolderId";
 
 interface Props {
   folder: Folder;
 }
 
 const FolderDraft: React.FC<Props> = ({ folder }) => {
+  const { setEditFolderDialogVisible } = useEditFolderDialogVisibleStore();
+  const { setEditFolderId } = useEditFolderIdStore();
+
   return (
     <div className="w-full bg-[#EEEEEE] h-20 rounded-lg cursor-pointer flex shadow justify-between items-center px-6">
       <div className="flex items-center gap-3">
@@ -19,7 +24,9 @@ const FolderDraft: React.FC<Props> = ({ folder }) => {
           alt="drafts-folder-icon"
           className="h-7 w-7"
         />
-        <p className="font-semibold text-blue-600">{folder.name}</p>
+        <p className="font-semibold text-blue-600 w-20 truncate">
+          {folder.name}
+        </p>
       </div>
       <div>
         <p className="text-xs">Created at</p>
@@ -56,7 +63,14 @@ const FolderDraft: React.FC<Props> = ({ folder }) => {
           Publish
         </div>
         <div className="w-10 bg-white rounded-e-lg h-8 grid place-content-center">
-          <Button icon={`${PrimeIcons.COG}`} className="h-6 w-6" />
+          <Button
+            icon={`${PrimeIcons.COG}`}
+            onClick={() => {
+              setEditFolderDialogVisible(true);
+              setEditFolderId(folder.id);
+            }}
+            className="h-6 w-6"
+          />
         </div>
       </div>
     </div>

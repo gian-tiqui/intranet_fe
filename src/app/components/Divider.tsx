@@ -47,6 +47,9 @@ import UserProfileDialog from "./UserProfileDialog";
 import UnreadDialog from "./UnreadDialog";
 import useToastRefStore from "../store/toastRef";
 import { Toast } from "primereact/toast";
+import EditFolderDialog from "./EditFolderDialog";
+import useEditFolderDialogVisibleStore from "../store/editFolderDialogVisible";
+import useEditFolderIdStore from "../store/editFolderId";
 
 interface Props {
   children?: ReactNode;
@@ -77,6 +80,9 @@ const Divider: React.FC<Props> = ({ children }) => {
   const [unreadVisible, setUnreadVisible] = useState<boolean>(false);
   const [unreadMessage, setUnreadMessage] = useState<string>("");
   const { toastRef } = useToastRefStore();
+  const { editFolderDialogVisible, setEditFolderDialogVisible } =
+    useEditFolderDialogVisibleStore();
+  const { editFolderId, setEditFolderId } = useEditFolderIdStore();
 
   const items = [
     {
@@ -251,6 +257,12 @@ const Divider: React.FC<Props> = ({ children }) => {
         message={unreadMessage}
         visible={unreadVisible}
         setVisible={setUnreadVisible}
+      />
+      <EditFolderDialog
+        visible={editFolderDialogVisible}
+        setVisible={setEditFolderDialogVisible}
+        folderId={editFolderId}
+        setFolderId={setEditFolderId}
       />
       <Dialog
         visible={updatedDialogShown}

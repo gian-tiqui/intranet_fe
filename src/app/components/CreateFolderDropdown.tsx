@@ -30,7 +30,7 @@ const CreateFolderDropdown: React.FC<Props> = ({
         },
         header: { className: "dark:bg-neutral-950" },
         token: {
-          className: "dark:text-white h-7 dark:bg-neutral-800 text-sm",
+          className: "text-white bg-blue-600",
         },
         filterInput: { className: "bg-neutral-800 dark:text-white" },
       }}

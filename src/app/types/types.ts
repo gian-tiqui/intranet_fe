@@ -276,9 +276,13 @@ type Folder = {
   icon: string;
   textColor?: string;
   folderColor?: string;
+  isPublished: boolean;
   createdAt: string;
   updatedAt: string;
+  folderDepartments: FolderDepartment[];
 };
+
+type FolderDepartment = { deptId: number; folderId: number; id: number };
 
 type UpdateStatus = {
   isUpdated: boolean;
@@ -342,4 +346,5 @@ export type {
   NavLinksType,
   PostDepartment,
   TabType,
+  FolderDepartment,
 };
