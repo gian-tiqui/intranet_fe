@@ -30,7 +30,7 @@ import { PrimeIcons } from "primereact/api";
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
-import { Image } from "primereact/image";
+import ImagePaginator from "@/app/components/ImagePaginator";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -580,13 +580,11 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                     )}
                   </div>
                 </div>
+                <ImagePaginator filePreviews={filePreviews} currentPage={1} />
               </div>
             </div>
           </div>
         </div>
-        {filePreviews.map((file, index) => (
-          <Image src={file} alt={file} key={index} />
-        ))}
       </div>
       <div className="w-[30%] bg-[#EEEEEE] shadow-lg overflow-y-auto">
         <div className="pt-3 flex justify-between items-center rounded-t-2xl w-full p-4 mb-3">

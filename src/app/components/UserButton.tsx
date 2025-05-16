@@ -56,12 +56,12 @@ const UserButton: React.FC<Props> = () => {
         await apiClient.post(`${API_BASE}/auth/logout`, {
           userId,
         });
-
-        setIsLoggedIn(false);
       } catch (error) {
         console.error(error);
         const { message } = error as { message: string };
         toast(message, { type: "error", className: toastClass });
+      } finally {
+        setIsLoggedIn(false);
       }
     }
 
