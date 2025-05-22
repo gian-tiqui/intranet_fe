@@ -329,9 +329,10 @@ const getFolderById = async (
   deptId?: number | undefined
 ): Promise<Folder | null> => {
   if (!id) return null;
+
   try {
     const response = await apiClient.get(
-      `${API_BASE}/folders/${id}?deptId=${deptId}`
+      `${API_BASE}/folders/${id}?deptId=${3}`
     );
 
     if (response.status === 200) {

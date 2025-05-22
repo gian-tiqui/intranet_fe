@@ -8,7 +8,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { updateFolder } from "../utils/service/folderService";
 import CustomToast from "./CustomToast";
-import { getFolderById } from "../functions/functions";
+import { decodeUserData, getFolderById } from "../functions/functions";
 import MotionP from "./animation/MotionP";
 import CreateFolderDropdown from "./CreateFolderDropdown";
 import useDepartments from "../custom-hooks/departments";
@@ -50,7 +50,7 @@ const EditFolderDialog: React.FC<Props> = ({
 
   const { data } = useQuery({
     queryKey: [`folder-${folderId}`],
-    queryFn: () => getFolderById(folderId),
+    queryFn: () => getFolderById(folderId, decodeUserData()?.deptId),
     enabled: !!folderId,
   });
 
