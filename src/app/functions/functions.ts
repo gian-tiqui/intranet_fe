@@ -332,7 +332,7 @@ const getFolderById = async (
 
   try {
     const response = await apiClient.get(
-      `${API_BASE}/folders/${id}?deptId=${3}`
+      `${API_BASE}/folders/${id}?deptId=${deptId}`
     );
 
     if (response.status === 200) {
