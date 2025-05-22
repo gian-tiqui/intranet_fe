@@ -121,7 +121,7 @@ const FolderGrid = () => {
         <SearchV2 />
       </div>
 
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6, duration: 0.5 }}
@@ -132,7 +132,7 @@ const FolderGrid = () => {
           by <span className="text-blue-600 font-semibold">HR</span> and{" "}
           <span className="text-blue-600 font-semibold">QM</span>
         </motion.p>
-      </motion.div>
+      </motion.div> */}
 
       <motion.div
         initial="hidden"

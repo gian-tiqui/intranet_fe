@@ -34,9 +34,7 @@ const Faqs = () => {
       <h1 className="text-2xl font-bold mb-2 mx-52 text-blue-600">
         Your questions answered
       </h1>
-      <p className="text-xs font-medium mb-10 mx-52 w-[600px] text-blue-950">
-        meow
-      </p>
+      <p className="text-xs font-medium mb-10 mx-52 w-[600px] text-blue-950"></p>
 
       <Accordion
         className="w-full px-36"
