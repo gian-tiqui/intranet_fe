@@ -15,7 +15,7 @@ const FolderPost: React.FC<Props> = ({ post, setVisible }) => {
 
   useEffect(() => {
     const checkLevel = async () => {
-      const userData = await decodeUserData();
+      const userData = decodeUserData();
 
       if (!post?.lid || !post?.userId) {
         console.log("Post data not ready, skipping check...");
