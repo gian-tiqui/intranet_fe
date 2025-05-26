@@ -59,7 +59,7 @@ const Notification: React.FC<Props> = ({ notification }) => {
   return (
     <div>
       <div
-        className={`flex gap-3 px-6 pt-1 cursor-pointer`}
+        className={`flex gap-3 px-6 pt-1 cursor-pointer text-sm`}
         onClick={handleClick}
       >
         <div className="w-10">

@@ -35,7 +35,7 @@ const HistoryTab = () => {
 
   if (notifications?.length === 0) {
     return (
-      <div className="px-6">
+      <div className="px-6 text-sm">
         <p>No notifications yet.</p>
       </div>
     );

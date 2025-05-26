@@ -52,7 +52,7 @@ const UserActivitiesBar = () => {
           <TabPanel
             key={index}
             pt={{
-              headerAction: { className: "bg-inherit" },
+              headerAction: { className: "bg-inherit text-xs" },
               content: { className: "pt-3" },
             }}
             header={tab.name}
