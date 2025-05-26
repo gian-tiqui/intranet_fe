@@ -31,7 +31,7 @@ const HistoryTabItem: React.FC<Props> = ({ item }) => {
 
   return (
     <div>
-      <div className="flex gap-3 px-6 pt-1">
+      <div className="flex gap-3 px-6 pt-1 text-sm">
         <div className="w-10">
           <Avatar
             className="h-10 w-10 bg-blue-600 text-white text-sm font-bold"

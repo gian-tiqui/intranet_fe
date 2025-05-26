@@ -33,7 +33,7 @@ const UnreadsTab = () => {
   if (unreads?.length === 0) {
     return (
       <div className="px-6">
-        <p>No unreads yet. Good job!</p>
+        <p className="text-sm">No unreads yet. Good job!</p>
       </div>
     );
   }
