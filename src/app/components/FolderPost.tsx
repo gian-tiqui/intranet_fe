@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Post } from "../types/types";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { PrimeIcons } from "primereact/api";
-import { API_BASE } from "../bindings/binding";
 import { decodeUserData } from "../functions/functions";
 
 interface Props {
