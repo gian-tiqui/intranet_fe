@@ -4,7 +4,7 @@ import wmcBuilding from "../../assets/bg-removed-wmc.png";
 
 const TempSection = () => {
   return (
-    <div className="w-full h-screen relative overflow-hidden">
+    <div className="w-full h-screen relative overflow-hidden hidden md:block">
       <Image
         src={wmcBuilding.src}
         alt="wmc building"

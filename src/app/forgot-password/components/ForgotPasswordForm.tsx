@@ -85,11 +85,11 @@ const ForgotPasswordForm = () => {
   return (
     <form
       onSubmit={handleSubmit(handleForgotPassword)}
-      className="lg:w-[490px] bg-[#EEEEEE] flex justify-center shadow-lg"
+      className="lg:w-[490px] bg-[#EEEEEE] flex justify-center pt-3 shadow-lg md:p-7"
     >
       {" "}
-      <main className="lg:w-[490px] p-7 dark:bg-neutral-800 h-screen flex flex-col justify-between items-center">
-        <header className="w-full">
+      <main className="lg:w-[490px] dark:bg-neutral-800 h-screen flex flex-col justify-between items-center">
+        <header className="w-full px-3 md:px-0">
           <Link href={"/welcome"} className="flex items-center gap-4">
             <Image src={wmcLogo.src} alt="wmc logo" height="45" width="45" />
             <div className="text-blue-600">
@@ -97,7 +97,7 @@ const ForgotPasswordForm = () => {
             </div>
           </Link>
         </header>
-        <section className="w-full lg:w-96 h-96 overflow-auto">
+        <section className="w-full lg:w-96 h-96 px-3 md:px-0 overflow-auto">
           <div className="flex flex-col mb-2">
             <p className="text-blue-600 text-3xl font-bold">
               Recover your password
@@ -197,7 +197,7 @@ const ForgotPasswordForm = () => {
             </p>
           </div>
         </section>
-        <footer className="w-96">
+        <footer className="w-96 px-3 md:px-0">
           <hr className="border-b/0 border-black w-full mb-2" />
           <p className="text-xs font-medium">
             Copyright 2025 All Rights Reserved

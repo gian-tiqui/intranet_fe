@@ -276,7 +276,7 @@ const Divider: React.FC<Props> = ({ children }) => {
         header="WMC Employee Portal Updates"
         className="h-[70vh] w-[50%]"
       >
-        <div className="w-full h-full bg-neutral-200 rounded p-4">
+        <div className="w-full h-full bg-neutral-200 rounded p-4 overflow-x-hidden">
           <p className="font-semibold">
             {" "}
             <i className={`pi pi-wrench me-2`}></i>Bug Fixes
@@ -397,7 +397,7 @@ const Divider: React.FC<Props> = ({ children }) => {
           <div
             className={`mx-auto w-full relative ${
               hydrated && isLoggedIn && "pt-20"
-            } ${hidden && "max-w-[750px]"} px-3 md:px-0`}
+            } ${hidden && "max-w-[750px]"}`}
           >
             {children}
           </div>

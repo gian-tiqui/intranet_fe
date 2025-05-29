@@ -148,10 +148,10 @@ const Form = () => {
         // animate={{ opacity: 1, x: 0 }}
         // transition={{ delay: 0, duration: 0.7 }}
         onSubmit={handleSubmit(handleLogin)}
-        className="lg:w-[490px] bg-[#EEEEEE] flex justify-center shadow-lg"
+        className="w-[100%] lg:w-[490px] bg-[#EEEEEE] flex justify-center shadow-lg"
       >
         <main className="lg:w-[490px] p-7 dark:bg-neutral-800 h-screen flex flex-col justify-between items-center">
-          <header className="w-full">
+          <header className="w-full px-4 md:px-0">
             <Link href={"/welcome"} className="flex items-center gap-4">
               <Image src={wmcLogo.src} alt="wmc logo" height="45" width="45" />
               <div className="text-blue-600">
@@ -161,7 +161,7 @@ const Form = () => {
               </div>
             </Link>
           </header>
-          <section className="w-full lg:w-96">
+          <section className="w-full lg:w-96 px-4 md:px-0">
             <div className="flex flex-col mb-10">
               <p className="text-blue-600 text-3xl font-bold">Welcome back</p>
               <p className="font-medium">Sign in to your account</p>
@@ -223,7 +223,7 @@ const Form = () => {
               </p>
             </div>
           </section>
-          <footer className="w-96">
+          <footer className="w-96 px-4 md:px-0">
             <hr className="border-b/0 border-black w-full mb-2" />
             <p className="text-xs font-medium">
               Copyright 2025 All Rights Reserved
