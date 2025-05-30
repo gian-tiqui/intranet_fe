@@ -96,6 +96,7 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
         pt={{
           header: { className: "bg-[#EEEEEE] rounded-t-2xl" },
           content: { className: "bg-[#EEEEEE] rounded-b-2xl" },
+          mask: { className: "backdrop-blur" },
         }}
       >
         <form className="pt-5" onSubmit={handleSubmit(handleFormSubmit)}>

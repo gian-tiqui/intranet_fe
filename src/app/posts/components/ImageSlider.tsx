@@ -32,6 +32,7 @@ const ImageSlider: React.FC<Props> = ({ imageLocations, postName }) => {
                 className:
                   "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100",
               },
+              mask: { className: "backdrop-blur" },
             }}
             header={`${postName} images`}
             onHide={() => {

@@ -154,6 +154,7 @@ const EditUserDialog: React.FC<Props> = ({
             className: "bg-white dark:bg-neutral-950 dark:text-white",
           },
           content: { className: "bg-neutral-200 dark:bg-neutral-950" },
+          mask: { className: "backdrop-blur" },
         }}
         visible={visible}
         onHide={() => {

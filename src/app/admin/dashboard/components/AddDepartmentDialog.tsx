@@ -70,6 +70,7 @@ const AddDepartmentDialog: React.FC<Props> = ({ visible, setVisible }) => {
             className: "bg-neutral-50 dark:bg-neutral-950 dark:text-white",
           },
           content: { className: "bg-neutral-200 dark:bg-neutral-950" },
+          mask: { className: "backdrop-blur" },
         }}
         visible={visible}
         onHide={() => {

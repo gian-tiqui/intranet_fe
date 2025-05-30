@@ -118,6 +118,7 @@ const EditFolderDialog: React.FC<Props> = ({
         pt={{
           header: { className: "bg-[#EEEEEE]" },
           content: { className: "bg-[#EEEEEE]" },
+          mask: { className: "backdrop-blur" },
         }}
       >
         <form className="pt-5" onSubmit={handleSubmit(handleFormSubmit)}>

@@ -162,6 +162,7 @@ const FolderContentDialog: React.FC<Props> = ({
           },
           content: { className: "bg-[#CBD5E1] pt-2 rounded-b-3xl" },
           root: { className: "rounded-3xl" },
+          mask: { className: "backdrop-blur" },
         }}
         className="w-[65%] h-[75vh]"
         header={<p className="ms-6">{folderData?.name || "Folder"}</p>}

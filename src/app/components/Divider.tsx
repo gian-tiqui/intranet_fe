@@ -272,6 +272,7 @@ const Divider: React.FC<Props> = ({ children }) => {
         pt={{
           header: { className: "bg-neutral-100" },
           content: { className: "bg-neutral-100" },
+          mask: { className: "backdrop-blur" },
         }}
         header="WMC Employee Portal Updates"
         className="h-[70vh] w-[50%]"

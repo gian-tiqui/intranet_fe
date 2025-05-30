@@ -63,6 +63,7 @@ const DeactivateUserDialog: React.FC<Props> = ({
       pt={{
         header: { className: "bg-white dark:bg-neutral-950" },
         content: { className: "bg-neutral-100 dark:bg-neutral-900" },
+        mask: { className: "backdrop-blur" },
       }}
       header="Deactivate account"
       onHide={() => {
