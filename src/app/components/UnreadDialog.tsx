@@ -15,6 +15,7 @@ const UnreadDialog: React.FC<State> = ({ setVisible, visible, message }) => {
           className: "bg-[#CBD5E1]/60 backdrop-blur text-blue-700 font-black",
         },
         content: { className: "bg-[#EEEEEE]/60 pt-6 backdrop-blur" },
+        mask: { className: "backdrop-blur" },
       }}
       className="w-96"
       visible={visible}

@@ -40,6 +40,7 @@ const UserProfileDialog = () => {
         content: {
           className: "bg-[#CBD5E1] rounded-lg h-56 w-[400px] flex p-0",
         },
+        mask: { className: "backdrop-blur" },
       }}
       onMaskClick={() => {
         if (userProfileVisible) setUserProfileVisible(false);

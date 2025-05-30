@@ -29,7 +29,7 @@ const SearchV2 = () => {
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.3, duration: 1 }}
       onSubmit={handleSubmit(handleSearch)}
-      className={`bg-[#EEEEEE] w-full h-18 mt-4 rounded-full justify-between border-2 p-1 ${
+      className={`bg-[#EEEEEE] w-96 md:w-full h-18 mt-4 rounded-full justify-between border-2 p-1 ${
         (watch("searchTerm") || "").length > 0
           ? "border-blue-600"
           : "border-black"

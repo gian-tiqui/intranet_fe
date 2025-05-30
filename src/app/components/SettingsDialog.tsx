@@ -21,6 +21,7 @@ const SettingsDialog: React.FC<Props> = ({ setVisible, visible }) => {
           className: "rounded-b-2xl bg-[#EEEEEE]",
         },
         root: { className: "rounded-2xl" },
+        mask: { className: "backdrop-blur" },
       }}
       visible={visible}
       onHide={() => {

@@ -43,6 +43,8 @@ const UserModal: React.FC<Props> = ({
         content: {
           className: "bg-[#EEEEEE] pt-2 rounded-b-3xl flex flex-col gap-1",
         },
+        mask: { className: "backdrop-blur" },
+
         root: { className: "rounded-3xl" },
       }}
       header={`What would you like to do? `}
