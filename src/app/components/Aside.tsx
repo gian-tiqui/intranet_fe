@@ -198,6 +198,17 @@ const Aside: React.FC<Props> = ({
                   <p className="w-full text-sm">My posts</p>
                 </div>
               )}
+            {userDeptId && [Department.HUMAN_RESOURCE].includes(userDeptId) && (
+              <div
+                className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded"
+                onClick={() => {
+                  handleClick("/users");
+                }}
+              >
+                <i className={`${PrimeIcons.USERS} text-lg`}></i>
+                <p className="w-full text-sm">Manage Users</p>
+              </div>
+            )}
           </div>
           <Divider className="mx-auto border-b border-black w-[88%]" />
           <div className="flex flex-col">
