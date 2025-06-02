@@ -663,8 +663,10 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
             className="w-full mb-6 h-12 items-center border border-black bg-inherit"
             options={buildTree(foldersData?.data.folders || [])}
             onChange={async (e: TreeSelectChangeEvent) => {
+              const deptId = decodeUserData()?.deptId;
               if (!e.value) return;
-              const selected = await getFolderById(+e.value);
+              if (!deptId) return;
+              const selected = await getFolderById(+e.value, deptId);
               if (selected) setSelectedFolder(selected);
             }}
             value={selectedFolder?.id.toString()}

@@ -310,7 +310,7 @@ const Divider: React.FC<Props> = ({ children }) => {
         </div>
       </Dialog>
       <UserProfileDialog />
-      <div className="flex h-screen text-neutral-800 dark:text-neutral-100 ">
+      <div className="flex h-screen text-neutral-800 dark:text-neutral-100">
         {showSearch && <SearchContainer />}
         {visible && <PostModal isMobile={isMobile} />}
         {shown && <Settings />}
@@ -396,9 +396,9 @@ const Divider: React.FC<Props> = ({ children }) => {
             </header>
           )}
           <div
-            className={`mx-auto w-full relative ${
+            className={`w-full h-screen overflow-y-auto relative ${
               hydrated && isLoggedIn && "pt-20"
-            } ${hidden && "max-w-[750px]"}`}
+            }`}
           >
             {children}
           </div>
