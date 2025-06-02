@@ -48,7 +48,14 @@ const getDraftsByUserId = async (userId: number, params: Query) => {
   return apiClient.get(`${API_BASE}/users/${userId}/drafts`, { params });
 };
 
+const getLastLogin = async (userId: number | null) => {
+  if (!userId) return;
+
+  return apiClient.get(`${API_BASE}/users/${userId}/last-login`);
+};
+
 export {
+  getLastLogin,
   getDraftsByUserId,
   findUsers,
   addUser,

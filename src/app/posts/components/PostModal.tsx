@@ -329,6 +329,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       formData.append("extractedText", data.extractedText);
       formData.append("downloadable", data.downloadable);
       formData.append("isPublished", data.isPublished.toString());
+      formData.append("typeId", "2");
 
       if (selectedFolder)
         formData.append("folderId", String(selectedFolder.id));
@@ -696,8 +697,10 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 className="w-full mb-6 h-12 border border-black items-center bg-inherit"
                 options={buildTree(foldersData?.data.folders || [])}
                 onChange={async (e: TreeSelectChangeEvent) => {
+                  const deptId = decodeUserData()?.deptId;
                   if (!e.value) return;
-                  const selected = await getFolderById(+e.value);
+                  if (!deptId) return;
+                  const selected = await getFolderById(+e.value, deptId);
                   if (selected) setSelectedFolder(selected);
                 }}
                 value={selectedFolder?.id.toString()}

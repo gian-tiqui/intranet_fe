@@ -1,6 +1,7 @@
 import { API_BASE } from "@/app/bindings/binding";
 import { decodeUserData } from "@/app/functions/functions";
 import apiClient from "@/app/http-common/apiUrl";
+import { Query } from "@/app/types/types";
 
 const fetchDeptPostsByLid = async () => {
   const lid = decodeUserData()?.lid;
@@ -27,4 +28,8 @@ const fetchDeptPostsByLid = async () => {
   }
 };
 
-export { fetchDeptPostsByLid };
+const getPostRevisions = async (postId: number, params: Query) => {
+  return apiClient.get(`${API_BASE}/post/${postId}/revisions}`, { params });
+};
+
+export { fetchDeptPostsByLid, getPostRevisions };
