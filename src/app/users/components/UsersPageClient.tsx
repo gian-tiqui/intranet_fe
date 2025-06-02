@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 
 const UsersPageClient = () => {
-  const [query, setQuery] = useState<Query>({ search: "" });
+  const [query] = useState<Query>({ search: "" });
 
   const { data } = useQuery({
     queryKey: [`users-${JSON.stringify(query)}`],
