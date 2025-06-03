@@ -25,8 +25,6 @@ import { jwtDecode } from "jwt-decode";
 import useDeleteModalStore from "../store/deleteModalStore";
 import DeleteModal from "../posts/components/DeleteModal";
 import useTokenStore from "../store/tokenStore";
-import { Dialog } from "primereact/dialog";
-import useUpdateDialogStore from "../store/updateDialogStore";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import Image from "next/image";
 import ovalGradient from "../assets/oval-gradient.png";
@@ -72,7 +70,6 @@ const Divider: React.FC<Props> = ({ children }) => {
   const [showPendingUsers, setShowPendingUsers] = useState<boolean>(false);
   const { setShowDeleteModal, showDeleteModal } = useDeleteModalStore();
   const { token } = useTokenStore();
-  const { updatedDialogShown, setUpdateDialogShown } = useUpdateDialogStore();
   const { isLoggedIn } = useLoginStore();
   const [hydrated, setHydrated] = useState<boolean>(false);
   const { setAddFolderDialogVisible } = useAddFolderStore();
@@ -264,51 +261,7 @@ const Divider: React.FC<Props> = ({ children }) => {
         folderId={editFolderId}
         setFolderId={setEditFolderId}
       />
-      <Dialog
-        visible={updatedDialogShown}
-        onHide={() => {
-          if (updatedDialogShown === true) setUpdateDialogShown(false);
-        }}
-        pt={{
-          header: { className: "bg-neutral-100" },
-          content: { className: "bg-neutral-100" },
-          mask: { className: "backdrop-blur" },
-        }}
-        header="WMC Employee Portal Updates"
-        className="h-[70vh] w-[50%]"
-      >
-        <div className="w-full h-full bg-neutral-200 rounded p-4 overflow-x-hidden">
-          <p className="font-semibold">
-            {" "}
-            <i className={`pi pi-wrench me-2`}></i>Bug Fixes
-          </p>
-          <ul className="mb-4">
-            <li className="list-item">
-              - PDF Page Structure fixed upon uploading
-            </li>
-            <li className="list-item">
-              - User will now be able to login properly without any errors
-              appearing.
-            </li>
-          </ul>
-          <p className="font-semibold">
-            <i className={`pi pi-sparkles me-2`}></i>Changes
-          </p>
-          <ul className="mb-4">
-            <li className="list-item">- Masks does not close post/edit form</li>
-            <li className="list-item">
-              - Added select and remove all button in department selection
-              dropdown
-            </li>
-            <li className="list-item">
-              - User deactivation has been moved (FOR IT users)
-            </li>
-            <li>
-              - Landing page after login was renovated to view organized folders
-            </li>
-          </ul>
-        </div>
-      </Dialog>
+
       <UserProfileDialog />
       <div className="flex h-screen text-neutral-800 dark:text-neutral-100">
         {showSearch && <SearchContainer />}
