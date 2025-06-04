@@ -4,7 +4,7 @@ import Grid from "./components/Grid";
 
 const Home = () => {
   return (
-    <div>
+    <div className="mx-auto w-[80%]">
       <AuthListener />
       <Grid />
     </div>
