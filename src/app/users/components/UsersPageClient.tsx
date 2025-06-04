@@ -32,8 +32,17 @@ const UsersPageClient = () => {
   return (
     <div className="w-full h-[86vh] overflow-y-auto">
       <AuthListener />
-      <DataTable value={data?.data.users} size="small" className="text-sm">
-        <Column field="firstName" header="First name" />
+      <DataTable
+        value={data?.data.users}
+        size="small"
+        className="text-sm"
+        pt={{ headerRow: { className: "bg-inherit" } }}
+      >
+        <Column
+          field="firstName"
+          header="First name"
+          pt={{ bodyCell: { className: "bg-inherit" } }}
+        />
         <Column field="middleName" header="Middle Name" />
         <Column field="lastName" header="Last Name" />
         <Column

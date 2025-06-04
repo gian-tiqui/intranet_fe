@@ -20,7 +20,7 @@ const findUserById = async (
 const updateUserById = async (
   id: number | undefined,
   data: User,
-  updatedBy: number
+  updatedBy: number | undefined
 ) => {
   return apiClient.put(`${API_BASE}/users/${id}`, { ...data, updatedBy });
 };

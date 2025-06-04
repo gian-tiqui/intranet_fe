@@ -2,10 +2,10 @@
 
 import AuthListener from "@/app/components/AuthListener";
 import useDepartments from "@/app/custom-hooks/departments";
-import { checkDept } from "@/app/functions/functions";
+import { checkDept, decodeUserData } from "@/app/functions/functions";
 import { API_URI } from "@/app/http-common/apiUrl";
 import { Department, User } from "@/app/types/types";
-import { findUserById } from "@/app/utils/service/userService";
+import { findUserById, updateUserById } from "@/app/utils/service/userService";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { Button } from "primereact/button";
@@ -61,7 +61,13 @@ const UserPage = () => {
   }
 
   const editForm = (data: User) => {
-    console.log(data);
+    const updatedBy = decodeUserData()?.sub;
+
+    console.log("hi");
+
+    updateUserById(Number(params.userId), data, updatedBy)
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -100,7 +106,7 @@ const UserPage = () => {
       <InputText
         disabled={!editMode}
         className="bg-inherit disabled:text-black"
-        {...register("middleName", { required: "Middlename is required" })}
+        {...register("middleName")}
       />
       <InputText
         disabled={!editMode}
@@ -138,6 +144,7 @@ const UserPage = () => {
           setSelectedDepartment(e.value);
         }}
       />
+      <Button type="submit">Submit</Button>
     </form>
   );
 };
