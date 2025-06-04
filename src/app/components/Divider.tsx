@@ -296,26 +296,26 @@ const Divider: React.FC<Props> = ({ children }) => {
             <PrimeImage
               src={upperLeftGradient.src}
               alt="large-gradient"
-              className="absolute top-0 left-24 w-[550px] h-[550px] -z-10"
+              className="absolute top-0 left-24 w-[550px] h-[550px] -z-10 hidden sm:block"
             />
             <PrimeImage
               src={ovalGradient.src}
               alt="large-gradient"
-              className="absolute top-24 right-24 -z-10 h-64 w-64"
+              className="absolute top-24 right-24 -z-10 h-64 w-64 hidden sm:block"
             />
           </>
         )}
 
         <main
           className={`max-h-screen overflow-auto relative ${
-            hydrated && isLoggedIn && !isCollapsed ? "w-[80%]" : "w-full"
+            hydrated && isLoggedIn && !isCollapsed ? "w-full" : "w-full"
           }`}
         >
           {hidden && (
             <header
-              className={`flex justify-between items-center backdrop-blur bg-slate-100/10 z-10 h-20 ${
-                !isCollapsed ? "w-[80%]" : "w-full"
-              } fixed pe-10 top-0 ${isCollapsed ? "ps-2" : "ps-5"} pe-10`}
+              className={`flex justify-between items-center backdrop-blur bg-slate-100/10 z-10 h-20 w-full  fixed top-0 ${
+                isCollapsed ? "ps-2" : "ps-5"
+              }`}
             >
               <div className="flex gap-3">
                 {isCollapsed && (
@@ -349,7 +349,7 @@ const Divider: React.FC<Props> = ({ children }) => {
             </header>
           )}
           <div
-            className={`w-full h-screen overflow-y-auto relative ${
+            className={`w-full h-screen  overflow-y-auto relative ${
               hydrated && isLoggedIn && "pt-20"
             }`}
           >
