@@ -31,6 +31,8 @@ type User = {
   lid: number;
   employeeLevel: EmployeeLevel;
   division: Division;
+  profilePictureLocation: string;
+  localNumber: string;
 };
 
 type TabType = {
