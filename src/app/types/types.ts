@@ -56,6 +56,12 @@ type ImageLocation = {
   postId: number;
 };
 
+type Census = {
+  readCount: number;
+  totalUsers: number;
+  readPercentage: string;
+};
+
 type Post = {
   pid: number;
   userId: number;
@@ -77,6 +83,7 @@ type Post = {
   employeeLevel: Level;
   downloadable: boolean;
   isPublished: boolean;
+  census: Census;
 };
 
 type PostDepartment = {
