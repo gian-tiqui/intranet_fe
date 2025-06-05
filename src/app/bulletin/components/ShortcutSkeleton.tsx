@@ -2,7 +2,7 @@ import React from "react";
 
 const ShortcutSkeleton = () => {
   return (
-    <div className="flex gap-2 items-center mb-8 mt-14">
+    <div className="flex gap-2 items-center mb-8 mt-14 max-w-[80%] w-full mx-auto">
       {Array(7)
         .fill(0)
         .map((_, index) => (

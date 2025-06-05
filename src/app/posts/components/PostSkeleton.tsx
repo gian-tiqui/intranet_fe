@@ -2,7 +2,7 @@ import React from "react";
 
 const PostSkeleton = () => {
   return (
-    <div>
+    <div className="max-w-[80%] w-full mx-auto">
       <div className="flex items-center gap-2 mb-3">
         <div className="h-9 w-9 bg-gray-400 rounded-full animate-pulse"></div>
         <div className="w-72 h-4 bg-gray-400 animate-pulse"></div>
