@@ -436,6 +436,13 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           generalPost && "cursor-pointer"
         } relative pt-10`}
       >
+        <div className="flex justify-center">
+          <div className="bg-[#EEE]/50 backdrop-blur px-4 py-1 shadow rounded rounded-cursor">
+            <p className="text-sm font-medium">
+              {post?.census.readPercentage} of the users have read this post
+            </p>
+          </div>
+        </div>
         {!post?.folderId &&
           deptIds.includes(userDeptId.toString()) &&
           !generalPost &&
