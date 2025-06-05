@@ -434,10 +434,10 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
         onClick={generalPost ? handleClick : undefined}
         className={`ignore-click ${
           generalPost && "cursor-pointer"
-        } relative pt-10`}
+        } relative pt-10 w-full max-w-[80%] mx-auto`}
       >
         <div className="flex justify-center">
-          <div className="bg-[#EEE]/50 backdrop-blur px-4 py-1 shadow rounded rounded-cursor">
+          <div className="bg-[#EEE]/50 backdrop-blur px-4 py-1 shadow rounded rounded-cursor mb-3">
             <p className="text-sm font-medium">
               {post?.census.readPercentage} of the users have read this post
             </p>

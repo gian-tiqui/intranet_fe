@@ -39,7 +39,7 @@ const Shortcuts: React.FC<Props> = ({ setMinMax, totalPosts, limit, min }) => {
   };
 
   return (
-    <div className="flex flex-wrap my-12 gap-2">
+    <div className="flex flex-wrap my-12 gap-2 max-w-[80%] mx-auto w-full">
       <div
         onClick={() => !isFirstPage && jumpPage("first")}
         className={`rounded-full px-3 py-2 cursor-pointer dark:hover:bg-neutral-700 bg-[#EEEEEE] hover:bg-gray-100 dark:bg-neutral-800 flex gap-1 items-center ${
