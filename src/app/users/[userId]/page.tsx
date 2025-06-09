@@ -91,19 +91,6 @@ const UserPage = () => {
       className="overflow-y-auto overflow-x-hidden h-[85vh] w-full"
     >
       <AuthListener />
-      {checkDept() && (
-        <Button
-          type="button"
-          onClick={() => {
-            setEditMode((prev) => !prev);
-          }}
-          className={`text-sm h-8 justify-center px-6 ${
-            editMode ? "bg-blue-600 text-white" : "bg-[#EEEEEE] text-blue-600"
-          }`}
-        >
-          Edit
-        </Button>
-      )}
 
       <Image
         src={`${API_URI}/uploads/profilepic/${data?.data.user.profilePictureLocation}`}
@@ -112,6 +99,22 @@ const UserPage = () => {
         height="200"
         width="200"
       />
+
+      <div className="py-10 px-5 bg-[#EEE]/60 backdrop-blur-0 w-full">
+        {checkDept() && (
+          <Button
+            type="button"
+            onClick={() => {
+              setEditMode((prev) => !prev);
+            }}
+            className={`text-sm h-8 justify-center px-6 ${
+              editMode ? "bg-blue-600 text-white" : "bg-[#EEEEEE] text-blue-600"
+            }`}
+          >
+            Edit
+          </Button>
+        )}
+      </div>
 
       <InputText
         disabled={!editMode}
@@ -139,7 +142,6 @@ const UserPage = () => {
         {...register("localNumber", { required: "Local Number is required" })}
       />
 
-      {/* Fixed: Use nullish coalescing to prevent undefined */}
       <InputText
         value={selectedDepartment?.departmentName ?? ""}
         required

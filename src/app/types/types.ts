@@ -33,6 +33,8 @@ type User = {
   division: Division;
   profilePictureLocation: string;
   localNumber: string;
+  jobTitle: string;
+  officeLocation: string;
 };
 
 type TabType = {
