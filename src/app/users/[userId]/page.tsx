@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
-import { Image } from "primereact/image";
+import Image from "next/image";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -43,7 +43,6 @@ const UserPage = () => {
   useEffect(() => {
     if (data?.data.user) {
       console.log(data.data.user);
-      // Use fallback values to ensure we never set undefined
       setValue("firstName", data.data.user.firstName || "");
       setValue("middleName", data.data.user.middleName || "");
       setValue("lastName", data.data.user.lastName || "");
@@ -91,16 +90,14 @@ const UserPage = () => {
       className="overflow-y-auto overflow-x-hidden h-[85vh] w-full"
     >
       <AuthListener />
-
-      <Image
-        src={`${API_URI}/uploads/profilepic/${data?.data.user.profilePictureLocation}`}
-        alt={`user-${data?.data.user.id}`}
-        className={`rounded-full !h-52 !w-52`}
-        height="200"
-        width="200"
-      />
-
-      <div className="py-10 px-5 bg-[#EEE]/60 backdrop-blur-0 w-full">
+      <div className="py-10 px-5 bg-[#EEE]/60 backdrop-blur-0 w-full relative flex items-center">
+        <Image
+          src={`${API_URI}/uploads/profilepic/${data?.data.user.profilePictureLocation}`}
+          alt={`user-${data?.data.user.id}`}
+          className={`rounded-full h-36 w-36`}
+          height="1000"
+          width="1000"
+        />
         {checkDept() && (
           <Button
             type="button"
@@ -115,7 +112,6 @@ const UserPage = () => {
           </Button>
         )}
       </div>
-
       <InputText
         disabled={!editMode}
         className="bg-inherit disabled:text-black"
@@ -135,21 +131,19 @@ const UserPage = () => {
         disabled={!editMode}
         className="bg-inherit disabled:text-black"
         {...register("email", { required: "Email is required" })}
-      />
+      />{" "}
       <InputText
         disabled={!editMode}
         className="bg-inherit disabled:text-black"
         {...register("localNumber", { required: "Local Number is required" })}
       />
-
       <InputText
         value={selectedDepartment?.departmentName ?? ""}
         required
         className="bg-inherit disabled:text-black"
         disabled={!editMode}
-        readOnly // Since this appears to be display-only
+        readOnly
       />
-
       <Dropdown
         options={departments}
         value={selectedDepartment}
@@ -161,7 +155,7 @@ const UserPage = () => {
           setSelectedDepartment(e.value);
         }}
       />
-      <Button type="submit">Submit</Button>
+      {editMode && <Button type="submit">Save</Button>}
     </form>
   );
 };
