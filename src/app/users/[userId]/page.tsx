@@ -132,7 +132,6 @@ const UserPage = () => {
         className="bg-inherit disabled:text-black"
         {...register("email", { required: "Email is required" })}
       />{" "}
-      patient balvedina joebert sa nung june 2 nasa ER papactive
       <InputText
         disabled={!editMode}
         className="bg-inherit disabled:text-black"
