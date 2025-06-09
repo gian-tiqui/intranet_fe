@@ -17,36 +17,51 @@ import { useForm } from "react-hook-form";
 
 const UserPage = () => {
   const params = useParams();
-  const { setValue, handleSubmit, register } = useForm<User>();
+
+  const { setValue, handleSubmit, register } = useForm<User>({
+    defaultValues: {
+      firstName: "",
+      middleName: "",
+      lastName: "",
+      localNumber: "",
+      email: "",
+      deptId: 0,
+    },
+  });
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: [`user-${params.userId}`],
     queryFn: () => findUserById(Number(params.userId)),
     enabled: typeof params.userId === "string",
   });
-  const [selectedDepartment, setSelectedDepartment] = useState<
-    Department | undefined
-  >(undefined);
+
+  const [selectedDepartment, setSelectedDepartment] =
+    useState<Department | null>(null);
   const [editMode, setEditMode] = useState<boolean>(false);
   const departments = useDepartments();
 
   useEffect(() => {
     if (data?.data.user) {
       console.log(data.data.user);
-      setValue("firstName", data.data.user.firstName);
-      setValue("middleName", data.data.user.middleName);
-      setValue("lastName", data.data.user.lastName);
-      setValue("localNumber", data.data.user.localNumber);
-      setValue("email", data.data.user.email);
-      setValue("deptId", data.data.user.deptId);
+      // Use fallback values to ensure we never set undefined
+      setValue("firstName", data.data.user.firstName || "");
+      setValue("middleName", data.data.user.middleName || "");
+      setValue("lastName", data.data.user.lastName || "");
+      setValue("localNumber", data.data.user.localNumber || "");
+      setValue("email", data.data.user.email || "");
+      setValue("deptId", data.data.user.deptId || 0);
     }
   }, [data, setValue]);
 
   useEffect(() => {
-    setSelectedDepartment(data?.data.user.department);
+    // Ensure we set a value or null, never undefined
+    setSelectedDepartment(data?.data.user.department || null);
   }, [data]);
 
   useEffect(() => {
-    if (selectedDepartment) setValue("deptId", selectedDepartment?.deptId);
+    if (selectedDepartment) {
+      setValue("deptId", selectedDepartment.deptId);
+    }
   }, [selectedDepartment, setValue]);
 
   if (isLoading) return <div className="text-sm">Loading user...</div>;
@@ -76,19 +91,6 @@ const UserPage = () => {
       className="overflow-y-auto overflow-x-hidden h-[85vh] w-full"
     >
       <AuthListener />
-      {checkDept() && (
-        <Button
-          type="button"
-          onClick={() => {
-            setEditMode((prev) => !prev);
-          }}
-          className={`text-sm h-8 justify-center px-6 ${
-            editMode ? "bg-blue-600 text-white" : "bg-[#EEEEEE] text-blue-600"
-          }`}
-        >
-          Edit
-        </Button>
-      )}
 
       <Image
         src={`${API_URI}/uploads/profilepic/${data?.data.user.profilePictureLocation}`}
@@ -97,6 +99,22 @@ const UserPage = () => {
         height="200"
         width="200"
       />
+
+      <div className="py-10 px-5 bg-[#EEE]/60 backdrop-blur-0 w-full">
+        {checkDept() && (
+          <Button
+            type="button"
+            onClick={() => {
+              setEditMode((prev) => !prev);
+            }}
+            className={`text-sm h-8 justify-center px-6 ${
+              editMode ? "bg-blue-600 text-white" : "bg-[#EEEEEE] text-blue-600"
+            }`}
+          >
+            Edit
+          </Button>
+        )}
+      </div>
 
       <InputText
         disabled={!editMode}
@@ -123,21 +141,20 @@ const UserPage = () => {
         className="bg-inherit disabled:text-black"
         {...register("localNumber", { required: "Local Number is required" })}
       />
+
       <InputText
-        disabled={!editMode}
-        className="bg-inherit disabled:text-black"
-        {...register("localNumber", { required: "Local Number is required" })}
-      />
-      <InputText
-        value={selectedDepartment?.departmentName}
+        value={selectedDepartment?.departmentName ?? ""}
         required
         className="bg-inherit disabled:text-black"
         disabled={!editMode}
+        readOnly // Since this appears to be display-only
       />
+
       <Dropdown
         options={departments}
         value={selectedDepartment}
         optionLabel="departmentName"
+        disabled={!editMode}
         placeholder="Select a department"
         className="bg-inherit"
         onChange={(e) => {
