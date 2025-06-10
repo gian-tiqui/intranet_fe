@@ -1,7 +1,7 @@
 import { StaticImageData } from "next/image";
 import { ReactNode } from "react";
 
-type EmployeeLevel = {
+export type EmployeeLevel = {
   id: number;
   level: string;
 };
@@ -35,6 +35,7 @@ type User = {
   localNumber: string;
   jobTitle: string;
   officeLocation: string;
+  phone: string;
 };
 
 type TabType = {
