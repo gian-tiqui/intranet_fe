@@ -5,9 +5,13 @@ import useDepartments from "@/app/custom-hooks/departments";
 import { checkDept, decodeUserData } from "@/app/functions/functions";
 import { API_URI } from "@/app/http-common/apiUrl";
 import { Department, EmployeeLevel, User } from "@/app/types/types";
-import { findUserById, updateUserById } from "@/app/utils/service/userService";
+import {
+  deleteUserById,
+  findUserById,
+  updateUserById,
+} from "@/app/utils/service/userService";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import Image from "next/image";
@@ -19,6 +23,7 @@ import Link from "next/link";
 
 const UserPage = () => {
   const params = useParams();
+  const router = useRouter();
 
   const { setValue, handleSubmit, register, watch } = useForm<User>({
     defaultValues: {
@@ -137,19 +142,38 @@ const UserPage = () => {
           </div>
 
           {checkDept() && (
-            <Button
-              type="button"
-              onClick={() => {
-                setEditMode((prev) => !prev);
-              }}
-              className={`text-sm h-8 justify-center px-6 ${
-                editMode
-                  ? "bg-blue-600 text-white"
-                  : "bg-[#EEEEEE] text-blue-600"
-              }`}
-            >
-              Edit
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                onClick={() => {
+                  setEditMode((prev) => !prev);
+                }}
+                className={`text-sm h-8 w-8 justify-center ${
+                  editMode
+                    ? "bg-blue-600 text-white"
+                    : "bg-[#EEEEEE] text-blue-600"
+                }`}
+                icon={`${PrimeIcons.USER_EDIT}`}
+              ></Button>{" "}
+              <Button
+                type="button"
+                onClick={() => {
+                  deleteUserById(data?.data.user.id)
+                    .then((response) => {
+                      if (response.status === 200) {
+                        router.push(`/users`);
+                      }
+                    })
+                    .catch((err) => console.error(err));
+                }}
+                className={`text-sm h-8 w-8 justify-center ${
+                  editMode
+                    ? "bg-blue-600 text-white"
+                    : "bg-[#EEEEEE] text-blue-600"
+                }`}
+                icon={`${PrimeIcons.LOCK}`}
+              ></Button>
+            </div>
           )}
         </div>
       </div>
