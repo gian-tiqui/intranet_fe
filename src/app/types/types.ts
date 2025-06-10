@@ -36,6 +36,7 @@ type User = {
   jobTitle: string;
   officeLocation: string;
   phone: string;
+  posts: Post[];
 };
 
 type TabType = {
