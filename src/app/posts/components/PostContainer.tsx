@@ -8,6 +8,7 @@ import { GroupedFiles, ImageLocation, PostComment } from "@/app/types/types";
 import CommentBar from "./CommentBar";
 import { API_BASE } from "@/app/bindings/binding";
 import {
+  checkDept,
   decodeUserData,
   fetchPost,
   fetchPostDeptIds,
@@ -436,13 +437,15 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           generalPost && "cursor-pointer"
         } relative pt-10 w-full max-w-[80%] mx-auto`}
       >
-        <div className="flex justify-center">
-          <div className="bg-[#EEE]/50 backdrop-blur px-4 py-1 shadow rounded rounded-cursor mb-3">
-            <p className="text-sm font-medium">
-              {post?.census.readPercentage} of the users have read this post
-            </p>
+        {checkDept() && (
+          <div className="flex justify-center">
+            <div className="bg-[#EEE]/50 backdrop-blur px-4 py-1 shadow rounded rounded-cursor mb-3">
+              <p className="text-sm font-medium">
+                {post?.census.readPercentage} of the users have read this post
+              </p>
+            </div>
           </div>
-        </div>
+        )}
         {!post?.folderId &&
           deptIds.includes(userDeptId.toString()) &&
           !generalPost &&

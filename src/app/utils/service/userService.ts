@@ -7,6 +7,22 @@ const addUser = async (data: User) => {
   return apiClient.post(`${API_BASE}/auth/register`, { ...data });
 };
 
+function omit<T extends object, K extends keyof T>(
+  obj: T,
+  keys: K[]
+): Omit<T, K> {
+  const result = { ...obj };
+  keys.forEach((key) => {
+    delete result[key];
+  });
+  return result;
+}
+
+const addUserV2 = async (data: User) => {
+  const sanitizedData = omit(data, ["password"]);
+  return apiClient.post(`${API_BASE}/users`, sanitizedData);
+};
+
 const findUsers = async (params: Query) => {
   return apiClient.get(`${API_BASE}/users`, { params });
 };
@@ -63,4 +79,5 @@ export {
   deactivateUser,
   findUserById,
   updateUserById,
+  addUserV2,
 };

@@ -4,7 +4,7 @@ import AuthListener from "@/app/components/AuthListener";
 import useDepartments from "@/app/custom-hooks/departments";
 import { checkDept, decodeUserData } from "@/app/functions/functions";
 import { API_URI } from "@/app/http-common/apiUrl";
-import { Department, User } from "@/app/types/types";
+import { Department, EmployeeLevel, User } from "@/app/types/types";
 import { findUserById, updateUserById } from "@/app/utils/service/userService";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 const UserPage = () => {
   const params = useParams();
 
-  const { setValue, handleSubmit, register } = useForm<User>({
+  const { setValue, handleSubmit, register, watch } = useForm<User>({
     defaultValues: {
       firstName: "",
       middleName: "",
@@ -39,21 +39,26 @@ const UserPage = () => {
     useState<Department | null>(null);
   const [editMode, setEditMode] = useState<boolean>(false);
   const departments = useDepartments();
+  const [employeeLevel, setEmployeeLevel] = useState<
+    EmployeeLevel | undefined
+  >();
 
   useEffect(() => {
     if (data?.data.user) {
-      console.log(data.data.user);
       setValue("firstName", data.data.user.firstName || "");
       setValue("middleName", data.data.user.middleName || "");
       setValue("lastName", data.data.user.lastName || "");
       setValue("localNumber", data.data.user.localNumber || "");
       setValue("email", data.data.user.email || "");
       setValue("deptId", data.data.user.deptId || 0);
+      setValue("phone", data.data.user.phone);
+      setValue("jobTitle", data.data.user.jobTitle);
+      setValue("officeLocation", data.data.user.officeLocation);
+      setEmployeeLevel(data.data.user.employeeLevel);
     }
   }, [data, setValue]);
 
   useEffect(() => {
-    // Ensure we set a value or null, never undefined
     setSelectedDepartment(data?.data.user.department || null);
   }, [data]);
 
@@ -77,8 +82,6 @@ const UserPage = () => {
   const editForm = (data: User) => {
     const updatedBy = decodeUserData()?.sub;
 
-    console.log("hi");
-
     updateUserById(Number(params.userId), data, updatedBy)
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
@@ -87,46 +90,67 @@ const UserPage = () => {
   return (
     <form
       onSubmit={handleSubmit(editForm)}
-      className="overflow-y-auto overflow-x-hidden h-[85vh] w-full"
+      className="overflow-y-auto overflow-x-hidden h-[85vh] w-full pt-16"
     >
       <AuthListener />
-      <div className="py-10 px-5 bg-[#EEE]/60 backdrop-blur-0 w-full relative flex items-center">
-        <Image
-          src={`${API_URI}/uploads/profilepic/${data?.data.user.profilePictureLocation}`}
-          alt={`user-${data?.data.user.id}`}
-          className={`rounded-full h-36 w-36`}
-          height="1000"
-          width="1000"
-        />
-        {checkDept() && (
-          <Button
-            type="button"
-            onClick={() => {
-              setEditMode((prev) => !prev);
-            }}
-            className={`text-sm h-8 justify-center px-6 ${
-              editMode ? "bg-blue-600 text-white" : "bg-[#EEEEEE] text-blue-600"
-            }`}
-          >
-            Edit
-          </Button>
-        )}
+      <div className="pt-20 relative">
+        <div className="absolute top-0 z-50 p-2 shadow-lg bg-[#EEE] rounded-full md:left-20">
+          <Image
+            src={`${API_URI}/uploads/profilepic/${data?.data.user.profilePictureLocation}`}
+            alt={`user-${data?.data.user.id}`}
+            className={`rounded-full h-44 w-44`}
+            height="1000"
+            width="1000"
+          />
+        </div>
+
+        <div className="px-5 py-4 h-36 md:ps-72 md:pe-28 bg-[#EEE]/60 backdrop-blur-0 w-full flex justify-between">
+          <div className="flex gap-4">
+            <div className="">
+              <div className="flex">
+                <InputText
+                  disabled={!editMode}
+                  className={`bg-inherit disabled:text-blue-600 font-semibold text-xl`}
+                  size={watch("firstName")?.length - 5 || 1}
+                  {...register("firstName", {
+                    required: "Firstname is required",
+                  })}
+                />
+
+                <InputText
+                  disabled={!editMode}
+                  className={`bg-inherit disabled:text-blue-600 font-semibold text-xl`}
+                  size={watch("lastName")?.length - 5 || 1}
+                  {...register("lastName", {
+                    required: "Lastname is required",
+                  })}
+                />
+              </div>
+              <InputText
+                {...register("jobTitle", { required: true })}
+                disabled={!editMode}
+                className="bg-inherit text-sm font-medium disabled:text-black"
+              />
+            </div>
+          </div>
+
+          {checkDept() && (
+            <Button
+              type="button"
+              onClick={() => {
+                setEditMode((prev) => !prev);
+              }}
+              className={`text-sm h-8 justify-center px-6 ${
+                editMode
+                  ? "bg-blue-600 text-white"
+                  : "bg-[#EEEEEE] text-blue-600"
+              }`}
+            >
+              Edit
+            </Button>
+          )}
+        </div>
       </div>
-      <InputText
-        disabled={!editMode}
-        className="bg-inherit disabled:text-black"
-        {...register("firstName", { required: "Firstname is required" })}
-      />
-      <InputText
-        disabled={!editMode}
-        className="bg-inherit disabled:text-black"
-        {...register("middleName")}
-      />
-      <InputText
-        disabled={!editMode}
-        className="bg-inherit disabled:text-black"
-        {...register("lastName", { required: "Lastname is required" })}
-      />
       <InputText
         disabled={!editMode}
         className="bg-inherit disabled:text-black"
@@ -144,17 +168,35 @@ const UserPage = () => {
         disabled={!editMode}
         readOnly
       />
-      <Dropdown
-        options={departments}
-        value={selectedDepartment}
-        optionLabel="departmentName"
+      <InputText
+        {...register("phone", { required: true })}
+        className="bg-inherit disabled:text-black"
         disabled={!editMode}
-        placeholder="Select a department"
-        className="bg-inherit"
-        onChange={(e) => {
-          setSelectedDepartment(e.value);
-        }}
+        readOnly
       />
+      <InputText
+        {...register("officeLocation", { required: true })}
+        disabled={!editMode}
+        className="bg-inherit disabled:text-black"
+      />
+      <InputText
+        value={employeeLevel?.level || ""}
+        disabled={!editMode}
+        className="bg-inherit disabled:text-black"
+      />
+      {editMode && (
+        <Dropdown
+          options={departments}
+          value={selectedDepartment}
+          optionLabel="departmentName"
+          disabled={!editMode}
+          placeholder="Select a department"
+          className="bg-inherit"
+          onChange={(e) => {
+            setSelectedDepartment(e.value);
+          }}
+        />
+      )}
       {editMode && <Button type="submit">Save</Button>}
     </form>
   );

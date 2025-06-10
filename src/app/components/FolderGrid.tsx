@@ -117,7 +117,7 @@ const FolderGrid = () => {
         setFolderId={setEditFolderId}
         refetch={refetch}
       />
-      <div className="mx-auto w-[600px]">
+      <div className="mx-auto md:w-[600px]">
         <SearchV2 />
       </div>
 
@@ -145,7 +145,7 @@ const FolderGrid = () => {
             },
           },
         }}
-        className="max-h-96 grid grid-cols-3 gap-3 items-start content-start"
+        className="max-h-96 grid md:grid-cols-3 gap-3 items-start content-start"
       >
         {data?.folders && data?.folders.length > 0
           ? data.folders.map((folder) => {

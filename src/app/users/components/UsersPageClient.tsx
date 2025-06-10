@@ -11,13 +11,16 @@ import { InputText } from "primereact/inputtext";
 import { FilterMatchMode } from "primereact/api";
 import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
+import NewUserDialog from "./NewUserDialog";
 
 const UsersPageClient = () => {
   const [query] = useState<Query>({ search: "" });
   const [globalFilterValue, setGlobalFilterValue] = useState<string>("");
   const [filters, setFilters] = useState<DataTableFilterMeta>({});
+  const [newUserDialogVisible, setNewUserDialogVisible] =
+    useState<boolean>(false);
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: [`users-${JSON.stringify(query)}`],
     queryFn: () => findUsers(query),
   });
@@ -77,6 +80,13 @@ const UsersPageClient = () => {
           >
             Clear
           </Button>
+          <Button
+            type="button"
+            onClick={() => setNewUserDialogVisible(true)}
+            className="p-button p-button-outlined p-button-sm text-xs px-3 h-8 border rounded bg-blue-600 text-white hover:bg-blue-500"
+          >
+            New User
+          </Button>
         </div>
       </div>
     );
@@ -98,6 +108,11 @@ const UsersPageClient = () => {
   return (
     <div className="w-full h-[86vh] overflow-y-auto p-8">
       <AuthListener />
+      <NewUserDialog
+        refetch={refetch}
+        visible={newUserDialogVisible}
+        setVisible={setNewUserDialogVisible}
+      />
 
       {header}
 
