@@ -5,18 +5,25 @@ import useDepartments from "@/app/custom-hooks/departments";
 import { checkDept, decodeUserData } from "@/app/functions/functions";
 import { API_URI } from "@/app/http-common/apiUrl";
 import { Department, EmployeeLevel, User } from "@/app/types/types";
-import { findUserById, updateUserById } from "@/app/utils/service/userService";
+import {
+  deleteUserById,
+  findUserById,
+  updateUserById,
+} from "@/app/utils/service/userService";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import Image from "next/image";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { PrimeIcons } from "primereact/api";
+import Link from "next/link";
 
 const UserPage = () => {
   const params = useParams();
+  const router = useRouter();
 
   const { setValue, handleSubmit, register, watch } = useForm<User>({
     defaultValues: {
@@ -135,69 +142,133 @@ const UserPage = () => {
           </div>
 
           {checkDept() && (
-            <Button
-              type="button"
-              onClick={() => {
-                setEditMode((prev) => !prev);
-              }}
-              className={`text-sm h-8 justify-center px-6 ${
-                editMode
-                  ? "bg-blue-600 text-white"
-                  : "bg-[#EEEEEE] text-blue-600"
-              }`}
-            >
-              Edit
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                onClick={() => {
+                  setEditMode((prev) => !prev);
+                }}
+                className={`text-sm h-8 w-8 justify-center ${
+                  editMode
+                    ? "bg-blue-600 text-white"
+                    : "bg-[#EEEEEE] text-blue-600"
+                }`}
+                icon={`${PrimeIcons.USER_EDIT}`}
+              ></Button>{" "}
+              <Button
+                type="button"
+                onClick={() => {
+                  deleteUserById(data?.data.user.id)
+                    .then((response) => {
+                      if (response.status === 200) {
+                        router.push(`/users`);
+                      }
+                    })
+                    .catch((err) => console.error(err));
+                }}
+                className={`text-sm h-8 w-8 justify-center ${
+                  editMode
+                    ? "bg-blue-600 text-white"
+                    : "bg-[#EEEEEE] text-blue-600"
+                }`}
+                icon={`${PrimeIcons.LOCK}`}
+              ></Button>
+            </div>
           )}
         </div>
       </div>
-      <InputText
-        disabled={!editMode}
-        className="bg-inherit disabled:text-black"
-        {...register("email", { required: "Email is required" })}
-      />{" "}
-      <InputText
-        disabled={!editMode}
-        className="bg-inherit disabled:text-black"
-        {...register("localNumber", { required: "Local Number is required" })}
-      />
-      <InputText
-        value={selectedDepartment?.departmentName ?? ""}
-        required
-        className="bg-inherit disabled:text-black"
-        disabled={!editMode}
-        readOnly
-      />
-      <InputText
-        {...register("phone", { required: true })}
-        className="bg-inherit disabled:text-black"
-        disabled={!editMode}
-        readOnly
-      />
-      <InputText
-        {...register("officeLocation", { required: true })}
-        disabled={!editMode}
-        className="bg-inherit disabled:text-black"
-      />
-      <InputText
-        value={employeeLevel?.level || ""}
-        disabled={!editMode}
-        className="bg-inherit disabled:text-black"
-      />
-      {editMode && (
-        <Dropdown
-          options={departments}
-          value={selectedDepartment}
-          optionLabel="departmentName"
-          disabled={!editMode}
-          placeholder="Select a department"
-          className="bg-inherit"
-          onChange={(e) => {
-            setSelectedDepartment(e.value);
-          }}
-        />
-      )}
-      {editMode && <Button type="submit">Save</Button>}
+      <div className="md:ps-24 flex w-full">
+        <div className="w-[30%] p-4 flex flex-col gap-3">
+          <div className="flex gap-2 items-center">
+            <i className={`${PrimeIcons.ENVELOPE} text-xl`}></i>
+            <InputText
+              disabled={!editMode}
+              className="bg-inherit disabled:text-black text-sm font-medium"
+              {...register("email", { required: "Email is required" })}
+            />{" "}
+          </div>
+
+          <div className="flex gap-2 items-center">
+            <i className={`${PrimeIcons.PHONE} text-xl`}></i>
+
+            <InputText
+              disabled={!editMode}
+              className="bg-inherit disabled:text-black text-sm font-medium"
+              {...register("localNumber", {
+                required: "Local Number is required",
+              })}
+            />
+          </div>
+          <div className="flex gap-2 items-center">
+            <i className={`${PrimeIcons.BUILDING} text-xl`}></i>
+
+            <InputText
+              value={selectedDepartment?.departmentName ?? ""}
+              required
+              className="bg-inherit disabled:text-black text-sm font-medium"
+              disabled={!editMode}
+              readOnly
+            />
+          </div>
+          <div className="flex gap-2 items-center">
+            <i className={`${PrimeIcons.PHONE} text-xl`}></i>
+
+            <InputText
+              {...register("phone", { required: true })}
+              className="bg-inherit disabled:text-black text-sm font-medium"
+              disabled={!editMode}
+              readOnly
+            />
+          </div>
+          <div className="flex gap-2 items-center">
+            <i className={`${PrimeIcons.BUILDING} text-xl`}></i>
+
+            <InputText
+              {...register("officeLocation", { required: true })}
+              disabled={!editMode}
+              className="bg-inherit disabled:text-black text-sm font-medium"
+            />
+          </div>
+          <div className="flex gap-2 items-center">
+            <i className={`${PrimeIcons.CHART_BAR} text-xl`}></i>
+
+            <InputText
+              value={employeeLevel?.level || ""}
+              disabled={!editMode}
+              className="bg-inherit disabled:text-black text-sm font-medium"
+            />
+          </div>
+
+          {editMode && (
+            <Dropdown
+              options={departments}
+              value={selectedDepartment}
+              optionLabel="departmentName"
+              disabled={!editMode}
+              placeholder="Select a department"
+              className="bg-inherit"
+              onChange={(e) => {
+                setSelectedDepartment(e.value);
+              }}
+            />
+          )}
+          {editMode && <Button type="submit">Save</Button>}
+        </div>
+        <div className="w-[70%]  p-4">
+          {data?.data.user.posts && data.data.user.posts.length > 0 ? (
+            <div className="flex flex-col gap-2">
+              <p className="text-sm font-medium">Posts</p>
+              {data?.data.user.posts.map((post) => (
+                <Link href={`/posts/${post.pid}`} key={post.pid}>
+                  {post.title}
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm font-medium">No posts yet</p>
+          )}
+        </div>
+      </div>
     </form>
   );
 };
