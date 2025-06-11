@@ -48,6 +48,7 @@ import { Toast } from "primereact/toast";
 import EditFolderDialog from "./EditFolderDialog";
 import useEditFolderDialogVisibleStore from "../store/editFolderDialogVisible";
 import useEditFolderIdStore from "../store/editFolderId";
+import Tutorial from "./Tutorial";
 
 interface Props {
   children?: ReactNode;
@@ -249,6 +250,7 @@ const Divider: React.FC<Props> = ({ children }) => {
           rejectButton: { className: "ms-2 w-20 bg-red-400 h-8" },
         }}
       />
+      <Tutorial />
       <Toast ref={toastRef} />
       <UnreadDialog
         message={unreadMessage}
