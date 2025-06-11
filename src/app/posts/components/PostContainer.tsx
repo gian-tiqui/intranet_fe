@@ -34,6 +34,7 @@ import { Toast } from "primereact/toast";
 import ImagePaginator from "@/app/components/ImagePaginator";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 
 interface Props {
   id: number;
@@ -170,13 +171,13 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
     setSignal(false);
   }, [signal, setIsRead, setSignal]);
 
-  const handleReadClick = async () => {
+  const accept = async () => {
     try {
       const response = await apiClient.post(`${API_BASE}/post-reader`, {
         userId: decodeUserData()?.sub,
         postId: id,
+        understood: 1,
       });
-
       if (response.status === 201) {
         setIsRead(true);
         setSignal(true);
@@ -188,6 +189,34 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
         className: toastClass,
       });
     }
+  };
+
+  const reject = async () => {
+    try {
+      const response = await apiClient.post(`${API_BASE}/post-reader`, {
+        userId: decodeUserData()?.sub,
+        postId: id,
+        understood: 0,
+      });
+      if (response.status === 201) {
+        setIsRead(true);
+        setSignal(true);
+      }
+    } catch (error) {
+      console.error(error);
+      toast("You have read the post already.", {
+        type: "error",
+        className: toastClass,
+      });
+    }
+  };
+
+  const handleReadClick = () => {
+    confirmDialog({
+      header: "Did you understand the post?",
+      accept,
+      reject,
+    });
   };
 
   useEffect(() => {
@@ -431,36 +460,22 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
   return (
     <>
       <Toast ref={toastRef} />
+      <ConfirmDialog />
       <div
         onClick={generalPost ? handleClick : undefined}
         className={`ignore-click ${
           generalPost && "cursor-pointer"
         } relative pt-10 w-full max-w-[80%] mx-auto`}
       >
-        {checkDept() && (
-          <div className="flex justify-center">
-            <div className="bg-[#EEE]/50 backdrop-blur px-4 py-1 shadow rounded rounded-cursor mb-3">
-              <p className="text-sm font-medium">
-                {post?.census.readPercentage} of the users have read this post
-              </p>
-            </div>
-          </div>
-        )}
         {!post?.folderId &&
           deptIds.includes(userDeptId.toString()) &&
           !generalPost &&
           isRead === false && (
             <div
               onClick={handleReadClick}
-              className={`hover:bg-gray-300 fixed z-10 bottom-64 bg-white rounded-full dark:bg-neutral-800 h-12 w-24 font-extrabold shadow-xl right-14 dark:hover:bg-neutral-700 py-1 px-3 flex items-center gap-1 cursor-pointer `}
+              className={`hover:bg-gray-300 fixed z-10 bottom-64 bg-white rounded-full dark:bg-neutral-800 font-extrabold shadow-xl right-14 dark:hover:bg-neutral-700 py-2 px-3 flex items-center gap-1 cursor-pointer `}
             >
-              <>
-                <Icon
-                  icon={"material-symbols-light:mark-email-read-outline"}
-                  className="h-6 w-6"
-                />
-                <p className="text-sm">Read</p>
-              </>
+              <p className="text-sm">Read</p>
             </div>
           )}
         <div className="flex items-start gap-2 mb-4 justify-between">
@@ -486,6 +501,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
               </span>
             </h1>
           </div>
+
           {editable && (
             <div className="rounded">
               {!generalPost && (
@@ -528,15 +544,40 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           )}
         </div>
 
-        <div className="w-full flex justify-between">
+        <div className="w-full flex justify-between items-center">
           <div>
-            <h1 className="text-xl font-bold">{post?.title}</h1>
+            <div className="flex gap-2">
+              <h1 className="text-xl font-bold">{post?.title}</h1>
+              {post?.superseeded && (
+                <Button
+                  pt={{
+                    tooltip: {
+                      text: { className: "text-xs" },
+                      arrow: { className: "bg-blue-600" },
+                    },
+                  }}
+                  onClick={() => router.push(`/posts/${post.parentId}`)}
+                  icon={`${PrimeIcons.EXCLAMATION_CIRCLE}`}
+                  tooltip={`This post has been superseeded by ${post.parentPost?.title}`}
+                />
+              )}
+            </div>
+
             <h4 className="text-xs mb-3">
               {post?.updatedAt
                 ? format(new Date(post.createdAt), "MMMM dd, yyyy")
                 : "Unknown Date"}
             </h4>
           </div>
+          {checkDept() && (
+            <div className="flex justify-center">
+              <div className="bg-[#EEE]/50 backdrop-blur px-4 py-1 shadow h-8 flex items-center rounded rounded-cursor mb-3">
+                <p className="text-sm font-medium">
+                  {post?.census.readPercentage} of the users have read this post
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         <hr className="w-full border-t border-black mb-2" />

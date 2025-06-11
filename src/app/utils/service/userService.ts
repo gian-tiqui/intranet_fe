@@ -70,6 +70,15 @@ const getLastLogin = async (userId: number | null) => {
   return apiClient.get(`${API_BASE}/users/${userId}/last-login`);
 };
 
+const uploadProfilePicture = async (
+  userId: number | undefined,
+  formData: FormData
+) => {
+  return apiClient.post(`${API_BASE}/users/${userId}/upload`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
+
 export {
   getLastLogin,
   getDraftsByUserId,
@@ -80,4 +89,5 @@ export {
   findUserById,
   updateUserById,
   addUserV2,
+  uploadProfilePicture,
 };

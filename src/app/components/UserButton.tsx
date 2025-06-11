@@ -13,6 +13,8 @@ import { Avatar } from "primereact/avatar";
 import SettingsDialog from "./SettingsDialog";
 import UserModal from "./UserModal";
 import useLoginStore from "../store/loggedInStore";
+import { useQuery } from "@tanstack/react-query";
+import { getLastLogin } from "../utils/service/userService";
 
 interface Props {
   isMobile?: boolean;
@@ -32,6 +34,38 @@ const UserButton: React.FC<Props> = () => {
     lastName: string;
     departmentName: string;
   } | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
+  const [date, setDate] = useState<string>("");
+
+  useEffect(() => {
+    const userId = decodeUserData()?.sub;
+    if (userId) setUserId(userId);
+  }, []);
+
+  const { data } = useQuery({
+    queryKey: [`deptid-${userId}`],
+    queryFn: () => getLastLogin(userId),
+    enabled: !!userId,
+  });
+
+  useEffect(() => {
+    if (data?.data?.lastLogin?.updatedAt) {
+      const formattedDate = new Date(
+        data.data.lastLogin.updatedAt
+      ).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
+      setDate(formattedDate);
+
+      const hasSeenDialog = sessionStorage.getItem("hasSeenLastLoginDialog");
+      if (!hasSeenDialog) {
+        sessionStorage.setItem("hasSeenLastLoginDialog", "true");
+      }
+    }
+  }, [data]);
 
   const router = useRouter();
 
@@ -100,7 +134,7 @@ const UserButton: React.FC<Props> = () => {
       />
 
       <div
-        className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-lg"
+        className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-3xl"
         onClick={() => setShowUserModal(true)}
       >
         {userData && (
@@ -115,6 +149,8 @@ const UserButton: React.FC<Props> = () => {
             <p className="text-sm">Loading...</p>
           ) : userData ? (
             <>
+              <p className="text-xs font-semibold">Last login ({date})</p>
+
               <p className="text-sm">
                 {`${userData.firstName} ${userData.lastName}`}
               </p>

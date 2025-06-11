@@ -88,6 +88,10 @@ type Post = {
   downloadable: boolean;
   isPublished: boolean;
   census: Census;
+  parentId?: number;
+  parentPost?: Post;
+  superseeded: boolean;
+  childrenPosts: Post[];
 };
 
 type PostDepartment = {
