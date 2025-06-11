@@ -35,7 +35,6 @@ import ImagePaginator from "@/app/components/ImagePaginator";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import Link from "next/link";
 
 interface Props {
   id: number;
