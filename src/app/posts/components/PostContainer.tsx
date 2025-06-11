@@ -35,6 +35,7 @@ import ImagePaginator from "@/app/components/ImagePaginator";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import Link from "next/link";
 
 interface Props {
   id: number;
@@ -546,7 +547,23 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
 
         <div className="w-full flex justify-between items-center">
           <div>
-            <h1 className="text-xl font-bold">{post?.title}</h1>
+            <div className="flex gap-2">
+              <h1 className="text-xl font-bold">{post?.title}</h1>
+              {post?.superseeded && (
+                <Button
+                  pt={{
+                    tooltip: {
+                      text: { className: "text-xs" },
+                      arrow: { className: "bg-blue-600" },
+                    },
+                  }}
+                  onClick={() => router.push(`/posts/${post.parentId}`)}
+                  icon={`${PrimeIcons.EXCLAMATION_CIRCLE}`}
+                  tooltip={`This post has been superseeded by ${post.parentPost?.title}`}
+                />
+              )}
+            </div>
+
             <h4 className="text-xs mb-3">
               {post?.updatedAt
                 ? format(new Date(post.createdAt), "MMMM dd, yyyy")

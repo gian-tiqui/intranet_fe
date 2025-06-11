@@ -417,6 +417,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                   await apiClient.post(`${API_BASE}/post-reader`, {
                     userId: decodeUserData()?.sub,
                     postId: response.data.post.pid,
+                    understood: 1,
                   });
                 }
               })
