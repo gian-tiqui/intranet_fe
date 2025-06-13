@@ -116,7 +116,7 @@ const UserPage = () => {
     >
       <AuthListener />
       <div className="pt-20 relative">
-        <div className="absolute top-0 z-50 p-2 shadow-lg bg-[#EEE] rounded-full md:left-20">
+        <div className="absolute top-0 z-40 p-2 shadow-lg bg-[#EEE] rounded-full md:left-20">
           <Image
             src={`${API_URI}/uploads/profilepic/${data?.data.user.profilePictureLocation}`}
             alt={`user-${data?.data.user.id}`}
