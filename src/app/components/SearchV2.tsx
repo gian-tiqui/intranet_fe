@@ -29,24 +29,30 @@ const SearchV2 = () => {
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.3, duration: 1 }}
       onSubmit={handleSubmit(handleSearch)}
-      className={`bg-[#EEEEEE] w-96 md:w-full h-18 mt-4 rounded-full justify-between border-2 p-1 ${
-        (watch("searchTerm") || "").length > 0
-          ? "border-blue-600"
-          : "border-black"
-      } mb-6 flex items-center ps-7 cursor-text`}
     >
-      <input
-        type="text"
-        {...register("searchTerm")}
-        className="border-none bg-inherit outline-none w-96"
-        placeholder="Looking for something?"
-      />
-      <Button
-        className="bg-white rounded-full shadow-xl h-14 w-40 border justify-center gap-2 hover:bg-blue-600 hover:shadow-2xl hover:text-white"
-        icon={PrimeIcons.SEARCH}
+      <motion.div
+        className={`bg-[#EEEEEE] w-96 md:w-full h-18 mt-4 rounded-full justify-between border-2 p-1 ${
+          (watch("searchTerm") || "").length > 0
+            ? "border-blue-600"
+            : "border-black"
+        } mb-6 flex items-center ps-7 cursor-text`}
       >
-        Search
-      </Button>
+        <input
+          type="text"
+          {...register("searchTerm")}
+          className="border-none bg-inherit outline-none w-96"
+          placeholder="Looking for something?"
+        />
+        <Button
+          className="bg-white rounded-full shadow-xl h-14 w-40 border justify-center gap-2 hover:bg-blue-600 hover:shadow-2xl hover:text-white"
+          icon={PrimeIcons.SEARCH}
+        >
+          Search
+        </Button>
+      </motion.div>
+      <div className="flex justify-center">
+        <div className="w-96 h-12 shadow rounded bg-[#EEE]"></div>
+      </div>
     </motion.form>
   );
 };

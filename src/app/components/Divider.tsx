@@ -243,12 +243,13 @@ const Divider: React.FC<Props> = ({ children }) => {
     <QueryClientProvider client={queryClient}>
       <ConfirmDialog
         pt={{
-          header: { className: "dark:bg-neutral-900 dark:text-white" },
-          content: { className: "dark:bg-neutral-900" },
-          footer: { className: "dark:bg-neutral-900" },
+          header: { className: "bg-[#EEE]" },
+          content: { className: "bg-[#EEE]" },
+          footer: { className: "bg-[#EEE]" },
           acceptButton: { className: "ms-2 w-20 h-8" },
           rejectButton: { className: "ms-2 w-20 bg-red-400 h-8" },
         }}
+        maskClassName="backdrop-blur"
       />
       <Tutorial />
       <Toast ref={toastRef} />
