@@ -4,6 +4,9 @@ import React, { useState } from "react";
 
 const Tutorial = () => {
   const [startButton, setStartButton] = useState<boolean>(true);
+
+  return null;
+
   return (
     <motion.div className="w-full h-screen absolute z-50 bg-[#EEE]/10 backdrop-blur">
       {startButton && (
