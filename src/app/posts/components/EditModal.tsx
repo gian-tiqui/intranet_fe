@@ -10,7 +10,7 @@ import apiClient from "@/app/http-common/apiUrl";
 import useEditModalStore from "@/app/store/editModal";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
 import { toastClass } from "@/app/tailwind-classes/tw_classes";
-import { Folder, Level, Post, Query } from "@/app/types/types";
+import { Folder, Level, Post, PostType, Query } from "@/app/types/types";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useQuery } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
@@ -31,6 +31,7 @@ import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
 import ImagePaginator from "@/app/components/ImagePaginator";
+import { getPostTypes } from "@/app/utils/service/postTypeService";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -72,6 +73,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const [selectedLevel, setSelectedLevel] = useState<Level | undefined>(
     undefined
   );
+  const [postType, setPostType] = useState<PostType | undefined>(undefined);
   const [downloadable, setDownloadable] = useState<boolean>(false);
   const [publish, setPublish] = useState<boolean>(false);
   const [selectedFolder, setSelectedFolder] = useState<Folder | undefined>(
@@ -103,6 +105,11 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const { data, isError, error } = useQuery({
     queryKey: ["level"],
     queryFn: fetchAllLevels,
+  });
+
+  const { data: postTypesResponse } = useQuery({
+    queryKey: [`post-types`],
+    queryFn: () => getPostTypes(),
   });
 
   const scanImage = async (imageUrl: string): Promise<string> => {
@@ -337,6 +344,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
       );
       formData.append("downloadable", data.downloadable.toString());
       formData.append("isPublished", data.isPublished.toString());
+      formData.append("typeId", postType ? postType.id.toString() : "1");
 
       convertedFiles.sort((a, b) => {
         const getPage = (name: string) => {
@@ -637,6 +645,14 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
             setSelectedDepartments={setSelectedDepartments}
             departments={departments}
             selectedDepartments={selectedDepartments}
+          />
+          <Dropdown
+            options={postTypesResponse?.data.postTypes}
+            className={`w-full mb-6 h-12 border border-black items-center bg-inherit`}
+            optionLabel="name"
+            value={postType}
+            placeholder="Select the type of document"
+            onChange={(e) => setPostType(e.value)}
           />
           <TreeSelect
             filter

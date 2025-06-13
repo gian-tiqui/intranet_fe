@@ -13,7 +13,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { pdfjs } from "react-pdf";
-import { Folder, Level, Query } from "@/app/types/types";
+import { Folder, Level, PostType, Query } from "@/app/types/types";
 import { useQuery } from "@tanstack/react-query";
 import { createWorker } from "tesseract.js";
 import DepartmentsList from "./DepartmentsList";
@@ -30,6 +30,7 @@ import useToastRefStore from "@/app/store/toastRef";
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
 import ImagePaginator from "@/app/components/ImagePaginator";
+import { getPostTypes } from "@/app/utils/service/postTypeService";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -73,6 +74,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   const [posting, setPosting] = useState<boolean>(false);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [levels, setLevels] = useState<Level[]>([]);
+  const [postType, setPostType] = useState<PostType | undefined>();
   const [filePreviews, setFilePreviews] = useState<string[]>([]);
   const [selectedLevel, setSelectedLevel] = useState<Level | undefined>(
     undefined
@@ -105,6 +107,12 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     queryKey: ["level"],
     queryFn: fetchAllLevels,
   });
+
+  const { data: postTypesResponse } = useQuery({
+    queryKey: [`post-types`],
+    queryFn: () => getPostTypes(),
+  });
+
   const options: { value: string; icon: string }[] = [
     {
       value: "public",
@@ -329,7 +337,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       formData.append("extractedText", data.extractedText);
       formData.append("downloadable", data.downloadable);
       formData.append("isPublished", data.isPublished.toString());
-      formData.append("typeId", "2");
+      formData.append("typeId", postType ? postType.id.toString() : "1");
 
       if (selectedFolder)
         formData.append("folderId", String(selectedFolder.id));
@@ -620,7 +628,7 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             </div>
           </div>
         </div>
-        <div className="w-[30%] h-[100vh] shadow-lg bg-[#EEEEEE] pt-4">
+        <div className="w-[30%] h-[100vh] shadow-lg bg-[#EEEEEE] pt-4 overflow-auto">
           <div className="w-full flex items-center justify-between px-5 mb-10">
             <p className="text-lg font-medium">Post Settings</p>
             <Button
@@ -672,6 +680,14 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                 setSelectedDepartments={setSelectedDepartments}
                 departments={departments}
                 selectedDepartments={selectedDepartments}
+              />
+              <Dropdown
+                options={postTypesResponse?.data.postTypes}
+                className={`w-full mb-6 h-12 border border-black items-center bg-inherit`}
+                optionLabel="name"
+                value={postType}
+                placeholder="Select the type of document"
+                onChange={(e) => setPostType(e.value)}
               />
               <TreeSelect
                 filter

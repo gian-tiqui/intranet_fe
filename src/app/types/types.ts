@@ -94,6 +94,11 @@ type Post = {
   childrenPosts: Post[];
 };
 
+type PostType = {
+  id: number;
+  name: string;
+};
+
 type PostDepartment = {
   id: number;
   postId: number;
@@ -357,6 +362,7 @@ export type {
   Comment,
   PostComment,
   CreateComment,
+  PostType,
   ABoardSelector,
   Department,
   MinMax,

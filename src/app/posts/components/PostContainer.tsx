@@ -34,7 +34,7 @@ import { Toast } from "primereact/toast";
 import ImagePaginator from "@/app/components/ImagePaginator";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
 
 interface Props {
   id: number;
@@ -460,7 +460,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
   return (
     <>
       <Toast ref={toastRef} />
-      <ConfirmDialog />
       <div
         onClick={generalPost ? handleClick : undefined}
         className={`ignore-click ${
