@@ -27,7 +27,7 @@ const Comments: React.FC<Props> = ({ comments, postId }) => {
   }
 
   return (
-    <div className="flex flex-col gap-6 pb-24">
+    <div className="flex flex-col gap-6 pb-24 mx-auto w-[80%]">
       {comments.slice(minMax.min, minMax.max).map((comment) => (
         <Comment isReply key={comment.cid} comment={comment} postId={postId} />
       ))}
