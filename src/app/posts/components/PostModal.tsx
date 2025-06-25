@@ -415,12 +415,13 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                   severity: "info",
                 });
 
-                const userLid = decodeUserData()?.lid;
+                const userLid: number | undefined = decodeUserData()?.lid;
 
                 if (
                   userLid &&
                   response.data.post.lid <= userLid &&
-                  data.deptIds.split(",").includes(String(userLid))
+                  data.deptIds.split(",").includes(String(userLid)) &&
+                  !selectedFolder
                 ) {
                   await apiClient.post(`${API_BASE}/post-reader`, {
                     userId: decodeUserData()?.sub,

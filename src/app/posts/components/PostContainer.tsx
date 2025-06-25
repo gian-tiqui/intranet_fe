@@ -181,6 +181,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
       if (response.status === 201) {
         setIsRead(true);
         setSignal(true);
+        refetch();
       }
     } catch (error) {
       console.error(error);
@@ -201,6 +202,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
       if (response.status === 201) {
         setIsRead(true);
         setSignal(true);
+        refetch();
       }
     } catch (error) {
       console.error(error);
@@ -466,8 +468,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           generalPost && "cursor-pointer"
         } relative pt-10 w-full max-w-[80%] mx-auto`}
       >
-        {!post?.folderId &&
-          deptIds.includes(userDeptId.toString()) &&
+        {deptIds.includes(userDeptId.toString()) &&
           !generalPost &&
           isRead === false && (
             <div
