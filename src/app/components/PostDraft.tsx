@@ -17,20 +17,21 @@ const PostDraft: React.FC<Props> = ({ post }) => {
   const { setPostId } = usePostIdStore();
 
   return (
-    <div className="w-full bg-[#EEEEEE] h-20 rounded-lg cursor-pointer flex justify-between shadow items-center px-6">
+    <div className="w-full bg-white dark:bg-neutral-900 hover:shadow-md border border-gray-200 dark:border-neutral-700 rounded-xl cursor-pointer flex justify-between items-center px-6 py-4 transition duration-200">
       <div className="flex items-center gap-3">
         <Image
           src={bluePost.src}
           alt="drafts-folder-icon"
           className="h-7 w-7"
         />
-        <p className="font-medium text-blue-600 text-lg w-20 truncate">
+        <p className="font-medium text-blue-700 dark:text-blue-300 text-lg truncate max-w-[10rem]">
           {post.title}
         </p>
       </div>
+
       <div>
-        <p className="text-xs">Created at</p>
-        <p className="text-sm text-blue-600 font-medium">
+        <p className="text-xs text-gray-500 dark:text-gray-400">Created at</p>
+        <p className="text-sm text-blue-600 dark:text-blue-300 font-medium">
           {new Date(post.createdAt).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
@@ -38,8 +39,11 @@ const PostDraft: React.FC<Props> = ({ post }) => {
           })}
         </p>
       </div>
+
       <div>
-        <p className="text-xs mb-1">Shared to</p>
+        <p className="text-xs mb-1 text-gray-500 dark:text-gray-400">
+          Shared to
+        </p>
         <div className="flex items-center gap-1">
           {Array(3)
             .fill(0)
@@ -58,13 +62,14 @@ const PostDraft: React.FC<Props> = ({ post }) => {
           />
         </div>
       </div>
-      <div className="h-8 rounded w-32 flex">
-        <div className="bg-blue-600 grid place-content-center text-white text-sm rounded-s-lg w-24 h-8">
+
+      <div className="flex rounded-md overflow-hidden border border-blue-600 dark:border-blue-400">
+        <div className="bg-blue-600 text-white dark:bg-blue-500 px-4 py-1 text-sm font-medium grid place-items-center">
           Publish
         </div>
-        <div className="w-10 bg-white rounded-e-lg h-8 grid place-content-center">
+        <div className="bg-white dark:bg-neutral-800 grid place-items-center px-2">
           <Button
-            icon={`${PrimeIcons.COG}`}
+            icon={PrimeIcons.COG}
             onClick={() => {
               setShowEditModal(true);
               setPostId(post.pid);

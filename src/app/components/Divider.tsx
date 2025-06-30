@@ -34,7 +34,6 @@ import { usePathname } from "next/navigation";
 import HeaderIcons from "./HeaderIcons";
 import UserActivitiesBar from "./UserActivitiesBar";
 import useActivityBarStore from "../store/activitybar";
-import { Button } from "primereact/button";
 import useLoginStore from "../store/loggedInStore";
 import SearchContainer from "./SearchContainer";
 import { SpeedDial } from "primereact/speeddial";
@@ -49,6 +48,7 @@ import EditFolderDialog from "./EditFolderDialog";
 import useEditFolderDialogVisibleStore from "../store/editFolderDialogVisible";
 import useEditFolderIdStore from "../store/editFolderId";
 import Tutorial from "./Tutorial";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 interface Props {
   children?: ReactNode;
@@ -317,16 +317,26 @@ const Divider: React.FC<Props> = ({ children }) => {
           {hidden && (
             <header
               className={`flex justify-between items-center backdrop-blur bg-slate-100/10 z-10 h-20 w-full fixed top-0 ${
-                isCollapsed ? "ps-2 pe-4" : "ps-5 pe-72"
+                isCollapsed ? "ps-2 pe-4" : "ps-5 pe-96"
               }`}
             >
               <div className="flex gap-3">
                 {isCollapsed && (
-                  <Button
-                    tooltip="Expand Sidebar"
-                    icon={`pi pi-expand`}
-                    onClick={() => setIsCollapsed(false)}
-                  />
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={
+                      setIsCollapsed
+                        ? () => setIsCollapsed(!isCollapsed)
+                        : undefined
+                    }
+                    className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+                  >
+                    <Icon
+                      icon="solar:close-circle-bold"
+                      className="h-6 w-6 text-gray-600 dark:text-gray-400"
+                    />
+                  </motion.button>
                 )}
                 <motion.div
                   className="flex items-center gap-4"

@@ -22,9 +22,8 @@ interface Props {
   isMobile?: boolean;
 }
 
-const UserButton: React.FC<Props> = ({ isMobile }) => {
+const UserButton: React.FC<Props> = () => {
   const [settingsDialogVisible, setSettingsDialogVisible] = useState(false);
-  const [hoveredAction, setHoveredAction] = useState<string | null>(null);
   const { setShowLogoutArt } = useLogoutArtStore();
   const { setHidden } = useNavbarVisibilityStore();
   const { setIsLoggedIn } = useLoginStore();
@@ -119,43 +118,6 @@ const UserButton: React.FC<Props> = ({ isMobile }) => {
     setSettingsDialogVisible(true);
   };
 
-  const ActionButton: React.FC<{
-    icon: string;
-    label: string;
-    onClick: (event: React.MouseEvent) => void;
-    variant?: "primary" | "danger";
-    id: string;
-  }> = ({ icon, label, onClick, variant = "primary", id }) => (
-    <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      onClick={onClick}
-      onMouseEnter={() => setHoveredAction(id)}
-      onMouseLeave={() => setHoveredAction(null)}
-      className={`
-        flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200
-        ${
-          variant === "danger"
-            ? "hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400"
-            : "hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-        }
-        ${hoveredAction === id ? "shadow-sm" : ""}
-      `}
-    >
-      <Icon
-        icon={icon}
-        className={`h-4 w-4 transition-colors duration-200 ${
-          hoveredAction === id
-            ? variant === "danger"
-              ? "text-red-700 dark:text-red-300"
-              : "text-blue-700 dark:text-blue-300"
-            : ""
-        }`}
-      />
-      <span className="text-sm font-medium">{label}</span>
-    </motion.button>
-  );
-
   return (
     <>
       <UserModal
@@ -245,30 +207,6 @@ const UserButton: React.FC<Props> = ({ isMobile }) => {
               className="h-4 w-4 text-gray-400 dark:text-gray-500"
             />
           </motion.div>
-        </motion.div>
-
-        {/* Quick Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mt-4 pt-4 border-t border-gray-200/50 dark:border-gray-700/50"
-        >
-          <div className="flex justify-between items-center gap-2">
-            <ActionButton
-              id="settings"
-              icon="solar:settings-bold-duotone"
-              label="Settings"
-              onClick={isMobile ? handleShowSettingsMobile : handleShowSettings}
-            />
-            <ActionButton
-              id="logout"
-              icon="solar:logout-2-bold-duotone"
-              label="Logout"
-              onClick={handleLogout}
-              variant="danger"
-            />
-          </div>
         </motion.div>
 
         {/* Status Indicator */}
