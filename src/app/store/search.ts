@@ -1,13 +1,34 @@
+// searchTermStore.ts
 import { create } from "zustand";
 
-interface State {
+interface SearchStore {
   searchTerm: string;
-  setSearchTerm: (searchTerm: string) => void;
+  deptId?: number;
+  postTypeId?: number;
+  folderDeptId?: number;
+  setSearchParams: (params: {
+    searchTerm: string;
+    deptId?: number;
+    postTypeId?: number;
+    folderDeptId?: number;
+  }) => void;
+  clearSearchParams: () => void;
 }
 
-const searchTermStore = create<State>((set) => ({
+const searchTermStore = create<SearchStore>((set) => ({
   searchTerm: "",
-  setSearchTerm: (searchTerm: string) => set({ searchTerm }),
+  deptId: undefined,
+  postTypeId: undefined,
+  folderDeptId: undefined,
+  setSearchParams: ({ searchTerm, deptId, postTypeId, folderDeptId }) =>
+    set({ searchTerm, deptId, postTypeId, folderDeptId }),
+  clearSearchParams: () =>
+    set({
+      searchTerm: "",
+      deptId: undefined,
+      postTypeId: undefined,
+      folderDeptId: undefined,
+    }),
 }));
 
 export default searchTermStore;

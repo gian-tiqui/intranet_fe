@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import searchTermStore from "../store/search";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
@@ -15,10 +15,25 @@ import FolderSearchItem from "./FolderSearchItem";
 
 interface FormFields {
   searchTerm: string;
+  deptId?: number;
+  postTypeId?: number;
+  folderDeptId?: number;
 }
 
 const SearchContainer = () => {
-  const { searchTerm, setSearchTerm } = searchTermStore();
+  const { searchTerm, deptId, postTypeId, folderDeptId, clearSearchParams } =
+    searchTermStore();
+
+  useEffect(() => {
+    setQuery({
+      search: searchTerm,
+      skip: 0,
+      take: 5,
+      deptId,
+      postTypeId,
+      folderDeptId,
+    });
+  }, [searchTerm, deptId, postTypeId, folderDeptId]);
   const { setShowSearch } = useShowSearchStore();
   const [query, setQuery] = useState<Query>({
     search: searchTerm,
@@ -32,7 +47,7 @@ const SearchContainer = () => {
 
   const handleClose = () => {
     setShowSearch(false);
-    setSearchTerm("");
+    clearSearchParams();
   };
 
   const handleSearch = ({ searchTerm }: FormFields) => {

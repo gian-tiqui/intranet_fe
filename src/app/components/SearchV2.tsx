@@ -1,24 +1,40 @@
+import { motion } from "framer-motion";
 import { PrimeIcons } from "primereact/api";
 import { Button } from "primereact/button";
-import React from "react";
-import { useForm } from "react-hook-form";
+import { Dropdown } from "primereact/dropdown";
+import { useForm, Controller } from "react-hook-form";
 import searchTermStore from "../store/search";
 import useShowSearchStore from "../store/showSearch";
-import { motion } from "motion/react";
+import { Department, PostType } from "../types/types";
 
 interface FormFields {
   searchTerm: string;
+  deptId?: number;
+  postTypeId?: number;
+  folderDeptId?: number;
 }
 
-const SearchV2 = () => {
-  const { handleSubmit, register, reset, watch } = useForm<FormFields>();
-  const { setSearchTerm } = searchTermStore();
+interface SearchV2Props {
+  departments: Department[];
+  postTypes: PostType[];
+}
+
+const SearchV2: React.FC<SearchV2Props> = ({ departments, postTypes }) => {
+  const { handleSubmit, control, register, reset, watch } =
+    useForm<FormFields>();
+  const { setSearchParams } = searchTermStore();
   const { setShowSearch } = useShowSearchStore();
 
   const handleSearch = (data: FormFields) => {
     if (!data.searchTerm) return;
 
-    setSearchTerm(data.searchTerm);
+    setSearchParams({
+      searchTerm: data.searchTerm,
+      deptId: data.deptId,
+      postTypeId: data.postTypeId,
+      folderDeptId: data.folderDeptId,
+    });
+
     setShowSearch(true);
     reset();
   };
@@ -30,6 +46,7 @@ const SearchV2 = () => {
       transition={{ delay: 0.3, duration: 1 }}
       onSubmit={handleSubmit(handleSearch)}
     >
+      {/* Search Bar */}
       <motion.div
         className={`bg-[#EEEEEE] w-96 md:w-full h-18 mt-4 rounded-full justify-between border-2 p-1 ${
           (watch("searchTerm") || "").length > 0
@@ -50,8 +67,61 @@ const SearchV2 = () => {
           Search
         </Button>
       </motion.div>
+
+      {/* Filters */}
       <div className="flex justify-center">
-        <div className="w-96 h-12 shadow rounded bg-[#EEE]"></div>
+        <div className="w-96 bg-[#EEE] p-4 rounded-xl shadow flex flex-col gap-3">
+          <Controller
+            control={control}
+            name="deptId"
+            render={({ field }) => (
+              <Dropdown
+                {...field}
+                value={field.value ?? null}
+                options={departments.map((d) => ({
+                  label: d.departmentName,
+                  value: d.deptId,
+                }))}
+                placeholder="Filter by Department"
+                className="w-full"
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="postTypeId"
+            render={({ field }) => (
+              <Dropdown
+                {...field}
+                value={field.value ?? null}
+                options={postTypes.map((p) => ({
+                  label: p.name,
+                  value: p.id,
+                }))}
+                placeholder="Filter by Post Type"
+                className="w-full"
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="folderDeptId"
+            render={({ field }) => (
+              <Dropdown
+                {...field}
+                value={field.value ?? null}
+                options={departments.map((d) => ({
+                  label: d.departmentName,
+                  value: d.deptId,
+                }))}
+                placeholder="Filter by Folder Department"
+                className="w-full"
+              />
+            )}
+          />
+        </div>
       </div>
     </motion.form>
   );

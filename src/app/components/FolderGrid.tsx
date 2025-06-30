@@ -27,8 +27,15 @@ import useFolderDialogVisibleStore from "../store/folderDialog";
 import { motion } from "motion/react";
 import useEditFolderDialogVisibleStore from "../store/editFolderDialogVisible";
 import useEditFolderIdStore from "../store/editFolderId";
+import useDepartments from "../custom-hooks/departments";
+import { getPostTypes } from "../utils/service/postTypeService";
 
 const FolderGrid = () => {
+  const departments = useDepartments();
+  const { data: postTypeResponse } = useQuery({
+    queryKey: ["post-types"],
+    queryFn: () => getPostTypes(),
+  });
   const [query, setQuery] = useState<Query>({
     search: "",
     skip: 0,
@@ -118,7 +125,10 @@ const FolderGrid = () => {
         refetch={refetch}
       />
       <div className="mx-auto md:w-[600px]">
-        <SearchV2 />
+        <SearchV2
+          departments={departments}
+          postTypes={postTypeResponse?.data.postTypes}
+        />
       </div>
 
       {/* <motion.div
