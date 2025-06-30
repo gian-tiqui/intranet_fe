@@ -88,8 +88,6 @@ const AddSubfolderDialog: React.FC<Props> = ({
     if (!selectedDepartments) return;
     const joinedDepartmentIds = selectedDepartments.join(",");
 
-    console.log(joinedDepartmentIds);
-
     setValue("deptIds", joinedDepartmentIds);
   }, [selectedDepartments, setValue]);
 

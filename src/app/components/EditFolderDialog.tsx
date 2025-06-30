@@ -64,7 +64,6 @@ const EditFolderDialog: React.FC<Props> = ({
 
   useEffect(() => {
     if (data) {
-      console.log(data);
       setValue("name", data.name);
       setValue("isPublished", data.isPublished ? 1 : 0);
       setIsChecked(data.isPublished);
