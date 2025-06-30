@@ -18,7 +18,7 @@ const FolderPost: React.FC<Props> = ({ post, setVisible }) => {
       const userData = decodeUserData();
 
       if (!post?.lid || !post?.userId) {
-        console.log("Post data not ready, skipping check...");
+        console.debug("Post data not ready, skipping check...");
         return;
       }
 

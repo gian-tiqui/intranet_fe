@@ -226,7 +226,6 @@ const AddUserDialog: React.FC<Props> = ({ visible, setVisible }) => {
               placeholder="Select level"
               onChange={(e) => {
                 setSelectedLevel(e.value);
-                console.log(e.value);
                 setValue("lid", e.value.lid);
               }}
             />
@@ -267,7 +266,6 @@ const AddUserDialog: React.FC<Props> = ({ visible, setVisible }) => {
               placeholder="Select a department"
               onChange={(e) => {
                 setSelectedDepartment(e.value);
-                console.log(e.value);
                 setValue("deptId", e.value.deptId);
               }}
             />
@@ -307,7 +305,6 @@ const AddUserDialog: React.FC<Props> = ({ visible, setVisible }) => {
               placeholder="Select a division"
               onChange={(e) => {
                 setSelectedDivision(e.value);
-                console.log(e.value);
                 setValue("divisionId", e.value.id);
               }}
             />
