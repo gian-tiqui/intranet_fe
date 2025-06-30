@@ -243,13 +243,51 @@ const Divider: React.FC<Props> = ({ children }) => {
     <QueryClientProvider client={queryClient}>
       <ConfirmDialog
         pt={{
-          header: { className: "bg-[#EEE]" },
-          content: { className: "bg-[#EEE]" },
-          footer: { className: "bg-[#EEE]" },
-          acceptButton: { className: "ms-2 w-20 h-8" },
-          rejectButton: { className: "ms-2 w-20 bg-red-400 h-8" },
+          header: {
+            className: "bg-[#EEE] rounded-t-3xl border-b border-gray-200",
+          },
+          content: {
+            className: "bg-[#EEE] px-6 py-4",
+          },
+          footer: {
+            className:
+              "bg-[#EEE] rounded-b-3xl border-t border-gray-200 px-6 py-4",
+          },
+          root: {
+            className: "rounded-3xl shadow-2xl border-0 overflow-hidden",
+          },
+          acceptButton: {
+            className: `
+        ms-2 w-20 h-9 
+        bg-gradient-to-r from-blue-500 to-blue-600 
+        border-none rounded-lg text-white font-medium text-sm
+        hover:from-blue-600 hover:to-blue-700 
+        focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-2
+        transition-all duration-300 ease-in-out
+        hover:scale-105 active:scale-95
+        shadow-md hover:shadow-lg
+      `,
+          },
+          rejectButton: {
+            className: `
+        me-2 w-20 h-9
+        bg-gradient-to-r from-red-500 to-red-600 
+        border-none rounded-lg text-white font-medium text-sm
+        hover:from-red-600 hover:to-red-700 
+        focus:ring-2 focus:ring-red-500/20 focus:ring-offset-2
+        transition-all duration-300 ease-in-out
+        hover:scale-105 active:scale-95
+        shadow-md hover:shadow-lg
+      `,
+          },
+          message: {
+            className: "text-gray-700 text-base leading-relaxed",
+          },
+          icon: {
+            className: "text-blue-500 text-2xl me-3",
+          },
         }}
-        maskClassName="backdrop-blur"
+        maskClassName="backdrop-blur-md bg-black/20"
       />
       <Tutorial />
       <Toast ref={toastRef} />
