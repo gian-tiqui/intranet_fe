@@ -6,12 +6,14 @@ import { useForm, Controller } from "react-hook-form";
 import searchTermStore from "../store/search";
 import useShowSearchStore from "../store/showSearch";
 import { Department, PostType } from "../types/types";
+import { MultiSelect } from "primereact/multiselect";
 
 interface FormFields {
   searchTerm: string;
   deptId?: number;
   postTypeId?: number;
   folderDeptId?: number;
+  searchTypes?: string[]; // ['post', 'folder', 'user']
 }
 
 interface SearchV2Props {
@@ -30,9 +32,10 @@ const SearchV2: React.FC<SearchV2Props> = ({ departments, postTypes }) => {
 
     setSearchParams({
       searchTerm: data.searchTerm,
-      deptId: data.deptId,
-      postTypeId: data.postTypeId,
-      folderDeptId: data.folderDeptId,
+      deptId: data.deptId ? Number(data.deptId) : undefined,
+      postTypeId: data.postTypeId ? Number(data.postTypeId) : undefined,
+      folderDeptId: data.folderDeptId ? Number(data.folderDeptId) : undefined,
+      searchTypes: data.searchTypes ?? ["post", "folder", "user"],
     });
 
     setShowSearch(true);
@@ -118,6 +121,25 @@ const SearchV2: React.FC<SearchV2Props> = ({ departments, postTypes }) => {
                 }))}
                 placeholder="Filter by Folder Department"
                 className="w-full"
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="searchTypes"
+            render={({ field }) => (
+              <MultiSelect
+                {...field}
+                value={field.value ?? []}
+                options={[
+                  { label: "Posts", value: "post" },
+                  { label: "Folders", value: "folder" },
+                  { label: "Users", value: "user" },
+                ]}
+                placeholder="Filter by Type"
+                className="w-full"
+                display="chip"
               />
             )}
           />

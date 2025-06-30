@@ -319,6 +319,8 @@ type Query = {
   isPublished?: number;
   deptId?: number;
   postTypeId?: number;
+  searchTypes?: string[] | undefined;
+
   folderDeptId?: number;
 };
 

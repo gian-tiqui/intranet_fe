@@ -21,8 +21,14 @@ interface FormFields {
 }
 
 const SearchContainer = () => {
-  const { searchTerm, deptId, postTypeId, folderDeptId, clearSearchParams } =
-    searchTermStore();
+  const {
+    searchTerm,
+    deptId,
+    postTypeId,
+    folderDeptId,
+    clearSearchParams,
+    searchTypes,
+  } = searchTermStore();
 
   useEffect(() => {
     setQuery({
@@ -32,11 +38,16 @@ const SearchContainer = () => {
       deptId,
       postTypeId,
       folderDeptId,
+      searchTypes,
     });
-  }, [searchTerm, deptId, postTypeId, folderDeptId]);
+  }, [searchTerm, deptId, postTypeId, folderDeptId, searchTypes]);
   const { setShowSearch } = useShowSearchStore();
   const [query, setQuery] = useState<Query>({
     search: searchTerm,
+    deptId,
+    postTypeId,
+    folderDeptId,
+    searchTypes,
     skip: 0,
     take: 5,
   });
