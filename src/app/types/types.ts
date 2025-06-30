@@ -318,6 +318,10 @@ type Query = {
   depth?: number;
   isPublished?: number;
   deptId?: number;
+  postTypeId?: number;
+  searchTypes?: string[] | undefined;
+
+  folderDeptId?: number;
 };
 
 type AddDepartmentFormField = {
