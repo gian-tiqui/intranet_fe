@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import useLogoutArtStore from "../store/useLogoutSplashStore";
@@ -20,8 +22,9 @@ interface Props {
   isMobile?: boolean;
 }
 
-const UserButton: React.FC<Props> = () => {
+const UserButton: React.FC<Props> = ({ isMobile }) => {
   const [settingsDialogVisible, setSettingsDialogVisible] = useState(false);
+  const [hoveredAction, setHoveredAction] = useState<string | null>(null);
   const { setShowLogoutArt } = useLogoutArtStore();
   const { setHidden } = useNavbarVisibilityStore();
   const { setIsLoggedIn } = useLoginStore();
@@ -116,8 +119,45 @@ const UserButton: React.FC<Props> = () => {
     setSettingsDialogVisible(true);
   };
 
+  const ActionButton: React.FC<{
+    icon: string;
+    label: string;
+    onClick: (event: React.MouseEvent) => void;
+    variant?: "primary" | "danger";
+    id: string;
+  }> = ({ icon, label, onClick, variant = "primary", id }) => (
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={onClick}
+      onMouseEnter={() => setHoveredAction(id)}
+      onMouseLeave={() => setHoveredAction(null)}
+      className={`
+        flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200
+        ${
+          variant === "danger"
+            ? "hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400"
+            : "hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+        }
+        ${hoveredAction === id ? "shadow-sm" : ""}
+      `}
+    >
+      <Icon
+        icon={icon}
+        className={`h-4 w-4 transition-colors duration-200 ${
+          hoveredAction === id
+            ? variant === "danger"
+              ? "text-red-700 dark:text-red-300"
+              : "text-blue-700 dark:text-blue-300"
+            : ""
+        }`}
+      />
+      <span className="text-sm font-medium">{label}</span>
+    </motion.button>
+  );
+
   return (
-    <div className="px-3 mb-3">
+    <>
       <UserModal
         visible={showUserModal}
         setVisible={setShowUserModal}
@@ -133,35 +173,126 @@ const UserButton: React.FC<Props> = () => {
         setVisible={setSettingsDialogVisible}
       />
 
-      <div
-        className="flex items-center gap-3 hover:bg-neutral-200 dark:hover:bg-neutral-700 p-2 cursor-pointer rounded-3xl"
-        onClick={() => setShowUserModal(true)}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-4 shadow-lg border border-gray-200/50 dark:border-gray-700/50"
       >
-        {userData && (
-          <Avatar
-            label={userData.firstName[0] + userData.lastName[0]}
-            shape="circle"
-            className="font-bold bg-blue-500 text-white"
-          />
-        )}
-        <div>
-          {loading ? (
-            <p className="text-sm">Loading...</p>
-          ) : userData ? (
-            <>
-              <p className="text-xs font-semibold">Last login ({date})</p>
+        {/* User Profile Section */}
+        <motion.div
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="flex items-center gap-3 p-3 hover:bg-white/70 dark:hover:bg-gray-800/70 cursor-pointer rounded-xl transition-all duration-300 backdrop-blur-sm"
+          onClick={() => setShowUserModal(true)}
+        >
+          <div className="relative">
+            {userData ? (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              >
+                <Avatar
+                  label={userData.firstName[0] + userData.lastName[0]}
+                  shape="circle"
+                  className="font-bold bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg"
+                  style={{ width: "40px", height: "40px" }}
+                />
+              </motion.div>
+            ) : (
+              <div className="w-10 h-10 bg-gray-300 dark:bg-gray-600 rounded-full animate-pulse" />
+            )}
+            <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 shadow-sm" />
+          </div>
 
-              <p className="text-sm">
-                {`${userData.firstName} ${userData.lastName}`}
+          <div className="flex-1 min-w-0">
+            {loading ? (
+              <div className="space-y-2">
+                <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded animate-pulse" />
+                <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4" />
+              </div>
+            ) : userData ? (
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 }}
+              >
+                <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                  {`${userData.firstName} ${userData.lastName}`}
+                </p>
+                <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
+                  {userData.departmentName}
+                </p>
+                {date && (
+                  <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                    Last login: {date}
+                  </p>
+                )}
+              </motion.div>
+            ) : (
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                User not found
               </p>
-              <p className="text-xs truncate">{userData.departmentName}</p>
-            </>
-          ) : (
-            <p className="text-sm">User not found</p>
-          )}
-        </div>
-      </div>
-    </div>
+            )}
+          </div>
+
+          <motion.div
+            whileHover={{ rotate: 90 }}
+            transition={{ duration: 0.2 }}
+          >
+            <Icon
+              icon="solar:alt-arrow-right-bold-duotone"
+              className="h-4 w-4 text-gray-400 dark:text-gray-500"
+            />
+          </motion.div>
+        </motion.div>
+
+        {/* Quick Actions */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mt-4 pt-4 border-t border-gray-200/50 dark:border-gray-700/50"
+        >
+          <div className="flex justify-between items-center gap-2">
+            <ActionButton
+              id="settings"
+              icon="solar:settings-bold-duotone"
+              label="Settings"
+              onClick={isMobile ? handleShowSettingsMobile : handleShowSettings}
+            />
+            <ActionButton
+              id="logout"
+              icon="solar:logout-2-bold-duotone"
+              label="Logout"
+              onClick={handleLogout}
+              variant="danger"
+            />
+          </div>
+        </motion.div>
+
+        {/* Status Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="mt-3 pt-3 border-t border-gray-200/30 dark:border-gray-700/30"
+        >
+          <div className="flex items-center justify-center gap-2">
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">
+                Online
+              </span>
+            </div>
+            <div className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full" />
+            <span className="text-xs text-gray-500 dark:text-gray-500">
+              Active now
+            </span>
+          </div>
+        </motion.div>
+      </motion.div>
+    </>
   );
 };
 
