@@ -265,7 +265,6 @@ const SearchV2: React.FC<SearchV2Props> = ({ departments, postTypes }) => {
           </div>
         </motion.div>
 
-        {/* Active Filters Summary */}
         {activeFiltersCount > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}

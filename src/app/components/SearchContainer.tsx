@@ -41,6 +41,7 @@ const SearchContainer = () => {
       searchTypes,
     });
   }, [searchTerm, deptId, postTypeId, folderDeptId, searchTypes]);
+
   const { setShowSearch } = useShowSearchStore();
   const [query, setQuery] = useState<Query>({
     search: searchTerm,
@@ -63,7 +64,6 @@ const SearchContainer = () => {
 
   const handleSearch = ({ searchTerm }: FormFields) => {
     if (!searchTerm) return;
-
     setQuery((prev) => ({ ...prev, search: searchTerm }));
   };
 
@@ -77,139 +77,252 @@ const SearchContainer = () => {
   }
 
   return (
-    <div className="absolute h-screen w-screen bg-[#CBD5E1] z-20">
-      <header className="h-32 w-full flex items-center px-3 justify-between">
-        <div className="flex items-center gap-4 w-full">
-          <Image src={wmcLogo.src} alt="wmc logo" height="45" width="45" />
-          <div className="text-blue-600">
-            <h4 className="font-semibold text-xl">Westlake</h4>
-            <h6 className="text-xs font-semibold">Medical Center</h6>
-          </div>
-        </div>
-        <div className="w-full">
-          <form
-            onSubmit={handleSubmit(handleSearch)}
-            className="bg-[#EEEEEE] w-full h-18 mt-4 rounded-full justify-between border-2 p-1 border-black mb-6 flex items-center ps-7"
-          >
-            <input
-              type="text"
-              {...register("searchTerm")}
-              className="border-none bg-inherit outline-none w-96"
-              placeholder="Search here..."
-            />
+    <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      {/* Modern Modal Container */}
+      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
+        {/* Header with Glassmorphism Effect */}
+        <header className="relative bg-gradient-to-r from-blue-600 via-blue-700 to-purple-700 p-6">
+          <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+          <div className="relative flex items-center justify-between">
+            {/* Logo Section */}
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                <Image
+                  src={wmcLogo.src}
+                  alt="wmc logo"
+                  height="32"
+                  width="32"
+                  className="rounded-lg"
+                />
+              </div>
+              <div className="text-white">
+                <h4 className="font-bold text-xl tracking-tight">Westlake</h4>
+                <h6 className="text-sm font-medium text-white/80">
+                  Medical Center
+                </h6>
+              </div>
+            </div>
+
+            {/* Close Button */}
             <Button
-              className="bg-white rounded-full shadow-xl h-14 w-40 border justify-center gap-2"
-              icon={`${PrimeIcons.SEARCH}`}
-            >
-              Search
-            </Button>
+              onClick={handleClose}
+              className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 border-0 transition-all duration-200"
+              icon={`${PrimeIcons.TIMES} text-white text-lg`}
+            />
+          </div>
+
+          {/* Modern Search Bar */}
+          <form onSubmit={handleSubmit(handleSearch)} className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <i className={`${PrimeIcons.SEARCH} text-gray-400`}></i>
+              </div>
+              <input
+                type="text"
+                {...register("searchTerm")}
+                className="w-full pl-12 pr-32 py-4 bg-white/90 backdrop-blur-sm rounded-2xl border-0 outline-none focus:ring-2 focus:ring-white/50 placeholder-gray-500 text-gray-900 font-medium transition-all duration-200"
+                placeholder="Search posts, folders, users..."
+              />
+              <div className="absolute inset-y-0 right-0 pr-2 flex items-center">
+                <Button
+                  type="submit"
+                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl border-0 font-semibold text-sm transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  Search
+                </Button>
+              </div>
+            </div>
           </form>
-        </div>
+        </header>
 
-        <div className="w-full flex justify-end">
-          <Button
-            onClick={handleClose}
-            icon={`${PrimeIcons.TIMES} text-xl`}
-            className="h-14 w-14"
-          ></Button>
-        </div>
-      </header>
-      <section className="py-3 flex flex-col items-center mx-auto h-96 bg-[#EEEEEE] w-[43%] rounded-t-2xl shadow">
-        {isLoading && <p>Loading...</p>}
-        {isError && (
-          <p>There was a problem with your search. Try again later.</p>
+        {/* Results Section */}
+        <section className="max-h-96 overflow-y-auto">
+          {/* Results Header */}
+          <div className="sticky top-0 bg-gray-50/80 backdrop-blur-sm border-b border-gray-200/50 px-6 py-4">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-semibold text-gray-700">
+                {isLoading ? (
+                  <span className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                    Searching...
+                  </span>
+                ) : (
+                  `${data?.data.total || 0} results found`
+                )}
+              </p>
+              {data && data.data.total > 0 && (
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                  Live results
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Results Content */}
+          <div className="p-6">
+            {isLoading && (
+              <div className="flex items-center justify-center py-12">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-8 h-8 border-3 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                  <p className="text-gray-600 font-medium">
+                    Searching database...
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {isError && (
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i
+                      className={`${PrimeIcons.EXCLAMATION_TRIANGLE} text-red-600 text-2xl`}
+                    ></i>
+                  </div>
+                  <p className="text-gray-800 font-semibold mb-2">
+                    Search Error
+                  </p>
+                  <p className="text-gray-600">
+                    There was a problem with your search. Please try again.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {data && data.data.total === 0 && !isLoading && (
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i
+                      className={`${PrimeIcons.SEARCH} text-gray-400 text-2xl`}
+                    ></i>
+                  </div>
+                  <p className="text-gray-800 font-semibold mb-2">
+                    No Results Found
+                  </p>
+                  <p className="text-gray-600">
+                    Try adjusting your search terms or filters.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Search Results */}
+            <div className="space-y-3">
+              {data?.data.results.map(
+                (
+                  item: { type: string; data: Post | Folder | User },
+                  index: number
+                ) => {
+                  const itemProps = {
+                    index,
+                    type: item.type,
+                    handleClose,
+                    className:
+                      "transform transition-all duration-200 hover:scale-[1.02] hover:shadow-lg rounded-xl",
+                  };
+
+                  switch (item.type) {
+                    case "post":
+                      const post: Post = item.data as Post;
+                      return (
+                        <PostSearchItem
+                          {...itemProps}
+                          key={post.pid}
+                          post={post}
+                        />
+                      );
+                    case "folder":
+                      const folder: Folder = item.data as Folder;
+                      return (
+                        <FolderSearchItem
+                          {...itemProps}
+                          key={folder.id}
+                          folder={folder}
+                        />
+                      );
+                    case "user":
+                      const user: User = item.data as User;
+                      return (
+                        <UserSearchItem
+                          {...itemProps}
+                          key={user.id}
+                          user={user}
+                        />
+                      );
+                    default:
+                      return (
+                        <div
+                          key={index}
+                          className="p-4 bg-red-50 rounded-xl border border-red-200"
+                        >
+                          <p className="text-red-600 font-medium">
+                            Error loading this item
+                          </p>
+                        </div>
+                      );
+                  }
+                }
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* Modern Pagination Footer */}
+        {data && data.data.total > 0 && (
+          <footer className="bg-gray-50/80 backdrop-blur-sm border-t border-gray-200/50 px-6 py-4">
+            <div className="flex items-center justify-between">
+              <Button
+                onClick={() => {
+                  setQuery((prev) => {
+                    const skip = prev.skip ?? 0;
+                    const take = prev.take ?? 5;
+                    const newSkip = Math.max(skip - take, 0);
+                    return { ...prev, skip: newSkip };
+                  });
+                }}
+                disabled={(query.skip ?? 0) === 0}
+                className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 disabled:bg-gray-100 border border-gray-200 rounded-xl transition-all duration-200 disabled:opacity-50"
+                icon={`${PrimeIcons.CHEVRON_LEFT} text-gray-600`}
+              >
+                <span className="text-gray-700 font-medium">Previous</span>
+              </Button>
+
+              <div className="flex items-center gap-4">
+                <span className="px-4 py-2 bg-blue-100 text-blue-800 rounded-xl font-semibold text-sm">
+                  Page {Math.floor((query.skip ?? 0) / (query.take ?? 5)) + 1}
+                </span>
+                <span className="text-gray-500 text-sm">of</span>
+                <span className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl font-semibold text-sm">
+                  {data ? Math.ceil(data.data.total / (query.take ?? 5)) : 1}
+                </span>
+              </div>
+
+              <Button
+                onClick={() => {
+                  setQuery((prev) => {
+                    const skip = prev.skip ?? 0;
+                    const take = prev.take ?? 5;
+                    const nextSkip = skip + take;
+                    if (data && nextSkip >= data.data.total) return prev;
+                    return { ...prev, skip: nextSkip };
+                  });
+                }}
+                disabled={
+                  data
+                    ? (query.skip ?? 0) + (query.take ?? 5) >= data.data.total
+                    : true
+                }
+                className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 disabled:bg-gray-100 border border-gray-200 rounded-xl transition-all duration-200 disabled:opacity-50"
+              >
+                <span className="text-gray-700 font-medium">Next</span>
+                <i className={`${PrimeIcons.CHEVRON_RIGHT} text-gray-600`}></i>
+              </Button>
+            </div>
+          </footer>
         )}
-        <p className="my-2">Results for this search: {data?.data.total}</p>
-        {data?.data.results.map(
-          (
-            item: { type: string; data: Post | Folder | User },
-            index: number
-          ) => {
-            switch (item.type) {
-              case "post":
-                const post: Post = item.data as Post;
-
-                return (
-                  <PostSearchItem
-                    index={index}
-                    type={item.type}
-                    key={post.pid}
-                    post={post}
-                    handleClose={handleClose}
-                  />
-                );
-                break;
-              case "folder":
-                const folder: Folder = item.data as Folder;
-
-                return (
-                  <FolderSearchItem
-                    index={index}
-                    type={item.type}
-                    key={folder.id}
-                    folder={folder}
-                    handleClose={handleClose}
-                  />
-                );
-                break;
-              case "user":
-                const user: User = item.data as User;
-
-                return (
-                  <UserSearchItem
-                    index={index}
-                    key={user.id}
-                    type={item.type}
-                    user={user}
-                    handleClose={handleClose}
-                  />
-                );
-                break;
-              default:
-                return <p>There was an error in this item</p>;
-            }
-          }
-        )}
-      </section>
-      <footer className="w-[43%] mx-auto bg-[#EEEEEE] rounded-b-3xl pb-4 px-5 flex justify-between gap-2">
-        <Button
-          onClick={() => {
-            setQuery((prev) => {
-              const skip = prev.skip ?? 0;
-              const take = prev.take ?? 5;
-              const newSkip = Math.max(skip - take, 0);
-              return { ...prev, skip: newSkip };
-            });
-          }}
-          disabled={(query.skip ?? 0) === 0}
-          className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium disabled:opacity-50"
-          icon={`${PrimeIcons.ARROW_LEFT} text-xs`}
-        ></Button>
-
-        <span className="text-sm font-medium self-center">
-          Page {Math.floor((query.skip ?? 0) / (query.take ?? 5)) + 1} of{" "}
-          {data ? Math.ceil(data.data.total / (query.take ?? 5)) : 1}
-        </span>
-
-        <Button
-          onClick={() => {
-            setQuery((prev) => {
-              const skip = prev.skip ?? 0;
-              const take = prev.take ?? 5;
-              const nextSkip = skip + take;
-              if (data && nextSkip >= data.data.total) return prev;
-              return { ...prev, skip: nextSkip };
-            });
-          }}
-          disabled={
-            data
-              ? (query.skip ?? 0) + (query.take ?? 5) >= data.data.total
-              : true
-          }
-          className="h-7 w-7 bg-blue-600 justify-center text-white text-sm font-medium disabled:opacity-50"
-          icon={`${PrimeIcons.ARROW_RIGHT} text-xs`}
-        ></Button>
-      </footer>
+      </div>
     </div>
   );
 };

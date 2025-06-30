@@ -10,40 +10,38 @@ const ConfirmModal: React.FC<Props> = ({
   setShowConfirmModal,
   setConfirmed,
 }) => {
-  const handleButtonClick = (option: string) => {
+  const handleButtonClick = (option: "yes" | "no") => {
     if (option === "yes") {
       setConfirmed(true);
-      setShowConfirmModal(false);
-    } else {
-      setShowConfirmModal(false);
     }
+    setShowConfirmModal(false);
   };
 
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className="bg-[#EEEEEE] w-64 rounded-3xl pt-10"
+      className="w-72 bg-[#EEE] dark:bg-neutral-900 rounded-2xl shadow-xl px-6 pt-8 pb-4 text-center transition duration-300 border border-gray-200 dark:border-neutral-700"
     >
       <Icon
-        icon={"material-symbols:warning-outline"}
-        className="mx-auto mb-3 h-10 w-10"
+        icon="material-symbols:warning-outline"
+        className="mx-auto mb-3 h-10 w-10 text-yellow-500"
       />
-      <p className="font-semibold mb-7 w-40 text-center mx-auto">
-        You have not read the post yet, leave?
+      <p className="font-semibold text-gray-800 dark:text-white mb-6 text-sm">
+        You have not read the post yet. Are you sure you want to leave?
       </p>
 
-      <div className="w-full flex justify-between">
+      <div className="flex gap-3">
         <button
           onClick={() => handleButtonClick("yes")}
-          className="rounded-bl-3xl w-full border py-2 bg-inherit hover:bg-gray-100 border-black"
+          className="flex-1 py-2 rounded-lg border border-blue-600 bg-blue-600 text-white hover:bg-blue-700 transition text-sm font-medium"
         >
-          Yes
+          Yes, leave
         </button>
         <button
           onClick={() => handleButtonClick("no")}
-          className="rounded-br-3xl w-full border py-2 bg-inherit hover:bg-gray-100 border-black"
+          className="flex-1 py-2 rounded-lg border border-gray-300 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-neutral-700 transition text-sm font-medium"
         >
-          No
+          No, stay
         </button>
       </div>
     </div>

@@ -466,19 +466,21 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
         onClick={generalPost ? handleClick : undefined}
         className={`ignore-click ${
           generalPost && "cursor-pointer"
-        } relative pt-10 w-full max-w-[80%] mx-auto`}
+        } relative bg-[#EEE] dark:bg-[#1f1f1f] shadow-lg border border-gray-200 dark:border-neutral-700 rounded-xl p-6 my-6 transition-all duration-300 hover:shadow-xl max-w-[80%] mx-auto`}
       >
         {deptIds.includes(userDeptId.toString()) &&
           !generalPost &&
           isRead === false && (
             <div
               onClick={handleReadClick}
-              className={`hover:bg-gray-300 fixed z-10 bottom-64 bg-white rounded-full dark:bg-neutral-800 font-extrabold shadow-xl right-14 dark:hover:bg-neutral-700 py-2 px-3 flex items-center gap-1 cursor-pointer `}
+              className={`hover:bg-gray-300 fixed z-10 bottom-64 bg-white rounded-full dark:bg-neutral-800 font-extrabold shadow-xl right-14 dark:hover:bg-neutral-700 py-2 px-3 flex items-center gap-1 cursor-pointer`}
             >
               <p className="text-sm">Read</p>
             </div>
           )}
-        <div className="flex items-start gap-2 mb-4 justify-between">
+
+        {/* Header */}
+        <div className="flex items-start gap-2 mb-6 justify-between">
           <div className="flex gap-3 items-start">
             {userData && (
               <Avatar
@@ -491,21 +493,27 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
                 className="font-bold bg-blue-500 text-white h-10 w-10"
               />
             )}
-
-            <h1 className="text-lg font-semibold">
-              {decodeUserData()?.sub !== post?.userId
-                ? `${post?.user?.firstName} ${post?.user?.lastName}`
-                : "You"}{" "}
-              <span className="text-sm font-medium">
-                {post?.edited && "(Edited)"}
-              </span>
-            </h1>
+            <div>
+              <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
+                {decodeUserData()?.sub !== post?.userId
+                  ? `${post?.user?.firstName} ${post?.user?.lastName}`
+                  : "You"}{" "}
+                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  {post?.edited && "(Edited)"}
+                </span>
+              </h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+                {post?.updatedAt
+                  ? format(new Date(post.createdAt), "MMMM dd, yyyy")
+                  : "Unknown Date"}
+              </p>
+            </div>
           </div>
 
           {editable && (
             <div className="rounded">
               {!generalPost && (
-                <div className="hover:bg-gray-300 hover:dark:bg-neutral-700 p-1 mb-1">
+                <div className="hover:bg-gray-300 hover:dark:bg-neutral-700 p-1 mb-1 rounded-full">
                   <Icon
                     icon={"iwwa:option-horizontal"}
                     className="h-7 w-7"
@@ -544,10 +552,13 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           )}
         </div>
 
-        <div className="w-full flex justify-between items-center">
-          <div>
-            <div className="flex gap-2">
-              <h1 className="text-xl font-bold">{post?.title}</h1>
+        {/* Title & Status */}
+        <div className="w-full flex justify-between items-start mb-4">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-semibold tracking-tight text-blue-800 dark:text-blue-300">
+                {post?.title}
+              </h1>
               {post?.superseeded && (
                 <Button
                   pt={{
@@ -559,75 +570,82 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
                   onClick={() => router.push(`/posts/${post.parentId}`)}
                   icon={`${PrimeIcons.EXCLAMATION_CIRCLE}`}
                   tooltip={`This post has been superseeded by ${post.parentPost?.title}`}
+                  className="p-button-sm"
                 />
               )}
             </div>
-
-            <h4 className="text-xs mb-3">
-              {post?.updatedAt
-                ? format(new Date(post.createdAt), "MMMM dd, yyyy")
-                : "Unknown Date"}
-            </h4>
           </div>
+
           {checkDept() && (
-            <div className="flex justify-center">
-              <div className="bg-[#EEE]/50 backdrop-blur px-4 py-1 shadow h-8 flex items-center rounded rounded-cursor mb-3">
-                <p className="text-sm font-medium">
-                  {post?.census.readPercentage} of the users have read this post
-                </p>
-              </div>
+            <div className="bg-[#EEE]/50 backdrop-blur px-4 py-1 shadow h-8 flex items-center rounded mb-2">
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                {post?.census.readPercentage}% have read this
+              </p>
             </div>
           )}
         </div>
 
-        <hr className="w-full border-t border-black mb-2" />
+        <hr className="my-4 border-t border-gray-300 dark:border-neutral-700" />
 
-        <p>{post?.message}</p>
+        {/* Post message */}
+        <p className="text-base text-gray-800 dark:text-gray-200 mb-4 whitespace-pre-line leading-relaxed">
+          {post?.message}
+        </p>
 
+        {/* Images */}
         {post?.imageLocations && post?.imageLocations?.length > 0 && (
-          <ImagePaginator filePreviews={preview} currentPage={currentIndex} />
+          <div className="bg-gray-100 dark:bg-neutral-800 p-4 rounded-xl mb-4">
+            <ImagePaginator filePreviews={preview} currentPage={currentIndex} />
+          </div>
         )}
-        <div
-          className={`flex items-center w-full ${
-            post?.imageLocations && post?.imageLocations?.length > 0
-              ? "justify-between"
-              : "justify-end"
-          } gap-1 rounded-lg pt-4 mb-6`}
-        >
-          {post?.downloadable &&
-            post?.imageLocations &&
-            post?.imageLocations?.length > 0 &&
-            !post.folderId && (
+
+        {/* Download button */}
+        {post?.downloadable &&
+          post?.imageLocations &&
+          post?.imageLocations?.length > 0 &&
+          !post.folderId && (
+            <div className="flex justify-end mt-4">
               <div
                 onClick={
-                  post.imageLocations && post.imageLocations.length > 1
+                  post.imageLocations.length > 1
                     ? handleDownloadAllImages
                     : singleDownload
                 }
-                className="flex hover:bg-gray-300 dark:hover:bg-neutral-700 py-1 px-2 items-center gap-1 rounded  cursor-pointer "
+                className="flex items-center gap-2 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 px-3 py-2 rounded-md shadow cursor-pointer transition"
               >
-                <Icon icon={"akar-icons:download"} />
-                <span className="text-sm">
-                  {post.imageLocations && post.imageLocations.length > 1
+                <Icon
+                  icon={"akar-icons:download"}
+                  className="text-blue-600 dark:text-blue-300"
+                />
+                <span className="text-sm font-medium text-blue-700 dark:text-blue-200">
+                  {post.imageLocations.length > 1
                     ? "Download all files"
                     : "Download file"}
                 </span>
               </div>
-            )}
-        </div>
+            </div>
+          )}
       </div>
+
+      {/* Comments */}
       {!generalPost && (
         <>
-          {comments && <Comments comments={comments} postId={id} />}
-          <CommentBar
-            comments={comments}
-            setComments={setComments}
-            postId={id}
-          />
+          {comments && (
+            <div className="  p-4 mt-6">
+              <Comments comments={comments} postId={id} />
+              <CommentBar
+                comments={comments}
+                setComments={setComments}
+                postId={id}
+              />
+            </div>
+          )}
         </>
       )}
+
+      {/* Floating paginator */}
       {preview.length > 0 && (
-        <div className="h-10 w-36 flex items-center justify-between bg-[#EEEEEE] fixed top-60 z-40 right-7 shadow rounded-lg">
+        <div className="h-10 w-36 flex items-center justify-between bg-[#EEEEEE] dark:bg-neutral-800 fixed top-60 z-40 right-7 shadow rounded-lg">
           <Button
             className="h-8 w-8"
             onClick={() => {
@@ -635,7 +653,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
             }}
             icon={`${PrimeIcons.ARROW_LEFT} text-xs`}
           />
-          <p className="text-xs">
+          <p className="text-xs text-gray-700 dark:text-gray-300">
             Page {currentIndex + 1} of {preview.length}
           </p>
           <Button

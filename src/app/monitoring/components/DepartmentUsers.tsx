@@ -27,7 +27,7 @@ const DepartmentUsers: React.FC<Props> = ({
     .sort((a, b) => a.firstName.localeCompare(b.firstName));
 
   const groupedUsers: { [key: string]: typeof filteredUsers } = {};
-  filteredUsers?.forEach((user) => {
+  filteredUsers.forEach((user) => {
     const firstLetter = user.firstName[0].toUpperCase();
     if (!groupedUsers[firstLetter]) {
       groupedUsers[firstLetter] = [];
@@ -36,22 +36,23 @@ const DepartmentUsers: React.FC<Props> = ({
   });
 
   return (
-    <div>
-      <h1 className="text-blue-600 text-xl font-bold mb-5">
+    <div className="w-[90%] mx-auto pt-6">
+      <h1 className="text-blue-600 text-2xl font-bold mb-6">
         Users Read Monitoring
       </h1>
-      <div className="w-full flex flex-col gap-2 md:gap-0 md:flex-row mb-3 justify-between">
+
+      <div className="w-full flex flex-col md:flex-row gap-3 md:gap-4 mb-6 justify-between">
         <InputText
           type="text"
-          placeholder="Search here..."
-          className="px-5 w-72 text-sm bg-[#EEEEEE] rounded-xl shadow"
+          placeholder="Search by name..."
+          className="w-full md:w-1/2 text-sm px-4 py-2 bg-[#EEEEEE] dark:bg-neutral-800 text-black dark:text-white rounded-xl shadow border-none focus:ring-2 focus:ring-blue-500"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
 
         <Dropdown
           options={departments}
-          className="bg-[#EEEEEE] w-72 rounded-xl shadow"
+          className="w-full md:w-1/2 bg-[#EEEEEE] dark:bg-neutral-800 text-black dark:text-white rounded-xl shadow border-none"
           pt={{
             input: { className: "text-sm" },
             item: { className: "text-sm" },
@@ -61,21 +62,21 @@ const DepartmentUsers: React.FC<Props> = ({
           filter
           onChange={(e) => {
             const dept = e.value;
-            if (dept && setDept) setDept(e.value);
+            if (dept && setDept) setDept(dept);
           }}
         />
       </div>
 
-      <section className="flex flex-col gap-4 overflow-auto">
-        {filteredUsers && filteredUsers.length > 0 ? (
+      <section className="flex flex-col gap-6">
+        {filteredUsers.length > 0 ? (
           Object.keys(groupedUsers)
             .sort()
             .map((letter) => (
               <div key={letter}>
-                <h2 className="text-xl font-bold mb-3 mt-3 text-blue-600">
+                <h2 className="text-lg font-bold text-blue-600 mb-3">
                   {letter}
                 </h2>
-                <div className="flex flex-col bg-[#EEEEEE] py-3 rounded-xl">
+                <div className="bg-[#EEEEEE] dark:bg-neutral-800 rounded-xl shadow px-4 py-3 flex flex-col gap-2">
                   {groupedUsers[letter].map((user, index) => (
                     <UserCard key={user.userId} user={user} index={index} />
                   ))}
@@ -83,8 +84,8 @@ const DepartmentUsers: React.FC<Props> = ({
               </div>
             ))
         ) : (
-          <div className="h-full w-full grid place-content-center">
-            <p>Nothing to show here</p>
+          <div className="w-full h-40 grid place-content-center text-center text-gray-500">
+            <p>No users found matching your search.</p>
           </div>
         )}
       </section>

@@ -132,7 +132,7 @@ const FolderGrid = () => {
       >
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-2">
-            WMC Employe Portal
+            WMC Employee Portal
           </h1>
           <p className="text-gray-600 text-lg">
             Search and manage posts, folders, and employees across your
@@ -311,18 +311,21 @@ const FolderGrid = () => {
                 <h3 className="text-xl font-semibold text-gray-600 mb-2">
                   No folders found
                 </h3>
-                <p className="text-gray-500 mb-6">
-                  Create your first folder to get started organizing your
-                  documents
-                </p>
+
                 {checkDept() && (
-                  <Button
-                    onClick={() => setAddFolderDialogVisible(true)}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 border-0"
-                    icon={PrimeIcons.PLUS}
-                  >
-                    Create First Folder
-                  </Button>
+                  <>
+                    <p className="text-gray-500 mb-6">
+                      Create your first folder to get started organizing your
+                      documents
+                    </p>
+                    <Button
+                      onClick={() => setAddFolderDialogVisible(true)}
+                      className="bg-gradient-to-r from-blue-600 gap-2 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 border-0"
+                      icon={PrimeIcons.PLUS}
+                    >
+                      Create First Folder
+                    </Button>
+                  </>
                 )}
               </div>
             </motion.div>
