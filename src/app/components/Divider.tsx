@@ -317,7 +317,7 @@ const Divider: React.FC<Props> = ({ children }) => {
           {hidden && (
             <header
               className={`flex justify-between items-center backdrop-blur bg-slate-100/10 z-10 h-20 w-full fixed top-0 ${
-                isCollapsed ? "ps-2 pe-4" : "ps-5 pe-96"
+                isCollapsed ? "ps-2 pe-4" : "ps-5 md:pe-96"
               }`}
             >
               <div className="flex gap-3">
