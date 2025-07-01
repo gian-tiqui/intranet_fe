@@ -25,6 +25,7 @@
     "jspdf": "^2.5.2",
     "jwt-decode": "^4.0.0",
     "lottie-react": "^2.4.0",
+    "lucide-react": "^0.525.0",
     "motion": "^12.9.2",
     "next": "^15.1.0",
     "particles.js": "^2.0.0",
