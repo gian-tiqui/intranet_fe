@@ -1,8 +1,7 @@
 import React from "react";
 import { User } from "../types/types";
 import { PrimeIcons } from "primereact/api";
-import useUserProfileStore from "../store/userProfileStore";
-import useUserIdStore from "../store/userIdStore";
+import { useRouter } from "next/navigation";
 
 interface Props {
   user: User;
@@ -11,13 +10,17 @@ interface Props {
   index: number;
 }
 
-const UserSearchItem: React.FC<Props> = ({ user, type, index }) => {
-  const { setUserProfileVisible } = useUserProfileStore();
-  const { setUserId } = useUserIdStore();
+const UserSearchItem: React.FC<Props> = ({
+  user,
+  type,
+  index,
+  handleClose,
+}) => {
+  const router = useRouter();
 
   const handleClick = () => {
-    setUserId(user.id);
-    setUserProfileVisible(true);
+    router.push(`/users/${user.id}`);
+    handleClose();
   };
 
   return (
