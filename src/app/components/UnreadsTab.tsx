@@ -39,7 +39,7 @@ const UnreadsTab = () => {
   }
 
   return (
-    <div className="h-[70vh] overflow-auto">
+    <div className="h-[70vh] overflow-x-hidden overflow-y-auto">
       <div className="flex gap-3">
         <div className="w-full flex flex-col">
           {unreads?.map((item, index) => (

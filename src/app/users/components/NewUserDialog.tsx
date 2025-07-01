@@ -92,237 +92,409 @@ const NewUserDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
     <>
       <Toast ref={toastRef} />
       <Dialog
-        header="New User"
+        header="Create New User"
         visible={visible}
         onHide={() => {
           reset();
           setVisible(false);
         }}
         pt={{
-          header: { className: "bg-[#EEE] rounded-t-3xl" },
-          content: { className: "bg-[#EEE]" },
-          root: { className: "rounded-3xl" },
-          mask: { className: "backdrop-blur" },
+          header: {
+            className:
+              "bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-t-2xl px-6 py-4",
+          },
+          content: {
+            className: "bg-white p-0 overflow-hidden",
+          },
+          root: {
+            className: "rounded-2xl shadow-2xl border-0 max-w-4xl w-full",
+          },
+          mask: {
+            className: "backdrop-blur-sm bg-black/20",
+          },
         }}
+        maximizable
+        closable
+        modal
       >
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-3 min-w-[350px]"
-        >
-          <label className="text-sm font-medium">Email</label>
-          <InputText
-            {...register("email", { required: true })}
-            placeholder="e.g. johndoe@email.com"
-            className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-          />
-          {showError("email", "Email")}
+        <div className="p-6 max-h-[80vh] overflow-y-auto">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Personal Information Section */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i className="pi pi-user text-blue-600"></i>
+                Personal Information
+              </h3>
 
-          <label className="text-sm font-medium">First Name</label>
-          <InputText
-            {...register("firstName", { required: true })}
-            placeholder="e.g. John"
-            className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-          />
-          {showError("firstName", "First Name")}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Email Address <span className="text-red-500">*</span>
+                  </label>
+                  <InputText
+                    {...register("email", { required: true })}
+                    placeholder="johndoe@company.com"
+                    className="w-full h-12 px-4 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  />
+                  {showError("email", "Email")}
+                </div>
 
-          <label className="text-sm font-medium">Middle Name</label>
-          <InputText
-            {...register("middleName")}
-            placeholder="e.g. Michael"
-            className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-          />
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Phone Number <span className="text-red-500">*</span>
+                  </label>
+                  <InputText
+                    {...register("phone", { required: true })}
+                    placeholder="+1 (555) 123-4567"
+                    className="w-full h-12 px-4 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  />
+                  {showError("phone", "Phone")}
+                </div>
 
-          <label className="text-sm font-medium">Last Name</label>
-          <InputText
-            {...register("lastName", { required: true })}
-            placeholder="e.g. Doe"
-            className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-          />
-          {showError("lastName", "Last Name")}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    First Name <span className="text-red-500">*</span>
+                  </label>
+                  <InputText
+                    {...register("firstName", { required: true })}
+                    placeholder="John"
+                    className="w-full h-12 px-4 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  />
+                  {showError("firstName", "First Name")}
+                </div>
 
-          <label className="text-sm font-medium">Address</label>
-          <InputText
-            {...register("address", { required: true })}
-            placeholder="e.g. 123 Street Name"
-            className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-          />
-          {showError("address", "Address")}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Middle Name
+                  </label>
+                  <InputText
+                    {...register("middleName")}
+                    placeholder="Michael"
+                    className="w-full h-12 px-4 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  />
+                </div>
 
-          <label className="text-sm font-medium">City</label>
-          <InputText
-            {...register("city", { required: true })}
-            placeholder="e.g. Los Angeles"
-            className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-          />
-          {showError("city", "City")}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Last Name <span className="text-red-500">*</span>
+                  </label>
+                  <InputText
+                    {...register("lastName", { required: true })}
+                    placeholder="Doe"
+                    className="w-full h-12 px-4 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  />
+                  {showError("lastName", "Last Name")}
+                </div>
 
-          <label className="text-sm font-medium">State</label>
-          <InputText
-            {...register("state", { required: true })}
-            placeholder="e.g. California"
-            className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-          />
-          {showError("state", "State")}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Date of Birth <span className="text-red-500">*</span>
+                  </label>
+                  <Controller
+                    name="dob"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Calendar
+                        {...field}
+                        placeholder="Select date"
+                        dateFormat="mm/dd/yy"
+                        showIcon
+                        value={field.value}
+                        className="w-full"
+                        inputClassName="w-full h-12 px-4 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        onChange={(e) => field.onChange(e.value)}
+                      />
+                    )}
+                  />
+                  {showError("dob", "Date of Birth")}
+                </div>
 
-          <label className="text-sm font-medium">Zip Code</label>
-          <InputText
-            {...register("zipCode", { required: true })}
-            placeholder="e.g. 90001"
-            className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-          />
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Gender <span className="text-red-500">*</span>
+                  </label>
+                  <Controller
+                    name="gender"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Dropdown
+                        {...field}
+                        value={field.value}
+                        options={[
+                          "Male",
+                          "Female",
+                          "Other",
+                          "Prefer not to say",
+                        ]}
+                        placeholder="Select gender"
+                        className="w-full"
+                        pt={{
+                          root: {
+                            className:
+                              "h-12 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all",
+                          },
+                          input: { className: "px-4 text-sm" },
+                        }}
+                        onChange={(e) => field.onChange(e.value)}
+                      />
+                    )}
+                  />
+                  {showError("gender", "Gender")}
+                </div>
+              </div>
+            </div>
 
-          {showError("zipCode", "Zip Code")}
+            {/* Address Information Section */}
+            <div className="bg-green-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i className="pi pi-map-marker text-green-600"></i>
+                Address Information
+              </h3>
 
-          <label className="text-sm font-medium">Date of Birth</label>
-          <Controller
-            name="dob"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <Calendar
-                {...field}
-                placeholder="e.g. 1990-01-01"
-                dateFormat="yy-mm-dd"
-                showIcon
-                value={field.value}
-                className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-                onChange={(e) => field.onChange(e.value)}
-              />
-            )}
-          />
+              <div className="grid grid-cols-1 gap-6">
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Street Address <span className="text-red-500">*</span>
+                  </label>
+                  <InputText
+                    {...register("address", { required: true })}
+                    placeholder="123 Main Street, Apt 4B"
+                    className="w-full h-12 px-4 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                  />
+                  {showError("address", "Address")}
+                </div>
 
-          <label className="text-sm font-medium">Gender</label>
-          <Controller
-            name="gender"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <Dropdown
-                {...field}
-                value={field.value}
-                options={["Male", "Female", "Other"]}
-                placeholder="Select gender"
-                className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-                onChange={(e) => field.onChange(e.value)}
-              />
-            )}
-          />
-          {showError("gender", "Gender")}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      City <span className="text-red-500">*</span>
+                    </label>
+                    <InputText
+                      {...register("city", { required: true })}
+                      placeholder="Los Angeles"
+                      className="w-full h-12 px-4 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                    />
+                    {showError("city", "City")}
+                  </div>
 
-          <label className="text-sm font-medium">Employee Level</label>
-          <Controller
-            name="lid"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <Dropdown
-                {...field}
-                value={selLvl}
-                options={lvlData}
-                optionLabel="level"
-                placeholder="Select level"
-                className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-                onChange={(e) => {
-                  setSelLvl(e.value);
-                  field.onChange(e.value.lid);
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      State/Province <span className="text-red-500">*</span>
+                    </label>
+                    <InputText
+                      {...register("state", { required: true })}
+                      placeholder="California"
+                      className="w-full h-12 px-4 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                    />
+                    {showError("state", "State")}
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      ZIP/Postal Code <span className="text-red-500">*</span>
+                    </label>
+                    <InputText
+                      {...register("zipCode", { required: true })}
+                      placeholder="90210"
+                      className="w-full h-12 px-4 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                    />
+                    {showError("zipCode", "Zip Code")}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Employment Information Section */}
+            <div className="bg-purple-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i className="pi pi-briefcase text-purple-600"></i>
+                Employment Information
+              </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Employee ID <span className="text-red-500">*</span>
+                  </label>
+                  <InputText
+                    {...register("employeeId", { required: true })}
+                    placeholder="EMP-001234"
+                    className="w-full h-12 px-4 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                  />
+                  {showError("employeeId", "Employee ID")}
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Job Title <span className="text-red-500">*</span>
+                  </label>
+                  <InputText
+                    {...register("jobTitle", { required: true })}
+                    placeholder="Software Engineer"
+                    className="w-full h-12 px-4 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                  />
+                  {showError("jobTitle", "Job Title")}
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Employee Level <span className="text-red-500">*</span>
+                  </label>
+                  <Controller
+                    name="lid"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Dropdown
+                        {...field}
+                        value={selLvl}
+                        options={lvlData}
+                        optionLabel="level"
+                        placeholder="Select employee level"
+                        className="w-full"
+                        pt={{
+                          root: {
+                            className:
+                              "h-12 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all",
+                          },
+                          input: { className: "px-4 text-sm" },
+                        }}
+                        onChange={(e) => {
+                          setSelLvl(e.value);
+                          field.onChange(e.value.lid);
+                        }}
+                      />
+                    )}
+                  />
+                  {showError("lid", "Employee Level")}
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Division <span className="text-red-500">*</span>
+                  </label>
+                  <Controller
+                    name="divisionId"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Dropdown
+                        {...field}
+                        value={selDiv}
+                        options={divData?.data.divisions}
+                        optionLabel="divisionName"
+                        placeholder="Select division"
+                        className="w-full"
+                        pt={{
+                          root: {
+                            className:
+                              "h-12 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all",
+                          },
+                          input: { className: "px-4 text-sm" },
+                        }}
+                        onChange={(e) => {
+                          setSelDiv(e.value);
+                          field.onChange(e.value.id);
+                        }}
+                      />
+                    )}
+                  />
+                  {showError("divisionId", "Division")}
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Department <span className="text-red-500">*</span>
+                  </label>
+                  <Controller
+                    name="deptId"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Dropdown
+                        {...field}
+                        value={selDept}
+                        options={deptData?.data.departments}
+                        optionLabel="departmentName"
+                        placeholder="Select department"
+                        className="w-full"
+                        pt={{
+                          root: {
+                            className:
+                              "h-12 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all",
+                          },
+                          input: { className: "px-4 text-sm" },
+                        }}
+                        onChange={(e) => {
+                          setSelDept(e.value);
+                          field.onChange(e.value.deptId);
+                        }}
+                      />
+                    )}
+                  />
+                  {showError("deptId", "Department")}
+                </div>
+              </div>
+            </div>
+
+            {/* Office Information Section */}
+            <div className="bg-orange-50 rounded-xl p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i className="pi pi-building text-orange-600"></i>
+                Office Information
+              </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Office Location <span className="text-red-500">*</span>
+                  </label>
+                  <InputText
+                    {...register("officeLocation", { required: true })}
+                    placeholder="RD - ICT Office, 5th Floor"
+                    className="w-full h-12 px-4 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                  />
+                  {showError("officeLocation", "Office Location")}
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Local Extension <span className="text-red-500">*</span>
+                  </label>
+                  <InputText
+                    {...register("localNumber", { required: true })}
+                    placeholder="101"
+                    className="w-full h-12 px-4 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                  />
+                  {showError("localNumber", "Local Number")}
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-3 pt-6 border-t border-gray-200">
+              <Button
+                type="button"
+                label="Cancel"
+                severity="secondary"
+                outlined
+                className="px-6 py-3 text-sm font-medium"
+                onClick={() => {
+                  reset();
+                  setVisible(false);
                 }}
               />
-            )}
-          />
-          {showError("lid", "Employee Level")}
-
-          <label className="text-sm font-medium">Division</label>
-          <Controller
-            name="divisionId"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <Dropdown
-                {...field}
-                value={selDiv}
-                options={divData?.data.divisions}
-                optionLabel="divisionName"
-                placeholder="Select division"
-                className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-                onChange={(e) => {
-                  setSelDiv(e.value);
-                  field.onChange(e.value.id);
-                }}
+              <Button
+                icon="pi pi-user-plus"
+                label="Create User"
+                type="submit"
+                className="px-6 py-3 text-white text-sm font-medium bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 border-0"
               />
-            )}
-          />
-          {showError("divisionId", "Division")}
-
-          <label className="text-sm font-medium">Department</label>
-
-          <Controller
-            name="deptId"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <Dropdown
-                {...field}
-                value={selDept}
-                options={deptData?.data.departments}
-                optionLabel="departmentName"
-                placeholder="Select department"
-                className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-                onChange={(e) => {
-                  setSelDept(e.value);
-                  field.onChange(e.value.deptId);
-                }}
-              />
-            )}
-          />
-          {showError("deptId", "Department")}
-
-          <label className="text-sm font-medium">Phone</label>
-          <InputText
-            {...register("phone", { required: true })}
-            placeholder="e.g. 09123456789"
-            className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-          />
-          {showError("phone", "Phone")}
-
-          <label className="text-sm font-medium">Employee ID</label>
-          <InputText
-            {...register("employeeId", { required: true })}
-            placeholder="e.g. EMP-00123"
-            className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-          />
-          {showError("employeeId", "Employee ID")}
-
-          <label className="text-sm font-medium">Job Title</label>
-          <InputText
-            {...register("jobTitle", { required: true })}
-            placeholder="e.g. Software Engineer"
-            className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-          />
-          {showError("jobTitle", "Job Title")}
-
-          <label className="text-sm font-medium">Local Number</label>
-          <InputText
-            {...register("localNumber", { required: true })}
-            placeholder="e.g. 101"
-            className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-          />
-          {showError("localNumber", "Local Number")}
-
-          <label className="text-sm font-medium">Office Location</label>
-          <InputText
-            {...register("officeLocation", { required: true })}
-            placeholder="e.g. RD - ICT Office"
-            className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-          />
-          {showError("localNumber", "Local Number")}
-
-          <Button
-            icon={PrimeIcons.PLUS}
-            label="Create User"
-            type="submit"
-            className="mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-          />
-        </form>
+            </div>
+          </form>
+        </div>
       </Dialog>
     </>
   );

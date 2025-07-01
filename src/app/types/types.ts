@@ -92,6 +92,7 @@ type Post = {
   parentPost?: Post;
   superseeded: boolean;
   childrenPosts: Post[];
+  type: PostType;
 };
 
 type PostType = {

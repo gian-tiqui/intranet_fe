@@ -23,7 +23,7 @@ import CustomToast from "./CustomToast";
 import EditFolderDialog from "./EditFolderDialog";
 import FolderPost from "./FolderPost";
 import blueFolder from "../assets/blue-folder.png";
-import { Image } from "primereact/image";
+import SubfolderContainer from "./SubfolderContainer";
 
 interface Props {
   visible: boolean;
@@ -193,55 +193,18 @@ const FolderContentDialog: React.FC<Props> = ({
           {folderPosts ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
               {data?.data?.subfolders?.map((subfolder: Folder) => (
-                <div
+                <SubfolderContainer
                   key={subfolder.id}
-                  onClick={() => {
-                    setVisible(false);
-                    handleSubfolderClick(subfolder.id);
-                  }}
-                  className={`hover:cursor-pointer h-36 px-3 rounded-2xl shadow-lg flex flex-col p-4 gap-2 justify-between bg-[#EEEEEE]`}
-                >
-                  <div className="flex items-start gap-2 w-full justify-between">
-                    <Image
-                      src={blueFolder.src}
-                      className="h-6 w-6"
-                      alt="blue-folder"
-                    />
-                    {checkDept() && (
-                      <Button
-                        icon={`${PrimeIcons.COG} text-xl`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          overlayPanelsRef.current[subfolder.id]?.toggle(e);
-                        }}
-                      >
-                        <OverlayPanel
-                          ref={setOverlayPanelRef(subfolder.id)}
-                          className="dark:bg-neutral-950 dark:text-white"
-                        >
-                          <div className="flex flex-col gap-2">
-                            <Button
-                              icon={`${PrimeIcons.USER_EDIT}`}
-                              className="gap-2"
-                              onClick={() => handleEditClick(subfolder.id)}
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              icon={`${PrimeIcons.TRASH}`}
-                              className="gap-2"
-                              onClick={() => handleDeleteClick(subfolder.id)}
-                            >
-                              Delete
-                            </Button>
-                          </div>
-                        </OverlayPanel>
-                      </Button>
-                    )}
-                  </div>
-                  <div></div>
-                  <p className="font-semibold text-sm">{subfolder.name}</p>
-                </div>
+                  subfolder={subfolder}
+                  setVisible={setVisible}
+                  handleSubfolderClick={handleSubfolderClick}
+                  checkDept={checkDept}
+                  overlayPanelsRef={overlayPanelsRef}
+                  setOverlayPanelRef={setOverlayPanelRef}
+                  handleEditClick={handleEditClick}
+                  handleDeleteClick={handleDeleteClick}
+                  blueFolder={blueFolder}
+                />
               ))}
 
               {folderPosts.data.post && folderPosts.data.post.length > 0

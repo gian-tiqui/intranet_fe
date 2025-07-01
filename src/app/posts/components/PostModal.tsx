@@ -505,88 +505,122 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     <form
       onSubmit={handleSubmit(handlePost)}
       onClick={handleFormClick}
-      className="h-screen w-screen bg-[#CBD5E1] z-50 absolute"
+      className="h-screen w-screen bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 z-50 absolute"
     >
-      <div className="flex">
-        <div className="w-[70%] flex justify-center h-[100vh]  overflow-y-auto relative">
+      <div className="flex h-full">
+        {/* Main Content Area */}
+        <div className="w-[70%] flex justify-center h-full overflow-y-auto relative">
+          {/* File Preview Navigation */}
           {filePreviews.length > 0 && (
-            <div className="fixed bottom-5 bg-[#EEEEEE] rounded-lg shadow h-12 px-2 items-center w-40 z-50 right-[438px] flex justify-between">
+            <div className="fixed bottom-8 bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 h-14 px-4 items-center w-48 z-50 right-[450px] flex justify-between">
               <Button
                 type="button"
-                className="h-7 w-7 bg-blue-600 justify-center text-white"
+                className="h-8 w-8 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 justify-center text-white rounded-xl shadow-lg transition-all duration-300 hover:scale-105 border-0"
                 onClick={() => {
                   if (currentPage > 0) setCurrentPage((prev) => prev - 1);
                 }}
                 icon={`${PrimeIcons.ARROW_LEFT}`}
-              ></Button>
-              <p className="text-sm font-medium">Page {currentPage + 1}</p>
+              />
+              <p className="text-sm font-semibold text-slate-700">
+                Page {currentPage + 1}
+              </p>
               <Button
                 type="button"
-                className="h-7 w-7 bg-blue-600 justify-center text-white"
+                className="h-8 w-8 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 justify-center text-white rounded-xl shadow-lg transition-all duration-300 hover:scale-105 border-0"
                 onClick={() => {
                   if (currentPage < filePreviews.length - 1)
                     setCurrentPage((prev) => prev + 1);
                 }}
                 icon={`${PrimeIcons.ARROW_RIGHT}`}
-              ></Button>
+              />
             </div>
           )}
-          <div className="w-[70%] bg-[#CBD5E1] pt-14">
-            <div className="flex items-start gap-3 mb-2 mx-4">
-              <Avatar
-                className="bg-blue-600 h-12 w-12 font-bold text-white"
-                shape="circle"
-                label={
-                  String(decodeUserData()?.firstName[0]).toUpperCase() +
-                  String(decodeUserData()?.lastName[0]).toUpperCase()
-                }
-              />
-              <div>
-                <div className="flex justify-between">
-                  <p className="font-bold">
-                    {decodeUserData()?.firstName} {decodeUserData()?.lastName}
-                  </p>
-                </div>
 
-                <div className="bg-inherit text-sm items-center flex gap-1">
-                  <MultiStateCheckbox
-                    value={postVisibility}
-                    options={options}
-                    onChange={(e) => setPostVisibility(e.value)}
-                    optionValue="value"
+          {/* Main Writing Area */}
+          <div className="w-[70%] pt-8 px-6">
+            {/* User Info Section */}
+            <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg border border-white/30 p-6 mb-6">
+              <div className="flex items-start gap-4">
+                <div className="relative">
+                  <Avatar
+                    className="bg-gradient-to-br from-blue-500 to-purple-600 h-14 w-14 font-bold text-white shadow-lg ring-4 ring-white/50"
+                    shape="circle"
+                    label={
+                      String(decodeUserData()?.firstName[0]).toUpperCase() +
+                      String(decodeUserData()?.lastName[0]).toUpperCase()
+                    }
                   />
-                  <span>{postVisibility || "nothing selected"}</span>
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white"></div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg text-slate-800">
+                    {decodeUserData()?.firstName} {decodeUserData()?.lastName}
+                  </h3>
+                  <div className="bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 text-sm items-center flex gap-2 mt-2 border border-white/40">
+                    <MultiStateCheckbox
+                      value={postVisibility}
+                      options={options}
+                      onChange={(e) => setPostVisibility(e.value)}
+                      optionValue="value"
+                    />
+                    <span className="font-medium text-slate-700">
+                      {postVisibility || "Select visibility"}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="relative mx-4">
-              <div>
-                <input
-                  className="w-full outline-none p-2 bg-inherit placeholder-neutral-600"
-                  placeholder="Write the title here"
-                  {...register("title")}
-                />
-                <p className="mb-3 text-sm font-medium ms-2">
-                  {new Date().toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </p>
-                <hr className="w-full border-b border border-gray-400" />
-                <textarea
-                  className="w-full outline-none p-2 bg-inherit placeholder-neutral-600 resize-none overflow-hidden"
-                  placeholder="Is there something you want to write for the memo?"
-                  {...register("message")}
-                  onInput={(e) => {
-                    e.currentTarget.style.height = "auto";
-                    e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
-                  }}
-                />
+            {/* Writing Area */}
+            <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-lg border border-white/30 p-8">
+              <div className="space-y-6">
+                {/* Title Input */}
+                <div className="relative">
+                  <input
+                    className="w-full outline-none p-4 bg-white/50 backdrop-blur-sm rounded-2xl placeholder-slate-500 text-xl font-semibold border border-white/40 focus:border-blue-300 focus:ring-4 focus:ring-blue-100 transition-all duration-300"
+                    placeholder="Write your title here..."
+                    {...register("title")}
+                  />
+                </div>
 
-                <div className="w-full p-4 mb-4 dark:bg-neutral-900 rounded-md">
-                  <div className="relative w-full border border-dashed border-neutral-400 dark:border-neutral-800 dark:bg-neutral-900 rounded-md p-4 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-all duration-200">
+                {/* Date Display */}
+                <div className="flex items-center gap-2 px-4">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <p className="text-sm font-medium text-slate-600">
+                    {new Date().toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
+                </div>
+
+                {/* Divider */}
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
+                  </div>
+                  <div className="relative flex justify-center">
+                    <div className="w-8 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+                  </div>
+                </div>
+
+                {/* Message Textarea */}
+                <div className="relative">
+                  <textarea
+                    className="w-full outline-none p-4 bg-white/50 backdrop-blur-sm rounded-2xl placeholder-slate-500 resize-none overflow-hidden min-h-[120px] border border-white/40 focus:border-blue-300 focus:ring-4 focus:ring-blue-100 transition-all duration-300"
+                    placeholder="Share your thoughts..."
+                    {...register("message")}
+                    onInput={(e) => {
+                      e.currentTarget.style.height = "auto";
+                      e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
+                    }}
+                  />
+                </div>
+
+                {/* File Upload Area */}
+                <div className="relative">
+                  <div className="bg-white/40 backdrop-blur-sm rounded-2xl p-6 border-2 border-dashed border-slate-300 hover:border-blue-400 hover:bg-white/60 transition-all duration-300 group">
                     <input
                       type="file"
                       multiple={true}
@@ -595,31 +629,44 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                       {...register("memo")}
                       onChange={handleFileChange}
                     />
-                    <div className="flex flex-col items-center justify-center text-gray-500">
+                    <div className="flex flex-col items-center justify-center text-slate-600">
                       {isConverting ? (
-                        <div className="flex flex-col items-center">
-                          <Icon
-                            icon="eos-icons:loading"
-                            className="h-10 w-10 animate-spin"
-                          />
-                          <span className="mt-2 text-sm">
+                        <div className="flex flex-col items-center space-y-3">
+                          <div className="relative">
+                            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                              <Icon
+                                icon="eos-icons:loading"
+                                className="h-6 w-6 animate-spin text-white"
+                              />
+                            </div>
+                          </div>
+                          <span className="text-sm font-medium">
                             Converting PDF...
                           </span>
                         </div>
                       ) : fileNames.length > 0 ? (
-                        <ImagePaginator
-                          filePreviews={filePreviews}
-                          currentPage={currentPage}
-                        />
-                      ) : (
-                        <div className="flex flex-col items-center">
-                          <Icon
-                            icon={"material-symbols:upload"}
-                            className="h-10 w-10"
+                        <div className="w-full">
+                          <ImagePaginator
+                            filePreviews={filePreviews}
+                            currentPage={currentPage}
                           />
-                          <span className="mt-2 text-sm">
-                            Click to upload memo (PDF or Image)
-                          </span>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center space-y-3 group-hover:scale-105 transition-transform duration-300">
+                          <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center group-hover:from-blue-200 group-hover:to-purple-200 transition-all duration-300">
+                            <Icon
+                              icon="material-symbols:upload"
+                              className="h-8 w-8 text-blue-600"
+                            />
+                          </div>
+                          <div className="text-center">
+                            <span className="text-sm font-medium text-slate-700">
+                              Click to upload memo
+                            </span>
+                            <p className="text-xs text-slate-500 mt-1">
+                              PDF or Image files supported
+                            </p>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -629,26 +676,37 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
             </div>
           </div>
         </div>
-        <div className="w-[30%] h-[100vh] shadow-lg bg-[#EEEEEE] pt-4 overflow-auto">
-          <div className="w-full flex items-center justify-between px-5 mb-10">
-            <p className="text-lg font-medium">Post Settings</p>
-            <Button
-              className="h-6 w-6"
-              icon={`${PrimeIcons.TIMES}`}
-              onClick={() => setVisible(false)}
-            ></Button>
+
+        {/* Settings Sidebar */}
+        <div className="w-[30%] h-full bg-white/60 backdrop-blur-lg border-l border-white/30 overflow-auto">
+          {/* Header */}
+          <div className="sticky top-0 bg-white/80 backdrop-blur-lg border-b border-white/30 p-6 z-10">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold text-slate-800">
+                Post Settings
+              </h2>
+              <Button
+                className="h-10 w-10 bg-white/70 hover:bg-white/90 text-slate-600 hover:text-slate-800 rounded-xl shadow-lg transition-all duration-300 hover:scale-105 border border-white/40"
+                icon={`${PrimeIcons.TIMES}`}
+                onClick={() => setVisible(false)}
+              />
+            </div>
           </div>
 
-          <div className="rounded-2xl mt-2 relative pb-2">
-            <div className="flex items-center flex-col px-5">
+          {/* Settings Content */}
+          <div className="p-6 space-y-6">
+            {/* Employee Level Dropdown */}
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-slate-700">
+                Employee Level
+              </label>
               <Dropdown
-                className={`w-full mb-6 h-12 border border-black items-center bg-inherit`}
+                className="w-full h-12 bg-white/70 backdrop-blur-sm border border-white/40 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
                 filter
-                placeholder="Select a employee level"
+                placeholder="Select employee level"
                 value={selectedLevel}
                 onChange={(e) => {
                   const lid = e.target.value.lid;
-
                   if (lid === 1) {
                     setSelectedDepartments([
                       ...departments.map((dept) => String(dept.deptId)),
@@ -656,143 +714,195 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
                   } else {
                     setSelectedDepartments([]);
                   }
-
                   setSelectedLevel(e.target.value);
                 }}
                 options={levels}
                 pt={{
                   root: {
-                    className: "dark:bg-neutral-950 dark:border-neutral-700",
+                    className:
+                      "bg-white/70 backdrop-blur-sm border-white/40 rounded-xl",
                   },
-
                   panel: {
-                    className: "bg-[#EEEEEE]",
+                    className:
+                      "bg-white/95 backdrop-blur-lg rounded-xl shadow-2xl border border-white/40",
                   },
-                  header: { className: "bg-[#EEEEEE]" },
+                  header: {
+                    className:
+                      "bg-white/95 backdrop-blur-lg rounded-t-xl border-b border-white/40",
+                  },
                   filterInput: {
-                    className: "bg-white border border-black h-10 px-3 text-sm",
+                    className:
+                      "bg-white/70 border border-white/40 rounded-lg h-10 px-3 text-sm",
                   },
                 }}
                 valueTemplate={selectedOptionTemplate}
                 itemTemplate={levelOptionTemplate}
                 optionLabel="level"
               />
+            </div>
+
+            {/* Departments */}
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-slate-700">
+                Departments
+              </label>
               <DepartmentsListMemo
                 setSelectedDepartments={setSelectedDepartments}
                 departments={departments}
                 selectedDepartments={selectedDepartments}
               />
+            </div>
+
+            {/* Post Type */}
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-slate-700">
+                Document Type
+              </label>
               <Dropdown
                 options={postTypesResponse?.data.postTypes}
-                className={`w-full mb-6 h-12 border border-black items-center bg-inherit`}
+                className="w-full h-12 bg-white/70 backdrop-blur-sm border border-white/40 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
                 optionLabel="name"
                 value={postType}
-                placeholder="Select the type of document"
+                placeholder="Select document type"
                 onChange={(e) => setPostType(e.value)}
+                pt={{
+                  root: {
+                    className:
+                      "bg-white/70 backdrop-blur-sm border-white/40 rounded-xl",
+                  },
+                  panel: {
+                    className:
+                      "bg-white/95 backdrop-blur-lg rounded-xl shadow-2xl border border-white/40",
+                  },
+                }}
               />
+            </div>
+
+            {/* Folder Selection */}
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-slate-700">
+                Folder
+              </label>
               <TreeSelect
                 filter
                 pt={{
                   root: {
                     className:
-                      "dark:bg-neutral-950 dark:border-neutral-700 dark:text-neutral-100",
+                      "bg-white/70 backdrop-blur-sm border-white/40 rounded-xl",
                   },
                   tree: {
-                    root: { className: "bg-[#eeeeee]" },
-                    content: {
-                      className: "bg-[#EEEEEE]",
+                    root: {
+                      className: "bg-white/95 backdrop-blur-lg rounded-xl",
                     },
+                    content: { className: "bg-white/95 backdrop-blur-lg" },
                   },
-                  wrapper: { className: "bg-[#EEEEEE]" },
+                  wrapper: {
+                    className: "bg-white/95 backdrop-blur-lg rounded-xl",
+                  },
                   header: {
-                    className: "dark:bg-neutral-950 dark:text-neutral-100",
+                    className: "bg-white/95 backdrop-blur-lg rounded-t-xl",
                   },
                   filter: {
                     className:
-                      "dark:bg-neutral-700 dark:border-neutral-700 dark:text-neutral-100 dark:placeholder-neutral-400",
+                      "bg-white/70 border border-white/40 rounded-lg text-slate-700",
                   },
                 }}
-                className="w-full mb-6 h-12 border border-black items-center bg-inherit"
+                className="w-full h-12 bg-white/70 backdrop-blur-sm border border-white/40 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
                 options={buildTree(foldersData?.data.folders || [])}
                 onChange={async (e: TreeSelectChangeEvent) => {
                   const deptId = decodeUserData()?.deptId;
-                  if (!e.value) return;
-                  if (!deptId) return;
+                  if (!e.value || !deptId) return;
                   const selected = await getFolderById(+e.value, deptId);
                   if (selected) setSelectedFolder(selected);
                 }}
                 value={selectedFolder?.id.toString()}
                 placeholder="Select a folder"
               />
+            </div>
 
+            {/* Checkboxes */}
+            <div className="space-y-4">
+              {/* Notify Recipients */}
               <div
-                className={`h-12 border flex items-center gap-2 px-3 w-full ${
-                  notify && "bg-blue-500 text-white"
-                } border-black mb-6 rounded-lg`}
+                className={`relative h-12 border border-white/40 rounded-xl flex items-center gap-3 px-4 cursor-pointer transition-all duration-300 ${
+                  notify
+                    ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg"
+                    : "bg-white/50 backdrop-blur-sm text-slate-700 hover:bg-white/70"
+                }`}
                 onClick={() => setNotify((prev) => !prev)}
               >
                 <Checkbox
                   id="notifyCheckbox"
-                  className=""
                   value={notify}
                   checked={notify}
+                  className="pointer-events-none"
                 />
                 <label
                   htmlFor="notifyCheckbox"
-                  className="hover:cursor-pointer text-sm"
+                  className="text-sm font-medium cursor-pointer"
                 >
-                  Notify recipients?
+                  Notify recipients
                 </label>
               </div>
+
+              {/* Downloadable */}
               <div
-                className={`h-12 border flex items-center gap-2 px-3 w-full ${
-                  downloadable && "bg-blue-500 text-white"
-                } border-black mb-6 rounded-lg`}
+                className={`relative h-12 border border-white/40 rounded-xl flex items-center gap-3 px-4 cursor-pointer transition-all duration-300 ${
+                  downloadable
+                    ? "bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg"
+                    : "bg-white/50 backdrop-blur-sm text-slate-700 hover:bg-white/70"
+                }`}
                 onClick={() => setDownloadable((prev) => !prev)}
               >
                 <Checkbox
                   id="downloadable"
-                  className=""
                   value={downloadable}
                   checked={downloadable}
+                  className="pointer-events-none"
                 />
                 <label
                   htmlFor="downloadable"
-                  className="hover:cursor-pointer text-sm"
+                  className="text-sm font-medium cursor-pointer"
                 >
                   Downloadable
                 </label>
               </div>
+
+              {/* Publish */}
               <div
-                className={`h-12 border flex items-center gap-2 px-3 w-full ${
-                  publish && "bg-blue-500 text-white"
-                } border-black mb-6 rounded-lg`}
+                className={`relative h-12 border border-white/40 rounded-xl flex items-center gap-3 px-4 cursor-pointer transition-all duration-300 ${
+                  publish
+                    ? "bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg"
+                    : "bg-white/50 backdrop-blur-sm text-slate-700 hover:bg-white/70"
+                }`}
                 onClick={() => setPublish((prev) => !prev)}
               >
                 <Checkbox
                   id="publish"
-                  className=""
                   value={publish}
                   checked={publish}
+                  className="pointer-events-none"
                 />
                 <label
                   htmlFor="publish"
-                  className="hover:cursor-pointer text-sm"
+                  className="text-sm font-medium cursor-pointer"
                 >
                   Publish
                 </label>
               </div>
-              <Button
-                type="submit"
-                icon={`${PrimeIcons.SAVE}`}
-                className={`${
-                  posting && "opacity-80"
-                }  bg-blue-600 text-white font-medium w-full gap-2 h-12 justify-center`}
-                disabled={isConverting || posting}
-              >
-                Post
-              </Button>
             </div>
+
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              icon={`${PrimeIcons.SAVE}`}
+              className={`w-full justify-center h-14 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-xl shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl border-0 gap-3 ${
+                posting ? "opacity-70 cursor-not-allowed" : ""
+              }`}
+              disabled={isConverting || posting}
+            >
+              {posting ? "Publishing..." : "Publish Post"}
+            </Button>
           </div>
         </div>
       </div>

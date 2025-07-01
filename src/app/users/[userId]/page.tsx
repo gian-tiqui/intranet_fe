@@ -207,13 +207,19 @@ const UserPage = () => {
               <div className="absolute -top-16 left-8">
                 <div className="relative">
                   <div className="w-32 h-32 rounded-2xl bg-[#EEEEEE] p-2 shadow-xl">
-                    <Image
-                      src={`${API_URI}/uploads/profilepic/${data?.data.user.profilePictureLocation}`}
-                      alt={`${data?.data.user.firstName} ${data?.data.user.lastName}`}
-                      className="w-full h-full rounded-xl object-cover"
-                      height="200"
-                      width="200"
-                    />
+                    {data?.data.user.profilePictureLocation ? (
+                      <Image
+                        src={`${API_URI}/uploads/profilepic/${data?.data.user.profilePictureLocation}`}
+                        alt={`${data?.data.user.firstName} ${data?.data.user.lastName}`}
+                        className="w-full h-full rounded-xl object-cover"
+                        height="200"
+                        width="200"
+                      />
+                    ) : (
+                      <div className="w-full h-full rounded-xl bg-gray-200 flex items-center justify-center">
+                        <i className="pi pi-user text-4xl text-gray-400"></i>
+                      </div>
+                    )}
                   </div>
 
                   {/* Upload Button */}
@@ -224,7 +230,13 @@ const UserPage = () => {
                         name="profile"
                         accept="image/*"
                         customUpload
-                        className="[&_.p-button]:w-10 [&_.p-button]:h-10 [&_.p-button]:rounded-full [&_.p-button]:bg-blue-600 [&_.p-button]:border-0 [&_.p-button]:shadow-lg"
+                        className="[&_.p-button]:w-10 [&_.p-button]:h-10 [&_.p-button]:rounded-full [&_.p-button]:bg-blue-600 [&_.p-button]:border-0 [&_.p-button]:shadow-lg [&_.p-button]:flex [&_.p-button]:items-center [&_.p-button]:justify-center [&_.p-button]:text-[0px]"
+                        chooseOptions={{
+                          icon: "pi pi-camera",
+                          iconOnly: true,
+                          className:
+                            "w-full h-full flex ps-3 items-center justify-center text-white text-sm p-0",
+                        }}
                         uploadHandler={(event) => {
                           const file = event.files?.[0];
                           if (file) {
