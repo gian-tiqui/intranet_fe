@@ -41,7 +41,6 @@ import useAddFolderStore from "../store/addFolderDialog";
 import { PrimeIcons } from "primereact/api";
 import useShowSearchStore from "../store/showSearch";
 import UserProfileDialog from "./UserProfileDialog";
-import UnreadDialog from "./UnreadDialog";
 import useToastRefStore from "../store/toastRef";
 import { Toast } from "primereact/toast";
 import EditFolderDialog from "./EditFolderDialog";
@@ -49,6 +48,7 @@ import useEditFolderDialogVisibleStore from "../store/editFolderDialogVisible";
 import useEditFolderIdStore from "../store/editFolderId";
 import Tutorial from "./Tutorial";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { Button } from "primereact/button";
 
 interface Props {
   children?: ReactNode;
@@ -291,11 +291,7 @@ const Divider: React.FC<Props> = ({ children }) => {
       />
       <Tutorial />
       <Toast ref={toastRef} />
-      <UnreadDialog
-        message={unreadMessage}
-        visible={unreadVisible}
-        setVisible={setUnreadVisible}
-      />
+
       <EditFolderDialog
         visible={editFolderDialogVisible}
         setVisible={setEditFolderDialogVisible}
@@ -396,7 +392,16 @@ const Divider: React.FC<Props> = ({ children }) => {
                 </motion.div>
               </div>
 
-              <HeaderIcons showPendingUsers={showPendingUsers} />
+              <div className="flex gap-1">
+                {unreadVisible && (
+                  <Button
+                    tooltipOptions={{ position: "left" }}
+                    icon={`${PrimeIcons.EXCLAMATION_CIRCLE} text-red-400 text-2xl`}
+                    tooltip={unreadMessage}
+                  />
+                )}
+                <HeaderIcons showPendingUsers={showPendingUsers} />
+              </div>
             </header>
           )}
           <div
