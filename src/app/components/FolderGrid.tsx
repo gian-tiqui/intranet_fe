@@ -27,8 +27,6 @@ import useEditFolderDialogVisibleStore from "../store/editFolderDialogVisible";
 import useEditFolderIdStore from "../store/editFolderId";
 import useDepartments from "../custom-hooks/departments";
 import { getPostTypes } from "../utils/service/postTypeService";
-import Cookies from "js-cookie";
-import { INTRANET } from "../bindings/binding";
 
 const FolderGrid = () => {
   const departments = useDepartments();
