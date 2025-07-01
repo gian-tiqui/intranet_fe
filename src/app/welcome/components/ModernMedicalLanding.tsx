@@ -16,6 +16,8 @@ import {
   LucideIcon,
 } from "lucide-react";
 import ModernNav from "./ModernNav";
+import { useQuery } from "@tanstack/react-query";
+import { getLandingPageData } from "@/app/utils/service/landingPageService";
 
 // === Types ===
 interface Department {
@@ -29,14 +31,14 @@ interface Department {
 
 interface Stat {
   label: string;
-  value: string;
+  value: string | undefined;
   icon: LucideIcon;
 }
 
 interface CardItem {
   icon: LucideIcon;
   label: string;
-  value: string;
+  value: string | undefined;
   color: string;
 }
 
@@ -47,6 +49,11 @@ interface MousePosition {
 
 // === Component ===
 const ModernMedicalLanding: React.FC = () => {
+  const { data } = useQuery({
+    queryKey: [`landing-page-data`],
+    queryFn: () => getLandingPageData(),
+  });
+
   const [activeTab, setActiveTab] = useState<number>(0);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [mousePosition, setMousePosition] = useState<MousePosition>({
@@ -104,14 +111,18 @@ const ModernMedicalLanding: React.FC = () => {
         "Get real-time updates from your department and organization-wide announcements.",
       icon: FileText,
       color: "from-green-500 to-emerald-500",
-      image: "📝",
+      image: "13",
     },
   ];
 
   const stats: Stat[] = [
-    { label: "Healthcare Professionals", value: "100+", icon: Users },
+    {
+      label: "Employees",
+      value: data?.data.employeesCount.toString(),
+      icon: Users,
+    },
     { label: "Patients Served", value: "10K+", icon: Heart },
-    { label: "Years of Excellence", value: "3+", icon: Award },
+    { label: "Years of Excellence", value: "13", icon: Award },
     { label: "Regular Consultants", value: "100+", icon: Activity },
   ];
 
@@ -119,13 +130,13 @@ const ModernMedicalLanding: React.FC = () => {
     {
       icon: FileText,
       label: "Memos Shared",
-      value: "0",
+      value: data?.data.postsCount.toString(),
       color: "from-blue-500 to-cyan-500",
     },
     {
       icon: Activity,
       label: "Notifications Sent",
-      value: "0",
+      value: data?.data.notificationsCount.toString(),
       color: "from-purple-500 to-pink-500",
     },
   ];
