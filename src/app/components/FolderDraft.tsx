@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Folder } from "../types/types";
-import { Image } from "primereact/image";
-import blueFolder from "../assets/blue-folder.png";
+import { Icon } from "@iconify/react";
 import { Button } from "primereact/button";
-import { PrimeIcons } from "primereact/api";
 import { Avatar } from "primereact/avatar";
+import { Badge } from "primereact/badge";
+import { Tooltip } from "primereact/tooltip";
 import useEditFolderDialogVisibleStore from "../store/editFolderDialogVisible";
 import useEditFolderIdStore from "../store/editFolderId";
 
@@ -15,69 +15,171 @@ interface Props {
 const FolderDraft: React.FC<Props> = ({ folder }) => {
   const { setEditFolderDialogVisible } = useEditFolderDialogVisibleStore();
   const { setEditFolderId } = useEditFolderIdStore();
+  const [isHovered, setIsHovered] = useState(false);
+
+  const formatDate = (date: string) => {
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const getTimeAgo = (date: string) => {
+    const now = new Date();
+    const createdDate = new Date(date);
+    const diffTime = Math.abs(now.getTime() - createdDate.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 1) return "Today";
+    if (diffDays === 2) return "Yesterday";
+    if (diffDays <= 7) return `${diffDays} days ago`;
+    if (diffDays <= 30) return `${Math.ceil(diffDays / 7)} weeks ago`;
+    return `${Math.ceil(diffDays / 30)} months ago`;
+  };
+
+  const handleEdit = () => {
+    console.log("edit");
+    setEditFolderDialogVisible(true);
+    setEditFolderId(folder.id);
+  };
+
+  const generateAvatarColors = (index: number) => {
+    const colors = [
+      "bg-blue-500",
+      "bg-green-500",
+      "bg-purple-500",
+      "bg-pink-500",
+      "bg-orange-500",
+    ];
+    return colors[index % colors.length];
+  };
 
   return (
-    <div className="w-full bg-white dark:bg-neutral-900 hover:shadow-md border border-gray-200 dark:border-neutral-700 rounded-xl cursor-pointer flex justify-between items-center px-6 py-4 transition duration-200">
-      <div className="flex items-center gap-3">
-        <Image
-          src={blueFolder.src}
-          alt="drafts-folder-icon"
-          className="h-7 w-7"
+    <div
+      className={`group relative w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer ${
+        isHovered
+          ? "shadow-xl shadow-blue-500/10 dark:shadow-blue-400/10 border-blue-300 dark:border-blue-600 scale-[1.02]"
+          : "shadow-sm hover:shadow-lg hover:shadow-gray-200/50 dark:hover:shadow-gray-900/50"
+      }`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Status Badge */}
+      <div className="absolute top-4 right-4 z-10">
+        <Badge
+          value="Draft"
+          severity="warning"
+          className="bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-200 text-xs font-medium px-3 py-1 rounded-full"
         />
-        <p className="font-semibold text-blue-700 dark:text-blue-300 truncate max-w-[10rem]">
-          {folder.name}
-        </p>
       </div>
 
-      <div>
-        <p className="text-xs text-gray-500 dark:text-gray-400">Created at</p>
-        <p className="text-sm text-blue-600 dark:text-blue-300 font-medium">
-          {new Date(folder.createdAt).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </p>
-      </div>
+      {/* Main Content */}
+      <div className="p-6">
+        {/* Header Section */}
+        <div className="flex items-start justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                <Icon icon="mdi:folder" className="w-6 h-6 text-white" />
+              </div>
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-amber-500 rounded-full flex items-center justify-center">
+                <Icon icon="mdi:pencil" className="w-2.5 h-2.5 text-white" />
+              </div>
+            </div>
+            <div>
+              <h3 className="font-bold text-lg text-gray-900 dark:text-white truncate max-w-[12rem] mb-1">
+                {folder.name}
+              </h3>
+              <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                <Icon icon="mdi:clock-outline" className="w-4 h-4" />
+                <span>{getTimeAgo(folder.createdAt)}</span>
+                <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
+                <span>{formatDate(folder.createdAt)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <div>
-        <p className="text-xs mb-1 text-gray-500 dark:text-gray-400">
-          Shared to
-        </p>
-        <div className="flex items-center gap-1">
-          {Array(3)
-            .fill(0)
-            .map((_, index) => (
-              <Avatar
-                key={index}
-                label="TE"
-                shape="circle"
-                className="h-8 w-8 bg-blue-600 text-white text-xs"
-              />
+        {/* Collaborators Section */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+              <Icon icon="mdi:account-group" className="w-4 h-4" />
+              Departments/Division
+            </h4>
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {folder.folderDepartments?.length ?? 0} departments
+            </span>
+          </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            {folder.folderDepartments?.slice(0, 5).map((fd, index) => (
+              <div key={fd.id} className="relative">
+                <Avatar
+                  label={
+                    fd.department?.departmentName
+                      ? fd.department.departmentName.charAt(0)
+                      : "?"
+                  }
+                  shape="circle"
+                  className={`w-10 h-10 ${generateAvatarColors(
+                    index
+                  )} text-white text-sm font-medium border-2 border-white dark:border-gray-800 shadow-sm`}
+                />
+                <Tooltip
+                  target={`.collab-${fd.id}`}
+                  content={fd.department?.departmentName ?? "Unknown"}
+                  position="top"
+                />
+                <div
+                  className={`collab-${fd.id} absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full`}
+                ></div>
+              </div>
             ))}
-          <Avatar
-            label="+4"
-            shape="circle"
-            className="h-8 w-8 bg-blue-600 border text-white text-xs border-white"
+
+            {folder.folderDepartments &&
+              folder.folderDepartments.length > 5 && (
+                <Avatar
+                  label={`+${folder.folderDepartments.length - 5}`}
+                  shape="circle"
+                  className="w-10 h-10 bg-gray-400 dark:bg-gray-600 text-white text-sm font-medium border-2 border-white dark:border-gray-800 shadow-sm"
+                />
+              )}
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex items-center gap-3">
+          <Button
+            className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+            onClick={() => console.log("Publish folder")}
+          >
+            <Icon icon="mdi:publish" className="w-4 h-4" />
+            <span>Publish</span>
+          </Button>
+
+          <Tooltip target=".edit-button" content="Edit Folder" position="top" />
+          <Button
+            className="edit-button w-12 h-12 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-sm hover:shadow-md flex items-center justify-center"
+            onClick={handleEdit}
+          >
+            <Icon icon="mdi:cog" className="w-5 h-5" />
+          </Button>
+
+          <Tooltip
+            target=".more-button"
+            content="More Options"
+            position="top"
           />
         </div>
       </div>
 
-      <div className="flex rounded-md overflow-hidden border border-blue-600 dark:border-blue-400">
-        <div className="bg-blue-600 text-white dark:bg-blue-500 px-4 py-1 text-sm font-medium grid place-items-center">
-          Publish
-        </div>
-        <div className="bg-white dark:bg-neutral-800 grid place-items-center px-2">
-          <Button
-            icon={PrimeIcons.COG}
-            onClick={() => {
-              setEditFolderDialogVisible(true);
-              setEditFolderId(folder.id);
-            }}
-            className="h-6 w-6"
-          />
-        </div>
-      </div>
+      {/* Hover Overlay Effect */}
+      <div
+        className={`pointer-events-none absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 transition-opacity duration-300 ${
+          isHovered ? "opacity-100" : "opacity-0"
+        }`}
+      />
     </div>
   );
 };

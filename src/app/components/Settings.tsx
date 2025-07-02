@@ -10,86 +10,110 @@ import SecretQuestion from "./SecretQuestion";
 
 const Settings = () => {
   const { setShown } = useShowSettingsStore();
-  const [fragment, setFragment] = useState<string>("userInfo");
+  const [activeIndex, setActiveIndex] = useState(0);
   const { setHidden } = useNavbarVisibilityStore();
 
-  const stopPropa = (e: React.MouseEvent) => {
+  const stopPropa = (e) => {
     e.stopPropagation();
   };
 
   const handleOuterChange = () => {
     const userDept = decodeUserData()?.departmentName;
-
     if (userDept?.toLowerCase() !== "admin") setHidden(true);
     setShown(false);
   };
 
+  const userData = decodeUserData();
+
   return (
     <div
-      className="min-w-full min-h-full bg-black bg-opacity-85 absolute z-40 grid place-content-center"
+      className="fixed inset-0 bg-gradient-to-br from-black/60 via-black/70 to-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
       onClick={handleOuterChange}
     >
       <div
-        className="w-82 md:w-[700px] md:h-96 rounded-3xl bg-white dark:bg-neutral-900 p-8"
+        className="w-full max-w-4xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 dark:border-gray-700/50"
         onClick={stopPropa}
       >
-        <div className="flex justify-between items-start w-full mb-5">
-          <div className="flex gap-3 w-full">
-            <div className="h-10 w-10 bg-neutral-300 rounded-full"></div>
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-200/50 dark:border-gray-700/50">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-lg shadow-lg">
+                {userData?.firstName?.[0]}
+                {userData?.lastName?.[0]}
+              </div>
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"></div>
+            </div>
             <div>
-              <p>
-                {decodeUserData()?.firstName} {decodeUserData()?.lastName}
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                {userData?.firstName} {userData?.lastName}
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                <Icon icon="mdi:office-building" className="w-4 h-4" />
+                {userData?.departmentName}
               </p>
-              <p className="text-xs">{decodeUserData()?.departmentName}</p>
             </div>
           </div>
-          <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded flex items-center gap-3">
-            <Icon
-              icon={"iconamoon:exit-light"}
-              className="h-7 w-7"
+
+          <HoverBox className="group relative">
+            <button
               onClick={() => setShown(false)}
-            />
+              className="p-3 rounded-xl bg-gray-100/50 dark:bg-gray-800/50 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 border border-transparent hover:border-red-200 dark:hover:border-red-800"
+            >
+              <Icon
+                icon="material-symbols:close-rounded"
+                className="w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-red-500 transition-colors"
+              />
+            </button>
           </HoverBox>
         </div>
-        <hr className="w-full mb-4 border-t dark:border-gray-700" />
 
-        <div className="grid md:flex">
-          <div className="md::w-1/3 flex flex-col p-2">
-            <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-              <div
-                className=" flex items-center gap-3"
-                onClick={() => setFragment("userInfo")}
+        {/* Tab Navigation */}
+        <div className="px-6">
+          <div className="flex space-x-2 border-b border-gray-200/50 dark:border-gray-700/50">
+            {[
+              {
+                id: 0,
+                icon: "mdi:account-circle-outline",
+                label: "User Information",
+              },
+              { id: 1, icon: "mdi:lock-outline", label: "Password" },
+              { id: 2, icon: "mdi:security", label: "Security Questions" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveIndex(tab.id)}
+                className={`flex items-center gap-2 px-6 py-3 font-medium text-sm transition-all duration-200 border-b-2 ${
+                  activeIndex === tab.id
+                    ? "text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400 bg-blue-50/50 dark:bg-blue-900/20"
+                    : "text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                }`}
               >
-                <Icon icon={"mdi:user-outline"} className="w-6 h-6" />
-                <p className="">User Information</p>
-              </div>
-            </HoverBox>
-            <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-              <div
-                className="flex items-center gap-3"
-                onClick={() => setFragment("password")}
-              >
-                <Icon icon={"mdi:password-outline"} className="w-6 h-6" />
-                <p className="">Password</p>
-              </div>
-            </HoverBox>
-            <HoverBox className="hover:bg-neutral-300 dark:hover:bg-neutral-800 p-2 cursor-pointer rounded">
-              <div
-                className="flex items-center gap-3"
-                onClick={() => setFragment("secret")}
-              >
-                <Icon
-                  icon={"mingcute:user-security-line"}
-                  className="w-6 h-6"
-                />
-                <p className="">Secret Questions</p>
-              </div>
-            </HoverBox>
+                <Icon icon={tab.icon} className="w-5 h-5" />
+                <span className="hidden sm:inline">{tab.label}</span>
+              </button>
+            ))}
           </div>
-          <div className="md:w-2/3 p-2 h-64 overflow-auto">
-            {fragment === "userInfo" && <UserInfo />}
-            {fragment === "password" && <Password />}
-            {fragment === "secret" && <SecretQuestion />}
+        </div>
+
+        {/* Tab Content */}
+        <div className="p-6">
+          <div className="min-h-[300px]">
+            {activeIndex === 0 && (
+              <div className="animate-in slide-in-from-right-5 duration-200">
+                <UserInfo />
+              </div>
+            )}
+            {activeIndex === 1 && (
+              <div className="animate-in slide-in-from-right-5 duration-200">
+                <Password />
+              </div>
+            )}
+            {activeIndex === 2 && (
+              <div className="animate-in slide-in-from-right-5 duration-200">
+                <SecretQuestion />
+              </div>
+            )}
           </div>
         </div>
       </div>

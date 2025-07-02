@@ -28,7 +28,7 @@ const Drafts = () => {
   }, []);
 
   return (
-    <div className="w-[85%] mx-auto h-[86vh] overflow-y-auto pt-4">
+    <div className="w-full px-[5%] h-[86vh] overflow-y-auto overflow-x-hidden pt-4">
       <h4 className="font-medium text-blue-600 text-lg mb-6">Drafts</h4>
       <div className="flex flex-col gap-2">
         {data?.data.results.map(

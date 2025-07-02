@@ -111,7 +111,7 @@ const ModernMedicalLanding: React.FC = () => {
         "Get real-time updates from your department and organization-wide announcements.",
       icon: FileText,
       color: "from-green-500 to-emerald-500",
-      image: "13",
+      image: "🗂️",
     },
   ];
 

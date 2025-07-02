@@ -82,7 +82,7 @@ type Post = {
   lid: number;
   readers: PostReader[];
   folderId: number;
-  postDepartments: { department: Department }[];
+  postDepartments: { id: number; department: Department }[];
   folder: Folder;
   employeeLevel: Level;
   downloadable: boolean;
@@ -104,6 +104,7 @@ type PostDepartment = {
   id: number;
   postId: number;
   deptId: number;
+  department: Department;
 };
 
 type RetPost = {
@@ -305,7 +306,12 @@ type Folder = {
   folderDepartments: FolderDepartment[];
 };
 
-type FolderDepartment = { deptId: number; folderId: number; id: number };
+type FolderDepartment = {
+  deptId: number;
+  folderId: number;
+  id: number;
+  department: Department;
+};
 
 type UpdateStatus = {
   isUpdated: boolean;
