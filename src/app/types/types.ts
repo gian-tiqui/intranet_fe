@@ -169,6 +169,16 @@ type ABoardSelector = {
   icon: string;
 };
 
+type CreateIncidentReportDto = {
+  title: string;
+  reportDescription: string;
+  reportingDepartmentId: number;
+  reporterId: number;
+  reportedUserId: number;
+  reportedDepartmentId: number;
+  statusId: number;
+};
+
 type MinMax = {
   min: number;
   max: number;
@@ -360,6 +370,7 @@ export type {
   DepartmentWithIncompleteReads,
   CommentsProp,
   RetPost,
+  CreateIncidentReportDto,
   Level,
   Decoder,
   UnreadPost,

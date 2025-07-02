@@ -128,6 +128,13 @@ const Aside: React.FC<Props> = ({
         path: "/departments-memo",
         isActive: pathname === "/departments-memo",
       },
+      {
+        id: "incident-report",
+        label: "Incident Reports",
+        icon: "solar:buildings-2-bold-duotone",
+        path: "/incident-report",
+        isActive: pathname === "/incident-report",
+      },
     ];
 
     if (
