@@ -29,8 +29,13 @@ const removeDepartmentById = async (id: number | undefined) => {
   return apiClient.delete(`${API_BASE}/department/${id}`);
 };
 
+const getDepartmentUsers = async (deptId: number | undefined) => {
+  return apiClient.get(`${API_BASE}/department/${deptId}/users`);
+};
+
 export {
   addDepartment,
+  getDepartmentUsers,
   fetchDepartments,
   fetchDepartmentById,
   removeDepartmentById,
