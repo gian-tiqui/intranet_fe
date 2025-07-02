@@ -1,17 +1,8 @@
 import React from "react";
-import Form from "./components/Form";
-import LoginTemplate from "./template/LoginTemplate";
-import TempSection from "./components/TempSection";
+import ModernLoginPage from "./components/ModernLoginPage";
 
 const Login = () => {
-  return (
-    <div className="relative">
-      <LoginTemplate>
-        <Form />
-        <TempSection />
-      </LoginTemplate>
-    </div>
-  );
+  return <ModernLoginPage />;
 };
 
 export default Login;

@@ -14,7 +14,7 @@ const ModernNav = () => {
   const router = useRouter();
 
   const routes: RouteTypes[] = [
-    { name: "Home", path: "/" },
+    { name: "Home", path: "/welcome" },
     { name: "FAQS", path: "/faqs" },
   ];
 
