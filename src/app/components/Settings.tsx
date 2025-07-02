@@ -13,7 +13,7 @@ const Settings = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const { setHidden } = useNavbarVisibilityStore();
 
-  const stopPropa = (e) => {
+  const stopPropa = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
 
