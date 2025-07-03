@@ -128,15 +128,16 @@ const Aside: React.FC<Props> = ({
         path: "/departments-memo",
         isActive: pathname === "/departments-memo",
       },
-      {
+    ];
+    if (userDeptId && userDeptId === Department.CUSTOMER_EXPERIENCE) {
+      baseItems.push({
         id: "incident-report",
         label: "Incident Reports",
         icon: "solar:buildings-2-bold-duotone",
         path: "/incident-report",
         isActive: pathname === "/incident-report",
-      },
-    ];
-
+      });
+    }
     if (
       userDeptId &&
       [Department.HUMAN_RESOURCE, Department.QUALITY_MANAGEMENT].includes(

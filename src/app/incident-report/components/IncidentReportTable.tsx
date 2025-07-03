@@ -2,11 +2,9 @@ import { IncidentReport } from "@/app/types/types";
 import { getIncidentReports } from "@/app/utils/service/incidentReportService";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable, DataTableFilterMeta } from "primereact/datatable";
-import { InputText } from "primereact/inputtext";
-import { Badge } from "primereact/badge";
+import { FilterMatchMode } from "primereact/api";
 import React, { useEffect, useState } from "react";
 import useReportSignalStore from "@/app/store/refetchReportSignal";
 
@@ -66,23 +64,24 @@ const IncidentReportTable: React.FC<Props> = ({ statusId }) => {
     };
   }, [signal, refetch, setSignal]);
 
-  const [filters, setFilters] = useState<DataTableFilterMeta>({
-    title: { value: null, matchMode: "contains" },
-    reporterName: { value: null, matchMode: "contains" },
-    reportingDepartment: { value: null, matchMode: "contains" },
-    reportedDepartment: { value: null, matchMode: "contains" },
-    createdAtFormatted: { value: null, matchMode: "contains" },
-  });
+  const [filters, setFilters] = useState<DataTableFilterMeta>({});
+  const [, setGlobalFilterValue] = useState("");
 
-  const [globalFilterValue, setGlobalFilterValue] = useState("");
+  useEffect(() => {
+    initFilters();
+  }, []);
 
-  const globalFilterFields = [
-    "title",
-    "reporterName",
-    "reportingDepartment",
-    "reportedDepartment",
-    "createdAtFormatted",
-  ];
+  const initFilters = () => {
+    setFilters({
+      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      title: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      reporterName: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+      reportingDepartment: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      reportedDepartment: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      createdAtFormatted: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    });
+    setGlobalFilterValue("");
+  };
 
   const transformData = (incidentReports: IncidentReport[]) =>
     incidentReports?.map((report) => ({
@@ -95,17 +94,10 @@ const IncidentReportTable: React.FC<Props> = ({ statusId }) => {
 
   const reports = transformData(data?.data.incidentReports ?? []);
 
-  const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setGlobalFilterValue(value);
-  };
-
   const titleBodyTemplate = (rowData: IncidentReport) => (
     <div className="flex flex-col gap-1">
-      <span className="font-medium text-slate-900 text-sm">
-        {rowData.title}
-      </span>
-      <span className="text-xs text-slate-500 truncate max-w-[200px]">
+      <span className="font-medium text-gray-900 text-sm">{rowData.title}</span>
+      <span className="text-xs text-gray-500 truncate max-w-[200px]">
         {rowData.reportDescription}
       </span>
     </div>
@@ -113,31 +105,35 @@ const IncidentReportTable: React.FC<Props> = ({ statusId }) => {
 
   const reporterBodyTemplate = (rowData: IncidentReport) => (
     <div className="flex items-center gap-3">
-      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-        <span className="text-white text-xs font-medium">
-          {rowData.reporter.firstName?.charAt(0)}
-        </span>
+      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+        {rowData.reporter?.firstName?.charAt(0)?.toUpperCase()}
       </div>
       <div className="flex flex-col">
-        <span className="font-medium text-slate-900 text-sm">
-          {rowData.reporter.firstName}
+        <span className="font-medium text-gray-900 text-sm">
+          {rowData.reporter?.firstName} {rowData.reporter?.lastName}
         </span>
-        <span className="text-xs text-slate-500">Reporter</span>
+        <span className="text-xs text-gray-500">Reporter</span>
       </div>
     </div>
   );
 
   const departmentBodyTemplate = (department: string) => (
-    <Badge
-      value={department}
-      className="!bg-slate-100 !text-slate-700 !border-slate-200 !px-3 !py-1 !text-xs !font-medium !rounded-full"
-    />
+    <div className="flex items-center gap-2">
+      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+      <span className="text-gray-700 text-sm">
+        {department || (
+          <span className="italic text-gray-400">No department</span>
+        )}
+      </span>
+    </div>
   );
 
   const dateBodyTemplate = (rowData: IncidentReport) => (
     <div className="flex flex-col gap-1">
-      <span className="text-sm text-slate-900">{rowData.createdAt}</span>
-      <span className="text-xs text-slate-500">
+      <span className="text-sm text-gray-900">
+        {formatDate(rowData.createdAt)}
+      </span>
+      <span className="text-xs text-gray-500">
         {new Date(rowData.createdAt).toLocaleTimeString("en-US", {
           hour: "2-digit",
           minute: "2-digit",
@@ -147,39 +143,24 @@ const IncidentReportTable: React.FC<Props> = ({ statusId }) => {
   );
 
   const statusBodyTemplate = (rowData: IncidentReport) => (
-    <Badge
-      value={getStatusLabel(rowData.statusId)}
-      className={`!px-3 !py-1 !text-xs !font-medium !rounded-full !border ${getStatusColor(
+    <span
+      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
         rowData.statusId
       )}`}
-    />
+    >
+      {getStatusLabel(rowData.statusId)}
+    </span>
   );
 
   const actionBodyTemplate = (rowData: IncidentReport) => (
     <div className="flex items-center gap-2">
-      <Button
-        icon="pi pi-eye"
-        className="!w-8 !h-8 !p-0 !bg-blue-50 hover:!bg-blue-100 !border-blue-200 !text-blue-600 !rounded-lg !transition-all !duration-200"
+      <button
         onClick={() => router.push(`/incident-report/${rowData.id}`)}
-        tooltip="View Details"
-        tooltipOptions={{ position: "top" }}
-      />
-    </div>
-  );
-
-  const loadingTemplate = () => <div className="p-6">Loading table</div>;
-
-  const emptyTemplate = () => (
-    <div className="text-center py-16">
-      <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-        <i className="pi pi-inbox text-2xl text-slate-400"></i>
-      </div>
-      <h3 className="text-lg font-medium text-slate-900 mb-2">
-        No Reports Found
-      </h3>
-      <p className="text-slate-500 text-sm">
-        There are no incident reports matching your current filters.
-      </p>
+        className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 hover:text-blue-700 transition-all duration-200 group"
+        title="View report details"
+      >
+        <i className="pi pi-eye text-sm group-hover:scale-110 transition-transform"></i>
+      </button>
     </div>
   );
 
@@ -200,176 +181,200 @@ const IncidentReportTable: React.FC<Props> = ({ statusId }) => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-      {/* Header */}
-      <div className="p-6 bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-semibold text-slate-900 mb-1">
-              Incident Reports
-            </h2>
-            <p className="text-sm text-slate-600">
-              {reports.length} reports • Status: {getStatusLabel(statusId)}
-            </p>
+    <div className="w-full overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+        {/* Table Header with Stats */}
+        <div className="p-6 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold mb-1">Incident Reports</h2>
+              <p className="text-blue-100 text-sm">
+                Manage and view incident reports • Status:{" "}
+                {getStatusLabel(statusId)}
+              </p>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold">{reports?.length || 0}</div>
+                <div className="text-xs text-blue-100">Total Reports</div>
+              </div>
+            </div>
           </div>
+        </div>
+
+        {/* Enhanced DataTable */}
+        <div className="p-6">
+          <DataTable
+            value={reports}
+            loading={isLoading}
+            className="modern-datatable"
+            paginator
+            rows={10}
+            rowsPerPageOptions={[10, 25, 50, 100]}
+            filters={filters}
+            filterDisplay="row"
+            globalFilterFields={[
+              "title",
+              "reporterName",
+              "reportingDepartment",
+              "reportedDepartment",
+              "createdAtFormatted",
+            ]}
+            rowClassName={() =>
+              "hover:bg-blue-50 transition-colors border-b border-gray-100"
+            }
+            emptyMessage={
+              <div className="text-center py-12">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                  <i className="pi pi-inbox text-2xl text-gray-400"></i>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No reports found
+                </h3>
+                <p className="text-gray-500 mb-4">
+                  There are no incident reports matching your current filters.
+                </p>
+              </div>
+            }
+            pt={{
+              table: { className: "border-separate border-spacing-0 w-full" },
+              thead: { className: "bg-gray-50" },
+              headerRow: {
+                className:
+                  "bg-gray-50 border-b border-gray-200 px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider",
+              },
+              bodyRow: {
+                className: "px-6 py-4 whitespace-nowrap text-sm text-gray-900",
+              },
+            }}
+          >
+            <Column
+              field="title"
+              header="Title"
+              filter
+              filterPlaceholder="Search titles..."
+              style={{ minWidth: "16rem" }}
+              body={titleBodyTemplate}
+            />
+
+            <Column
+              field="reporterName"
+              header="Reporter"
+              filter
+              filterPlaceholder="Search reporters..."
+              style={{ minWidth: "14rem" }}
+              body={reporterBodyTemplate}
+            />
+
+            <Column
+              field="reportingDepartment"
+              header="Reporting Dept"
+              filter
+              filterPlaceholder="Search departments..."
+              style={{ minWidth: "12rem" }}
+              body={(rowData) =>
+                departmentBodyTemplate(rowData.reportingDepartment)
+              }
+            />
+
+            <Column
+              field="reportedDepartment"
+              header="Reported Dept"
+              filter
+              filterPlaceholder="Search departments..."
+              style={{ minWidth: "12rem" }}
+              body={(rowData) =>
+                departmentBodyTemplate(rowData.reportedDepartment)
+              }
+            />
+
+            <Column
+              field="statusId"
+              header="Status"
+              style={{ minWidth: "8rem" }}
+              body={statusBodyTemplate}
+            />
+
+            <Column
+              field="createdAtFormatted"
+              header="Created"
+              filter
+              filterPlaceholder="Search dates..."
+              style={{ minWidth: "10rem" }}
+              body={dateBodyTemplate}
+            />
+
+            <Column
+              header="Actions"
+              style={{ minWidth: "8rem" }}
+              body={actionBodyTemplate}
+            />
+          </DataTable>
+        </div>
+      </div>
+
+      {/* Footer Stats */}
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
           <div className="flex items-center gap-3">
-            <div className="relative">
-              <i className="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-sm"></i>
-              <InputText
-                value={globalFilterValue}
-                onChange={onGlobalFilterChange}
-                placeholder="Search reports..."
-                className="!pl-10 !pr-4 !py-2 !text-sm !border-slate-300 !rounded-lg !bg-white focus:!border-blue-500 focus:!ring-2 focus:!ring-blue-500/20"
-              />
+            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+              <i className="pi pi-file-text text-blue-600"></i>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Total Reports</p>
+              <p className="text-lg font-semibold text-gray-900">
+                {reports?.length || 0}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+              <i className="pi pi-clock text-amber-600"></i>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Pending</p>
+              <p className="text-lg font-semibold text-gray-900">
+                {reports?.filter((r) => r.statusId === 1).length || 0}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+              <i className="pi pi-check text-green-600"></i>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Resolved</p>
+              <p className="text-lg font-semibold text-gray-900">
+                {reports?.filter((r) => r.statusId === 3).length || 0}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+              <i className="pi pi-building text-purple-600"></i>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Departments</p>
+              <p className="text-lg font-semibold text-gray-900">
+                {[
+                  ...new Set(
+                    reports?.map((r) => r.reportingDepartment).filter(Boolean)
+                  ),
+                ].length || 0}
+              </p>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Table */}
-      <DataTable
-        value={reports}
-        loading={isLoading}
-        loadingIcon={loadingTemplate}
-        emptyMessage={emptyTemplate}
-        paginator
-        rows={10}
-        rowsPerPageOptions={[10, 25, 50]}
-        filters={filters}
-        globalFilter={globalFilterValue}
-        onFilter={(e) => setFilters(e.filters as DataTableFilterMeta)}
-        globalFilterFields={globalFilterFields}
-        className="modern-datatable"
-        paginatorClassName="!border-t !border-slate-200 !bg-slate-50"
-        scrollable
-        scrollHeight="600px"
-      >
-        <Column
-          header="Title"
-          field="title"
-          body={titleBodyTemplate}
-          filter
-          filterPlaceholder="Search titles..."
-          showFilterMenu={false}
-          filterMatchMode="contains"
-          className="min-w-[250px]"
-        />
-        <Column
-          header="Reporter"
-          field="reporterName"
-          body={reporterBodyTemplate}
-          filter
-          filterPlaceholder="Search reporters..."
-          showFilterMenu={false}
-          filterMatchMode="contains"
-          className="min-w-[200px]"
-        />
-        <Column
-          header="Reporting Dept"
-          field="reportingDepartment"
-          body={(rowData) =>
-            departmentBodyTemplate(rowData.reportingDepartment)
-          }
-          filter
-          filterPlaceholder="Search departments..."
-          showFilterMenu={false}
-          filterMatchMode="contains"
-          className="min-w-[150px]"
-        />
-        <Column
-          header="Reported Dept"
-          field="reportedDepartment"
-          body={(rowData) => departmentBodyTemplate(rowData.reportedDepartment)}
-          filter
-          filterPlaceholder="Search departments..."
-          showFilterMenu={false}
-          filterMatchMode="contains"
-          className="min-w-[150px]"
-        />
-        <Column
-          header="Status"
-          field="statusId"
-          body={statusBodyTemplate}
-          className="min-w-[120px]"
-        />
-        <Column
-          header="Created"
-          field="createdAtFormatted"
-          body={dateBodyTemplate}
-          sortable
-          className="min-w-[130px]"
-        />
-        <Column
-          header="Actions"
-          body={actionBodyTemplate}
-          className="min-w-[120px]"
-        />
-      </DataTable>
-
-      <style jsx global>{`
-        .modern-datatable .p-datatable-thead > tr > th {
-          background: #f8fafc;
-          border-bottom: 1px solid #e2e8f0;
-          border-top: none;
-          border-left: none;
-          border-right: none;
-          padding: 16px 12px;
-          font-weight: 600;
-          font-size: 14px;
-          color: #334155;
-        }
-
-        .modern-datatable .p-datatable-tbody > tr > td {
-          padding: 16px 12px;
-          border-bottom: 1px solid #f1f5f9;
-          border-left: none;
-          border-right: none;
-          font-size: 14px;
-        }
-
-        .modern-datatable .p-datatable-tbody > tr:last-child > td {
-          border-bottom: none;
-        }
-
-        .modern-datatable .p-column-filter-row .p-column-filter-element {
-          margin: 0;
-        }
-
-        .modern-datatable .p-column-filter-row .p-column-filter-element input {
-          border: 1px solid #e2e8f0;
-          border-radius: 8px;
-          padding: 8px 12px;
-          font-size: 13px;
-          transition: all 0.2s ease;
-        }
-
-        .modern-datatable
-          .p-column-filter-row
-          .p-column-filter-element
-          input:focus {
-          border-color: #3b82f6;
-          box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
-          outline: none;
-        }
-
-        .modern-datatable .p-paginator {
-          padding: 16px 12px;
-          border-top: 1px solid #e2e8f0;
-        }
-
-        .modern-datatable .p-paginator .p-paginator-pages .p-paginator-page {
-          border-radius: 8px;
-          margin: 0 2px;
-        }
-
-        .modern-datatable
-          .p-paginator
-          .p-paginator-pages
-          .p-paginator-page.p-highlight {
-          background: #3b82f6;
-          border-color: #3b82f6;
-        }
-      `}</style>
     </div>
   );
 };
