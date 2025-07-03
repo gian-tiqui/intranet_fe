@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Eye,
   EyeOff,
@@ -9,16 +9,21 @@ import {
   ArrowRight,
   Shield,
   LucideIcon,
+  Mail,
+  MapPin,
+  Phone,
+  Megaphone,
 } from "lucide-react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { API_BASE, INTRANET } from "@/app/bindings/binding";
-import { toastClass } from "@/app/tailwind-classes/tw_classes";
 import useLoginStore from "@/app/store/loggedInStore";
 import ModernNav from "@/app/welcome/components/ModernNav";
+import { motion } from "framer-motion";
+import { Toast } from "primereact/toast";
+import CustomToast from "@/app/components/CustomToast";
 
 // Type definitions
 interface MousePosition {
@@ -62,6 +67,7 @@ interface DecodedToken {
 const ModernLoginPage: React.FC = () => {
   const router = useRouter();
   const { setIsLoggedIn } = useLoginStore();
+  const toastRef = useRef<Toast>(null);
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -115,21 +121,22 @@ const ModernLoginPage: React.FC = () => {
         }
       );
 
-      toast.dismiss();
+      // Remove toast.dismiss(); -- not needed for PrimeReact Toast
 
       const accessToken: DecodedToken = jwtDecode(
         response.data.tokens.accessToken
       );
 
       if (accessToken.confirmed === false) {
-        toast("Please wait for your account to be activated", {
-          className: toastClass,
-          type: "info",
+        toastRef.current?.show({
+          severity: "info",
+          summary: "Account not active",
+          detail: "Please wait for your account to be activated",
+          life: 4000,
         });
         return;
       }
 
-      // setHidden(true); // Uncomment if you have this state
       const rt = response.data.tokens.refreshToken;
       const decodedToken = jwtDecode<{ exp?: number }>(rt);
 
@@ -144,17 +151,16 @@ const ModernLoginPage: React.FC = () => {
       Cookies.set(INTRANET, rt, { expires: expirationDays });
       localStorage.setItem(INTRANET, response.data.tokens.accessToken);
 
-      setIsLoggedIn(true); // Uncomment if you have this state
-      // setShowSplash(true); // Uncomment if you have this state
-      // setIsCollapsed(false); // Uncomment if you have this state
-
+      setIsLoggedIn(true);
       router.push("/");
     } catch (error: unknown) {
       console.error(error);
       if (typeof error === "object" && error !== null) {
-        toast("There's a problem with your ID or password", {
-          type: "error",
-          className: toastClass,
+        toastRef.current?.show({
+          severity: "error",
+          summary: "Login Failed",
+          detail: "There's a problem with your ID or password",
+          life: 4000,
         });
         setWrongAttempts((prev) => prev + 1);
       } else {
@@ -198,17 +204,17 @@ const ModernLoginPage: React.FC = () => {
     {
       icon: Shield,
       title: "Secure Access",
-      description: "Advanced security protocols protect your medical data",
+      description: "Advanced security protocols protect your data",
     },
     {
       icon: Building2,
       title: "Hospital Network",
-      description: "Connected to all Westlake Medical Center systems",
+      description: "Connected to some Westlake Medical Center systems",
     },
     {
-      icon: User,
-      title: "Personalized Dashboard",
-      description: "Customized interface based on your role and department",
+      icon: Megaphone,
+      title: "Stay Updated",
+      description: "Real time updates of Memos, Guidelines, and more.",
     },
   ];
 
@@ -230,11 +236,13 @@ const ModernLoginPage: React.FC = () => {
     <div
       className={`h-screen bg-gradient-to-br  overflow-x-hidden from-slate-50 via-blue-50 to-cyan-50 overflow-auto`}
     >
+      <CustomToast ref={toastRef} />
+
       {/* Navbar */}
       <ModernNav />
 
       {/* Background animation */}
-      <div className="fixed inset-0 pt pointer-events-none">
+      <div className="fixed inset-0 pointer-events-none">
         <div
           className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl"
           style={getAnimationStyle(0)}
@@ -259,7 +267,7 @@ const ModernLoginPage: React.FC = () => {
           >
             <div>
               <span className="inline-block px-4 py-2 bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 rounded-full text-sm font-semibold mb-4">
-                🏥 Medical Portal Access
+                🏥 Employee Portal Access
               </span>
               <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
                 Hospital at the{" "}
@@ -451,7 +459,7 @@ const ModernLoginPage: React.FC = () => {
             {/* Mobile Hero Content */}
             <div className="lg:hidden mt-8 text-center">
               <span className="inline-block px-4 py-2 bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 rounded-full text-sm font-semibold mb-4">
-                🏥 Medical Portal Access
+                🏥 Employee Portal Access
               </span>
               <h1 className="text-3xl font-bold text-gray-900 mb-4">
                 Hospital at the{" "}
@@ -463,6 +471,32 @@ const ModernLoginPage: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* Footer */}
+      <motion.footer
+        className="relative z-10 text-center py-8 mt-16"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.2, duration: 0.8 }}
+      >
+        <div className="flex items-center justify-center space-x-2 mt-10 text-gray-600">
+          <Shield className="w-4 h-4" />
+          <span>Powered by Westlake Medical Center ICT Department</span>
+        </div>
+        <div className="flex justify-center items-center space-x-6 mt-4">
+          <div className="flex items-center space-x-2 text-sm text-gray-500">
+            <Phone className="w-4 h-4" />
+            <span>(+632) 8553-8185</span>
+          </div>
+          <div className="flex items-center space-x-2 text-sm text-gray-500">
+            <Mail className="w-4 h-4" />
+            <span>info@westlakemedical.com</span>
+          </div>
+          <div className="flex items-center space-x-2 text-sm text-gray-500">
+            <MapPin className="w-4 h-4" />
+            <span>San Pedro, Laguna</span>
+          </div>
+        </div>
+      </motion.footer>
     </div>
   );
 };

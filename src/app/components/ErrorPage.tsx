@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import notFound from "../assets/404v2.json";
 import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
+import useLoginStore from "../store/loggedInStore";
 
 const ErrorPage = () => {
   const options = {
@@ -11,6 +12,7 @@ const ErrorPage = () => {
     loop: true,
   };
   const { setHidden } = useNavbarVisibilityStore();
+  const { setIsLoggedIn } = useLoginStore();
 
   const [count, setCount] = useState<number>(4);
   const router = useRouter();
@@ -28,9 +30,13 @@ const ErrorPage = () => {
 
   useEffect(() => {
     setHidden(false);
+    setIsLoggedIn(false);
 
-    return () => setHidden(true);
-  }, [setHidden]);
+    return () => {
+      setHidden(true);
+      setIsLoggedIn(true);
+    };
+  }, [setHidden, setIsLoggedIn]);
 
   return (
     <div className="h-screen w selection:-screen grid place-content-center bg-neutral-200 text-neutral-900 dark:bg-neutral-900 font-mono">

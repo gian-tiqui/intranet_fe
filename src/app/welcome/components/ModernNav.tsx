@@ -30,8 +30,12 @@ const ModernNav = () => {
           className="flex items-center space-x-4"
           whileHover={{ scale: 1.05 }}
         >
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-cyan-600 flex items-center justify-center shadow-lg">
-            <Image src={wmcLogo.src} alt="westlakelogo" className="h-10 w-10" />
+          <div className="w-12 h-12 flex items-center justify-center shadow-lg">
+            <Image
+              src={wmcLogo.src}
+              alt="westlakelogo"
+              className="h-full w-full"
+            />
           </div>
           <div>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">

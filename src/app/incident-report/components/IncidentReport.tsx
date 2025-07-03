@@ -1,34 +1,43 @@
 "use client";
-import { Query } from "@/app/types/types";
-import { getIncidentReport } from "@/app/utils/service/incidentReportService";
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "primereact/button";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import IncidentReportDialog from "./IncidentReportDialog";
+import { TabPanel, TabView } from "primereact/tabview";
+import IncidentReportTable from "./IncidentReportTable";
 
 const IncidentReport = () => {
-  const [query] = useState<Query>({ search: "", skip: 0, take: 1000 });
   const [visible, setVisible] = useState<boolean>(false);
 
-  const { data } = useQuery({
-    queryKey: [`incident-reports`],
-    queryFn: () => getIncidentReport(query),
-  });
-
-  useEffect(() => {
-    console.log(data?.data);
-  }, [data]);
+  const tabPanels: { header: string; statusId: number }[] = [
+    { header: "New", statusId: 1 },
+    { header: "Viewed", statusId: 2 },
+    { header: "Forwarded", statusId: 3 },
+    { header: "Seen", statusId: 4 },
+    { header: "Sent", statusId: 5 },
+    { header: "Sanctioned", statusId: 6 },
+  ];
 
   return (
     <>
       <IncidentReportDialog visible={visible} setVisible={setVisible} />
-      <div>
-        <Button
-          onClick={() => setVisible(true)}
-          className="bg-blue-600 text-white w-32 font-medium justify-center h-8"
-        >
-          Report
-        </Button>
+      <div className="w-full md:h-[86vh]">
+        <header className="p-4">
+          <Button
+            onClick={() => setVisible(true)}
+            className="bg-blue-600 text-white w-32 font-medium justify-center h-8"
+          >
+            Report
+          </Button>
+        </header>
+        <div className="p-4">
+          <TabView>
+            {tabPanels.map((tabPanel, index: number) => (
+              <TabPanel header={tabPanel.header} key={index}>
+                <IncidentReportTable statusId={tabPanel.statusId} />
+              </TabPanel>
+            ))}
+          </TabView>
+        </div>
       </div>
     </>
   );
