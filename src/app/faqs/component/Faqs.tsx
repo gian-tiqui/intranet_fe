@@ -1,7 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Search, HelpCircle, Shield } from "lucide-react";
+import {
+  Plus,
+  Search,
+  HelpCircle,
+  Shield,
+  Mail,
+  MapPin,
+  Phone,
+} from "lucide-react";
 import ModernNav from "@/app/welcome/components/ModernNav";
 
 interface FAQ {
@@ -276,18 +284,29 @@ const Faqs: React.FC = () => {
 
       {/* Footer */}
       <motion.footer
-        className="relative z-10 text-center py-8 border-t border-gray-200/50 bg-white/30 backdrop-blur-sm"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.8 }}
+        className="relative z-10 text-center py-8 mt-16"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.2, duration: 0.8 }}
       >
-        <div className="flex items-center justify-center space-x-2 text-gray-600 mb-4">
+        <div className="flex items-center justify-center space-x-2 text-gray-600">
           <Shield className="w-4 h-4" />
           <span>Powered by Westlake Medical Center ICT Department</span>
         </div>
-        <p className="text-sm text-gray-500">
-          © 2025 Westlake Medical Center. All rights reserved.
-        </p>
+        <div className="flex justify-center items-center space-x-6 mt-4">
+          <div className="flex items-center space-x-2 text-sm text-gray-500">
+            <Phone className="w-4 h-4" />
+            <span>(+632) 8553-8185</span>
+          </div>
+          <div className="flex items-center space-x-2 text-sm text-gray-500">
+            <Mail className="w-4 h-4" />
+            <span>info@westlakemedical.com</span>
+          </div>
+          <div className="flex items-center space-x-2 text-sm text-gray-500">
+            <MapPin className="w-4 h-4" />
+            <span>San Pedro, Laguna</span>
+          </div>
+        </div>
       </motion.footer>
     </div>
   );

@@ -1,5 +1,6 @@
 import { StaticImageData } from "next/image";
 import { ReactNode } from "react";
+import IncidentReport from "../incident-report/components/IncidentReport";
 
 export type EmployeeLevel = {
   id: number;
@@ -337,7 +338,7 @@ type Query = {
   deptId?: number;
   postTypeId?: number;
   searchTypes?: string[] | undefined;
-
+  statusId?: number;
   folderDeptId?: number;
 };
 
@@ -354,6 +355,43 @@ type Division = {
   departments: Department[];
   createdAt: Date;
   updatedAt: Date;
+};
+
+type IncidentReport = {
+  id: number;
+  title: string;
+  reportDescription: string;
+  reportedDepartmentExplanation: string;
+  sanction: string;
+  reportingDepartmentId: number;
+  reportingDepartment: Department;
+  reporterId: number;
+  reporter: User;
+  reportedUserId: number;
+  reportedUser: User;
+  reportedDepartmentId: number;
+  reportedDepartment: Department;
+  public: boolean;
+  comments: Comment[];
+  statusId: number;
+  status: IncidentReportStatus;
+  evidences: IncidentReportImageLocations[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+type IncidentReportStatus = {
+  id: number;
+  status: string;
+
+  reports: IncidentReport[];
+};
+
+type IncidentReportImageLocations = {
+  id: number;
+  imageLocation: string;
+  incidentReportId: number;
+  incidentReport: IncidentReport;
 };
 
 export type {
@@ -393,4 +431,5 @@ export type {
   PostDepartment,
   TabType,
   FolderDepartment,
+  IncidentReport,
 };
