@@ -2,12 +2,12 @@ import React from "react";
 import IncidentReportContainer from "../components/IncidentReportContainer";
 import AuthListener from "@/app/components/AuthListener";
 
-const IncidentReportPage = async ({
+const IncidentReportPage = ({
   params,
 }: {
   params: { incidentReportId: string };
 }) => {
-  const { incidentReportId } = await params;
+  const { incidentReportId } = params;
   const reportId = parseInt(incidentReportId, 10);
 
   if (isNaN(reportId)) {
