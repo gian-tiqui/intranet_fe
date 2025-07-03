@@ -49,6 +49,7 @@ import useEditFolderIdStore from "../store/editFolderId";
 import Tutorial from "./Tutorial";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Button } from "primereact/button";
+import IncidentReportDialog from "../incident-report/components/IncidentReportDialog";
 
 interface Props {
   children?: ReactNode;
@@ -81,6 +82,8 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { editFolderDialogVisible, setEditFolderDialogVisible } =
     useEditFolderDialogVisibleStore();
   const { editFolderId, setEditFolderId } = useEditFolderIdStore();
+  const [reportDialogVisible, setReportDialogVisible] =
+    useState<boolean>(false);
 
   const items = [
     {
@@ -95,6 +98,13 @@ const Divider: React.FC<Props> = ({ children }) => {
       icon: PrimeIcons.FOLDER,
       command: () => {
         setAddFolderDialogVisible(true);
+      },
+    },
+    {
+      label: "Incident Report",
+      icon: PrimeIcons.FLAG,
+      command: () => {
+        setReportDialogVisible(true);
       },
     },
   ];
@@ -291,6 +301,10 @@ const Divider: React.FC<Props> = ({ children }) => {
       />
       <Tutorial />
       <Toast ref={toastRef} />
+      <IncidentReportDialog
+        visible={reportDialogVisible}
+        setVisible={setReportDialogVisible}
+      />
 
       <EditFolderDialog
         visible={editFolderDialogVisible}

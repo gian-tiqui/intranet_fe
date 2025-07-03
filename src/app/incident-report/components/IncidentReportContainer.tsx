@@ -4,11 +4,9 @@ import {
   AlertTriangle,
   User,
   Building2,
-  FileText,
   MessageSquare,
   Eye,
   EyeOff,
-  Clock,
   ArrowLeft,
   Edit,
   Trash2,
@@ -16,10 +14,8 @@ import {
   Camera,
   Mail,
   Phone,
-  AlertCircle,
-  CheckCircle,
-  XCircle,
-  Minus,
+  Activity,
+  FileText,
 } from "lucide-react";
 import { getIncidentReportById } from "@/app/utils/service/incidentReportService";
 import { useQuery } from "@tanstack/react-query";
@@ -34,10 +30,10 @@ const ModernIncidentReportPage: React.FC<Props> = ({ incidentReportId }) => {
     queryFn: () => getIncidentReportById(incidentReportId),
     enabled: !!incidentReportId && incidentReportId !== undefined,
   });
+  const [activeTab, setActiveTab] = useState("overview");
   const [isLoaded, setIsLoaded] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [animationTime, setAnimationTime] = useState(0);
-  const [activeTab, setActiveTab] = useState("overview");
   const [showSensitiveInfo, setShowSensitiveInfo] = useState(false);
 
   useEffect(() => {
@@ -73,35 +69,12 @@ const ModernIncidentReportPage: React.FC<Props> = ({ incidentReportId }) => {
     };
   };
 
-  const getStatusColor = (statusId: number | undefined) => {
-    switch (statusId) {
-      case 1:
-        return "bg-blue-100 text-blue-800 border-blue-200";
-      case 2:
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case 3:
-        return "bg-green-100 text-green-800 border-green-200";
-      case 4:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-    }
-  };
-
-  const getStatusIcon = (statusId: number | undefined) => {
-    switch (statusId) {
-      case 1:
-        return <AlertCircle className="w-4 h-4" />;
-      case 2:
-        return <Clock className="w-4 h-4" />;
-      case 3:
-        return <CheckCircle className="w-4 h-4" />;
-      case 4:
-        return <XCircle className="w-4 h-4" />;
-      default:
-        return <Minus className="w-4 h-4" />;
-    }
-  };
+  const tabs = [
+    { id: "overview", label: "Overview", icon: FileText },
+    { id: "details", label: "Details", icon: Activity },
+    { id: "evidence", label: "Evidence", icon: Camera },
+    { id: "comments", label: "Comments", icon: MessageSquare },
+  ];
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return "N/A";
@@ -115,13 +88,6 @@ const ModernIncidentReportPage: React.FC<Props> = ({ incidentReportId }) => {
       minute: "2-digit",
     });
   };
-
-  const tabs = [
-    { id: "overview", label: "Overview", icon: FileText },
-    { id: "details", label: "Details", icon: FileText },
-    { id: "evidence", label: "Evidence", icon: Camera },
-    { id: "comments", label: "Comments", icon: MessageSquare },
-  ];
 
   return (
     <div className="min-h-screen overflow-x-hidden">
@@ -154,21 +120,6 @@ const ModernIncidentReportPage: React.FC<Props> = ({ incidentReportId }) => {
                 </p>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
-              <div
-                className={`px-4 py-2 rounded-full border flex items-center space-x-2 ${getStatusColor(
-                  data?.data.incidentReport.statusId
-                )}`}
-              >
-                {getStatusIcon(data?.data.incidentReport.statusId)}
-                <span className="text-sm font-semibold">
-                  {data?.data.incidentReport.statusId}
-                </span>
-              </div>
-              <button className="p-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 transition-all duration-200">
-                <Edit className="w-5 h-5" />
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -194,7 +145,6 @@ const ModernIncidentReportPage: React.FC<Props> = ({ incidentReportId }) => {
             ))}
           </div>
         </div>
-
         {/* Content Area */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
@@ -225,7 +175,7 @@ const ModernIncidentReportPage: React.FC<Props> = ({ incidentReportId }) => {
                     <h3 className="font-semibold text-gray-900 mb-3">
                       Description
                     </h3>
-                    <p className="text-gray-700 bg-gray-50 rounded-xl p-4">
+                    <p className="text-gray-700 bg-gray-50 rounded-xl p-4 break-words overflow-wrap-anywhere">
                       {data?.data.incidentReport.reportDescription}
                     </p>
                   </div>
@@ -304,16 +254,20 @@ const ModernIncidentReportPage: React.FC<Props> = ({ incidentReportId }) => {
                     </div>
 
                     <div className="bg-gray-50 rounded-xl p-4">
-                      <p className="text-sm text-gray-600 mb-1">Created Date</p>
-                      <p className="font-semibold text-gray-900">
-                        {formatDate(data?.data.incidentReport.createdAt)}
-                      </p>
-                    </div>
-
-                    <div className="bg-gray-50 rounded-xl p-4">
                       <p className="text-sm text-gray-600 mb-1">Last Updated</p>
                       <p className="font-semibold text-gray-900">
                         {formatDate(data?.data.incidentReport.updatedAt)}
+                      </p>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-xl p-4 max-h-48 overflow-y-auto">
+                      <p className="text-sm text-gray-600 mb-1">
+                        Department Explanation
+                      </p>
+                      <p className="font-semibold text-gray-900 whitespace-pre-wrap break-words">
+                        {data?.data.incidentReport
+                          .reportedDepartmentExplanation ||
+                          "No explanation provided"}
                       </p>
                     </div>
                   </div>
@@ -329,19 +283,14 @@ const ModernIncidentReportPage: React.FC<Props> = ({ incidentReportId }) => {
                     </div>
 
                     <div className="bg-gray-50 rounded-xl p-4">
-                      <p className="text-sm text-gray-600 mb-1">
-                        Department Explanation
-                      </p>
+                      <p className="text-sm text-gray-600 mb-1">Created Date</p>
                       <p className="font-semibold text-gray-900">
-                        {data?.data.incidentReport
-                          .reportedDepartmentExplanation ||
-                          "No explanation provided"}
+                        {formatDate(data?.data.incidentReport.createdAt)}
                       </p>
                     </div>
-
-                    <div className="bg-gray-50 rounded-xl p-4">
+                    <div className="bg-gray-50 rounded-xl p-4 max-h-48 overflow-y-auto">
                       <p className="text-sm text-gray-600 mb-1">Sanction</p>
-                      <p className="font-semibold text-gray-900">
+                      <p className="font-semibold text-gray-900 whitespace-pre-wrap break-words">
                         {data?.data.incidentReport.sanction ||
                           "No sanction applied"}
                       </p>
