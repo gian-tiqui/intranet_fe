@@ -17,28 +17,54 @@ import {
 } from "../types/types";
 
 const decodeUserData = () => {
-  const at = localStorage.getItem(INTRANET);
-  if (at) {
-    return jwtDecode<Decoder>(at);
+  // Check if we're in a browser environment
+  if (typeof window === "undefined") {
+    return null;
   }
+
+  try {
+    const at = localStorage.getItem(INTRANET);
+    if (at) {
+      return jwtDecode<Decoder>(at);
+    }
+  } catch (error) {
+    console.error("Error decoding user data:", error);
+  }
+
   return null;
 };
 
 const checkDept = () => {
-  const userDeptCode = decodeUserData()?.departmentCode.toLowerCase();
-
-  if (userDeptCode) {
-    const depts: string[] = ["hr", "qm"];
-
-    if (!depts.includes(userDeptCode)) {
-      return false;
-    }
+  // Check if we're in a browser environment
+  if (typeof window === "undefined") {
+    return false;
   }
 
-  return true;
+  try {
+    const userDeptCode = decodeUserData()?.departmentCode?.toLowerCase();
+
+    if (userDeptCode) {
+      const depts: string[] = ["hr", "qm"];
+
+      if (!depts.includes(userDeptCode)) {
+        return false;
+      }
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error checking department:", error);
+    return false;
+  }
 };
 
 const fetchMonitoringData = async () => {
+  if (typeof window === "undefined") {
+    throw new Error(
+      "fetchMonitoringData can only be called on the client side"
+    );
+  }
+
   const response = await apiClient.get(`${API_BASE}/monitoring/users`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
@@ -49,9 +75,12 @@ const fetchMonitoringData = async () => {
 
 const fetchNotifs = async () => {
   try {
-    const deptId = decodeUserData()?.deptId;
-    const userId = decodeUserData()?.sub;
-    const lid = decodeUserData()?.lid;
+    const userData = decodeUserData();
+    if (!userData) return [];
+
+    const deptId = userData.deptId;
+    const userId = userData.sub;
+    const lid = userData.lid;
     const API_URI = `${API_BASE}/notification?deptId=${deptId}&userId=${userId}&lid=${lid}`;
 
     const response = await apiClient.get(API_URI);
@@ -59,16 +88,18 @@ const fetchNotifs = async () => {
     return response.data as NotificationType[];
   } catch (error) {
     console.error(error);
+    return [];
   }
 };
 
 const fetchPublicPosts = async () => {
-  if (decodeUserData()) {
+  const userData = decodeUserData();
+  if (userData) {
     try {
       const response = await apiClient.get(
-        `${API_BASE}/post?lid=${
-          decodeUserData()?.lid
-        }&public=true&userIdComment=${decodeUserData()?.sub}&isPublished=${1}`
+        `${API_BASE}/post?lid=${userData.lid}&public=true&userIdComment=${
+          userData.sub
+        }&isPublished=${1}`
       );
 
       return response.data as RetPost;
@@ -80,11 +111,10 @@ const fetchPublicPosts = async () => {
 };
 
 const fetchPosts = async () => {
-  if (decodeUserData()) {
+  const userData = decodeUserData();
+  if (userData) {
     try {
-      const apiUri = `${API_BASE}/post?lid=${decodeUserData()?.lid}&deptId=${
-        decodeUserData()?.deptId
-      }&lid=${decodeUserData()?.lid}&userIdComment=${decodeUserData()?.sub}`;
+      const apiUri = `${API_BASE}/post?lid=${userData.lid}&deptId=${userData.deptId}&lid=${userData.lid}&userIdComment=${userData.sub}`;
 
       const response = await apiClient.get(apiUri, {
         headers: {
@@ -102,9 +132,10 @@ const fetchPosts = async () => {
 
 const fetchUserUnreads = async () => {
   try {
-    const apiUri = `${API_BASE}/notification/unreads/${
-      decodeUserData()?.sub
-    }?deptId=${decodeUserData()?.deptId}`;
+    const userData = decodeUserData();
+    if (!userData) return [];
+
+    const apiUri = `${API_BASE}/notification/unreads/${userData.sub}?deptId=${userData.deptId}`;
     const response = await apiClient.get(apiUri, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
@@ -114,10 +145,15 @@ const fetchUserUnreads = async () => {
     return response.data.unreadPosts as UnreadPost[];
   } catch (error) {
     console.error(error);
+    return [];
   }
 };
 
 const fetchAllLevels = async () => {
+  if (typeof window === "undefined") {
+    throw new Error("fetchAllLevels can only be called on the client side");
+  }
+
   try {
     const response = await apiClient.get(`${API_BASE}/level`, {
       headers: {
@@ -128,20 +164,25 @@ const fetchAllLevels = async () => {
     return response.data as Level[];
   } catch (error) {
     console.error(error);
+    return [];
   }
 };
 
 const fetchPostsByLevel = async () => {
   try {
+    const userData = decodeUserData();
+    if (!userData) return { posts: [] };
+
     const response = await apiClient.get(
-      `${API_BASE}/post/level/${decodeUserData()?.lid}?deptId=${
-        decodeUserData()?.deptId
+      `${API_BASE}/post/level/${userData.lid}?deptId=${
+        userData.deptId
       }&isPublished=${1}`
     );
 
     return response.data as RetPost;
   } catch (error) {
     console.error(error);
+    return { posts: [] };
   }
 };
 
@@ -249,8 +290,11 @@ const fetchLogsByTypeId = async (logType: number): Promise<LogType[]> => {
 
 const fetchPendingUsers = async () => {
   try {
+    const userData = decodeUserData();
+    if (!userData) return [];
+
     const response = await apiClient.get(
-      `${API_BASE}/users?confirm=false&deptId=${decodeUserData()?.deptId}`
+      `${API_BASE}/users?confirm=false&deptId=${userData.deptId}`
     );
 
     return response.data.users as User[];
@@ -262,13 +306,16 @@ const fetchPendingUsers = async () => {
 
 const fetchPost = async (id: number) => {
   try {
+    const userData = decodeUserData();
+    if (!userData) return null;
+
     let userCommentId;
     if (
-      decodeUserData()?.departmentCode.toLowerCase() === "hr" ||
-      decodeUserData()?.departmentCode.toLowerCase() === "qm"
+      userData.departmentCode?.toLowerCase() === "hr" ||
+      userData.departmentCode?.toLowerCase() === "qm"
     )
       userCommentId = "";
-    else userCommentId = decodeUserData()?.sub;
+    else userCommentId = userData.sub;
 
     const response = await apiClient.get(
       `${API_BASE}/post/${id}?userIdComment=${userCommentId}`,
