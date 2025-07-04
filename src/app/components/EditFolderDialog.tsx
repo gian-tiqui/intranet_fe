@@ -47,8 +47,9 @@ const EditFolderDialog: React.FC<Props> = ({
   const departments = useDepartments();
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { data } = useQuery({
+  const { data, isLoading: isQueryLoading } = useQuery({
     queryKey: [`folder-${folderId}`],
     queryFn: () => getFolderById(folderId, decodeUserData()?.deptId),
     enabled: !!folderId,
@@ -58,7 +59,6 @@ const EditFolderDialog: React.FC<Props> = ({
     const extractedDeptIds = [
       ...folderDepartments.map((data) => data.deptId.toString()),
     ];
-
     setSelectedDepartments(extractedDeptIds);
   };
 
@@ -71,33 +71,58 @@ const EditFolderDialog: React.FC<Props> = ({
     }
   }, [data, setValue]);
 
-  const handleFormSubmit = (data: FormFields) => {
-    updateFolder({
-      name: data.name,
-      folderId,
-      deptIds: data.deptIds,
-      isPublished: data.isPublished,
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          toastRef.current?.show({
-            severity: "info",
-            summary: "Success",
-            detail: "Folder updated successfully.",
-          });
+  useEffect(() => {
+    if (!selectedDepartments.length) return;
+    const joinedDepartmentIds = selectedDepartments.join(",");
+    setValue("deptIds", joinedDepartmentIds);
+  }, [selectedDepartments, setValue]);
 
-          if (refetch) refetch();
-          reset();
+  const handleFormSubmit = async (formData: FormFields) => {
+    setIsLoading(true);
 
-          setVisible(false);
-        }
-      })
-      .catch((error) => console.error(error));
+    try {
+      const response = await updateFolder({
+        name: formData.name,
+        folderId,
+        deptIds: formData.deptIds,
+        isPublished: formData.isPublished,
+      });
+
+      if (response.status === 200) {
+        toastRef.current?.show({
+          severity: "success",
+          summary: "Success",
+          detail: "Folder updated successfully.",
+        });
+
+        if (refetch) refetch();
+        reset();
+        setVisible(false);
+      }
+    } catch (error) {
+      console.error(error);
+      toastRef.current?.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Failed to update folder. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDialogHide = () => {
+    if (visible && !isLoading) {
+      reset();
+      setSelectedDepartments([]);
+      setIsChecked(false);
+      setFolderId(-1);
+      setVisible(false);
+    }
   };
 
   useEffect(() => {
-    if (isChecked) setValue("isPublished", 1);
-    else setValue("isPublished", 0);
+    setValue("isPublished", isChecked ? 1 : 0);
   }, [isChecked, setValue]);
 
   return (
@@ -105,63 +130,173 @@ const EditFolderDialog: React.FC<Props> = ({
       <CustomToast ref={toastRef} />
       <Dialog
         visible={visible}
-        onHide={() => {
-          if (visible) {
-            reset();
-            setFolderId(-1);
-            setVisible(false);
-          }
-        }}
-        header="Change Folder Name"
-        className="w-96"
+        onHide={handleDialogHide}
+        header={
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
+              <i className={`${PrimeIcons.PENCIL} text-white text-lg`}></i>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-gray-800">
+                Edit Folder
+              </h2>
+              <p className="text-sm text-gray-500">
+                Update folder details and permissions
+              </p>
+            </div>
+          </div>
+        }
+        className="w-[28rem] max-w-[90vw]"
         pt={{
-          header: { className: "bg-[#EEEEEE]" },
-          content: { className: "bg-[#EEEEEE]" },
-          mask: { className: "backdrop-blur" },
+          root: {
+            className: "shadow-2xl",
+          },
+          header: {
+            className:
+              "bg-gradient-to-r from-gray-50 to-white border-b border-gray-200 rounded-t-2xl px-6 py-4",
+          },
+          content: {
+            className: "bg-white rounded-b-2xl px-6 py-6",
+          },
+          mask: {
+            className: "backdrop-blur-sm bg-black/20",
+          },
+          closeButton: {
+            className:
+              "w-8 h-8 rounded-full hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center",
+          },
         }}
+        closable={!isLoading}
       >
-        <form className="pt-5" onSubmit={handleSubmit(handleFormSubmit)}>
-          <div className="h-14 mb-12">
-            <label htmlFor="folderNameInput" className="text-sm font-semibold">
-              Update Folder
-            </label>
-            <InputText
-              id="folderNameInput"
-              {...register("name", { required: true })}
-              placeholder="Administrative..."
-              type="text"
-              className="h-12 w-full px-5 text-sm bg-white border border-black mb-1"
-            />
-            {errors.name && (
-              <MotionP className="text-red-500 font-semibold text-xs">
-                Folder name is required
-              </MotionP>
-            )}
+        {isQueryLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center space-y-4">
+              <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto"></div>
+              <p className="text-sm text-gray-500">Loading folder details...</p>
+            </div>
           </div>
+        ) : (
+          <form className="space-y-6" onSubmit={handleSubmit(handleFormSubmit)}>
+            {/* Folder Name Input */}
+            <div className="space-y-2">
+              <label
+                htmlFor="folderNameInput"
+                className="block text-sm font-semibold text-gray-700"
+              >
+                Folder Name
+              </label>
+              <div className="relative">
+                <InputText
+                  id="folderNameInput"
+                  {...register("name", {
+                    required: "Folder name is required",
+                    minLength: {
+                      value: 2,
+                      message: "Folder name must be at least 2 characters",
+                    },
+                    maxLength: {
+                      value: 50,
+                      message: "Folder name cannot exceed 50 characters",
+                    },
+                  })}
+                  placeholder="e.g., Administrative Documents"
+                  type="text"
+                  className="w-full h-12 px-4 text-sm bg-white border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 placeholder:text-gray-400"
+                  disabled={isLoading}
+                />
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <i
+                    className={`${PrimeIcons.FOLDER} text-gray-400 text-sm`}
+                  ></i>
+                </div>
+              </div>
+              {errors.name && (
+                <MotionP className="text-red-500 font-medium text-xs flex items-center gap-1">
+                  <i
+                    className={`${PrimeIcons.EXCLAMATION_TRIANGLE} text-xs`}
+                  ></i>
+                  {errors.name.message}
+                </MotionP>
+              )}
+            </div>
 
-          <div className="h-20">
-            <CreateFolderDropdown
-              departments={departments}
-              selectedDepartments={selectedDepartments}
-              setSelectedDepartments={setSelectedDepartments}
-            />
-          </div>
+            {/* Department Dropdown */}
+            <div className="space-y-2">
+              <CreateFolderDropdown
+                departments={departments}
+                selectedDepartments={selectedDepartments}
+                setSelectedDepartments={setSelectedDepartments}
+              />
+            </div>
 
-          <div
-            className="flex items-center gap-2 mb-6 hover:underline cursor-pointer w-[25%]"
-            onClick={() => setIsChecked((prev) => !prev)}
-          >
-            <Checkbox checked={isChecked} />
-            <p className="text-sm text-blue-600 font-medium">Publish</p>
-          </div>
+            {/* Publish Checkbox */}
+            <div className="space-y-2">
+              <div
+                className="flex items-center gap-3 p-3 bg-blue-50 border border-blue-200 rounded-xl hover:bg-blue-100 cursor-pointer transition-colors duration-200 group"
+                onClick={() => !isLoading && setIsChecked((prev) => !prev)}
+              >
+                <Checkbox
+                  checked={isChecked}
+                  disabled={isLoading}
+                  pt={{
+                    root: {
+                      className: "w-5 h-5",
+                    },
+                    box: {
+                      className:
+                        "w-5 h-5 border-2 border-blue-300 rounded-md group-hover:border-blue-400 transition-colors duration-200",
+                    },
+                    icon: {
+                      className: "w-3 h-3 text-blue-600",
+                    },
+                  }}
+                />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-blue-800">
+                    Make folder public
+                  </p>
+                  <p className="text-xs text-blue-600">
+                    Allow all users to access this folder
+                  </p>
+                </div>
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <i
+                    className={`${PrimeIcons.GLOBE} text-blue-500 text-sm`}
+                  ></i>
+                </div>
+              </div>
+            </div>
 
-          <Button
-            icon={`${PrimeIcons.PLUS} me-2`}
-            className="justify-center w-full bg-blue-600 h-10 text-white"
-          >
-            Update Folder
-          </Button>
-        </form>
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-2">
+              <Button
+                type="button"
+                onClick={handleDialogHide}
+                disabled={isLoading}
+                className="flex-1 h-12 bg-gray-100 justify-center text-gray-700 border border-gray-300 hover:bg-gray-200 transition-colors duration-200 rounded-xl font-medium"
+                text
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="flex-1 h-12 justify-center bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                loading={isLoading}
+                loadingIcon={`${PrimeIcons.SPINNER} pi-spin`}
+              >
+                {isLoading ? (
+                  "Updating..."
+                ) : (
+                  <>
+                    <i className={`${PrimeIcons.CHECK} mr-2`}></i>
+                    Update Folder
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
+        )}
       </Dialog>
     </>
   );
