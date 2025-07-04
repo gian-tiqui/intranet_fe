@@ -84,22 +84,25 @@ const Divider: React.FC<Props> = ({ children }) => {
   const { editFolderId, setEditFolderId } = useEditFolderIdStore();
   const [reportDialogVisible, setReportDialogVisible] =
     useState<boolean>(false);
-
   const items = [
-    {
-      label: "Post",
-      icon: "pi pi-pen-to-square",
-      command: () => {
-        setVisible(true);
-      },
-    },
-    {
-      label: "New Folder",
-      icon: PrimeIcons.FOLDER,
-      command: () => {
-        setAddFolderDialogVisible(true);
-      },
-    },
+    ...(checkDept()
+      ? [
+          {
+            label: "Post",
+            icon: "pi pi-pen-to-square",
+            command: () => {
+              setVisible(true);
+            },
+          },
+          {
+            label: "New Folder",
+            icon: PrimeIcons.FOLDER,
+            command: () => {
+              setAddFolderDialogVisible(true);
+            },
+          },
+        ]
+      : []),
     {
       label: "Incident Report",
       icon: PrimeIcons.FLAG,
@@ -364,8 +367,8 @@ const Divider: React.FC<Props> = ({ children }) => {
         >
           {hidden && (
             <header
-              className={`flex justify-between items-center backdrop-blur bg-slate-100/10 z-10 h-20 w-full fixed top-0 ${
-                isCollapsed ? "ps-2 pe-4" : "ps-5 md:pe-96"
+              className={`flex justify-between items-center backdrop-blur bg-slate-100/10 z-10 h-20 w-full absolute top-0 ${
+                isCollapsed ? "ps-2 pe-4" : "ps-5 pe-4"
               }`}
             >
               <div className="flex gap-3">
@@ -426,21 +429,31 @@ const Divider: React.FC<Props> = ({ children }) => {
             {children}
           </div>
         </main>
-        {editVisible && isLoggedIn && hydrated && (
+        {isLoggedIn && hydrated && (
           <SpeedDial
             model={items}
             radius={120}
             type="linear"
             direction="up"
             className="bottom-5 right-5"
-            showIcon={`pi pi-sparkles`}
-            hideIcon={`pi pi-times`}
+            showIcon="pi pi-sparkles"
+            hideIcon="pi pi-times"
             pt={{
               button: {
-                root: { className: "bg-white h-10 w-10" },
+                root: {
+                  className:
+                    "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 h-14 w-14 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0 rounded-full backdrop-blur-sm",
+                },
               },
-              action: { className: "bg-white h-10 w-10" },
+              action: {
+                className:
+                  "bg-white/90 backdrop-blur-sm hover:bg-white h-12 w-12 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 border border-gray-200/50 rounded-full",
+              },
+              menu: {
+                className: "gap-3",
+              },
             }}
+            transitionDelay={100}
           />
         )}
       </div>

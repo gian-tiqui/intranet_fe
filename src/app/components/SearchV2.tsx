@@ -187,10 +187,12 @@ const SearchV2: React.FC<SearchV2Props> = ({ departments, postTypes }) => {
                       {...field}
                       value={field.value ?? null}
                       options={
-                        postTypes.map((p) => ({
-                          label: p.name,
-                          value: p.id,
-                        })) || []
+                        Array.isArray(postTypes)
+                          ? postTypes.map((p) => ({
+                              label: p.name,
+                              value: p.id,
+                            }))
+                          : []
                       }
                       placeholder="Select Post Type"
                       className="w-full modern-dropdown"

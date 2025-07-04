@@ -1,3 +1,4 @@
+"use client";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -27,12 +28,15 @@ import useEditFolderDialogVisibleStore from "../store/editFolderDialogVisible";
 import useEditFolderIdStore from "../store/editFolderId";
 import useDepartments from "../custom-hooks/departments";
 import { getPostTypes } from "../utils/service/postTypeService";
+import { INTRANET } from "../bindings/binding";
+import Cookies from "js-cookie";
 
 const FolderGrid = () => {
   const departments = useDepartments();
   const { data: postTypeResponse } = useQuery({
     queryKey: ["post-types"],
     queryFn: () => getPostTypes(),
+    enabled: !!Cookies.get(INTRANET) && Cookies.get(INTRANET) !== undefined,
   });
   const [query, setQuery] = useState<Query>({
     search: "",
@@ -51,6 +55,7 @@ const FolderGrid = () => {
     useFolderDialogVisibleStore();
   const { addFolderDialogVisible, setAddFolderDialogVisible } =
     useAddFolderStore();
+
   const toastRef = useRef<Toast>(null);
   const { data, isLoading, refetch } = useQuery({
     queryKey: [`folders-grid`],
@@ -60,6 +65,11 @@ const FolderGrid = () => {
       if (checkDept()) return fetchMainFolders(query);
       else return fetchMainFolders({ ...query, deptId });
     },
+    enabled:
+      !!Cookies.get(INTRANET) &&
+      Cookies.get(INTRANET) !== undefined &&
+      !!localStorage.getItem(INTRANET) &&
+      localStorage.getItem(INTRANET) !== undefined,
   });
 
   useEffect(() => {
