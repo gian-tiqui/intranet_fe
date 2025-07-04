@@ -6,11 +6,14 @@ import { Folder } from "@/app/types/types";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import SubfolderItems from "./SubfolderItems";
+import Cookies from "js-cookie";
+import { INTRANET } from "@/app/bindings/binding";
 
 const QmList = () => {
   const { data, error, isError, isLoading, refetch } = useQuery({
     queryKey: ["main-folder"],
     queryFn: () => fetchMainFolders({ search: "", skip: 0, take: 10 }),
+    enabled: !!Cookies.get(INTRANET) && Cookies.get(INTRANET) !== undefined,
   });
 
   const [selectedSubFolder, setSelectedSubFolder] = useState<Folder>();

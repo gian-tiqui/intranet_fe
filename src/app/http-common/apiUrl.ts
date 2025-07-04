@@ -16,49 +16,50 @@ const isTokenExpired = (token: string) => {
   const { exp } = jwtDecode(token);
 
   if (!exp) throw new Error("Token does not have a valid exp");
-  if (Date.now() >= exp * 1000) {
-    return true;
-  }
-
-  return false;
+  return Date.now() >= exp * 1000;
 };
 
 apiClient.interceptors.request.use(
   async (config) => {
     let accessToken = localStorage.getItem(INTRANET);
 
-    if (accessToken && isTokenExpired(accessToken)) {
-      try {
-        const refreshToken = Cookies.get(INTRANET);
+    // ✅ If no access token, skip refresh and return config
+    if (!accessToken) {
+      return config;
+    }
 
+    // ✅ If token exists but is expired, attempt refresh
+    if (isTokenExpired(accessToken)) {
+      const refreshToken = Cookies.get(INTRANET);
+
+      if (!refreshToken) {
+        console.warn("No refresh token found.");
+        return config;
+      }
+
+      try {
         const response = await axios.post(
           `${API_URI}/auth/refresh`,
           { refreshToken },
-          {
-            withCredentials: true,
-          }
+          { withCredentials: true }
         );
 
         accessToken = response.data.access_token;
 
-        if (!accessToken || accessToken === undefined) {
+        if (!accessToken) {
           Cookies.remove(INTRANET);
           localStorage.removeItem(INTRANET);
-
-          throw new Error("No token was generated");
+          throw new Error("No access token returned from refresh.");
         }
 
-        try {
-          localStorage.setItem(INTRANET, accessToken);
-        } catch (error) {
-          console.error(error);
-        }
-      } catch (refreshError) {
-        console.error("Token refresh failed:", refreshError);
-        return Promise.reject(refreshError);
+        localStorage.setItem(INTRANET, accessToken);
+      } catch (error) {
+        console.error("Token refresh failed:", error);
+        return Promise.reject(error);
       }
     }
 
+    // ✅ Attach token if available
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
@@ -72,24 +73,42 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
+
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      localStorage.getItem(INTRANET)
+    ) {
       originalRequest._retry = true;
 
+      const refreshToken = Cookies.get(INTRANET);
+
+      if (!refreshToken) {
+        console.warn("No refresh token found in response interceptor.");
+        return Promise.reject(error);
+      }
+
       try {
-        const refreshToken = Cookies.get(INTRANET);
         const response = await axios.post(
           `${API_URI}/auth/refresh`,
           { refreshToken },
           { withCredentials: true }
         );
 
-        const { access_token } = response.data;
-        localStorage.setItem(INTRANET, access_token);
+        const accessToken = response.data.access_token;
 
-        originalRequest.headers.Authorization = `Bearer ${access_token}`;
+        if (!accessToken) {
+          Cookies.remove(INTRANET);
+          localStorage.removeItem(INTRANET);
+          throw new Error("No access token returned from refresh.");
+        }
+
+        localStorage.setItem(INTRANET, accessToken);
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+
         return apiClient(originalRequest);
       } catch (refreshError) {
-        console.error("Refresh token failed:", refreshError);
+        console.error("Refresh token failed in response:", refreshError);
         return Promise.reject(refreshError);
       }
     }
