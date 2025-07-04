@@ -27,4 +27,15 @@ const getIncidentReports = async (
   return apiClient.get(`${API_BASE}/incident-report`, { params });
 };
 
-export { getIncidentReports, createIncidentReport, getIncidentReportById };
+const getIncidentReportCount = async (): Promise<
+  AxiosResponse<{ message: string; counts: { ["key"]: number } }>
+> => {
+  return apiClient.get(`${API_BASE}/incident-report/1/counts`);
+};
+
+export {
+  getIncidentReports,
+  createIncidentReport,
+  getIncidentReportById,
+  getIncidentReportCount,
+};

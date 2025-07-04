@@ -256,51 +256,60 @@ const Divider: React.FC<Props> = ({ children }) => {
     <QueryClientProvider client={queryClient}>
       <ConfirmDialog
         pt={{
+          root: {
+            className:
+              "w-[28rem] max-w-[90vw] rounded-2xl shadow-2xl border-0 overflow-hidden bg-white",
+          },
           header: {
-            className: "bg-[#EEE] rounded-t-3xl border-b border-gray-200",
+            className:
+              "bg-gradient-to-r from-gray-50 to-white border-b border-gray-200 px-6 py-5",
+          },
+          headerTitle: {
+            className: "text-xl font-semibold text-gray-800",
           },
           content: {
-            className: "bg-[#EEE] px-6 py-4",
+            className: "bg-white px-6 py-6",
           },
           footer: {
             className:
-              "bg-[#EEE] rounded-b-3xl border-t border-gray-200 px-6 py-4",
+              "bg-gradient-to-r from-gray-50 to-white border-t border-gray-200 px-6 py-4 flex gap-3 justify-end",
           },
-          root: {
-            className: "rounded-3xl shadow-2xl border-0 overflow-hidden",
+          message: {
+            className:
+              "text-gray-700 text-base leading-relaxed font-medium ml-4",
+          },
+          icon: {
+            className:
+              "w-12 h-12 rounded-full bg-gradient-to-r  from-amber-400 to-orange-500 grid place-content-center ps-3 text-white text-xl shadow-lg flex-shrink-0",
           },
           acceptButton: {
             className: `
-        ms-2 w-20 h-9 
-        bg-gradient-to-r from-blue-500 to-blue-600 
-        border-none rounded-lg text-white font-medium text-sm
-        hover:from-blue-600 hover:to-blue-700 
-        focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-2
-        transition-all duration-300 ease-in-out
-        hover:scale-105 active:scale-95
-        shadow-md hover:shadow-lg
+        px-6 py-3 min-w-[100px] h-11
+        bg-gradient-to-r from-red-500 to-red-600 
+        border-none rounded-xl text-white font-semibold text-sm
+        hover:from-red-600 hover:to-red-700 
+        focus:ring-2 focus:ring-red-500/20 focus:ring-offset-2
+        transition-all duration-200 ease-in-out
+        hover:shadow-lg hover:-translate-y-0.5
+        active:translate-y-0 active:shadow-md
+        disabled:opacity-50 disabled:cursor-not-allowed
       `,
           },
           rejectButton: {
             className: `
-        me-2 w-20 h-9
-        bg-gradient-to-r from-red-500 to-red-600 
-        border-none rounded-lg text-white font-medium text-sm
-        hover:from-red-600 hover:to-red-700 
-        focus:ring-2 focus:ring-red-500/20 focus:ring-offset-2
-        transition-all duration-300 ease-in-out
-        hover:scale-105 active:scale-95
-        shadow-md hover:shadow-lg
+        px-6 py-3 min-w-[100px] h-11 mr-3
+        bg-white border-2 border-gray-300 text-gray-700 font-semibold text-sm
+        rounded-xl
+        hover:bg-gray-50 hover:border-gray-400
+        focus:ring-2 focus:ring-gray-500/20 focus:ring-offset-2
+        transition-all duration-200 ease-in-out
+        hover:shadow-md hover:-translate-y-0.5
+        active:translate-y-0 active:shadow-sm
+        disabled:opacity-50 disabled:cursor-not-allowed
       `,
           },
-          message: {
-            className: "text-gray-700 text-base leading-relaxed",
-          },
-          icon: {
-            className: "text-blue-500 text-2xl me-3",
-          },
         }}
-        maskClassName="backdrop-blur-md bg-black/20"
+        maskClassName="backdrop-blur-sm bg-black/30"
       />
       <Tutorial />
       <Toast ref={toastRef} />
@@ -308,14 +317,12 @@ const Divider: React.FC<Props> = ({ children }) => {
         visible={reportDialogVisible}
         setVisible={setReportDialogVisible}
       />
-
       <EditFolderDialog
         visible={editFolderDialogVisible}
         setVisible={setEditFolderDialogVisible}
         folderId={editFolderId}
         setFolderId={setEditFolderId}
       />
-
       <UserProfileDialog />
       <div className="flex h-screen text-neutral-800 dark:text-neutral-100">
         {showSearch && <SearchContainer />}

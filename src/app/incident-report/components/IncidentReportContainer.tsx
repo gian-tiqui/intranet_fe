@@ -19,12 +19,14 @@ import {
 } from "lucide-react";
 import { getIncidentReportById } from "@/app/utils/service/incidentReportService";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 interface Props {
   incidentReportId: number;
 }
 
 const ModernIncidentReportPage: React.FC<Props> = ({ incidentReportId }) => {
+  const router = useRouter();
   const { data } = useQuery({
     queryKey: ["incident-report-single", incidentReportId],
     queryFn: () => getIncidentReportById(incidentReportId),
@@ -108,7 +110,10 @@ const ModernIncidentReportPage: React.FC<Props> = ({ incidentReportId }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <button className="p-2 rounded-xl bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-600 hover:from-blue-200 hover:to-cyan-200 transition-all duration-200">
+              <button
+                onClick={() => router.back()}
+                className="p-2 rounded-xl bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-600 hover:from-blue-200 hover:to-cyan-200 transition-all duration-200"
+              >
                 <ArrowLeft className="w-5 h-5" />
               </button>
               <div>

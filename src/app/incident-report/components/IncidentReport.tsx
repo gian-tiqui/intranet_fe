@@ -1,28 +1,29 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
-import IncidentReportTable from "./IncidentReportTable";
-import { decodeUserData } from "@/app/functions/functions";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { getIncidentReportCount } from "@/app/utils/service/incidentReportService";
+import { decodeUserData } from "@/app/functions/functions";
+import IncidentReportTable from "./IncidentReportTable";
 
 const IncidentReport = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const router = useRouter();
 
+  const { data: irCountResponse, isLoading } = useQuery({
+    queryKey: ["incident-report-count"],
+    queryFn: getIncidentReportCount,
+  });
+
   useEffect(() => {
     const decoded = decodeUserData();
-
-    if (decoded) {
-      if (decoded.deptId !== 10) router.push("/");
+    if (decoded?.deptId !== 10) {
+      router.push("/");
     }
   }, [router]);
 
-  const tabPanels: {
-    header: string;
-    statusId: number;
-    icon: string;
-    color: string;
-    description: string;
-  }[] = [
+  const tabPanels = [
     {
       header: "New",
       statusId: 1,
@@ -68,22 +69,19 @@ const IncidentReport = () => {
   ];
 
   const getTabCount = (statusId: number) => {
-    // This would typically come from your data/API
-    // For now, returning placeholder counts
-    const counts = {
-      1: 12, // New
-      2: 8, // Viewed
-      3: 15, // Forwarded
-      4: 6, // Seen
-      5: 3, // Sent
-      6: 2, // Sanctioned
-    };
-    return counts[statusId as keyof typeof counts] || 0;
+    return (
+      (irCountResponse?.data?.counts as Record<number, number>)?.[statusId] ?? 0
+    );
   };
+
+  const totalReports = tabPanels.reduce(
+    (sum, tab) => sum + getTabCount(tab.statusId),
+    0
+  );
 
   return (
     <div className="w-full overflow-hidden p-4">
-      {/* Header Section */}
+      {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
@@ -94,48 +92,39 @@ const IncidentReport = () => {
               Track and manage incident reports across all departments
             </p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-gray-900">
-                {tabPanels.reduce(
-                  (sum, tab) => sum + getTabCount(tab.statusId),
-                  0
-                )}
-              </div>
-              <div className="text-xs text-gray-500">Total Reports</div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-gray-900">
+              {isLoading ? "..." : totalReports}
             </div>
+            <div className="text-xs text-gray-500">Total Reports</div>
           </div>
         </div>
       </div>
 
-      {/* Modern Tab Navigation */}
+      {/* Tab Navigation */}
       <div className="bg-gray-50 border-b border-gray-200 px-6">
-        <div className="flex space-x-1 py-4">
+        <div className="flex space-x-1 py-4 overflow-x-auto">
           {tabPanels.map((tab, index) => (
             <button
-              key={index}
+              key={tab.statusId}
               onClick={() => setActiveIndex(index)}
-              className={`
-                relative flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-sm transition-all duration-200
-                ${
-                  activeIndex === index
-                    ? "bg-white text-blue-600 shadow-sm border border-gray-200"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
-                }
-              `}
+              className={`relative flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-sm transition-all duration-200 ${
+                activeIndex === index
+                  ? "bg-white text-blue-600 shadow-sm border border-gray-200"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
+              }`}
             >
               <div
-                className={`
-                w-8 h-8 rounded-full flex items-center justify-center text-white text-xs
-                ${activeIndex === index ? tab.color : "bg-gray-400"}
-              `}
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs ${
+                  activeIndex === index ? tab.color : "bg-gray-400"
+                }`}
               >
                 <i className={`pi ${tab.icon}`}></i>
               </div>
               <div className="flex flex-col items-start">
                 <span className="font-medium">{tab.header}</span>
                 <span className="text-xs opacity-75">
-                  {getTabCount(tab.statusId)} reports
+                  {isLoading ? "..." : `${getTabCount(tab.statusId)} reports`}
                 </span>
               </div>
               {activeIndex === index && (
@@ -146,15 +135,12 @@ const IncidentReport = () => {
         </div>
       </div>
 
-      {/* Tab Content with Animation */}
+      {/* Tab Content */}
       <div className="p-6 bg-gray-50 min-h-[calc(100vh-200px)]">
         <div className="mb-4">
           <div className="flex items-center gap-3 mb-2">
             <div
-              className={`
-              w-10 h-10 rounded-lg flex items-center justify-center text-white
-              ${tabPanels[activeIndex].color}
-            `}
+              className={`w-10 h-10 rounded-lg flex items-center justify-center text-white ${tabPanels[activeIndex].color}`}
             >
               <i className={`pi ${tabPanels[activeIndex].icon} text-lg`}></i>
             </div>
@@ -169,24 +155,20 @@ const IncidentReport = () => {
           </div>
         </div>
 
-        {/* Tab Content */}
         <div className="transition-all duration-300 ease-in-out">
           <IncidentReportTable statusId={tabPanels[activeIndex].statusId} />
         </div>
       </div>
 
-      {/* Custom Styles */}
       <style jsx global>{`
         .p-tabview .p-tabview-nav {
           display: none;
         }
-
         .p-tabview .p-tabview-panels {
           padding: 0;
           border: none;
           background: transparent;
         }
-
         .p-tabview .p-tabview-panel {
           padding: 0;
         }
