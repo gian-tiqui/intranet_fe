@@ -209,7 +209,7 @@ const UserPage = () => {
                   <div className="w-32 h-32 rounded-2xl bg-[#EEEEEE] p-2 shadow-xl">
                     {data?.data.user.profilePictureLocation ? (
                       <Image
-                        src={`${API_URI}/uploads/profilepic/${data?.data.user.profilePictureLocation}`}
+                        src={`${API_URI}/uploads/profilePic/${data?.data.user.profilePictureLocation}`}
                         alt={`${data?.data.user.firstName} ${data?.data.user.lastName}`}
                         className="w-full h-full rounded-xl object-cover"
                         height="200"
