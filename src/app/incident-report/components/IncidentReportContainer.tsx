@@ -470,7 +470,11 @@ const ModernIncidentReportPage: React.FC<Props> = ({ incidentReportId }) => {
                   <div className="flex items-center space-x-2 text-sm">
                     <Building2 className="w-4 h-4 text-gray-500" />
                     <span className="text-gray-700">
-                      Department ID: {data?.data.incidentReport.reporter.deptId}
+                      Department:{" "}
+                      {
+                        data?.data.incidentReport.reporter.department
+                          .departmentName
+                      }
                     </span>
                   </div>
                 </div>

@@ -196,6 +196,7 @@ const UserPage = () => {
                       icon={`${PrimeIcons.TRASH} text-lg`}
                       tooltip="Delete user"
                     />
+                    <Button type="submit">submit</Button>
                   </>
                 )}
               </div>
