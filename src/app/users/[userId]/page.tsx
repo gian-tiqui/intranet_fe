@@ -124,6 +124,7 @@ const UserPage = () => {
     updateUserById(Number(params.userId), data, updatedBy)
       .then((res) => {
         if (res.status === 200) {
+          refetch();
           setEditMode(false);
         }
       })
@@ -196,7 +197,6 @@ const UserPage = () => {
                       icon={`${PrimeIcons.TRASH} text-lg`}
                       tooltip="Delete user"
                     />
-                    <Button type="submit">submit</Button>
                   </>
                 )}
               </div>
