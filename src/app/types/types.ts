@@ -244,7 +244,14 @@ type Decoder = {
   deptId: number;
   departmentCode: string;
   lid: number;
+  isFirstLogin: boolean;
   departmentName: string;
+};
+
+type TutorialContent = {
+  title: string;
+  instruction: string;
+  image: string;
 };
 
 type Level = {
@@ -415,6 +422,7 @@ export type {
   DepartmentMonitoring,
   TabContent,
   UserMonitoring,
+  TutorialContent,
   NotificationType,
   Post,
   GroupedPosts,
