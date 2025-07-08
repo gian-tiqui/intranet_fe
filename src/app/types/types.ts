@@ -1,5 +1,6 @@
 import { StaticImageData } from "next/image";
 import { ReactNode } from "react";
+
 import IncidentReport from "../incident-report/components/IncidentReport";
 
 export type EmployeeLevel = {
@@ -8,7 +9,7 @@ export type EmployeeLevel = {
 };
 
 type User = {
-  id: number;
+  id?: number;
   email: string;
   firstName: string;
   middleName?: string;
@@ -38,6 +39,7 @@ type User = {
   officeLocation: string;
   phone: string;
   posts: Post[];
+  isFirstLogin: number | boolean;
 };
 
 type TabType = {
