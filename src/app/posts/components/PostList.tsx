@@ -117,7 +117,7 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
   const { isCollapsed, setIsCollapsed } = useToggleStore();
 
   const groupedPosts = useMemo(
-    () => groupPostsByDate(selectedVis === "dept" ? posts : allPosts),
+    () => groupPostsByDate(selectedVis === "dept" ? allPosts : posts),
     [selectedVis, posts, allPosts]
   );
 
