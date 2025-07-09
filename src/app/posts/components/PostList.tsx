@@ -188,10 +188,10 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
               }
               className="h-4 w-4 text-blue-500"
             />
-            Recent {selectedVis === "dept" ? "Department" : "General"} Posts
+            Recent {selectedVis === "dept" ? "General" : "Department"} Posts
           </h3>
           <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">
-            {(selectedVis === "dept" ? posts : allPosts).length}
+            {(selectedVis === "dept" ? allPosts : posts).length}
           </span>
         </div>
       </motion.div>
