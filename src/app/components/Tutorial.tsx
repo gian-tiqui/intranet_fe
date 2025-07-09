@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { decodeUserData } from "../functions/functions";
 import { TutorialContent } from "../types/types";
 import { Department } from "../utils/enums/enum";
-import { updateUserById } from "../utils/service/userService";
+import { findUserById, updateUserById } from "../utils/service/userService";
 import epPage from "../assets/employee-portal-ss.png";
 import { Image } from "primereact/image";
 
@@ -57,23 +57,35 @@ const Tutorial = () => {
   >([]);
 
   useEffect(() => {
-    const decoded = decodeUserData();
+    const f = async () => {
+      try {
+        const decoded = decodeUserData();
 
-    if (
-      [
-        Department.CUSTOMER_EXPERIENCE,
-        Department.HUMAN_RESOURCE,
-        Department.QUALITY_MANAGEMENT,
-      ].includes(decoded?.deptId ?? 0)
-    ) {
-      setPagesBasedOnDepartment(hRQmPages);
-    } else {
-      setPagesBasedOnDepartment(userPages);
-    }
+        const { data } = await findUserById(decoded?.sub);
 
-    if (decoded) {
-      setIsFirstLogin(decoded.isFirstLogin);
-    }
+        console.log(data);
+
+        if (data.user) {
+          setIsFirstLogin(Boolean(data.user.isFirstLogin));
+        }
+
+        if (
+          [
+            Department.CUSTOMER_EXPERIENCE,
+            Department.HUMAN_RESOURCE,
+            Department.QUALITY_MANAGEMENT,
+          ].includes(decoded?.deptId ?? 0)
+        ) {
+          setPagesBasedOnDepartment(hRQmPages);
+        } else {
+          setPagesBasedOnDepartment(userPages);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    f();
   }, []);
 
   if (!isFirstLogin) return null;
@@ -86,7 +98,7 @@ const Tutorial = () => {
     try {
       const { data, status } = await updateUserById(
         decoded.sub,
-        { isFirstLogin: 1 },
+        { isFirstLogin: 0 },
         decoded.sub
       );
 
