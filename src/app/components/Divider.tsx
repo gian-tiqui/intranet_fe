@@ -46,7 +46,7 @@ import { Toast } from "primereact/toast";
 import EditFolderDialog from "./EditFolderDialog";
 import useEditFolderDialogVisibleStore from "../store/editFolderDialogVisible";
 import useEditFolderIdStore from "../store/editFolderId";
-import Tutorial from "./Tutorial";
+// import Tutorial from "./Tutorial";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Button } from "primereact/button";
 import IncidentReportDialog from "../incident-report/components/IncidentReportDialog";
@@ -258,60 +258,66 @@ const Divider: React.FC<Props> = ({ children }) => {
         pt={{
           root: {
             className:
-              "w-[28rem] max-w-[90vw] rounded-2xl shadow-2xl border-0 overflow-hidden bg-white",
+              "w-[32rem] max-w-[92vw] rounded-3xl shadow-2xl border-0 overflow-hidden bg-white/95 backdrop-blur-md",
           },
           header: {
             className:
-              "bg-gradient-to-r from-gray-50 to-white border-b border-gray-200 px-6 py-5",
+              "bg-gradient-to-br from-slate-50/80 via-white/90 to-slate-100/80 border-b border-slate-200/60 px-8 py-6",
           },
           headerTitle: {
-            className: "text-xl font-semibold text-gray-800",
+            className: "text-2xl font-bold text-slate-800 tracking-tight",
           },
           content: {
-            className: "bg-white px-6 py-6",
+            className: "bg-white/90 px-8 py-8",
           },
           footer: {
             className:
-              "bg-gradient-to-r from-gray-50 to-white border-t border-gray-200 px-6 py-4 flex gap-3 justify-end",
+              "bg-gradient-to-br from-slate-50/80 via-white/90 to-slate-100/80 border-t border-slate-200/60 px-8 py-6 flex gap-4 justify-end",
           },
           message: {
             className:
-              "text-gray-700 text-base leading-relaxed font-medium ml-4",
+              "text-slate-700 text-lg leading-relaxed font-medium ml-5",
           },
           icon: {
             className:
-              "w-12 h-12 rounded-full bg-gradient-to-r  from-amber-400 to-orange-500 grid place-content-center ps-3 text-white text-xl shadow-lg flex-shrink-0",
+              "w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 grid place-content-center text-white text-2xl shadow-xl flex-shrink-0 ring-4 ring-orange-500/20",
           },
           acceptButton: {
             className: `
-        px-6 py-3 min-w-[100px] h-11
-        bg-gradient-to-r from-red-500 to-red-600 
-        border-none rounded-xl text-white font-semibold text-sm
-        hover:from-red-600 hover:to-red-700 
-        focus:ring-2 focus:ring-red-500/20 focus:ring-offset-2
-        transition-all duration-200 ease-in-out
-        hover:shadow-lg hover:-translate-y-0.5
-        active:translate-y-0 active:shadow-md
+        px-8 py-4 min-w-[120px] h-14
+        bg-gradient-to-br from-red-500 via-red-600 to-red-700 
+        border-none rounded-2xl text-white font-bold text-base
+        hover:from-red-600 hover:via-red-700 hover:to-red-800 
+        focus:ring-4 focus:ring-red-500/30 focus:ring-offset-2
+        transition-all duration-300 ease-out
+        hover:shadow-2xl hover:shadow-red-500/25 hover:-translate-y-1 hover:scale-105
+        active:translate-y-0 active:scale-100 active:shadow-lg
         disabled:opacity-50 disabled:cursor-not-allowed
+        relative overflow-hidden
+        before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent
+        before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-700
       `,
           },
           rejectButton: {
             className: `
-        px-6 py-3 min-w-[100px] h-11 mr-3
-        bg-white border-2 border-gray-300 text-gray-700 font-semibold text-sm
-        rounded-xl
-        hover:bg-gray-50 hover:border-gray-400
-        focus:ring-2 focus:ring-gray-500/20 focus:ring-offset-2
-        transition-all duration-200 ease-in-out
-        hover:shadow-md hover:-translate-y-0.5
-        active:translate-y-0 active:shadow-sm
+        px-8 py-4 min-w-[120px] h-14 mr-4
+        bg-white/80 border-2 border-slate-300/80 text-slate-700 font-bold text-base
+        rounded-2xl backdrop-blur-sm
+        hover:bg-slate-50/90 hover:border-slate-400/90 hover:text-slate-800
+        focus:ring-4 focus:ring-slate-500/20 focus:ring-offset-2
+        transition-all duration-300 ease-out
+        hover:shadow-xl hover:shadow-slate-500/20 hover:-translate-y-1 hover:scale-105
+        active:translate-y-0 active:scale-100 active:shadow-md
         disabled:opacity-50 disabled:cursor-not-allowed
+        relative overflow-hidden
+        before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-slate-200/30 before:to-transparent
+        before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-700
       `,
           },
         }}
-        maskClassName="backdrop-blur-sm bg-black/30"
+        maskClassName="backdrop-blur-md bg-gradient-to-br from-slate-900/40 via-slate-800/30 to-slate-900/40"
       />
-      <Tutorial />
+      {/* <Tutorial /> */}
       <Toast ref={toastRef} />
       <IncidentReportDialog
         visible={reportDialogVisible}
