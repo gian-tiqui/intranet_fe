@@ -79,12 +79,12 @@ const ModernSubfolderContainer: React.FC<Props> = ({
       />
 
       {/* Content wrapper */}
-      <div className="relative z-10 h-full flex flex-col justify-between p-4">
+      <div className="relative z-10 h-full flex flex-col p-4">
         {/* Top section with folder icon and settings */}
-        <div className="flex items-start justify-between w-full">
-          {/* Folder icon container */}
+        <div className="flex items-start justify-between w-full mb-3">
+          {/* Folder icon container - Made much smaller */}
           <div
-            className={`p-3 rounded-xl transition-all duration-300 ${
+            className={`p-1.5 sm:p-2 rounded-lg transition-all duration-300 ${
               isHovered
                 ? "bg-white/20 shadow-lg backdrop-blur-sm scale-110"
                 : "bg-blue-50 shadow-sm"
@@ -93,9 +93,11 @@ const ModernSubfolderContainer: React.FC<Props> = ({
             <div className="relative">
               <Image
                 src={blueFolder.src}
-                className={`h-7 w-7 transition-all duration-300 ${
+                className={`!h-4 !w-4 sm:!h-5 sm:!w-5 transition-all duration-300 ${
                   isHovered ? "brightness-0 invert" : ""
                 }`}
+                height={"15%"}
+                width={"15%"}
                 alt="blue-folder"
               />
               {/* Pulse animation on hover */}
@@ -105,7 +107,7 @@ const ModernSubfolderContainer: React.FC<Props> = ({
             </div>
           </div>
 
-          {/* Settings button */}
+          {/* Settings button - Made smaller */}
           {checkDept() && (
             <div
               className={`transition-all duration-300 ${
@@ -114,7 +116,7 @@ const ModernSubfolderContainer: React.FC<Props> = ({
             >
               <Button
                 icon={`${PrimeIcons.COG}`}
-                className={`w-10 h-10 rounded-full justify-center border-0 shadow-lg transition-all duration-300 ${
+                className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full justify-center border-0 shadow-lg transition-all duration-300 ${
                   isHovered
                     ? "bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
                     : "bg-white text-slate-600 hover:bg-slate-50"
@@ -160,8 +162,8 @@ const ModernSubfolderContainer: React.FC<Props> = ({
           )}
         </div>
 
-        {/* Middle spacer with floating particles effect */}
-        <div className="flex-1 relative">
+        {/* Middle spacer with floating particles effect - Reduced space */}
+        <div className="flex-1 relative min-h-0">
           {isHovered && (
             <div className="absolute inset-0 overflow-hidden">
               <div
@@ -180,22 +182,30 @@ const ModernSubfolderContainer: React.FC<Props> = ({
           )}
         </div>
 
-        {/* Bottom section with folder name */}
-        <div className="space-y-2">
+        {/* Bottom section with folder name - Better spacing */}
+        <div className="mt-auto space-y-2">
           <h3
-            className={`font-semibold text-sm leading-tight line-clamp-2 
+            className={`font-semibold text-sm sm:text-base leading-tight line-clamp-2 
                          transition-all duration-300 ${
                            isHovered
                              ? "text-white drop-shadow-sm"
                              : "text-slate-800"
                          }`}
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              wordBreak: "break-word",
+              hyphens: "auto",
+            }}
           >
             {subfolder.name}
           </h3>
 
           {/* Animated progress bar */}
           <div
-            className={`h-1 bg-gradient-to-r from-blue-500 to-purple-500 
+            className={`h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 
                           rounded-full transition-all duration-500 ${
                             isHovered ? "w-full opacity-100" : "w-0 opacity-0"
                           }`}
@@ -207,7 +217,7 @@ const ModernSubfolderContainer: React.FC<Props> = ({
               isHovered ? "opacity-100" : "opacity-0"
             }`}
           >
-            <div className="w-2 h-2 bg-white/60 rounded-full" />
+            <div className="w-1.5 h-1.5 bg-white/60 rounded-full" />
             <span className="text-xs text-white/80 font-medium">Folder</span>
           </div>
         </div>
