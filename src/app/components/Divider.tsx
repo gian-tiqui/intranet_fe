@@ -46,7 +46,7 @@ import { Toast } from "primereact/toast";
 import EditFolderDialog from "./EditFolderDialog";
 import useEditFolderDialogVisibleStore from "../store/editFolderDialogVisible";
 import useEditFolderIdStore from "../store/editFolderId";
-import Tutorial from "./Tutorial";
+// import Tutorial from "./Tutorial";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Button } from "primereact/button";
 import IncidentReportDialog from "../incident-report/components/IncidentReportDialog";
@@ -311,7 +311,7 @@ const Divider: React.FC<Props> = ({ children }) => {
         }}
         maskClassName="backdrop-blur-sm bg-black/30"
       />
-      <Tutorial />
+      {/* <Tutorial /> */}
       <Toast ref={toastRef} />
       <IncidentReportDialog
         visible={reportDialogVisible}
