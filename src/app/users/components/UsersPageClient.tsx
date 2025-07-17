@@ -9,6 +9,7 @@ import { DataTable, DataTableFilterMeta } from "primereact/datatable";
 import { FilterMatchMode } from "primereact/api";
 import React, { useState, useEffect } from "react";
 import NewUserDialog from "./NewUserDialog";
+import formatDate from "@/app/utils/functions/formatDate";
 
 const UsersPageClient = () => {
   const [query] = useState<Query>({ search: "" });
@@ -191,6 +192,26 @@ const UsersPageClient = () => {
                       {rowData.department?.departmentName || (
                         <span className="italic text-gray-400">
                           No department
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                )}
+              />
+
+              <Column
+                header="Last login"
+                filter
+                filterPlaceholder="Search department..."
+                style={{ minWidth: "14rem" }}
+                body={(rowData) => (
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-700">
+                      {rowData?.loginLogs && rowData?.loginLogs.length > 0 ? (
+                        <>{formatDate(rowData?.loginLogs[0].createdAt)}</>
+                      ) : (
+                        <span className="italic text-gray-400">
+                          Haven&apos;t logged in yet
                         </span>
                       )}
                     </span>
