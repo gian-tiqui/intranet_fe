@@ -258,16 +258,12 @@ const UserPage = () => {
                   {editMode ? (
                     <div className="flex gap-3">
                       <InputText
-                        {...register("firstName", {
-                          required: "First name is required",
-                        })}
+                        {...register("firstName", {})}
                         placeholder="First name"
                         className="text-xl font-bold bg-gray-50 border-2 border-gray-200 rounded-xl px-4 py-2 focus:border-blue-500 focus:bg-[#EEEEEE] transition-all"
                       />
                       <InputText
-                        {...register("lastName", {
-                          required: "Last name is required",
-                        })}
+                        {...register("lastName", {})}
                         placeholder="Last name"
                         className="text-xl font-bold bg-gray-50 border-2 border-gray-200 rounded-xl px-4 py-2 focus:border-blue-500 focus:bg-[#EEEEEE] transition-all"
                       />
@@ -281,7 +277,7 @@ const UserPage = () => {
 
                 {editMode ? (
                   <InputText
-                    {...register("jobTitle", { required: true })}
+                    {...register("jobTitle")}
                     placeholder="Job title"
                     className="text-base text-gray-600 bg-gray-50 border-2 border-gray-200 rounded-xl px-4 py-2 focus:border-blue-500 focus:bg-[#EEEEEE] transition-all"
                   />
@@ -317,7 +313,7 @@ const UserPage = () => {
                     <i className={`${PrimeIcons.ENVELOPE} text-gray-400`}></i>
                   </div>
                   <InputText
-                    {...register("email", { required: "Email is required" })}
+                    {...register("email")}
                     disabled={!editMode}
                     className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all text-sm ${
                       editMode
@@ -339,9 +335,7 @@ const UserPage = () => {
                     <i className={`${PrimeIcons.PHONE} text-gray-400`}></i>
                   </div>
                   <InputText
-                    {...register("localNumber", {
-                      required: "Local number is required",
-                    })}
+                    {...register("localNumber", {})}
                     disabled={!editMode}
                     className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all text-sm ${
                       editMode
@@ -363,7 +357,7 @@ const UserPage = () => {
                     <i className={`${PrimeIcons.MOBILE} text-gray-400`}></i>
                   </div>
                   <InputText
-                    {...register("phone", { required: true })}
+                    {...register("phone")}
                     disabled={!editMode}
                     className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all text-sm ${
                       editMode
@@ -424,7 +418,7 @@ const UserPage = () => {
                     <i className={`${PrimeIcons.MAP_MARKER} text-gray-400`}></i>
                   </div>
                   <InputText
-                    {...register("officeLocation", { required: true })}
+                    {...register("officeLocation")}
                     disabled={!editMode}
                     className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all text-sm ${
                       editMode
