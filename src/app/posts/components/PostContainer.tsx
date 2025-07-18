@@ -1,6 +1,5 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { format } from "date-fns";
 import React, { useState, useEffect, useRef } from "react";
 import PostSkeleton from "./PostSkeleton";
 import Comments from "./Comments";
@@ -35,6 +34,7 @@ import ImagePaginator from "@/app/components/ImagePaginator";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
 import { confirmDialog } from "primereact/confirmdialog";
+import { formatFullDateWithRelative } from "@/app/utils/functions/formatFullDateWithRelative";
 
 interface Props {
   id: number;
@@ -215,7 +215,8 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
 
   const handleReadClick = () => {
     confirmDialog({
-      header: "Did you understand the post?",
+      header: `Did you understand the ${post?.type.name.toLowerCase()}?`,
+      content: `Please confirm that you have read and understood the ${post?.type.name.toLowerCase()}.`,
       accept,
       reject,
     });
@@ -493,7 +494,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
                 className="font-bold bg-blue-500 text-white h-10 w-10"
               />
             )}
-            <div>
+            <div className="">
               <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
                 {decodeUserData()?.sub !== post?.userId
                   ? `${post?.user?.firstName} ${post?.user?.lastName}`
@@ -502,9 +503,9 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
                   {post?.edited && "(Edited)"}
                 </span>
               </h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+              <p className="text-sm flex gap-2 text-gray-500 dark:text-gray-400 italic">
                 {post?.updatedAt
-                  ? format(new Date(post.createdAt), "MMMM dd, yyyy")
+                  ? formatFullDateWithRelative(new Date(post.createdAt))
                   : "Unknown Date"}
               </p>
             </div>
@@ -579,7 +580,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           {checkDept() && (
             <div className="bg-[#EEE]/50 backdrop-blur px-4 py-1 shadow h-8 flex items-center rounded mb-2">
               <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                {post?.census.readPercentage}% have read this
+                {post?.census.readPercentage} have read this
               </p>
             </div>
           )}

@@ -19,8 +19,8 @@ const ImagePaginator: React.FC<Props> = ({ filePreviews, currentPage }) => {
         }}
         src={filePreviews[currentPage]}
         alt={`${filePreviews}-${currentPage}`}
-        className="mb-10"
-        preview
+        className="mb-10 pointer-events-none select-none"
+        downloadable={false}
       />
     </main>
   );
