@@ -54,6 +54,7 @@ const ModernMedicalLanding: React.FC = () => {
     queryFn: () => getLandingPageData(),
   });
 
+  const [showNotice, setShowNotice] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<number>(0);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [mousePosition, setMousePosition] = useState<MousePosition>({
@@ -167,6 +168,26 @@ const ModernMedicalLanding: React.FC = () => {
   return (
     <div className="h-screen bg-gradient-to-br overflow-x-hidden from-slate-50 via-blue-50 to-cyan-50 overflow-auto">
       {/* Background animation */}
+      {showNotice && (
+        <div className="fixed inset-0 flex items-center justify-center bg-white/10 backdrop-blur-md z-50">
+          <div className="bg-white/30 border border-white/40 backdrop-blur-lg p-10 rounded-2xl shadow-2xl max-w-lg w-[90%] text-center text-blue-600">
+            <h2 className="text-3xl font-bold mb-4 tracking-tight">
+              Welcome to the Westlake Intranet
+            </h2>
+            <p className="text-lg font-medium text-gray-700/80 mb-6">
+              This portal is strictly for authorized employees of Westlake
+              Hospital. If you are not affiliated, please refrain from using
+              this platform.
+            </p>
+            <button
+              className="bg-blue-600/80 hover:bg-blue-600/100 hover:scale-110 text-white font-semibold px-6 py-3 rounded-full transition-all backdrop-blur-md border border-white/50"
+              onClick={() => setShowNotice(false)}
+            >
+              I Understand
+            </button>
+          </div>
+        </div>
+      )}
       <div className="fixed inset-0 pointer-events-none">
         <motion.div
           className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl"

@@ -68,7 +68,7 @@ const SearchV2: React.FC<SearchV2Props> = ({ departments, postTypes }) => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4">
+    <div className="w-full max-w-4xl mx-auto">
       <motion.form
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -96,7 +96,7 @@ const SearchV2: React.FC<SearchV2Props> = ({ departments, postTypes }) => {
                   type="text"
                   {...register("searchTerm")}
                   className="w-full py-4 text-lg bg-transparent border-none outline-none placeholder-gray-400 text-gray-700"
-                  placeholder="What are you looking for today?"
+                  placeholder="Are you looking for something?"
                 />
               </div>
               <Button
