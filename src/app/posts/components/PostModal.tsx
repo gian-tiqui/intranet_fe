@@ -10,7 +10,7 @@ import apiClient from "@/app/http-common/apiUrl";
 import useToggleStore from "@/app/store/navbarCollapsedStore";
 import useShowPostStore from "@/app/store/showPostStore";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { pdfjs } from "react-pdf";
 import { Folder, Level, PostType, Query } from "@/app/types/types";
@@ -206,73 +206,76 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
     return convertedFiles;
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const files = Array.from(e.target.files);
-      const fileNames: string[] = [];
-      const previews: string[] = [];
-      let extractedTexts = "";
-      const convertedFiles: File[] = [];
+  const handleFileChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files) {
+        const files = Array.from(e.target.files);
+        const fileNames: string[] = [];
+        const previews: string[] = [];
+        let extractedTexts = "";
+        const convertedFiles: File[] = [];
 
-      setIsConverting(true);
-      try {
-        for (const file of files) {
-          if (file.type === "application/pdf") {
-            toastRef.current?.show({
-              detail: `Converting PDF: ${file.name}`,
-              severity: "info",
-            });
+        setIsConverting(true);
+        try {
+          for (const file of files) {
+            if (file.type === "application/pdf") {
+              toastRef.current?.show({
+                detail: `Converting PDF: ${file.name}`,
+                severity: "info",
+              });
 
-            const convertedImages = await convertPdfToImage(file);
+              const convertedImages = await convertPdfToImage(file);
 
-            const texts = await Promise.all(
-              convertedImages.map(async (convertedImage) => {
-                const text = await scanImage(
-                  URL.createObjectURL(convertedImage)
-                );
-                previews.push(URL.createObjectURL(convertedImage));
-                convertedFiles.push(convertedImage);
-                return text;
-              })
-            );
+              const texts = await Promise.all(
+                convertedImages.map(async (convertedImage) => {
+                  const text = await scanImage(
+                    URL.createObjectURL(convertedImage)
+                  );
+                  previews.push(URL.createObjectURL(convertedImage));
+                  convertedFiles.push(convertedImage);
+                  return text;
+                })
+              );
 
-            extractedTexts += texts.join(" ") + " ";
-          } else if (file.type.startsWith("image/")) {
-            const text = await scanImage(URL.createObjectURL(file));
-            extractedTexts += text + " ";
-            convertedFiles.push(file);
-            previews.push(URL.createObjectURL(file));
-          } else {
-            toastRef.current?.show({
-              content: `Unsupported file format: ${file.name}`,
-              severity: "info",
-            });
+              extractedTexts += texts.join(" ") + " ";
+            } else if (file.type.startsWith("image/")) {
+              const text = await scanImage(URL.createObjectURL(file));
+              extractedTexts += text + " ";
+              convertedFiles.push(file);
+              previews.push(URL.createObjectURL(file));
+            } else {
+              toastRef.current?.show({
+                content: `Unsupported file format: ${file.name}`,
+                severity: "info",
+              });
+            }
+
+            fileNames.push(file.name);
           }
 
-          fileNames.push(file.name);
+          setFileNames(fileNames);
+          setConvertedFiles(convertedFiles);
+          setFilePreviews(previews);
+          setValue("extractedText", extractedTexts.trim());
+
+          toastRef.current?.show({
+            summary: "Files processed successfully!",
+            severity: "info",
+          });
+        } catch (error) {
+          console.error("Error processing files:", error);
+
+          toastRef.current?.show({
+            summary: "An error occurred while processing files.",
+            severity: "info",
+          });
+        } finally {
+          setIsConverting(false);
         }
-
-        setFileNames(fileNames);
-        setConvertedFiles(convertedFiles);
-        setFilePreviews(previews);
-        setValue("extractedText", extractedTexts.trim());
-
-        toastRef.current?.show({
-          summary: "Files processed successfully!",
-          severity: "info",
-        });
-      } catch (error) {
-        console.error("Error processing files:", error);
-
-        toastRef.current?.show({
-          summary: "An error occurred while processing files.",
-          severity: "info",
-        });
-      } finally {
-        setIsConverting(false);
       }
-    }
-  };
+    },
+    [setValue]
+  );
 
   const handlePost = async (data: FormFields) => {
     if (!postVisibility || postVisibility == "") {
@@ -455,6 +458,16 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
   };
 
   useEffect(() => {
+    return () => {
+      filePreviews.forEach((url) => {
+        if (url.startsWith("blob:")) {
+          URL.revokeObjectURL(url);
+        }
+      });
+    };
+  }, [filePreviews]);
+
+  useEffect(() => {
     setValue("downloadable", downloadable ? "1" : "0");
   }, [setValue, downloadable]);
 
@@ -467,6 +480,150 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
       setIsCollapsed(true);
     }
   }, [setIsCollapsed, isMobile]);
+
+  useEffect(() => {
+    const uploadArea = document.querySelector(".file-upload-area");
+    const dragOverlay = document.querySelector(".drag-overlay");
+
+    if (!uploadArea || !dragOverlay) return;
+
+    let dragCounter = 0;
+
+    const handleDragEnter = (e: Event) => {
+      const event = e as DragEvent;
+      event.preventDefault();
+      event.stopPropagation();
+      dragCounter++;
+
+      // Check if dragged items contain files
+      if (event.dataTransfer?.types.includes("Files")) {
+        dragOverlay.classList.add("opacity-100");
+        dragOverlay.classList.remove("opacity-0");
+        uploadArea.classList.add("border-blue-400", "bg-blue-50/40");
+        uploadArea.classList.remove("border-slate-300");
+      }
+    };
+
+    const handleDragOver = (e: Event) => {
+      const event = e as DragEvent;
+      event.preventDefault();
+      event.stopPropagation();
+    };
+
+    const handleDragLeave = (e: Event) => {
+      const event = e as DragEvent;
+      event.preventDefault();
+      event.stopPropagation();
+      dragCounter--;
+
+      if (dragCounter === 0) {
+        dragOverlay.classList.add("opacity-0");
+        dragOverlay.classList.remove("opacity-100");
+        uploadArea.classList.remove("border-blue-400", "bg-blue-50/40");
+        uploadArea.classList.add("border-slate-300");
+      }
+    };
+
+    const handleDrop = async (e: Event) => {
+      const event = e as DragEvent;
+      event.preventDefault();
+      event.stopPropagation();
+      dragCounter = 0;
+
+      // Hide drag overlay
+      dragOverlay.classList.add("opacity-0");
+      dragOverlay.classList.remove("opacity-100");
+      uploadArea.classList.remove("border-blue-400", "bg-blue-50/40");
+      uploadArea.classList.add("border-slate-300");
+
+      if (!event.dataTransfer?.files || isConverting) return;
+
+      const droppedFiles = Array.from(event.dataTransfer.files);
+      const validFiles = droppedFiles.filter((file) => {
+        const validTypes = [
+          "application/pdf",
+          "image/jpeg",
+          "image/jpg",
+          "image/png",
+        ];
+        return validTypes.includes(file.type);
+      });
+
+      if (validFiles.length === 0) {
+        toastRef.current?.show({
+          summary: "Invalid file type",
+          detail: "Please upload PDF or image files only.",
+          severity: "warn",
+        });
+        return;
+      }
+
+      if (validFiles.length + fileNames.length > 25) {
+        toastRef.current?.show({
+          summary: "File limit exceeded",
+          detail: `You can only upload ${25 - fileNames.length} more files.`,
+          severity: "warn",
+        });
+        return;
+      }
+
+      // Create a synthetic event object for handleFileChange
+      const syntheticEvent = {
+        target: {
+          files: validFiles,
+        },
+      } as unknown as React.ChangeEvent<HTMLInputElement>;
+
+      // Show success message for valid drops
+      toastRef.current?.show({
+        summary: "Files added",
+        detail: `${validFiles.length} file${
+          validFiles.length > 1 ? "s" : ""
+        } ready for processing.`,
+        severity: "success",
+      });
+
+      // Call the existing file handler
+      await handleFileChange(syntheticEvent);
+    };
+
+    // Add event listeners
+    uploadArea.addEventListener("dragenter", handleDragEnter as EventListener);
+    uploadArea.addEventListener("dragover", handleDragOver as EventListener);
+    uploadArea.addEventListener("dragleave", handleDragLeave as EventListener);
+    uploadArea.addEventListener("drop", handleDrop as EventListener);
+
+    // Cleanup function
+    return () => {
+      uploadArea.removeEventListener("dragenter", handleDragEnter);
+      uploadArea.removeEventListener("dragover", handleDragOver);
+      uploadArea.removeEventListener("dragleave", handleDragLeave);
+      uploadArea.removeEventListener("drop", handleDrop);
+    };
+  }, [isConverting, fileNames.length, handleFileChange]); // Dependencies for the useEffect
+
+  // Additional helper function to clear all files (optional)
+  const clearAllFiles = () => {
+    setFileNames([]);
+    setConvertedFiles([]);
+    setFilePreviews([]);
+    setCurrentPage(0);
+    setValue("extractedText", "");
+
+    // Reset file input
+    const fileInput = document.querySelector(
+      'input[type="file"]'
+    ) as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = "";
+    }
+
+    toastRef.current?.show({
+      summary: "Files cleared",
+      detail: "All uploaded files have been removed.",
+      severity: "info",
+    });
+  };
 
   const selectedOptionTemplate = (
     option: { level: string } | null,
@@ -620,55 +777,251 @@ const PostModal: React.FC<Props> = ({ isMobile }) => {
 
                 {/* File Upload Area */}
                 <div className="relative">
-                  <div className="bg-white/40 backdrop-blur-sm rounded-2xl p-6 border-2 border-dashed border-slate-300 hover:border-blue-400 hover:bg-white/60 transition-all duration-300 group">
+                  <div
+                    className={`file-upload-area bg-white/40 backdrop-blur-sm rounded-2xl p-6 border-2 border-dashed transition-all duration-300 group ${
+                      isConverting
+                        ? "border-blue-400 bg-blue-50/40"
+                        : fileNames.length > 0
+                        ? "border-green-400 bg-green-50/40"
+                        : "border-slate-300 hover:border-blue-400 hover:bg-white/60"
+                    }`}
+                  >
                     <input
                       type="file"
                       multiple={true}
                       accept=".pdf,.jpg,.jpeg,.png"
-                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      className="absolute inset-0 opacity-0 cursor-pointer disabled:cursor-not-allowed"
                       {...register("memo")}
                       onChange={handleFileChange}
+                      disabled={isConverting}
                     />
+
                     <div className="flex flex-col items-center justify-center text-slate-600">
                       {isConverting ? (
-                        <div className="flex flex-col items-center space-y-3">
+                        // Converting State
+                        <div className="flex flex-col items-center space-y-4">
                           <div className="relative">
-                            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center animate-pulse">
                               <Icon
                                 icon="eos-icons:loading"
-                                className="h-6 w-6 animate-spin text-white"
+                                className="h-8 w-8 animate-spin text-white"
                               />
                             </div>
-                          </div>
-                          <span className="text-sm font-medium">
-                            Converting PDF...
-                          </span>
-                        </div>
-                      ) : fileNames.length > 0 ? (
-                        <div className="w-full">
-                          <ImagePaginator
-                            filePreviews={filePreviews}
-                            currentPage={currentPage}
-                          />
-                        </div>
-                      ) : (
-                        <div className="flex flex-col items-center space-y-3 group-hover:scale-105 transition-transform duration-300">
-                          <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center group-hover:from-blue-200 group-hover:to-purple-200 transition-all duration-300">
-                            <Icon
-                              icon="material-symbols:upload"
-                              className="h-8 w-8 text-blue-600"
-                            />
+                            {/* Progress ring animation */}
+                            <div className="absolute inset-0 w-16 h-16">
+                              <svg
+                                className="w-16 h-16 transform -rotate-90"
+                                viewBox="0 0 64 64"
+                              >
+                                <circle
+                                  cx="32"
+                                  cy="32"
+                                  r="28"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                  fill="none"
+                                  className="text-blue-200"
+                                />
+                                <circle
+                                  cx="32"
+                                  cy="32"
+                                  r="28"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                  fill="none"
+                                  strokeDasharray="175.92"
+                                  strokeDashoffset="44"
+                                  className="text-blue-500 animate-pulse"
+                                />
+                              </svg>
+                            </div>
                           </div>
                           <div className="text-center">
-                            <span className="text-sm font-medium text-slate-700">
-                              Click to upload memo
+                            <span className="text-sm font-semibold text-blue-600">
+                              Processing files...
                             </span>
                             <p className="text-xs text-slate-500 mt-1">
-                              PDF or Image files supported
+                              Converting PDF and scanning text
                             </p>
                           </div>
                         </div>
+                      ) : fileNames.length > 0 ? (
+                        // Files Uploaded State
+                        <div className="w-full space-y-4">
+                          {/* Preview Area */}
+                          <div className="relative">
+                            <ImagePaginator
+                              filePreviews={filePreviews}
+                              currentPage={currentPage}
+                            />
+
+                            {/* File Counter Badge */}
+                            <div className="absolute top-3 right-3 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                              {fileNames.length} file
+                              {fileNames.length > 1 ? "s" : ""}
+                            </div>
+                          </div>
+
+                          {/* File List */}
+                          <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 max-h-32 overflow-y-auto">
+                            <div className="space-y-2">
+                              {fileNames.map((fileName, index) => (
+                                <div
+                                  key={index}
+                                  className="flex items-center justify-between text-xs bg-white/50 rounded-lg p-2"
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <Icon
+                                      icon={
+                                        fileName.endsWith(".pdf")
+                                          ? "mdi:file-pdf"
+                                          : "mdi:image"
+                                      }
+                                      className="h-4 w-4 text-blue-500"
+                                    />
+                                    <span className="font-medium text-slate-700 truncate max-w-32">
+                                      {fileName}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                    <span className="text-green-600 font-medium">
+                                      Ready
+                                    </span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Upload More Button */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const fileInput = document.querySelector(
+                                'input[type="file"]'
+                              ) as HTMLInputElement;
+                              if (fileInput) fileInput.click();
+                            }}
+                            className="w-full py-3 px-4 bg-white/70 hover:bg-white/90 border border-slate-200 rounded-xl text-slate-600 hover:text-slate-800 text-sm font-medium transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2"
+                          >
+                            <Icon
+                              icon="material-symbols:add"
+                              className="h-4 w-4"
+                            />
+                            Add more files
+                          </button>
+
+                          {/* Clear All Files Button */}
+                          <button
+                            type="button"
+                            onClick={clearAllFiles}
+                            className="w-full py-2 px-4 bg-red-50 hover:bg-red-100 border border-red-200 rounded-xl text-red-600 hover:text-red-700 text-sm font-medium transition-all duration-300 flex items-center justify-center gap-2"
+                          >
+                            <Icon
+                              icon="material-symbols:delete-outline"
+                              className="h-4 w-4"
+                            />
+                            Clear all files
+                          </button>
+                        </div>
+                      ) : (
+                        // Empty State
+                        <div className="flex flex-col items-center space-y-4 group-hover:scale-105 transition-transform duration-300">
+                          <div className="relative">
+                            <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-3xl flex items-center justify-center group-hover:from-blue-200 group-hover:to-purple-200 transition-all duration-300">
+                              <Icon
+                                icon="material-symbols:upload"
+                                className="h-10 w-10 text-blue-600 group-hover:scale-110 transition-transform duration-300"
+                              />
+                            </div>
+                            {/* Floating icons animation */}
+                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-100 rounded-lg flex items-center justify-center group-hover:animate-bounce">
+                              <Icon
+                                icon="mdi:file-pdf"
+                                className="h-3 w-3 text-red-500"
+                              />
+                            </div>
+                            <div
+                              className="absolute -bottom-1 -left-2 w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center group-hover:animate-bounce"
+                              style={{ animationDelay: "0.1s" }}
+                            >
+                              <Icon
+                                icon="mdi:image"
+                                className="h-3 w-3 text-green-500"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="text-center">
+                            <span className="text-lg font-bold text-slate-700 block mb-1">
+                              Drop files here
+                            </span>
+                            <span className="text-sm font-medium text-blue-600">
+                              or click to browse
+                            </span>
+                            <div className="mt-3 space-y-1">
+                              <p className="text-xs text-slate-500">
+                                Supported: PDF, JPG, PNG
+                              </p>
+                              <p className="text-xs text-slate-500">
+                                Max: 25 files • Auto text extraction
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Supported formats preview */}
+                          <div className="flex items-center gap-4 pt-2">
+                            <div className="flex items-center gap-1">
+                              <Icon
+                                icon="mdi:file-pdf"
+                                className="h-5 w-5 text-red-500"
+                              />
+                              <span className="text-xs text-slate-500">
+                                PDF
+                              </span>
+                            </div>
+                            <div className="w-1 h-1 bg-slate-300 rounded-full"></div>
+                            <div className="flex items-center gap-1">
+                              <Icon
+                                icon="mdi:image"
+                                className="h-5 w-5 text-green-500"
+                              />
+                              <span className="text-xs text-slate-500">
+                                Images
+                              </span>
+                            </div>
+                          </div>
+                        </div>
                       )}
+                    </div>
+
+                    {/* File count warning */}
+                    {fileNames.length >= 20 && (
+                      <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-2">
+                        <Icon
+                          icon="material-symbols:warning"
+                          className="h-5 w-5 text-amber-600"
+                        />
+                        <span className="text-sm text-amber-700">
+                          {fileNames.length >= 25
+                            ? "File limit reached (25/25)"
+                            : `Approaching file limit (${fileNames.length}/25)`}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Drag overlay */}
+                  <div className="drag-overlay absolute inset-0 bg-blue-500/10 backdrop-blur-sm rounded-2xl border-2 border-blue-400 border-dashed opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center">
+                    <div className="text-center">
+                      <Icon
+                        icon="material-symbols:upload"
+                        className="h-12 w-12 text-blue-600 mb-2"
+                      />
+                      <span className="text-lg font-bold text-blue-700">
+                        Drop files here
+                      </span>
                     </div>
                   </div>
                 </div>

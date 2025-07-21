@@ -30,7 +30,6 @@ import { PrimeIcons } from "primereact/api";
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
 import { Checkbox } from "primereact/checkbox";
-import ImagePaginator from "@/app/components/ImagePaginator";
 import { getPostTypes } from "@/app/utils/service/postTypeService";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -69,7 +68,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const [isConverting, setIsConverting] = useState<boolean>(false);
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const { refetch } = useRefetchPostStore();
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [isChecked, setIsChecked] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [filePreviews, setFilePreviews] = useState<string[]>([]);
   const [selectedLevel, setSelectedLevel] = useState<Level | undefined>(
@@ -251,57 +250,109 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
+
+      // Validate file sizes (e.g., max 10MB per file)
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      const oversizedFiles = files.filter((file) => file.size > maxSize);
+
+      if (oversizedFiles.length > 0) {
+        toast(
+          `Some files are too large (max 10MB): ${oversizedFiles
+            .map((f) => f.name)
+            .join(", ")}`,
+          {
+            type: "warning",
+            className: toastClass,
+          }
+        );
+        // Remove oversized files
+        const validFiles = files.filter((file) => file.size <= maxSize);
+        if (validFiles.length === 0) return;
+      }
+
       const fileNames: string[] = [];
       const previews: string[] = [];
       let extractedTexts = "";
       const convertedFiles: File[] = [];
 
       setIsConverting(true);
+
       try {
+        let processedCount = 0;
+        const totalFiles = files.length;
+
         for (const file of files) {
-          if (file.type === "application/pdf") {
-            toast(`Converting PDF: ${file.name}`, {
+          // Update progress
+          toast(
+            `Processing file ${processedCount + 1} of ${totalFiles}: ${
+              file.name
+            }`,
+            {
               type: "info",
               className: toastClass,
-            });
+              autoClose: 2000,
+            }
+          );
 
-            const convertedImages = await convertPdfToImage(file);
+          if (file.type === "application/pdf") {
+            try {
+              const convertedImages = await convertPdfToImage(file);
 
-            const texts = await Promise.all(
-              convertedImages.map(async (convertedImage) => {
-                const text = await scanImage(
-                  URL.createObjectURL(convertedImage)
-                );
-                previews.push(URL.createObjectURL(convertedImage));
-                convertedFiles.push(convertedImage);
-                return text;
-              })
-            );
+              const texts = await Promise.all(
+                convertedImages.map(async (convertedImage) => {
+                  const text = await scanImage(
+                    URL.createObjectURL(convertedImage)
+                  );
+                  previews.push(URL.createObjectURL(convertedImage));
+                  convertedFiles.push(convertedImage);
+                  return text;
+                })
+              );
 
-            extractedTexts += texts.join(" ") + " ";
+              extractedTexts += texts.join(" ") + " ";
+            } catch (error) {
+              console.error(`Error processing PDF ${file.name}:`, error);
+              toast(`Failed to process PDF: ${file.name}`, {
+                type: "error",
+                className: toastClass,
+              });
+            }
           } else if (file.type.startsWith("image/")) {
-            const text = await scanImage(URL.createObjectURL(file));
-            extractedTexts += text + " ";
-            convertedFiles.push(file);
-            previews.push(URL.createObjectURL(file));
+            try {
+              const text = await scanImage(URL.createObjectURL(file));
+              extractedTexts += text + " ";
+              convertedFiles.push(file);
+              previews.push(URL.createObjectURL(file));
+            } catch (error) {
+              console.error(`Error processing image ${file.name}:`, error);
+              toast(`Failed to process image: ${file.name}`, {
+                type: "error",
+                className: toastClass,
+              });
+            }
           } else {
             toast(`Unsupported file format: ${file.name}`, {
-              type: "error",
+              type: "warning",
               className: toastClass,
             });
           }
 
           fileNames.push(file.name);
+          processedCount++;
         }
 
-        setFileNames(fileNames);
-        setConvertedFiles(convertedFiles);
-        setFilePreviews(previews);
-        setValue("extractedText", extractedTexts.trim());
-        toast("Files processed successfully!", {
-          type: "success",
-          className: toastClass,
-        });
+        if (convertedFiles.length > 0) {
+          setFileNames(fileNames);
+          setConvertedFiles(convertedFiles);
+          setFilePreviews(previews);
+          setValue("extractedText", extractedTexts.trim());
+          setCurrentPage(0); // Reset to first page
+
+          toast(`Successfully processed ${convertedFiles.length} files!`, {
+            type: "success",
+            className: toastClass,
+          });
+        }
       } catch (error) {
         console.error("Error processing files:", error);
         toast("An error occurred while processing files.", {
@@ -610,82 +661,346 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ postId }) => {
                   )}
                 </div>
 
-                {/* File Upload Area */}
                 <div className="relative">
-                  <div className="bg-white/40 backdrop-blur-sm rounded-2xl p-6 border-2 border-dashed border-slate-300 hover:border-blue-400 hover:bg-white/60 transition-all duration-300 group relative">
-                    {/* Remove File Button */}
-                    <div
-                      onClick={removeFile}
-                      className="absolute -top-2 -right-2 h-8 w-8 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 grid place-content-center text-white rounded-full z-50 cursor-pointer shadow-lg transition-all duration-300 hover:scale-110"
-                    >
-                      <Icon
-                        icon={"icomoon-free:cancel-circle"}
-                        className="h-4 w-4"
-                      />
-                    </div>
-
-                    <input
-                      type="file"
-                      multiple={true}
-                      className="absolute inset-0 opacity-0 cursor-pointer"
-                      {...register("memo")}
-                      onChange={handleFileChange}
-                    />
-                    <div className="flex flex-col items-center justify-center text-slate-600">
-                      {loading ? (
-                        <div className="flex flex-col items-center space-y-3">
-                          <div className="relative">
-                            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                              <Icon
-                                icon="line-md:loading-loop"
-                                className="h-6 w-6 text-white"
-                              />
-                            </div>
-                          </div>
-                          <div className="space-y-2 w-full">
-                            <div className="h-3 w-full rounded bg-gradient-to-r from-slate-200 to-slate-300 animate-pulse"></div>
-                            <div className="h-3 w-2/3 mx-auto rounded bg-gradient-to-r from-slate-200 to-slate-300 animate-pulse"></div>
-                          </div>
-                        </div>
-                      ) : fileNames ? (
-                        <div className="w-full">
-                          <div className="flex flex-col items-center space-y-3 mb-4">
-                            <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center">
-                              <Icon
-                                icon="weui:done2-outlined"
-                                className="h-8 w-8 text-green-600"
-                              />
-                            </div>
-                            <span className="text-sm font-medium text-slate-700">
-                              File uploaded successfully
-                            </span>
-                          </div>
-                          <ImagePaginator
-                            filePreviews={filePreviews}
-                            currentPage={currentPage}
-                          />
-                        </div>
-                      ) : (
-                        <div className="flex flex-col items-center space-y-3 group-hover:scale-105 transition-transform duration-300">
-                          <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center group-hover:from-blue-200 group-hover:to-purple-200 transition-all duration-300">
+                  <div
+                    className={`bg-white/40 backdrop-blur-sm rounded-2xl p-6 border-2 transition-all duration-300 relative ${
+                      fileNames.length > 0
+                        ? "border-solid border-green-300 bg-green-50/40"
+                        : "border-dashed border-slate-300 hover:border-blue-400 hover:bg-white/60"
+                    } ${
+                      isConverting ? "border-blue-400 bg-blue-50/40" : ""
+                    } group`}
+                  >
+                    {/* Loading Overlay */}
+                    {isConverting && (
+                      <div className="absolute inset-0 bg-white/80 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center z-10">
+                        <div className="relative mb-4">
+                          <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
                             <Icon
-                              icon="material-symbols:upload"
-                              className="h-8 w-8 text-blue-600"
+                              icon="line-md:loading-loop"
+                              className="h-8 w-8 text-white"
                             />
                           </div>
-                          <div className="text-center">
-                            <span className="text-sm font-medium text-slate-700">
-                              Click to upload new memo
-                            </span>
-                            <p className="text-xs text-slate-500 mt-1">
-                              PDF or Image files supported
-                            </p>
+                        </div>
+                        <div className="text-center">
+                          <p className="font-semibold text-slate-700 mb-2">
+                            Processing files...
+                          </p>
+                          <p className="text-sm text-slate-600">
+                            Converting PDFs and extracting text
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* File Upload Input - Only active when no files uploaded */}
+                    {fileNames.length === 0 && (
+                      <input
+                        type="file"
+                        multiple={true}
+                        accept=".pdf,.jpg,.jpeg,.png,.gif,.bmp,.webp"
+                        className="absolute inset-0 opacity-0 cursor-pointer z-20"
+                        {...register("memo")}
+                        onChange={handleFileChange}
+                        disabled={isConverting || saving}
+                      />
+                    )}
+
+                    {/* Content based on state */}
+                    {fileNames.length > 0 ? (
+                      // Files uploaded state
+                      <div className="w-full">
+                        {/* Header with file count and actions */}
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl flex items-center justify-center">
+                              <Icon
+                                icon="weui:done2-outlined"
+                                className="h-6 w-6 text-green-600"
+                              />
+                            </div>
+                            <div>
+                              <p className="font-semibold text-slate-700">
+                                {fileNames.length} file
+                                {fileNames.length > 1 ? "s" : ""} uploaded
+                              </p>
+                              <p className="text-sm text-slate-600">
+                                {convertedFiles.length} image
+                                {convertedFiles.length > 1 ? "s" : ""} ready for
+                                preview
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Action buttons */}
+                          <div className="flex gap-2">
+                            {/* Hidden file input for replace functionality */}
+                            <input
+                              ref={(ref) => {
+                                // Store reference for programmatic access
+                                if (ref) {
+                                  (
+                                    window as Window & {
+                                      replaceFileInput?: HTMLInputElement | null;
+                                    }
+                                  ).replaceFileInput = ref;
+                                }
+                              }}
+                              type="file"
+                              multiple={true}
+                              accept=".pdf,.jpg,.jpeg,.png,.gif,.bmp,.webp"
+                              className="hidden"
+                              onChange={handleFileChange}
+                              disabled={isConverting || saving}
+                            />
+
+                            {/* Replace files button */}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                type WindowWithReplaceFileInput = Window & {
+                                  replaceFileInput?: HTMLInputElement | null;
+                                };
+                                const fileInput = (
+                                  window as WindowWithReplaceFileInput
+                                ).replaceFileInput;
+                                if (fileInput && !isConverting && !saving) {
+                                  fileInput.click();
+                                }
+                              }}
+                              className="h-9 px-4 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg flex items-center gap-2 transition-all duration-300 hover:scale-105"
+                              disabled={isConverting || saving}
+                            >
+                              <Icon
+                                icon="material-symbols:refresh"
+                                className="h-4 w-4"
+                              />
+                              Replace
+                            </button>
+
+                            {/* Remove all files button */}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                removeFile();
+                              }}
+                              className="h-9 px-4 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg flex items-center gap-2 transition-all duration-300 hover:scale-105"
+                              disabled={isConverting || saving}
+                            >
+                              <Icon
+                                icon="material-symbols:delete-outline"
+                                className="h-4 w-4"
+                              />
+                              Remove All
+                            </button>
                           </div>
                         </div>
-                      )}
-                    </div>
+
+                        {/* File list */}
+                        <div className="bg-white/60 rounded-xl p-4 mb-4 max-h-32 overflow-y-auto">
+                          <div className="space-y-2">
+                            {fileNames.map((fileName, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center gap-3 p-2 bg-white/70 rounded-lg"
+                              >
+                                <div className="w-8 h-8 bg-gradient-to-br from-slate-100 to-slate-200 rounded-lg flex items-center justify-center">
+                                  <Icon
+                                    icon={
+                                      fileName.toLowerCase().includes(".pdf")
+                                        ? "material-symbols:picture-as-pdf"
+                                        : "material-symbols:image"
+                                    }
+                                    className="h-4 w-4 text-slate-600"
+                                  />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-medium text-slate-700 truncate">
+                                    {fileName}
+                                  </p>
+                                  <p className="text-xs text-slate-500">
+                                    {fileName.toLowerCase().includes(".pdf")
+                                      ? "PDF Document"
+                                      : "Image File"}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Upload more files area */}
+                        <div
+                          className="mt-4 p-4 border-2 border-dashed border-slate-200 rounded-xl hover:border-blue-300 hover:bg-white/60 transition-all duration-300 group/upload cursor-pointer"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            type WindowWithReplaceFileInput = Window & {
+                              replaceFileInput?: HTMLInputElement | null;
+                            };
+                            const fileInput = (
+                              window as WindowWithReplaceFileInput
+                            ).replaceFileInput;
+                            if (fileInput && !isConverting && !saving) {
+                              fileInput.click();
+                            }
+                          }}
+                        >
+                          <div className="flex items-center justify-center gap-3 text-slate-600 group-hover/upload:text-blue-600">
+                            <Icon
+                              icon="material-symbols:add"
+                              className="h-5 w-5"
+                            />
+                            <span className="text-sm font-medium">
+                              Click to add more files
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      // No files uploaded state
+                      <div className="flex flex-col items-center space-y-4 group-hover:scale-105 transition-transform duration-300">
+                        <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center group-hover:from-blue-200 group-hover:to-purple-200 transition-all duration-300">
+                          <Icon
+                            icon="material-symbols:upload"
+                            className="h-10 w-10 text-blue-600"
+                          />
+                        </div>
+                        <div className="text-center">
+                          <h3 className="text-lg font-semibold text-slate-700 mb-2">
+                            Upload new memo files
+                          </h3>
+                          <p className="text-sm text-slate-600 mb-2">
+                            Drag and drop your files here, or click to browse
+                          </p>
+                          <div className="flex flex-wrap justify-center gap-2 text-xs text-slate-500">
+                            <span className="bg-white/60 px-2 py-1 rounded">
+                              PDF
+                            </span>
+                            <span className="bg-white/60 px-2 py-1 rounded">
+                              JPEG
+                            </span>
+                            <span className="bg-white/60 px-2 py-1 rounded">
+                              PNG
+                            </span>
+                            <span className="bg-white/60 px-2 py-1 rounded">
+                              GIF
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
+
+                  {/* Progress indicator */}
+                  {isConverting && (
+                    <div className="mt-3">
+                      <div className="w-full bg-white/60 rounded-full h-2">
+                        <div
+                          className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full animate-pulse"
+                          style={{ width: "70%" }}
+                        ></div>
+                      </div>
+                      <p className="text-xs text-slate-600 mt-1 text-center">
+                        Processing files and extracting text...
+                      </p>
+                    </div>
+                  )}
                 </div>
+
+                {/* Enhanced File Preview Navigation - Updated positioning */}
+                {filePreviews.length > 0 && (
+                  <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 h-16 px-6 items-center z-50 flex justify-between min-w-[280px]">
+                    <Button
+                      type="button"
+                      className="h-10 w-10 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 justify-center text-white rounded-xl shadow-lg transition-all duration-300 hover:scale-105 border-0"
+                      onClick={() => {
+                        if (currentPage > 0) setCurrentPage((prev) => prev - 1);
+                      }}
+                      disabled={currentPage === 0}
+                      icon={`${PrimeIcons.ARROW_LEFT}`}
+                    />
+
+                    <div className="flex items-center gap-3">
+                      <p className="text-sm font-semibold text-slate-700">
+                        {currentPage + 1} / {filePreviews.length}
+                      </p>
+                      <div className="flex gap-1">
+                        {filePreviews.map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setCurrentPage(index)}
+                            className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                              index === currentPage
+                                ? "bg-blue-500 scale-125"
+                                : "bg-slate-300 hover:bg-slate-400"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    <Button
+                      type="button"
+                      className="h-10 w-10 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 justify-center text-white rounded-xl shadow-lg transition-all duration-300 hover:scale-105 border-0"
+                      onClick={() => {
+                        if (currentPage < filePreviews.length - 1)
+                          setCurrentPage((prev) => prev + 1);
+                      }}
+                      disabled={currentPage === filePreviews.length - 1}
+                      icon={`${PrimeIcons.ARROW_RIGHT}`}
+                    />
+                  </div>
+                )}
+
+                {/* Enhanced File Preview Navigation - Updated positioning */}
+                {filePreviews.length > 0 && (
+                  <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 h-16 px-6 items-center z-50 flex justify-between min-w-[280px]">
+                    <Button
+                      type="button"
+                      className="h-10 w-10 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 justify-center text-white rounded-xl shadow-lg transition-all duration-300 hover:scale-105 border-0"
+                      onClick={() => {
+                        if (currentPage > 0) setCurrentPage((prev) => prev - 1);
+                      }}
+                      disabled={currentPage === 0}
+                      icon={`${PrimeIcons.ARROW_LEFT}`}
+                    />
+
+                    <div className="flex items-center gap-3">
+                      <p className="text-sm font-semibold text-slate-700">
+                        {currentPage + 1} / {filePreviews.length}
+                      </p>
+                      <div className="flex gap-1">
+                        {filePreviews.map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setCurrentPage(index)}
+                            className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                              index === currentPage
+                                ? "bg-blue-500 scale-125"
+                                : "bg-slate-300 hover:bg-slate-400"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    <Button
+                      type="button"
+                      className="h-10 w-10 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 justify-center text-white rounded-xl shadow-lg transition-all duration-300 hover:scale-105 border-0"
+                      onClick={() => {
+                        if (currentPage < filePreviews.length - 1)
+                          setCurrentPage((prev) => prev + 1);
+                      }}
+                      disabled={currentPage === filePreviews.length - 1}
+                      icon={`${PrimeIcons.ARROW_RIGHT}`}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>
