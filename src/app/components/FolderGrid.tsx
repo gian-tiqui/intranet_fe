@@ -116,7 +116,7 @@ const FolderGrid = () => {
 
   // Always render the same container structure
   return (
-    <div className="min-h-screen p-6 pt-16">
+    <div className="min-h-screen px-6 pt-10">
       <CustomToast ref={toastRef} />
       <AddFolderDialog
         refetch={refetch}
@@ -137,57 +137,23 @@ const FolderGrid = () => {
         refetch={refetch}
       />
 
+      <div className="text-center mb-6">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-2">
+          WMC Employee Portal
+        </h1>
+        <p className="text-gray-600 text-lg">
+          Search and manage posts, folders, and employees across your
+          organization
+        </p>
+      </div>
+
       {/* Show skeleton while loading or not mounted */}
       {isLoading || !mounted ? (
         <FolderGridSkeleton />
       ) : (
         <>
-          {/* Header Section */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="max-w-6xl mx-auto mb-8"
-          >
-            <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-2">
-                WMC Employee Portal
-              </h1>
-              <p className="text-gray-600 text-lg">
-                Search and manage posts, folders, and employees across your
-                organization
-              </p>
-            </div>
-
-            {/* Search Section */}
-            <div className="max-w-4xl mx-auto">
-              <SearchV2
-                departments={departments}
-                postTypes={postTypeResponse?.data.postTypes}
-              />
-            </div>
-          </motion.div>
-
           {/* Main Content */}
-          <div className="max-w-6xl mx-auto">
-            {/* Add Folder Button */}
-            {checkDept() && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-                className="mb-8 flex justify-end"
-              >
-                <Button
-                  onClick={() => setAddFolderDialogVisible(true)}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 border-0 flex items-center gap-2"
-                  icon={PrimeIcons.PLUS}
-                >
-                  New Folder
-                </Button>
-              </motion.div>
-            )}
-
+          <div className="max-w-6xl mx-auto mb-6">
             {/* Folders Grid */}
             <motion.div
               initial="hidden"
@@ -355,6 +321,22 @@ const FolderGrid = () => {
           </div>
         </>
       )}
+
+      {/* Header Section */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="max-w-6xl mx-auto mb-8"
+      >
+        {/* Search Section */}
+        <div className="max-w-4xl mx-auto">
+          <SearchV2
+            departments={departments}
+            postTypes={postTypeResponse?.data.postTypes}
+          />
+        </div>
+      </motion.div>
 
       {/* Custom Styles */}
       <style jsx global>{`
