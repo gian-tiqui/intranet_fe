@@ -50,7 +50,6 @@ const PostDraft: React.FC<Props> = ({ post }) => {
   };
 
   const handleEdit = () => {
-    console.log("?");
     setShowEditModal(true);
     setPostId(post.pid);
   };
@@ -151,10 +150,7 @@ const PostDraft: React.FC<Props> = ({ post }) => {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-3">
-          <Button
-            className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-            onClick={() => console.log("Publish post")}
-          >
+          <Button className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
             <Icon icon="mdi:publish" className="w-4 h-4" />
             <span>Publish</span>
           </Button>
