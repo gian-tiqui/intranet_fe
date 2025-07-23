@@ -152,13 +152,13 @@ const Aside: React.FC<Props> = ({
       )
     ) {
       baseItems.push(
-        {
-          id: "drafts",
-          label: "Drafts",
-          icon: "solar:document-text-bold-duotone",
-          path: "/drafts",
-          isActive: pathname === "/drafts",
-        },
+        // {
+        //   id: "drafts",
+        //   label: "Drafts",
+        //   icon: "solar:document-text-bold-duotone",
+        //   path: "/drafts",
+        //   isActive: pathname === "/drafts",
+        // },
         {
           id: "my-posts",
           label: "My Posts",
