@@ -63,8 +63,6 @@ const Tutorial = () => {
 
         const { data } = await findUserById(decoded?.sub);
 
-        console.log(data);
-
         if (data.user) {
           setIsFirstLogin(Boolean(data.user.isFirstLogin));
         }
@@ -101,8 +99,6 @@ const Tutorial = () => {
         { isFirstLogin: 0 },
         decoded.sub
       );
-
-      console.log(data);
 
       if (status === 200) {
         setIsFirstLogin(false);
