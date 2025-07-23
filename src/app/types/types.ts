@@ -8,6 +8,14 @@ export type EmployeeLevel = {
   level: string;
 };
 
+type PhoneDirectory = {
+  floor: string;
+  room: {
+    number: string;
+    name: string;
+  }[];
+};
+
 type User = {
   id?: number;
   email: string;
@@ -442,4 +450,5 @@ export type {
   TabType,
   FolderDepartment,
   IncidentReport,
+  PhoneDirectory,
 };

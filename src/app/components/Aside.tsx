@@ -128,6 +128,13 @@ const Aside: React.FC<Props> = ({
         path: "/departments-memo",
         isActive: pathname === "/departments-memo",
       },
+      {
+        id: "phone-directory",
+        label: "Phone Directory",
+        icon: "solar:phone-directory-bold-duotone",
+        path: "/phone-directory",
+        isActive: pathname === "/phone-directory",
+      },
     ];
     if (userDeptId && userDeptId === Department.CUSTOMER_EXPERIENCE) {
       baseItems.push({
@@ -145,13 +152,13 @@ const Aside: React.FC<Props> = ({
       )
     ) {
       baseItems.push(
-        {
-          id: "drafts",
-          label: "Drafts",
-          icon: "solar:document-text-bold-duotone",
-          path: "/drafts",
-          isActive: pathname === "/drafts",
-        },
+        // {
+        //   id: "drafts",
+        //   label: "Drafts",
+        //   icon: "solar:document-text-bold-duotone",
+        //   path: "/drafts",
+        //   isActive: pathname === "/drafts",
+        // },
         {
           id: "my-posts",
           label: "My Posts",
