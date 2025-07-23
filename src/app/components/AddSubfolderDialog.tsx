@@ -50,6 +50,7 @@ const AddSubfolderDialog: React.FC<Props> = ({
   } = useForm<FormFields>();
   const toastRef = useRef<Toast>(null);
   const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [createDefaultFolders, setCreateDefaultFolders] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const departments = useDepartments();
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
@@ -83,6 +84,7 @@ const AddSubfolderDialog: React.FC<Props> = ({
         setIsChecked(false);
         setVisible(false);
         refetchFolders();
+        setCreateDefaultFolders(0);
       }
     } catch (error) {
       console.error(error);
@@ -102,6 +104,7 @@ const AddSubfolderDialog: React.FC<Props> = ({
       setSelectedDepartments([]);
       setIsChecked(false);
       setVisible(false);
+      setCreateDefaultFolders(0);
     }
   };
 
@@ -235,6 +238,47 @@ const AddSubfolderDialog: React.FC<Props> = ({
                 </p>
                 <p className="text-xs text-blue-600">
                   Allow all users to access this folder
+                </p>
+              </div>
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <i className={`${PrimeIcons.GLOBE} text-blue-500 text-sm`}></i>
+              </div>
+            </div>
+          </div>
+
+          {/* Publish Checkbox */}
+          <div className="space-y-2">
+            <div
+              className="flex items-center gap-3 p-3 bg-blue-50 border border-blue-200 rounded-xl hover:bg-blue-100 cursor-pointer transition-colors duration-200 group"
+              onClick={() =>
+                !isLoading &&
+                setCreateDefaultFolders((prev) => (prev === 0 ? 1 : 0))
+              }
+            >
+              <Checkbox
+                checked={createDefaultFolders === 1}
+                disabled={isLoading}
+                pt={{
+                  root: {
+                    className: "w-5 h-5",
+                  },
+                  box: {
+                    className:
+                      "w-5 h-5 border-2 border-blue-300 rounded-md group-hover:border-blue-400 transition-colors duration-200",
+                  },
+                  icon: {
+                    className: "w-3 h-3 text-blue-600",
+                  },
+                }}
+              />
+              <div className="flex-1">
+                <p className="text-sm font-medium text-blue-800">
+                  Create default folders
+                </p>
+                <p className="text-xs text-blue-600">
+                  Automatically create default document folders (e.g.,
+                  &quot;Memo&quot;, &quot;Procedures&quot;,
+                  &quot;Guideline&quot;)
                 </p>
               </div>
               <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">

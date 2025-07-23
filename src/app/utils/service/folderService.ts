@@ -50,18 +50,21 @@ const addSubfolder = async ({
   parentId,
   deptIds,
   userId,
+  createDefaultFolders,
 }: {
   name: string;
   isPublished: number;
   parentId: number;
   deptIds: string;
   userId: number;
+  createDefaultFolders?: number;
 }) => {
   return apiClient.post(`${API_BASE}/folders/${parentId}/subfolder`, {
     name,
     isPublished,
     deptIds,
     userId,
+    createDefaultFolders,
   });
 };
 
