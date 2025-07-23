@@ -94,7 +94,7 @@ const Tutorial = () => {
     if (!decoded) return;
 
     try {
-      const { data, status } = await updateUserById(
+      const { status } = await updateUserById(
         decoded.sub,
         { isFirstLogin: 0 },
         decoded.sub
