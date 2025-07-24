@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -8,9 +8,7 @@ import useNavbarVisibilityStore from "../store/navbarVisibilityStore";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import useLogoutArtStore from "../store/useLogoutSplashStore";
 import { decodeUserData } from "../functions/functions";
-import { toast } from "react-toastify";
 import apiClient from "../http-common/apiUrl";
-import { toastClass } from "../tailwind-classes/tw_classes";
 import { Avatar } from "primereact/avatar";
 import SettingsDialog from "./SettingsDialog";
 import UserModal from "./UserModal";
@@ -18,6 +16,8 @@ import useLoginStore from "../store/loggedInStore";
 import { useQuery } from "@tanstack/react-query";
 import { findUserById, getLastLogin } from "../utils/service/userService";
 import useRefetchUserStore from "../store/refetchUserData";
+import { Toast } from "primereact/toast";
+import CustomToast from "./CustomToast";
 
 interface Props {
   isMobile?: boolean;
@@ -31,6 +31,7 @@ const UserButton: React.FC<Props> = () => {
   const [showUserModal, setShowUserModal] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showMyPosts, setShowMyPosts] = useState(false);
+  const toastRef = useRef<Toast>(null);
   const [userData, setUserData] = useState<{
     firstName: string;
     lastName: string;
@@ -50,8 +51,6 @@ const UserButton: React.FC<Props> = () => {
   });
 
   const { setRefetch } = useRefetchUserStore();
-
-  useEffect(() => {}, [userQueryData]);
 
   useEffect(() => {
     if (refetch) {
@@ -123,7 +122,11 @@ const UserButton: React.FC<Props> = () => {
       } catch (error) {
         console.error(error);
         const { message } = error as { message: string };
-        toast(message, { type: "error", className: toastClass });
+        toastRef.current?.show({
+          severity: "error",
+          summary: "Logout Failed",
+          detail: message || "An error occurred while logging out.",
+        });
       } finally {
         setIsLoggedIn(false);
       }
@@ -148,6 +151,8 @@ const UserButton: React.FC<Props> = () => {
 
   return (
     <>
+      <CustomToast ref={toastRef} />
+
       <UserModal
         visible={showUserModal}
         setVisible={setShowUserModal}

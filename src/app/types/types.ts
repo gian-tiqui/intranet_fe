@@ -48,6 +48,7 @@ type User = {
   phone: string;
   posts: Post[];
   isFirstLogin: number | boolean;
+  lastUpdated: Date;
 };
 
 type TabType = {
