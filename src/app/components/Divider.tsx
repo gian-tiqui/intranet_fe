@@ -50,6 +50,7 @@ import useEditFolderIdStore from "../store/editFolderId";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Button } from "primereact/button";
 import IncidentReportDialog from "../incident-report/components/IncidentReportDialog";
+import SixtyDaysAlert from "./60DaysAlert";
 
 interface Props {
   children?: ReactNode;
@@ -329,6 +330,7 @@ const Divider: React.FC<Props> = ({ children }) => {
         folderId={editFolderId}
         setFolderId={setEditFolderId}
       />
+      <SixtyDaysAlert />
       <UserProfileDialog />
       <div className="flex h-screen text-neutral-800 dark:text-neutral-100">
         {showSearch && <SearchContainer />}

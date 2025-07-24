@@ -70,6 +70,7 @@ const AddSubfolderDialog: React.FC<Props> = ({
         parentId,
         deptIds: data.deptIds,
         userId,
+        createDefaultFolders,
       });
 
       if (response.status === 201) {

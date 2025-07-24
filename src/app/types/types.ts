@@ -42,12 +42,13 @@ type User = {
   employeeLevel: EmployeeLevel;
   division: Division;
   profilePictureLocation: string;
-  localNumber: string;
   jobTitle: string;
   officeLocation: string;
   phone: string;
   posts: Post[];
   isFirstLogin: number | boolean;
+  lastUpdated: Date;
+  localNumber?: string;
 };
 
 type TabType = {
@@ -60,6 +61,7 @@ type PostReader = {
   postId: number;
   userId: number;
   readAt: Date;
+  createdAt: Date;
 
   post: Post;
   user: User;

@@ -165,6 +165,13 @@ const Aside: React.FC<Props> = ({
           icon: "solar:folder-with-files-bold-duotone",
           path: "/my-posts",
           isActive: pathname === "/my-posts",
+        },
+        {
+          id: "pending-updates",
+          label: "Profiles for approval",
+          icon: "solar:folder-with-files-bold-duotone",
+          path: "/pending-updates",
+          isActive: pathname === "/pending-updates",
         }
       );
     }
