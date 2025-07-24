@@ -1,14 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { Icon } from "@iconify/react";
-import apiClient from "../http-common/apiUrl";
-import { API_BASE, INTRANET } from "../bindings/binding";
 import { decodeUserData } from "../functions/functions";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
 import { useQuery } from "@tanstack/react-query";
-import { findUserById } from "../utils/service/userService";
+import { findUserById, updateUserProfile } from "../utils/service/userService";
 import CustomToast from "./CustomToast";
 import { Toast } from "primereact/toast";
 import useRefetchUserStore from "../store/refetchUserData";
@@ -56,26 +54,30 @@ const UserInfo = () => {
     const userId = decodeUserData()?.sub;
 
     try {
-      const response = await apiClient.put(
-        `${API_BASE}/users/${Number(userId)}`,
-        { ...data },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem(INTRANET)}`,
-          },
-        }
-      );
-
-      if (response.data.statusCode === 200) {
-        toastRef.current?.show({
-          severity: "success",
-          summary: "Profile Updated",
-          detail: "Your profile has been successfully updated.",
-          life: 3000,
+      if (data) {
+        const response = await updateUserProfile(userId, {
+          address: data.address,
+          dob: data.dob,
+          firstName: data.firstName,
+          gender: data.gender,
+          jobTitle: data.jobTitle,
+          lastName: data.lastName,
+          localNumber: data.localNumber,
+          middleName: data.middleName,
+          officeLocation: data.officeLocation,
+          suffix: data.suffix,
         });
+        if (response.status === 200) {
+          toastRef.current?.show({
+            severity: "success",
+            summary: "Profile Updated",
+            detail: response.data.message,
+            life: 3000,
+          });
 
-        refetch();
-        refetchUser();
+          refetch();
+          refetchUser();
+        }
       }
     } catch (error) {
       const { message } = error as { message: string };

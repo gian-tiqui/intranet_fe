@@ -35,6 +35,8 @@ import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
 import { confirmDialog } from "primereact/confirmdialog";
 import { formatFullDateWithRelative } from "@/app/utils/functions/formatFullDateWithRelative";
+import { Dialog } from "primereact/dialog";
+import formatTimeAgo from "@/app/utils/functions/formatTimeAgo";
 
 interface Props {
   id: number;
@@ -54,6 +56,8 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
     queryKey: [`single-post-${id}-${type}`],
     queryFn: () => fetchPost(id),
   });
+  const [showReadersModal, setShowReadersModal] = useState<boolean>(false);
+  const [downloadableAlert, setDownloadableAlert] = useState<boolean>(false);
   const [preview, setPreviews] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [comments, setComments] = useState<PostComment[]>([]);
@@ -327,6 +331,12 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
     }
   };
 
+  useEffect(() => {
+    if (post) {
+      setDownloadableAlert(!post.downloadable);
+    }
+  }, [post]);
+
   const handleDeleteClicked = () => {
     if (!post) return;
 
@@ -462,6 +472,258 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
 
   return (
     <>
+      <Dialog
+        visible={downloadableAlert}
+        onHide={() => {
+          if (downloadableAlert) setDownloadableAlert((prev) => !prev);
+        }}
+        modal
+        closable={false}
+        showHeader={false}
+        className="non-downloadable-dialog"
+        pt={{
+          root: { className: "backdrop-blur-sm shadow-none rounded-2xl" },
+          mask: { className: "bg-black/40 backdrop-blur-sm" },
+          content: {
+            className:
+              "!p-0 !border-0 !rounded-2xl !shadow-2xl !bg-transparent overflow-hidden",
+          },
+        }}
+      >
+        <div className="relative bg-gradient-to-br from-red-50 via-white to-orange-50 dark:from-red-950/30 dark:via-neutral-900 dark:to-orange-950/30 p-8 rounded-2xl border border-red-200 dark:border-red-800/50 min-w-[400px] max-w-[500px]">
+          {/* Animated background elements */}
+          <div className="absolute inset-0 overflow-hidden rounded-2xl">
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-red-100 dark:bg-red-900/20 rounded-full animate-pulse"></div>
+            <div
+              className="absolute -bottom-10 -left-10 w-24 h-24 bg-orange-100 dark:bg-orange-900/20 rounded-full animate-pulse"
+              style={{ animationDelay: "1s" }}
+            ></div>
+          </div>
+
+          {/* Content */}
+          <div className="relative z-10">
+            {/* Icon */}
+            <div className="flex justify-center mb-6">
+              <div className="relative">
+                <div className="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-25"></div>
+                <div className="relative bg-gradient-to-br from-red-500 to-red-600 p-4 rounded-full shadow-lg">
+                  <Icon
+                    icon="material-symbols:download-off-rounded"
+                    className="h-8 w-8 text-white"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Title */}
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-3">
+              Document Not Downloadable
+            </h2>
+
+            {/* Description */}
+            <p className="text-gray-600 dark:text-gray-300 text-center mb-6 leading-relaxed">
+              This document has been marked as{" "}
+              <span className="font-semibold text-red-600 dark:text-red-400">
+                non-downloadable
+              </span>{" "}
+              by the author. You can view the content but cannot save it to your
+              device.
+            </p>
+
+            {/* Visual indicator */}
+            <div className="bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800/50 rounded-xl p-4 mb-6">
+              <div className="flex items-center gap-3">
+                <Icon
+                  icon="material-symbols:shield-lock-rounded"
+                  className="h-5 w-5 text-red-500 flex-shrink-0"
+                />
+                <span className="text-sm text-red-700 dark:text-red-300 font-medium">
+                  Download restrictions are in place for this document
+                </span>
+              </div>
+            </div>
+
+            {/* Action button */}
+            <div className="flex justify-center">
+              <button
+                onClick={() => setDownloadableAlert(false)}
+                className="group bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center gap-2"
+              >
+                <span>I Understand</span>
+                <Icon
+                  icon="material-symbols:check-circle-rounded"
+                  className="h-5 w-5 group-hover:scale-110 transition-transform"
+                />
+              </button>
+            </div>
+          </div>
+
+          {/* Decorative elements */}
+          <div className="absolute top-4 right-4 opacity-20">
+            <Icon
+              icon="material-symbols:warning-rounded"
+              className="h-6 w-6 text-red-500"
+            />
+          </div>
+          <div className="absolute bottom-4 left-4 opacity-20">
+            <Icon
+              icon="material-symbols:security-rounded"
+              className="h-6 w-6 text-red-500"
+            />
+          </div>
+        </div>
+      </Dialog>
+      {/* Readers Modal */}
+      <Dialog
+        visible={showReadersModal}
+        onHide={() => setShowReadersModal(false)}
+        modal
+        closable={true}
+        showHeader={false}
+        className="readers-modal"
+        pt={{
+          root: { className: "backdrop-blur-sm rounded-2xl" },
+          mask: { className: "bg-black/30 backdrop-blur-sm" },
+          content: {
+            className:
+              "!p-0 !border-0 !rounded-2xl !shadow-2xl !bg-transparent overflow-hidden max-w-[500px] w-full",
+          },
+        }}
+      >
+        <div className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-blue-950/30 dark:via-neutral-900 dark:to-indigo-950/30 rounded-2xl border border-blue-200 dark:border-blue-800/50 overflow-hidden">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white relative overflow-hidden">
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+            <div className="relative z-10">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="bg-white/20 p-2 rounded-full">
+                    <Icon
+                      icon="material-symbols:groups-rounded"
+                      className="h-6 w-6"
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold">Readers</h3>
+                    <p className="text-blue-100 text-sm">
+                      Who has read this post
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowReadersModal(false)}
+                  className="hover:bg-white/20 p-2 rounded-full transition-colors"
+                >
+                  <Icon
+                    icon="material-symbols:close-rounded"
+                    className="h-5 w-5"
+                  />
+                </button>
+              </div>
+            </div>
+            {/* Decorative elements */}
+            <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/5 rounded-full"></div>
+            <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-white/5 rounded-full"></div>
+          </div>
+
+          {/* Content */}
+          <div className="p-6">
+            {post?.readers && post.readers.length > 0 ? (
+              <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
+                {post.readers.map((reader, index: number) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-4 p-4 bg-white/50 dark:bg-neutral-800/50 rounded-xl border border-gray-200/50 dark:border-neutral-700/50 hover:bg-white/70 dark:hover:bg-neutral-800/70 transition-all duration-200 hover:shadow-md"
+                  >
+                    {/* Avatar */}
+                    <div className="flex-shrink-0">
+                      <Avatar
+                        label={`${reader.user?.firstName?.[0] || "?"}${
+                          reader.user?.lastName?.[0] || "?"
+                        }`}
+                        shape="circle"
+                        className="font-bold bg-gradient-to-br from-blue-500 to-indigo-600 text-white h-12 w-12 shadow-lg"
+                      />
+                    </div>
+
+                    {/* User Info */}
+                    <div className="flex-grow min-w-0">
+                      <h4 className="font-semibold text-gray-900 dark:text-white truncate">
+                        {reader.user?.firstName} {reader.user?.lastName}
+                      </h4>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                        ID: {reader.user?.employeeId || "N/A"}
+                      </p>
+                    </div>
+
+                    {/* Time Info */}
+                    <div className="flex-shrink-0 text-right">
+                      <div className="bg-blue-100 dark:bg-blue-900/50 px-3 py-1 rounded-full">
+                        <p className="text-xs font-medium text-blue-700 dark:text-blue-300">
+                          {formatTimeAgo(String(reader.createdAt))}
+                        </p>
+                      </div>
+                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                        {new Date(reader.createdAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <div className="mb-4">
+                  <Icon
+                    icon="material-symbols:person-off-rounded"
+                    className="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto"
+                  />
+                </div>
+                <h4 className="text-lg font-semibold text-gray-600 dark:text-gray-400 mb-2">
+                  No Readers Yet
+                </h4>
+                <p className="text-gray-500 dark:text-gray-500 text-sm">
+                  This post hasn&apos;t been read by anyone yet.
+                </p>
+              </div>
+            )}
+
+            {/* Footer Stats */}
+            {post?.readers && post.readers.length > 0 && (
+              <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 rounded-xl border border-blue-200/50 dark:border-blue-800/50">
+                <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-2">
+                    <Icon
+                      icon="material-symbols:visibility-rounded"
+                      className="h-4 w-4 text-blue-600 dark:text-blue-400"
+                    />
+                    <span className="font-medium text-blue-700 dark:text-blue-300">
+                      Total Readers: {post.readers.length}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Icon
+                      icon="material-symbols:trending-up-rounded"
+                      className="h-4 w-4 text-green-600 dark:text-green-400"
+                    />
+                    <span className="font-medium text-green-700 dark:text-green-300">
+                      {post?.census?.readPercentage || "0%"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </Dialog>
+
       <Toast ref={toastRef} />
       <div
         onClick={generalPost ? handleClick : undefined}
@@ -469,6 +731,23 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           generalPost && "cursor-pointer"
         } relative bg-[#EEE] dark:bg-[#1f1f1f] shadow-lg border border-gray-200 dark:border-neutral-700 rounded-xl p-6 my-6 transition-all duration-300 hover:shadow-xl max-w-[80%] mx-auto`}
       >
+        {/* Watermark for non-downloadable documents */}
+        {!post?.downloadable && (
+          <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden rounded-xl">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="transform -rotate-45 text-red-500/20 dark:text-red-400/20 text-6xl font-bold whitespace-nowrap select-none">
+                NOT DOWNLOADABLE
+              </div>
+            </div>
+            <div className="absolute top-1/4 left-1/4 transform -rotate-45 text-red-500/15 dark:text-red-400/15 text-4xl font-bold whitespace-nowrap select-none">
+              RESTRICTED DOCUMENT
+            </div>
+            <div className="absolute bottom-1/4 right-1/4 transform -rotate-45 text-red-500/15 dark:text-red-400/15 text-4xl font-bold whitespace-nowrap select-none">
+              VIEW ONLY
+            </div>
+          </div>
+        )}
+
         {deptIds.includes(userDeptId.toString()) &&
           !generalPost &&
           isRead === false && (
@@ -481,7 +760,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           )}
 
         {/* Header */}
-        <div className="flex items-start gap-2 mb-6 justify-between">
+        <div className="flex items-start gap-2 mb-6 justify-between relative z-20">
           <div className="flex gap-3 items-start">
             {userData && (
               <Avatar
@@ -554,7 +833,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
         </div>
 
         {/* Title & Status */}
-        <div className="w-full flex justify-between items-start mb-4">
+        <div className="w-full flex justify-between items-start mb-4 relative z-20">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
               <h1 className="text-2xl font-semibold tracking-tight text-blue-800 dark:text-blue-300">
@@ -578,24 +857,27 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           </div>
 
           {checkDept() && (
-            <div className="bg-[#EEE]/50 backdrop-blur px-4 py-1 shadow h-8 flex items-center rounded mb-2">
+            <Button
+              onClick={() => setShowReadersModal(true)}
+              className="bg-[#EEE]/50 hover:bg-white/80 backdrop-blur px-4 py-1 shadow h-8 flex items-center rounded cursor-pointer mb-2"
+            >
               <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
                 {post?.census.readPercentage} have read this
               </p>
-            </div>
+            </Button>
           )}
         </div>
 
-        <hr className="my-4 border-t border-gray-300 dark:border-neutral-700" />
+        <hr className="my-4 border-t border-gray-300 dark:border-neutral-700 relative z-20" />
 
         {/* Post message */}
-        <p className="text-base text-gray-800 dark:text-gray-200 mb-4 whitespace-pre-line leading-relaxed">
+        <p className="text-base text-gray-800 dark:text-gray-200 mb-4 whitespace-pre-line leading-relaxed relative z-20">
           {post?.message}
         </p>
 
         {/* Images */}
         {post?.imageLocations && post?.imageLocations?.length > 0 && (
-          <div className="bg-gray-100 dark:bg-neutral-800 p-4 rounded-xl mb-4">
+          <div className="bg-gray-100 dark:bg-neutral-800 p-4 rounded-xl mb-4 relative z-20">
             <ImagePaginator filePreviews={preview} currentPage={currentIndex} />
           </div>
         )}
@@ -605,7 +887,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           post?.imageLocations &&
           post?.imageLocations?.length > 0 &&
           !post.folderId && (
-            <div className="flex justify-end mt-4">
+            <div className="flex justify-end mt-4 relative z-20">
               <div
                 onClick={
                   post.imageLocations.length > 1
@@ -627,12 +909,11 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
             </div>
           )}
       </div>
-
       {/* Comments */}
       {!generalPost && (
         <>
           {comments && (
-            <div className="  p-4 mt-6">
+            <div className="p-4 mt-6">
               <Comments comments={comments} postId={id} />
               <CommentBar
                 comments={comments}
@@ -643,7 +924,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           )}
         </>
       )}
-
       {/* Floating paginator */}
       {preview.length > 0 && (
         <div className="h-10 w-36 flex items-center justify-between bg-[#EEEEEE] dark:bg-neutral-800 fixed top-60 z-40 right-7 shadow rounded-lg">
@@ -667,6 +947,47 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           />
         </div>
       )}
+
+      {/* CSS for watermark animations */}
+      <style jsx>{`
+        .non-downloadable-dialog .p-dialog-content {
+          background: transparent !important;
+        }
+
+        @keyframes gentleBounce {
+          0%,
+          20%,
+          50%,
+          80%,
+          100% {
+            transform: translateY(0);
+          }
+          40% {
+            transform: translateY(-5px);
+          }
+          60% {
+            transform: translateY(-3px);
+          }
+        }
+
+        .non-downloadable-dialog {
+          animation: gentleBounce 0.6s ease-out;
+        }
+
+        @keyframes fadeInOut {
+          0%,
+          100% {
+            opacity: 0.1;
+          }
+          50% {
+            opacity: 0.3;
+          }
+        }
+
+        .watermark-pulse {
+          animation: fadeInOut 4s ease-in-out infinite;
+        }
+      `}</style>
     </>
   );
 };

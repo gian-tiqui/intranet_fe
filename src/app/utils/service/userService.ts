@@ -79,7 +79,30 @@ const uploadProfilePicture = async (
   });
 };
 
+type UserUpdate = {
+  address?: string;
+  dob?: Date;
+  firstName?: string;
+  gender?: string;
+  jobTitle?: string;
+  lastName?: string;
+  localNumber?: string;
+  middleName?: string;
+  officeLocation?: string;
+  suffix?: string;
+};
+
+const updateUserProfile = async (
+  userId: number | undefined,
+  data: UserUpdate
+) => {
+  return apiClient.patch(`${API_BASE}/users/${userId}/profileUpdate`, {
+    ...data,
+  });
+};
+
 export {
+  updateUserProfile,
   getLastLogin,
   getDraftsByUserId,
   findUsers,
