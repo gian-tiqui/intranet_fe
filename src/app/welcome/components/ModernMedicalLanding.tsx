@@ -172,12 +172,12 @@ const ModernMedicalLanding: React.FC = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-white/10 backdrop-blur-md z-50">
           <div className="bg-white/30 border border-white/40 backdrop-blur-lg p-10 rounded-2xl shadow-2xl max-w-lg w-[90%] text-center text-blue-600">
             <h2 className="text-3xl font-bold mb-4 tracking-tight">
-              Welcome to the Westlake Intranet
+              Welcome to the Westlake Employee Portal
             </h2>
             <p className="text-lg font-medium text-gray-700/80 mb-6">
               This portal is strictly for authorized employees of Westlake
-              Hospital. If you are not affiliated, please refrain from using
-              this platform.
+              Medical Center . If you are not affiliated, please refrain from
+              using this platform.
             </p>
             <button
               className="bg-blue-600/80 hover:bg-blue-600/100 hover:scale-110 text-white font-semibold px-6 py-3 rounded-full transition-all backdrop-blur-md border border-white/50"

@@ -16,7 +16,8 @@ import SettingsDialog from "./SettingsDialog";
 import UserModal from "./UserModal";
 import useLoginStore from "../store/loggedInStore";
 import { useQuery } from "@tanstack/react-query";
-import { getLastLogin } from "../utils/service/userService";
+import { findUserById, getLastLogin } from "../utils/service/userService";
+import useRefetchUserStore from "../store/refetchUserData";
 
 interface Props {
   isMobile?: boolean;
@@ -29,7 +30,6 @@ const UserButton: React.FC<Props> = () => {
   const { setIsLoggedIn } = useLoginStore();
   const [showUserModal, setShowUserModal] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [showMyPosts, setShowMyPosts] = useState(false);
   const [userData, setUserData] = useState<{
     firstName: string;
@@ -38,6 +38,26 @@ const UserButton: React.FC<Props> = () => {
   } | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [date, setDate] = useState<string>("");
+
+  const {
+    data: userQueryData,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: [`user-${userId}`],
+    queryFn: () => findUserById(userId),
+    enabled: !!userId,
+  });
+
+  const { setRefetch } = useRefetchUserStore();
+
+  useEffect(() => {}, [userQueryData]);
+
+  useEffect(() => {
+    if (refetch) {
+      setRefetch(refetch);
+    }
+  }, [refetch, setRefetch]);
 
   useEffect(() => {
     const userId = decodeUserData()?.sub;
@@ -72,15 +92,23 @@ const UserButton: React.FC<Props> = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const data = decodeUserData();
-    if (data) {
-      setUserData(data);
-      const dept = data.departmentCode?.toLowerCase();
-      if (dept === "it") setIsAdmin(true);
-      if (["hr", "qm", "admin"].includes(dept)) setShowMyPosts(true);
+    if (userQueryData) {
+      setUserData({
+        firstName: userQueryData.data.user.firstName,
+        lastName: userQueryData.data.user.lastName,
+        departmentName: userQueryData.data.user.department.departmentName,
+      });
+
+      if (userQueryData.data.user.department.departmentCode === "it")
+        setIsAdmin(true);
+      if (
+        ["hr", "qm", "admin"].includes(
+          userQueryData.data.user.department.departmentCode
+        )
+      )
+        setShowMyPosts(true);
     }
-    setLoading(false);
-  }, []);
+  }, [userQueryData]);
 
   const handleLogout = async (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -168,7 +196,7 @@ const UserButton: React.FC<Props> = () => {
           </div>
 
           <div className="flex-1 min-w-0">
-            {loading ? (
+            {isLoading ? (
               <div className="space-y-2">
                 <div className="h-3 bg-gray-300 dark:bg-gray-600 rounded animate-pulse" />
                 <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4" />

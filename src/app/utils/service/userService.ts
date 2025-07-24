@@ -28,7 +28,7 @@ const findUsers = async (params: Query) => {
 };
 
 const findUserById = async (
-  id: number | undefined
+  id: number | undefined | null
 ): Promise<AxiosResponse<{ user: User }>> => {
   return apiClient.get(`${API_BASE}/users/${id}`);
 };

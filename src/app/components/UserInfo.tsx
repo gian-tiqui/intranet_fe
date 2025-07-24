@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import { Icon } from "@iconify/react";
 import apiClient from "../http-common/apiUrl";
 import { API_BASE, INTRANET } from "../bindings/binding";
 import { decodeUserData } from "../functions/functions";
-import { User } from "../types/types";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
+import { useQuery } from "@tanstack/react-query";
+import { findUserById } from "../utils/service/userService";
+import CustomToast from "./CustomToast";
+import { Toast } from "primereact/toast";
+import useRefetchUserStore from "../store/refetchUserData";
 
 interface FormFields {
   firstName: string | undefined;
@@ -18,6 +21,9 @@ interface FormFields {
   gender: string | undefined;
   dob: Date | undefined;
   address: string | undefined;
+  localNumber: string | undefined;
+  jobTitle: string | undefined;
+  officeLocation: string | undefined;
 }
 
 const UserInfo = () => {
@@ -28,8 +34,8 @@ const UserInfo = () => {
     watch,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>();
-  const [user, setUser] = useState<User | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(true);
+  const toastRef = useRef<Toast>(null);
+  const { refetch: refetchUser } = useRefetchUserStore();
 
   const genderOptions = [
     { label: "Male", value: "Male" },
@@ -61,53 +67,53 @@ const UserInfo = () => {
       );
 
       if (response.data.statusCode === 200) {
-        toast.success(response.data.message, {
-          className:
-            "bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-green-200 dark:border-green-800",
+        toastRef.current?.show({
+          severity: "success",
+          summary: "Profile Updated",
+          detail: "Your profile has been successfully updated.",
+          life: 3000,
         });
+
+        refetch();
+        refetchUser();
       }
     } catch (error) {
       const { message } = error as { message: string };
 
-      toast.error(message, {
-        className:
-          "bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-red-200 dark:border-red-800",
+      toastRef.current?.show({
+        severity: "error",
+        summary: "Update Failed",
+        detail: message || "An error occurred while updating your profile.",
+        life: 3000,
       });
     }
   };
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const userId = decodeUserData()?.sub;
+  const {
+    data: user,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["user-profile"],
+    queryFn: () => {
+      const id = decodeUserData()?.sub;
 
-      if (userId) {
-        try {
-          const response = await apiClient.get(`${API_BASE}/users/${userId}`);
-
-          if (response.data.statusCode === 200) {
-            setUser(response.data.user);
-          }
-        } catch (error) {
-          const { message } = error as { message: string };
-          toast.error(message);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchUserData();
-  }, []);
+      return findUserById(id);
+    },
+  });
 
   useEffect(() => {
     const setFields = () => {
       if (user) {
-        setValue("firstName", user.firstName);
-        setValue("middleName", user.middleName);
-        setValue("lastName", user.lastName);
-        setValue("address", user.address);
-        setValue("gender", user.gender);
-        setValue("suffix", user.suffix);
+        setValue("firstName", user.data.user.firstName);
+        setValue("middleName", user.data.user.middleName);
+        setValue("lastName", user.data.user.lastName);
+        setValue("address", user.data.user.address);
+        setValue("gender", user.data.user.gender);
+        setValue("suffix", user.data.user.suffix);
+        setValue("localNumber", user.data.user.localNumber);
+        setValue("jobTitle", user.data.user.jobTitle);
+        setValue("officeLocation", user.data.user.officeLocation);
       }
     };
 
@@ -128,6 +134,7 @@ const UserInfo = () => {
   return (
     <div className="max-w-2xl mx-auto">
       {/* Header Section */}
+      <CustomToast ref={toastRef} />
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
@@ -313,6 +320,27 @@ const UserInfo = () => {
               )}
             </div>
 
+            {/* Local Number */}
+            <div className="space-y-2">
+              <label
+                htmlFor="localNumber"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                Local Number
+              </label>
+              <InputText
+                id="localNumber"
+                {...register("localNumber")}
+                pt={{
+                  root: {
+                    className:
+                      "w-full px-4 py-3 text-sm bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400",
+                  },
+                }}
+                placeholder="Enter local number"
+              />
+            </div>
+
             {/* Address */}
             <div className="space-y-2 md:col-span-2">
               <label
@@ -341,6 +369,57 @@ const UserInfo = () => {
                   {errors.address.message}
                 </p>
               )}
+            </div>
+          </div>
+        </div>
+
+        {/* Work Information Section */}
+        <div className="bg-gray-50/50 dark:bg-gray-800/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-700/50">
+          <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <Icon icon="mdi:briefcase" className="w-4 h-4" />
+            Work Information
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Job Title */}
+            <div className="space-y-2">
+              <label
+                htmlFor="jobTitle"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                Job Title
+              </label>
+              <InputText
+                id="jobTitle"
+                {...register("jobTitle")}
+                pt={{
+                  root: {
+                    className:
+                      "w-full px-4 py-3 text-sm bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400",
+                  },
+                }}
+                placeholder="Enter job title"
+              />
+            </div>
+
+            {/* Office Location */}
+            <div className="space-y-2">
+              <label
+                htmlFor="officeLocation"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                Office Location
+              </label>
+              <InputText
+                id="officeLocation"
+                {...register("officeLocation")}
+                pt={{
+                  root: {
+                    className:
+                      "w-full px-4 py-3 text-sm bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400",
+                  },
+                }}
+                placeholder="Enter office location"
+              />
             </div>
           </div>
         </div>
