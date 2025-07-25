@@ -30,6 +30,7 @@ import useDepartments from "../custom-hooks/departments";
 import { getPostTypes } from "../utils/service/postTypeService";
 import { INTRANET } from "../bindings/binding";
 import Cookies from "js-cookie";
+import { getBookMarksByUserID } from "../utils/service/userService";
 
 const FolderGrid = () => {
   const departments = useDepartments();
@@ -71,6 +72,11 @@ const FolderGrid = () => {
       Cookies.get(INTRANET) !== undefined &&
       !!localStorage.getItem(INTRANET) &&
       localStorage.getItem(INTRANET) !== undefined,
+  });
+
+  const { data: bookmarksResponse } = useQuery({
+    queryKey: [`bookmark`, decodeUserData()?.sub],
+    queryFn: () => getBookMarksByUserID(decodeUserData()?.sub),
   });
 
   useEffect(() => {
@@ -124,6 +130,7 @@ const FolderGrid = () => {
         setVisible={setAddFolderDialogVisible}
       />
       <FolderContentDialog
+        bookMarksIds={bookmarksResponse?.data.bookMarksIds}
         visible={folderDialogVisible}
         setVisible={setFolderDialogVisible}
         folderId={folderId}

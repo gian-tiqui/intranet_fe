@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Dialog } from "primereact/dialog";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   checkDept,
   decodeUserData,
@@ -30,12 +30,14 @@ interface Props {
   setVisible: (visible: boolean) => void;
   folderId: number | undefined;
   setFolderId: (folderId: number) => void;
+  bookMarksIds: number[];
 }
 
 const FolderContentDialog: React.FC<Props> = ({
   visible,
   setVisible,
   folderId,
+  bookMarksIds,
 }) => {
   const toastRef = useRef<Toast>(null);
   const [editSubfolderVisible, setEditSubfolderVisible] =
@@ -87,6 +89,17 @@ const FolderContentDialog: React.FC<Props> = ({
     },
     enabled: !!folderId,
   });
+
+  const organizedFolders = useMemo(() => {
+    if (!data?.data.subfolders) return [];
+    const markedFolders = data.data.subfolders
+      .filter((subfolder) => bookMarksIds.includes(subfolder.id))
+      .map((subfolder) => ({ ...subfolder, pinned: true }));
+    const unMarkedFolders = data.data.subfolders
+      .filter((subfolder) => !bookMarksIds.includes(subfolder.id))
+      .map((subfolder) => ({ ...subfolder, pinned: false }));
+    return [...markedFolders, ...unMarkedFolders];
+  }, [bookMarksIds, data]);
 
   const removeFolder = (id: number) => {
     deleteFolder(id)
@@ -192,20 +205,22 @@ const FolderContentDialog: React.FC<Props> = ({
         <div>
           {folderPosts ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
-              {data?.data?.subfolders?.map((subfolder: Folder) => (
-                <SubfolderContainer
-                  key={subfolder.id}
-                  subfolder={subfolder}
-                  setVisible={setVisible}
-                  handleSubfolderClick={handleSubfolderClick}
-                  checkDept={checkDept}
-                  overlayPanelsRef={overlayPanelsRef}
-                  setOverlayPanelRef={setOverlayPanelRef}
-                  handleEditClick={handleEditClick}
-                  handleDeleteClick={handleDeleteClick}
-                  blueFolder={blueFolder}
-                />
-              ))}
+              {organizedFolders.map(
+                (subfolder: Folder & { pinned: boolean }) => (
+                  <SubfolderContainer
+                    key={subfolder.id}
+                    subfolder={subfolder}
+                    setVisible={setVisible}
+                    handleSubfolderClick={handleSubfolderClick}
+                    checkDept={checkDept}
+                    overlayPanelsRef={overlayPanelsRef}
+                    setOverlayPanelRef={setOverlayPanelRef}
+                    handleEditClick={handleEditClick}
+                    handleDeleteClick={handleDeleteClick}
+                    blueFolder={blueFolder}
+                  />
+                )
+              )}
 
               {folderPosts.data.post && folderPosts.data.post.length > 0
                 ? folderPosts.data.post.map((post: Post) => {
@@ -227,6 +242,7 @@ const FolderContentDialog: React.FC<Props> = ({
 
       {selectedSubfolder && (
         <FolderContentDialog
+          bookMarksIds={bookMarksIds}
           visible={subfolderDialogVisible}
           setVisible={setSubfolderDialogVisible}
           folderId={selectedSubfolder}
