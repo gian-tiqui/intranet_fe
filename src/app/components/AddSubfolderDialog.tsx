@@ -32,6 +32,7 @@ interface FormFields {
   name: string;
   isPublished: number;
   deptIds: string;
+  bookMarkDeptIds: string;
 }
 
 const AddSubfolderDialog: React.FC<Props> = ({
@@ -54,6 +55,7 @@ const AddSubfolderDialog: React.FC<Props> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const departments = useDepartments();
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
+  const [bookmarkDepartments, setBookmarkDepartments] = useState<string[]>([]);
 
   const handleFormSubmit = async (data: FormFields) => {
     const userId = decodeUserData()?.sub;
@@ -71,6 +73,7 @@ const AddSubfolderDialog: React.FC<Props> = ({
         deptIds: data.deptIds,
         userId,
         createDefaultFolders,
+        bookmarkDeptIds: data.bookMarkDeptIds,
       });
 
       if (response.status === 201) {
@@ -114,6 +117,12 @@ const AddSubfolderDialog: React.FC<Props> = ({
     const joinedDepartmentIds = selectedDepartments.join(",");
     setValue("deptIds", joinedDepartmentIds);
   }, [selectedDepartments, setValue]);
+
+  useEffect(() => {
+    if (!bookmarkDepartments) return;
+    const joinedDepartmentIds = bookmarkDepartments.join(",");
+    setValue("bookMarkDeptIds", joinedDepartmentIds);
+  }, [bookmarkDepartments, setValue]);
 
   useEffect(() => {
     setValue("isPublished", isChecked ? 1 : 0);
@@ -205,9 +214,20 @@ const AddSubfolderDialog: React.FC<Props> = ({
           {/* Department Dropdown */}
           <div className="space-y-2">
             <CreateFolderDropdown
+              label="Department Recipients"
               departments={departments}
               selectedDepartments={selectedDepartments}
               setSelectedDepartments={setSelectedDepartments}
+            />
+          </div>
+
+          {/* Department Bookmark Dropdown */}
+          <div className="space-y-2">
+            <CreateFolderDropdown
+              label="Bookmark this to "
+              departments={departments}
+              selectedDepartments={bookmarkDepartments}
+              setSelectedDepartments={setBookmarkDepartments}
             />
           </div>
 

@@ -6,7 +6,7 @@ import { PrimeIcons } from "primereact/api";
 import { Folder } from "../types/types";
 
 interface Props {
-  subfolder: Folder;
+  subfolder: Folder & { pinned: boolean };
   setVisible: (visible: boolean) => void;
   handleSubfolderClick: (subfolderId: number) => void;
   checkDept: () => boolean;
@@ -48,17 +48,61 @@ const ModernSubfolderContainer: React.FC<Props> = ({
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group relative h-36 cursor-pointer rounded-2xl overflow-hidden
+      className={`group relative h-36 cursor-pointer rounded-2xl overflow-hidden
                  transform transition-all duration-300 ease-out
                  hover:scale-[1.02] hover:-translate-y-1 hover:shadow-2xl
                  bg-gradient-to-br from-white via-slate-50 to-slate-100
-                 border border-slate-200/50 backdrop-blur-sm"
+                 border border-slate-200/50 backdrop-blur-sm`}
       style={{
         background: isHovered
           ? "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)"
           : "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)",
       }}
     >
+      {/* Improved Pin Design - Top Right Position */}
+      {subfolder.pinned && (
+        <div className="absolute top-2 right-2 z-50">
+          <div
+            className={`relative flex items-center justify-center w-6 h-6 rounded-full
+                       transition-all duration-300 transform
+                       ${
+                         isHovered
+                           ? "bg-white/20 backdrop-blur-sm scale-110 shadow-lg"
+                           : "bg-amber-100 shadow-md"
+                       }`}
+          >
+            {/* Pin Icon SVG */}
+            <svg
+              className={`w-3.5 h-3.5 transition-all duration-300 ${
+                isHovered ? "text-white drop-shadow-sm" : "text-amber-600"
+              }`}
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M16,12V4H17V2H7V4H8V12L6,14V16H11.2V22H12.8V16H18V14L16,12Z" />
+            </svg>
+
+            {/* Pulsing ring effect */}
+            <div
+              className={`absolute inset-0 rounded-full border-2 transition-all duration-500
+                         ${
+                           isHovered
+                             ? "border-white/40 animate-ping"
+                             : "border-amber-300/50"
+                         }`}
+              style={{ animationDuration: "2s" }}
+            />
+
+            {/* Shimmer effect */}
+            <div
+              className={`absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/30 to-transparent
+                         transform -skew-x-12 transition-transform duration-1000
+                         ${isHovered ? "translate-x-8" : "-translate-x-8"}`}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Animated background pattern */}
       <div
         className="absolute inset-0 opacity-5 group-hover:opacity-15 transition-opacity duration-300"
@@ -211,14 +255,16 @@ const ModernSubfolderContainer: React.FC<Props> = ({
                           }`}
           />
 
-          {/* Folder type indicator */}
+          {/* Folder type indicator with pin status */}
           <div
             className={`flex items-center gap-2 transition-all duration-300 ${
               isHovered ? "opacity-100" : "opacity-0"
             }`}
           >
             <div className="w-1.5 h-1.5 bg-white/60 rounded-full" />
-            <span className="text-xs text-white/80 font-medium">Folder</span>
+            <span className="text-xs text-white/80 font-medium">
+              {subfolder.pinned ? "Pinned Folder" : "Folder"}
+            </span>
           </div>
         </div>
       </div>

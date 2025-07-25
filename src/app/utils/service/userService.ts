@@ -101,7 +101,12 @@ const updateUserProfile = async (
   });
 };
 
+const getBookMarksByUserID = (userId: number | undefined) => {
+  return apiClient.get(`${API_BASE}/users/${userId}/bookmarks`);
+};
+
 export {
+  getBookMarksByUserID,
   updateUserProfile,
   getLastLogin,
   getDraftsByUserId,

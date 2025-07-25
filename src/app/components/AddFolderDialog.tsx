@@ -24,6 +24,7 @@ interface FormFields {
   name: string;
   isPublished: number;
   deptIds: string;
+  bookMarkDeptIds: string;
 }
 
 const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
@@ -39,6 +40,7 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const departments = useDepartments();
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
+  const [bookmarkDepartments, setBookmarkDepartments] = useState<string[]>([]);
 
   const handleFormSubmit = async (data: FormFields) => {
     const userId = decodeUserData()?.sub;
@@ -53,6 +55,7 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
         isPublished: data.isPublished,
         deptIds: data.deptIds,
         userId,
+        bookmarkDeptIds: data.bookMarkDeptIds,
       });
 
       if (response.status === 201) {
@@ -64,6 +67,7 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
         refetch();
         reset();
         setSelectedDepartments([]);
+        setBookmarkDepartments([]);
         setIsChecked(false);
         setVisible(false);
       }
@@ -83,6 +87,7 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
     if (visible && !isLoading) {
       reset();
       setSelectedDepartments([]);
+      setBookmarkDepartments([]);
       setIsChecked(false);
       setVisible(false);
     }
@@ -93,6 +98,12 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
     const joinedDepartmentIds = selectedDepartments.join(",");
     setValue("deptIds", joinedDepartmentIds);
   }, [selectedDepartments, setValue]);
+
+  useEffect(() => {
+    if (!bookmarkDepartments) return;
+    const joinedDepartmentIds = bookmarkDepartments.join(",");
+    setValue("bookMarkDeptIds", joinedDepartmentIds);
+  }, [bookmarkDepartments, setValue]);
 
   useEffect(() => {
     setValue("isPublished", isChecked ? 1 : 0);
@@ -184,9 +195,20 @@ const AddFolderDialog: React.FC<Props> = ({ visible, setVisible, refetch }) => {
           {/* Department Dropdown */}
           <div className="space-y-2">
             <CreateFolderDropdown
+              label="Department Recipients"
               departments={departments}
               selectedDepartments={selectedDepartments}
               setSelectedDepartments={setSelectedDepartments}
+            />
+          </div>
+
+          {/* Bookmark Department Dropdown */}
+          <div className="space-y-2">
+            <CreateFolderDropdown
+              label="Bookmark this to "
+              departments={departments}
+              selectedDepartments={bookmarkDepartments}
+              setSelectedDepartments={setBookmarkDepartments}
             />
           </div>
 

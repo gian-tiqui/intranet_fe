@@ -1,6 +1,7 @@
 import { API_BASE } from "@/app/bindings/binding";
 import apiClient from "@/app/http-common/apiUrl";
-import { Query } from "@/app/types/types";
+import { Folder, Query } from "@/app/types/types";
+import { AxiosResponse } from "axios";
 
 const getFolders = async (params: Query) => {
   return apiClient.get(`${API_BASE}/folders`, { params });
@@ -10,8 +11,10 @@ const getFolderById = async (folderId: number) => {
   return apiClient.get(`${API_BASE}/folders/${folderId}`);
 };
 
-const getFolderSubfolders = async (folderId: number, params: Query) => {
-  if (!folderId) return;
+const getFolderSubfolders = async (
+  folderId: number,
+  params: Query
+): Promise<AxiosResponse<{ message: string; subfolders: Folder[] }>> => {
   return apiClient.get(`${API_BASE}/folders/${folderId}/subfolder`, { params });
 };
 
@@ -30,17 +33,20 @@ const addMainFolder = async ({
   isPublished,
   deptIds,
   userId,
+  bookmarkDeptIds,
 }: {
   name: string;
   isPublished: number;
   deptIds: string;
   userId: number;
+  bookmarkDeptIds: string;
 }) => {
   return apiClient.post(`${API_BASE}/folders`, {
     name,
     isPublished,
     deptIds,
     userId,
+    bookmarkDeptIds,
   });
 };
 
@@ -51,6 +57,7 @@ const addSubfolder = async ({
   deptIds,
   userId,
   createDefaultFolders,
+  bookmarkDeptIds,
 }: {
   name: string;
   isPublished: number;
@@ -58,6 +65,7 @@ const addSubfolder = async ({
   deptIds: string;
   userId: number;
   createDefaultFolders?: number;
+  bookmarkDeptIds: string;
 }) => {
   return apiClient.post(`${API_BASE}/folders/${parentId}/subfolder`, {
     name,
@@ -65,6 +73,7 @@ const addSubfolder = async ({
     deptIds,
     userId,
     createDefaultFolders,
+    bookmarkDeptIds,
   });
 };
 

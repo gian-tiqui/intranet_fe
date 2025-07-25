@@ -6,18 +6,18 @@ interface Props {
   departments: Department[];
   selectedDepartments: string[];
   setSelectedDepartments: Dispatch<SetStateAction<string[]>>;
+  label: string;
 }
 
 const CreateFolderDropdown: React.FC<Props> = ({
   departments,
   selectedDepartments,
   setSelectedDepartments,
+  label,
 }) => {
   return (
     <div className="space-y-2">
-      <label className="text-sm font-semibold text-gray-700">
-        Department Recipients
-      </label>
+      <label className="text-sm font-semibold text-gray-700">{label}</label>
       <MultiSelect
         value={selectedDepartments}
         options={departments.map((dept) => ({
