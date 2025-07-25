@@ -67,6 +67,11 @@ type PostReader = {
   user: User;
 };
 
+type UserUpdate = {
+  createdAt: Date;
+  user: User;
+};
+
 type ImageLocation = {
   id: number;
   imageLocation: string;
@@ -107,6 +112,28 @@ type Post = {
   childrenPosts: Post[];
   type: PostType;
 };
+
+// Add these interfaces to your types/types.ts file:
+export interface DepartmentInfo {
+  departmentName: string;
+  departmentCode: string;
+}
+
+export interface ReaderUser {
+  firstName: string;
+  lastName: string;
+  department: DepartmentInfo;
+}
+
+export interface GroupedDepartment {
+  departmentName: string;
+  departmentCode: string;
+  readers: PostReader[];
+}
+
+export interface GroupedReaders {
+  [key: string]: GroupedDepartment;
+}
 
 type PostType = {
   id: number;
@@ -432,6 +459,7 @@ export type {
   Decoder,
   UnreadPost,
   DepartmentMonitoring,
+  UserUpdate,
   TabContent,
   UserMonitoring,
   TutorialContent,
@@ -447,6 +475,7 @@ export type {
   Department,
   MinMax,
   ThType,
+  PostReader,
   NavLinksType,
   PostDepartment,
   TabType,
