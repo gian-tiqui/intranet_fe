@@ -281,7 +281,7 @@ const Divider: React.FC<Props> = ({ children }) => {
           },
           icon: {
             className:
-              "w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 grid place-content-center text-white text-2xl shadow-xl flex-shrink-0 ring-4 ring-orange-500/20",
+              "w-16 h-16 rounded-2xl bg-gradient-to-br px-5 from-amber-400 via-orange-500 to-red-500 grid place-content-center text-white text-2xl shadow-xl flex-shrink-0 ring-4 ring-orange-500/20",
           },
           acceptButton: {
             className: `

@@ -3,7 +3,14 @@ import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useRef } from "react";
 import PostSkeleton from "./PostSkeleton";
 import Comments from "./Comments";
-import { GroupedFiles, ImageLocation, PostComment } from "@/app/types/types";
+import {
+  GroupedDepartment,
+  GroupedFiles,
+  GroupedReaders,
+  ImageLocation,
+  PostComment,
+  PostReader,
+} from "@/app/types/types";
 import CommentBar from "./CommentBar";
 import { API_BASE } from "@/app/bindings/binding";
 import {
@@ -13,7 +20,6 @@ import {
   fetchPostDeptIds,
 } from "@/app/functions/functions";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import SmallToLarge from "@/app/components/animation/SmallToLarge";
 import useEditModalStore from "@/app/store/editModal";
 import usePostIdStore from "@/app/store/postId";
 import { jsPDF } from "jspdf";
@@ -73,6 +79,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
   const [userDeptId, setUserDeptId] = useState<number>(-1);
   const { setImages } = useImagesStore();
   const { signal, setSignal } = useSignalStore();
+  const [expandedDepts, setExpandedDepts] = useState<Set<string>>(new Set());
   const [userData, setUserData] = useState<{
     firstName: string;
     lastName: string;
@@ -527,7 +534,11 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
                 non-downloadable
               </span>{" "}
               by the author. You can view the content but cannot save it to your
-              device.
+              device.{" "}
+              <span className="font-semibold text-red-600 dark:text-red-400">
+                Do not take screenshots or photos
+              </span>{" "}
+              of this document as it may contain sensitive information.
             </p>
 
             {/* Visual indicator */}
@@ -586,7 +597,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           mask: { className: "bg-black/30 backdrop-blur-sm" },
           content: {
             className:
-              "!p-0 !border-0 !rounded-2xl !shadow-2xl !bg-transparent overflow-hidden max-w-[500px] w-full",
+              "!p-0 !border-0 !rounded-2xl !shadow-2xl !bg-transparent overflow-hidden max-w-[700px] w-full",
           },
         }}
       >
@@ -604,7 +615,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
                     />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold">Readers</h3>
+                    <h3 className="text-xl font-bold">Readers by Department</h3>
                     <p className="text-blue-100 text-sm">
                       Who has read this post
                     </p>
@@ -628,93 +639,236 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
 
           {/* Content */}
           <div className="p-6">
-            {post?.readers && post.readers.length > 0 ? (
-              <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
-                {post.readers.map((reader, index: number) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-4 p-4 bg-white/50 dark:bg-neutral-800/50 rounded-xl border border-gray-200/50 dark:border-neutral-700/50 hover:bg-white/70 dark:hover:bg-neutral-800/70 transition-all duration-200 hover:shadow-md"
-                  >
-                    {/* Avatar */}
-                    <div className="flex-shrink-0">
-                      <Avatar
-                        label={`${reader.user?.firstName?.[0] || "?"}${
-                          reader.user?.lastName?.[0] || "?"
-                        }`}
-                        shape="circle"
-                        className="font-bold bg-gradient-to-br from-blue-500 to-indigo-600 text-white h-12 w-12 shadow-lg"
+            {(() => {
+              if (!post?.readers || post.readers.length === 0) {
+                return (
+                  <div className="text-center py-12">
+                    <div className="mb-4">
+                      <Icon
+                        icon="material-symbols:person-off-rounded"
+                        className="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto"
                       />
                     </div>
-
-                    {/* User Info */}
-                    <div className="flex-grow min-w-0">
-                      <h4 className="font-semibold text-gray-900 dark:text-white truncate">
-                        {reader.user?.firstName} {reader.user?.lastName}
-                      </h4>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                        ID: {reader.user?.employeeId || "N/A"}
-                      </p>
-                    </div>
-
-                    {/* Time Info */}
-                    <div className="flex-shrink-0 text-right">
-                      <div className="bg-blue-100 dark:bg-blue-900/50 px-3 py-1 rounded-full">
-                        <p className="text-xs font-medium text-blue-700 dark:text-blue-300">
-                          {formatTimeAgo(String(reader.createdAt))}
-                        </p>
-                      </div>
-                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                        {new Date(reader.createdAt).toLocaleDateString(
-                          "en-US",
-                          {
-                            month: "short",
-                            day: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }
-                        )}
-                      </p>
-                    </div>
+                    <h4 className="text-lg font-semibold text-gray-600 dark:text-gray-400 mb-2">
+                      No Readers Yet
+                    </h4>
+                    <p className="text-gray-500 dark:text-gray-500 text-sm">
+                      This post hasn&apos;t been read by anyone yet.
+                    </p>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <div className="mb-4">
-                  <Icon
-                    icon="material-symbols:person-off-rounded"
-                    className="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto"
-                  />
+                );
+              }
+
+              // Group readers by department
+              const groupedReaders: GroupedReaders = post.readers.reduce(
+                (acc: GroupedReaders, reader: PostReader) => {
+                  const deptCode =
+                    reader.user?.department?.departmentCode || "Unknown";
+                  const deptName =
+                    reader.user?.department?.departmentName ||
+                    "Unknown Department";
+
+                  if (!acc[deptCode]) {
+                    acc[deptCode] = {
+                      departmentName: deptName,
+                      departmentCode: deptCode,
+                      readers: [],
+                    };
+                  }
+
+                  acc[deptCode].readers.push(reader);
+                  return acc;
+                },
+                {}
+              );
+
+              const toggleDepartment = (deptCode: string) => {
+                const newExpanded = new Set(expandedDepts);
+                if (newExpanded.has(deptCode)) {
+                  newExpanded.delete(deptCode);
+                } else {
+                  newExpanded.add(deptCode);
+                }
+                setExpandedDepts(newExpanded);
+              };
+
+              return (
+                <div className="space-y-4 max-h-[500px] overflow-y-auto custom-scrollbar">
+                  {Object.entries(groupedReaders)
+                    .sort(
+                      ([, a], [, b]) =>
+                        (b as GroupedDepartment).readers.length -
+                        (a as GroupedDepartment).readers.length
+                    )
+                    .map(
+                      ([deptCode, department]: [string, GroupedDepartment]) => (
+                        <div
+                          key={deptCode}
+                          className="bg-white/60 dark:bg-neutral-800/60 rounded-xl border border-gray-200/50 dark:border-neutral-700/50 overflow-hidden shadow-sm"
+                        >
+                          {/* Department Header */}
+                          <div
+                            onClick={() => toggleDepartment(deptCode)}
+                            className="flex items-center justify-between p-4 cursor-pointer hover:bg-white/80 dark:hover:bg-neutral-800/80 transition-all duration-200"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-2 rounded-lg shadow-md">
+                                <Icon
+                                  icon="material-symbols:corporate-fare-rounded"
+                                  className="h-5 w-5 text-white"
+                                />
+                              </div>
+                              <div>
+                                <h4 className="font-semibold text-gray-900 dark:text-white">
+                                  {department.departmentName}
+                                </h4>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                  {deptCode} • {department.readers.length}{" "}
+                                  reader
+                                  {department.readers.length !== 1 ? "s" : ""}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="bg-blue-100 dark:bg-blue-900/50 px-3 py-1 rounded-full">
+                                <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                                  {department.readers.length}
+                                </span>
+                              </div>
+                              <Icon
+                                icon={
+                                  expandedDepts.has(deptCode)
+                                    ? "material-symbols:expand-less-rounded"
+                                    : "material-symbols:expand-more-rounded"
+                                }
+                                className="h-6 w-6 text-gray-400 transition-transform duration-200"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Department Users */}
+                          {expandedDepts.has(deptCode) && (
+                            <div className="bg-gray-50/50 dark:bg-neutral-900/50 border-t border-gray-200/50 dark:border-neutral-700/50">
+                              <div className="p-4 space-y-3">
+                                {department.readers
+                                  .sort(
+                                    (a: PostReader, b: PostReader) =>
+                                      new Date(b.createdAt).getTime() -
+                                      new Date(a.createdAt).getTime()
+                                  )
+                                  .map((reader: PostReader, index: number) => (
+                                    <div
+                                      key={index}
+                                      className="flex items-center gap-4 p-3 bg-white/70 dark:bg-neutral-800/70 rounded-lg border border-gray-200/30 dark:border-neutral-700/30 hover:bg-white/90 dark:hover:bg-neutral-800/90 transition-all duration-200"
+                                    >
+                                      {/* Avatar */}
+                                      <div className="flex-shrink-0">
+                                        <Avatar
+                                          label={`${
+                                            reader.user?.firstName?.[0] || "?"
+                                          }${
+                                            reader.user?.lastName?.[0] || "?"
+                                          }`}
+                                          shape="circle"
+                                          className="font-bold bg-gradient-to-br from-green-500 to-teal-600 text-white h-10 w-10 shadow-md"
+                                        />
+                                      </div>
+
+                                      {/* User Info */}
+                                      <div className="flex-grow min-w-0">
+                                        <h5 className="font-medium text-gray-900 dark:text-white truncate">
+                                          {reader.user?.firstName}{" "}
+                                          {reader.user?.lastName}
+                                        </h5>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                          Read{" "}
+                                          {formatTimeAgo(
+                                            String(reader.createdAt)
+                                          )}
+                                        </p>
+                                      </div>
+
+                                      {/* Time Badge */}
+                                      <div className="flex-shrink-0">
+                                        <div className="bg-green-100 dark:bg-green-900/50 px-2 py-1 rounded-md">
+                                          <p className="text-xs font-medium text-green-700 dark:text-green-300">
+                                            {new Date(
+                                              reader.createdAt
+                                            ).toLocaleDateString("en-US", {
+                                              month: "short",
+                                              day: "numeric",
+                                              hour: "2-digit",
+                                              minute: "2-digit",
+                                            })}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )
+                    )}
                 </div>
-                <h4 className="text-lg font-semibold text-gray-600 dark:text-gray-400 mb-2">
-                  No Readers Yet
-                </h4>
-                <p className="text-gray-500 dark:text-gray-500 text-sm">
-                  This post hasn&apos;t been read by anyone yet.
-                </p>
-              </div>
-            )}
+              );
+            })()}
 
             {/* Footer Stats */}
             {post?.readers && post.readers.length > 0 && (
               <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 rounded-xl border border-blue-200/50 dark:border-blue-800/50">
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div className="flex flex-col items-center gap-1">
                     <Icon
                       icon="material-symbols:visibility-rounded"
-                      className="h-4 w-4 text-blue-600 dark:text-blue-400"
+                      className="h-5 w-5 text-blue-600 dark:text-blue-400"
                     />
-                    <span className="font-medium text-blue-700 dark:text-blue-300">
-                      Total Readers: {post.readers.length}
+                    <span className="text-lg font-bold text-blue-700 dark:text-blue-300">
+                      {post.readers.length}
+                    </span>
+                    <span className="text-xs text-blue-600 dark:text-blue-400">
+                      Total Readers
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-col items-center gap-1">
+                    <Icon
+                      icon="material-symbols:corporate-fare-rounded"
+                      className="h-5 w-5 text-purple-600 dark:text-purple-400"
+                    />
+                    <span className="text-lg font-bold text-purple-700 dark:text-purple-300">
+                      {
+                        Object.keys(
+                          post.readers.reduce(
+                            (
+                              acc: Record<string, boolean>,
+                              reader: PostReader
+                            ) => {
+                              const deptCode =
+                                reader.user?.department?.departmentCode ||
+                                "Unknown";
+                              acc[deptCode] = true;
+                              return acc;
+                            },
+                            {} as Record<string, boolean>
+                          )
+                        ).length
+                      }
+                    </span>
+                    <span className="text-xs text-purple-600 dark:text-purple-400">
+                      Departments
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-center gap-1">
                     <Icon
                       icon="material-symbols:trending-up-rounded"
-                      className="h-4 w-4 text-green-600 dark:text-green-400"
+                      className="h-5 w-5 text-green-600 dark:text-green-400"
                     />
-                    <span className="font-medium text-green-700 dark:text-green-300">
+                    <span className="text-lg font-bold text-green-700 dark:text-green-300">
                       {post?.census?.readPercentage || "0%"}
+                    </span>
+                    <span className="text-xs text-green-600 dark:text-green-400">
+                      Read Rate
                     </span>
                   </div>
                 </div>
@@ -723,7 +877,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           </div>
         </div>
       </Dialog>
-
       <Toast ref={toastRef} />
       <div
         onClick={generalPost ? handleClick : undefined}
@@ -803,7 +956,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
               )}
 
               {!openOptions && (
-                <SmallToLarge>
+                <>
                   <div
                     className="absolute z-50 w-28 bg-neutral-200 border text-black dark:text-white border-gray-300 rounded-xl dark:bg-neutral-800 dark:border-gray-700 p-2 right-0"
                     onClick={handleOptionsClicked}
@@ -826,7 +979,7 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
                       <p className="text-sm">Delete</p>
                     </div>
                   </div>
-                </SmallToLarge>
+                </>
               )}
             </div>
           )}
@@ -947,7 +1100,6 @@ const PostContainer: React.FC<Props> = ({ id, generalPost = false, type }) => {
           />
         </div>
       )}
-
       {/* CSS for watermark animations */}
       <style jsx>{`
         .non-downloadable-dialog .p-dialog-content {
