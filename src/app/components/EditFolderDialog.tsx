@@ -223,6 +223,7 @@ const EditFolderDialog: React.FC<Props> = ({
             {/* Department Dropdown */}
             <div className="space-y-2">
               <CreateFolderDropdown
+                label="Department Recipient"
                 departments={departments}
                 selectedDepartments={selectedDepartments}
                 setSelectedDepartments={setSelectedDepartments}
