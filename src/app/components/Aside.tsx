@@ -109,42 +109,44 @@ const Aside: React.FC<Props> = ({
     const baseItems: NavigationItem[] = [
       {
         id: "home",
-        label: "Home",
+        label: "Home", // More professional than "Home"
         icon: "solar:home-2-bold-duotone",
         path: "/",
         isActive: pathname === "/",
       },
       {
         id: "bulletin",
-        label: "General Bulletin",
+        label: "General Bulletin", // Clearer than "General Bulletin"
         icon: "solar:global-bold-duotone",
         path: "/bulletin",
         isActive: pathname === "/bulletin",
       },
       {
         id: "departments",
-        label: "Department Bulletin",
+        label: "Department Bulletin", // More specific than "Department Bulletin"
         icon: "solar:buildings-2-bold-duotone",
         path: "/departments-memo",
         isActive: pathname === "/departments-memo",
       },
       {
         id: "phone-directory",
-        label: "Phone Directory",
-        icon: "solar:phone-directory-bold-duotone",
+        label: "Phone Directory", // Shorter, still clear
+        icon: "solar:phone-bold-duotone",
         path: "/phone-directory",
         isActive: pathname === "/phone-directory",
       },
     ];
+
     if (userDeptId && userDeptId === Department.CUSTOMER_EXPERIENCE) {
       baseItems.push({
         id: "incident-report",
-        label: "Incident Reports",
-        icon: "solar:buildings-2-bold-duotone",
+        label: "Incident Reports", // This is already good
+        icon: "solar:buildings-2-bold-duotone", // Consider changing to "solar:warning-circle-bold-duotone"
         path: "/incident-report",
         isActive: pathname === "/incident-report",
       });
     }
+
     if (
       userDeptId &&
       [Department.HUMAN_RESOURCE, Department.QUALITY_MANAGEMENT].includes(
@@ -152,24 +154,17 @@ const Aside: React.FC<Props> = ({
       )
     ) {
       baseItems.push(
-        // {
-        //   id: "drafts",
-        //   label: "Drafts",
-        //   icon: "solar:document-text-bold-duotone",
-        //   path: "/drafts",
-        //   isActive: pathname === "/drafts",
-        // },
         {
           id: "my-posts",
-          label: "My Posts",
+          label: "My Publications", // More professional than "My Posts"
           icon: "solar:folder-with-files-bold-duotone",
           path: "/my-posts",
           isActive: pathname === "/my-posts",
         },
         {
           id: "pending-updates",
-          label: "Profiles for approval",
-          icon: "solar:folder-with-files-bold-duotone",
+          label: "Approval Queue", // Much clearer than "Profiles for approval"
+          icon: "solar:clipboard-check-bold-duotone", // Better icon for approval process
           path: "/pending-updates",
           isActive: pathname === "/pending-updates",
         }
@@ -179,7 +174,7 @@ const Aside: React.FC<Props> = ({
     if (userDeptId && [Department.HUMAN_RESOURCE].includes(userDeptId)) {
       baseItems.push({
         id: "users",
-        label: "Manage Users",
+        label: "User Management", // More descriptive than "Manage Users"
         icon: "solar:users-group-two-rounded-bold-duotone",
         path: "/users",
         isActive: pathname === "/users",
