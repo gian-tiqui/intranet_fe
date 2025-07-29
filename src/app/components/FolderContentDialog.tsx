@@ -80,24 +80,34 @@ const FolderContentDialog: React.FC<Props> = ({
     queryKey: [`folder-${folderId}-subfolder-${JSON.stringify(query)}`],
     queryFn: async () => {
       if (!folderId) return { data: { subfolders: [], count: 0 } };
-      let response;
-      const deptId = decodeUserData()?.sub;
-
-      if (checkDept()) response = await getFolderSubfolders(folderId, query);
-      else response = await getFolderSubfolders(folderId, { ...query, deptId });
+      const response = await getFolderSubfolders(folderId, query);
       return response;
     },
     enabled: !!folderId,
   });
 
+  // Fix for FolderContentDialog component
   const organizedFolders = useMemo(() => {
-    if (!data?.data.subfolders) return [];
+    // Add safety checks
+    if (!data?.data?.subfolders || !Array.isArray(data.data.subfolders)) {
+      return [];
+    }
+
+    if (!bookMarksIds || !Array.isArray(bookMarksIds)) {
+      return data.data.subfolders.map((subfolder) => ({
+        ...subfolder,
+        pinned: false,
+      }));
+    }
+
     const markedFolders = data.data.subfolders
-      .filter((subfolder) => bookMarksIds.includes(subfolder.id))
+      .filter((subfolder) => subfolder && bookMarksIds.includes(subfolder.id))
       .map((subfolder) => ({ ...subfolder, pinned: true }));
+
     const unMarkedFolders = data.data.subfolders
-      .filter((subfolder) => !bookMarksIds.includes(subfolder.id))
+      .filter((subfolder) => subfolder && !bookMarksIds.includes(subfolder.id))
       .map((subfolder) => ({ ...subfolder, pinned: false }));
+
     return [...markedFolders, ...unMarkedFolders];
   }, [bookMarksIds, data]);
 
