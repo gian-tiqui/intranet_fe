@@ -15,7 +15,7 @@ const SixtyDaysAlert = () => {
       const userId = decodeUserData()?.sub;
       return findUserById(userId);
     },
-    enabled: !!userId,
+    enabled: !!decodeUserData()?.sub || decodeUserData()?.sub !== undefined,
   });
 
   useEffect(() => {

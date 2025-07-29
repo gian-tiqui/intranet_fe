@@ -64,8 +64,7 @@ const FolderGrid = () => {
     queryFn: () => {
       const deptId = decodeUserData()?.sub;
 
-      if (checkDept()) return fetchMainFolders(query);
-      else return fetchMainFolders({ ...query, deptId });
+      return fetchMainFolders({ ...query });
     },
     enabled:
       !!Cookies.get(INTRANET) &&
@@ -77,6 +76,7 @@ const FolderGrid = () => {
   const { data: bookmarksResponse } = useQuery({
     queryKey: [`bookmark`, decodeUserData()?.sub],
     queryFn: () => getBookMarksByUserID(decodeUserData()?.sub),
+    enabled: !!decodeUserData()?.sub && decodeUserData()?.sub !== undefined,
   });
 
   useEffect(() => {
