@@ -62,8 +62,6 @@ const FolderGrid = () => {
   const { data, isLoading, refetch } = useQuery({
     queryKey: [`folders-grid`],
     queryFn: () => {
-      const deptId = decodeUserData()?.sub;
-
       return fetchMainFolders({ ...query });
     },
     enabled:
