@@ -47,7 +47,7 @@ const UserButton: React.FC<Props> = () => {
   } = useQuery({
     queryKey: [`user-${userId}`],
     queryFn: () => findUserById(userId),
-    enabled: !!userId,
+    enabled: !!decodeUserData()?.sub && decodeUserData()?.sub !== undefined,
   });
 
   const { setRefetch } = useRefetchUserStore();

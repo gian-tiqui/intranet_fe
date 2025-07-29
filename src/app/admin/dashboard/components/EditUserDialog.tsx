@@ -63,7 +63,7 @@ const EditUserDialog: React.FC<Props> = ({
   const { data: userData } = useQuery({
     queryKey: [`user-${userId}`],
     queryFn: () => findUserById(userId),
-    enabled: !!userId && userId != undefined,
+    enabled: !!decodeUserData()?.sub && decodeUserData()?.sub !== undefined,
   });
 
   const { data: departmentsData } = useQuery({
