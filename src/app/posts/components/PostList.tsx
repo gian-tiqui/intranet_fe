@@ -8,22 +8,10 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchPublicPosts } from "@/app/functions/functions";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import PostListItem from "./PostListItem";
-import useSignalStore from "@/app/store/signalStore";
 import { INTRANET } from "@/app/bindings/binding";
 import Cookies from "js-cookie";
 import { fetchDeptPostsByLid } from "@/app/utils/service/post";
 import { motion, AnimatePresence } from "framer-motion";
-
-const groupPostsByDate = (posts: Post[]) => {
-  return posts.reduce((groups: GroupedPosts, post: Post) => {
-    const date = format(new Date(post.createdAt), "yyyy-MM-dd");
-    if (!groups[date]) {
-      groups[date] = [];
-    }
-    groups[date].push(post);
-    return groups;
-  }, {});
-};
 
 interface Props {
   selectedVis: string;
@@ -73,7 +61,6 @@ const ModernSkeleton = () => {
 };
 
 const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
-  const { signal, setSignal } = useSignalStore();
   const [hoveredPost, setHoveredPost] = useState<number | null>(null);
   const [expandedDates, setExpandedDates] = useState<Set<string>>(new Set());
 
@@ -81,11 +68,7 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
     fetchDeptPostsByLid();
   }, []);
 
-  const {
-    data: _posts,
-    isLoading,
-    refetch: refetchPrivate,
-  } = useQuery({
+  const { data: _posts, isLoading } = useQuery({
     queryKey: ["private_dept_posts_by_lid"],
     queryFn: fetchDeptPostsByLid,
     staleTime: 1000 * 60 * 5,
@@ -94,7 +77,7 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
     enabled: Boolean(localStorage.getItem(INTRANET) && Cookies.get(INTRANET)),
   });
 
-  const { data: _allPosts, refetch: refetchPublic } = useQuery({
+  const { data: _allPosts } = useQuery({
     queryKey: ["public_posts"],
     queryFn: fetchPublicPosts,
     staleTime: 1000 * 60 * 5,
@@ -116,22 +99,36 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
 
   const { isCollapsed, setIsCollapsed } = useToggleStore();
 
-  const groupedPosts = useMemo(
-    () => groupPostsByDate(selectedVis === "dept" ? allPosts : posts),
-    [selectedVis, posts, allPosts]
-  );
+  const groupedPosts = useMemo(() => {
+    const postsToGroup = selectedVis === "dept" ? allPosts : posts;
+    // Add defensive check - ensure we have a valid array
+    if (!postsToGroup || !Array.isArray(postsToGroup)) {
+      return {};
+    }
+    return groupPostsByDate(postsToGroup);
+  }, [selectedVis, posts, allPosts]);
 
-  useEffect(() => {
-    refetchPrivate();
-    refetchPublic();
+  // Also update the groupPostsByDate function to be more defensive
+  const groupPostsByDate = (posts: Post[]) => {
+    // Add safety check
+    if (!posts || !Array.isArray(posts)) {
+      return {};
+    }
 
-    if (!_posts || !_allPosts) return;
+    return posts.reduce((groups: GroupedPosts, post: Post) => {
+      // Add safety check for post object
+      if (!post || !post.createdAt) {
+        return groups;
+      }
 
-    setPosts(_posts?.posts);
-    setAllPosts(_allPosts.posts);
-
-    setSignal(false);
-  }, [refetchPrivate, refetchPublic, _allPosts, _posts, signal, setSignal]);
+      const date = format(new Date(post.createdAt), "yyyy-MM-dd");
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+      groups[date].push(post);
+      return groups;
+    }, {});
+  };
 
   const [maxNum, setMaxNum] = useState<number>(2);
 
