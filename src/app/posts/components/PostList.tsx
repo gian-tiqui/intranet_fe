@@ -99,15 +99,6 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
 
   const { isCollapsed, setIsCollapsed } = useToggleStore();
 
-  const groupedPosts = useMemo(() => {
-    const postsToGroup = selectedVis === "dept" ? allPosts : posts;
-    // Add defensive check - ensure we have a valid array
-    if (!postsToGroup || !Array.isArray(postsToGroup)) {
-      return {};
-    }
-    return groupPostsByDate(postsToGroup);
-  }, [selectedVis, posts, allPosts]);
-
   // Also update the groupPostsByDate function to be more defensive
   const groupPostsByDate = (posts: Post[]) => {
     // Add safety check
@@ -129,6 +120,15 @@ const PostList: React.FC<Props> = ({ selectedVis, isMobile, onClick }) => {
       return groups;
     }, {});
   };
+
+  const groupedPosts = useMemo(() => {
+    const postsToGroup = selectedVis === "dept" ? allPosts : posts;
+    // Add defensive check - ensure we have a valid array
+    if (!postsToGroup || !Array.isArray(postsToGroup)) {
+      return {};
+    }
+    return groupPostsByDate(postsToGroup);
+  }, [selectedVis, posts, allPosts]);
 
   const [maxNum, setMaxNum] = useState<number>(2);
 
