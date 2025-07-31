@@ -114,12 +114,12 @@ const UserButton: React.FC<Props> = () => {
   const handleLogout = async (event: React.MouseEvent) => {
     event.stopPropagation();
 
-    const userId = decodeUserData()?.sub;
+    const refreshToken = Cookies.get(INTRANET);
 
     if (userId) {
       try {
         await apiClient.post(`${API_BASE}/auth/logout`, {
-          userId,
+          refreshToken,
         });
       } catch (error) {
         console.error(error);
